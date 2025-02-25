@@ -1,6 +1,7 @@
+/** ![mailboxIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMjIgMTdhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJWOS41QzIgNyA0IDUgNi41IDVIMThjMi4yIDAgNCAxLjggNCA0eiIvPjxwYXRoIGQ9Ik0xNSA5aDN2Mk02LjUgNUM5IDUgMTEgNyAxMSA5LjVWMTdhMiAyIDAgMCAxLTIgMnYwTTYgMTBoMSIvPjwvc3ZnPg==) */
 export const mailboxIcon = (
   <>
-    <path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H18c2.2 0 4 1.8 4 4v8Z" />
+    <path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H18c2.2 0 4 1.8 4 4z" />
     <path d="M15 9h3v2M6.5 5C9 5 11 7 11 9.5V17a2 2 0 0 1-2 2v0M6 10h1" />
   </>
 );

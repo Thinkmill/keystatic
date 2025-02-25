@@ -1,3 +1,4 @@
+/** ![coffeeIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTcgOGgxYTQgNCAwIDEgMSAwIDhoLTFNMyA4aDE0djlhNCA0IDAgMCAxLTQgNEg3YTQgNCAwIDAgMS00LTRaTTYgMnYyTTEwIDJ2Mk0xNCAydjIiLz48L3N2Zz4=) */
 export const coffeeIcon = (
   <path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2" />
 );

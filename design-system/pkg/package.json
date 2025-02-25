@@ -2,8 +2,6 @@
   "name": "@keystar/ui",
   "version": "0.7.17",
   "license": "MIT AND Apache-2.0",
-  "main": "",
-  "module": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/Thinkmill/keystatic/",
@@ -1573,7 +1571,6 @@
     "@svgr/core": "^6.5.1",
     "@svgr/plugin-jsx": "^6.5.1",
     "@svgr/plugin-prettier": "^6.5.1",
-    "@svgr/plugin-svgo": "^6.5.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
@@ -1583,6 +1580,7 @@
     "next": "^15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "svgo": "^3.3.2",
     "tsx": "^4.8.2"
   },
   "peerDependencies": {

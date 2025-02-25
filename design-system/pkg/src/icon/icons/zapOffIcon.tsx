@@ -1,3 +1,4 @@
+/** ![zapOffIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTIuNDEgNi43NSAxMyAybC0yLjQzIDIuOTJNMTguNTcgMTIuOTEgMjEgMTBoLTUuMzRNOCA4bC01IDZoOWwtMSA4IDUtNk0yIDJsMjAgMjAiLz48L3N2Zz4=) */
 export const zapOffIcon = (
   <path d="M12.41 6.75 13 2l-2.43 2.92M18.57 12.91 21 10h-5.34M8 8l-5 6h9l-1 8 5-6M2 2l20 20" />
 );

@@ -1,3 +1,4 @@
+/** ![vibrateOffIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJtMiA4IDIgMi0yIDIgMiAyLTIgMk0yMiA4bC0yIDIgMiAyLTIgMiAyIDJNOCA4djEwYzAgLjU1LjQ1IDEgMSAxaDZjLjU1IDAgMS0uNDUgMS0xdi0yTTE2IDEwLjM0VjZjMC0uNTUtLjQ1LTEtMS0xaC00LjM0TTIgMmwyMCAyMCIvPjwvc3ZnPg==) */
 export const vibrateOffIcon = (
   <path d="m2 8 2 2-2 2 2 2-2 2M22 8l-2 2 2 2-2 2 2 2M8 8v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2M16 10.34V6c0-.55-.45-1-1-1h-4.34M2 2l20 20" />
 );

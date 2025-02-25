@@ -1,3 +1,4 @@
+/** ![audioLinesIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMiAxMHYzTTYgNnYxMU0xMCAzdjE4TTE0IDh2N00xOCA1djEzTTIyIDEwdjMiLz48L3N2Zz4=) */
 export const audioLinesIcon = (
   <path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3" />
 );

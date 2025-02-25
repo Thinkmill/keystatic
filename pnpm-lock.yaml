@@ -534,9 +534,6 @@ importers:
       '@svgr/plugin-prettier':
         specifier: ^6.5.1
         version: 6.5.1(@svgr/core@6.5.1)
-      '@svgr/plugin-svgo':
-        specifier: ^6.5.1
-        version: 6.5.1(@svgr/core@6.5.1)
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -564,6 +561,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      svgo:
+        specifier: ^3.3.2
+        version: 3.3.2
       tsx:
         specifier: ^4.8.2
         version: 4.8.2
@@ -5891,12 +5891,6 @@ packages:
     peerDependencies:
       '@svgr/core': '*'
 
-  '@svgr/plugin-svgo@6.5.1':
-    resolution: {integrity: sha512-omvZKf8ixP9z6GWgwbtmP9qQMPX4ODXi+wzbVZgomNFsUIlHA1sf4fThdwTWSsZGgvGAG6yE+b/F5gWUkcZ/iQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      '@svgr/core': '*'
-
   '@swc/core-darwin-arm64@1.3.82':
     resolution: {integrity: sha512-JfsyDW34gVKD3uE0OUpUqYvAD3yseEaicnFP6pB292THtLJb0IKBBnK50vV/RzEJtc1bR3g1kNfxo2PeurZTrA==}
     engines: {node: '>=10'}
@@ -7758,9 +7752,20 @@ packages:
   css-select@4.3.0:
     resolution: {integrity: sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ==}
 
+  css-select@5.1.0:
+    resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
+
   css-tree@1.1.3:
     resolution: {integrity: sha512-tRpdppF7TRazZrjJ6v3stzv93qxRcSsFmW6cX0Zm2NVKpxE1WV1HblnghVv9TreireHkqI/VDEsfolRF1p6y7Q==}
     engines: {node: '>=8.0.0'}
+
+  css-tree@2.2.1:
+    resolution: {integrity: sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA==}
+    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
+
+  css-tree@2.3.1:
+    resolution: {integrity: sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw==}
+    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
 
   css-what@6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
@@ -7774,9 +7779,9 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  csso@4.2.0:
-    resolution: {integrity: sha512-wvlcdIbf6pwKEk7vHj8/Bkc0B4ylXZruLvOgs9doS5eOsOpuodOV2zJChSpkp+pRpYQLQMeF04nr3Z68Sta9jA==}
-    engines: {node: '>=8.0.0'}
+  csso@5.0.5:
+    resolution: {integrity: sha512-0LrrStPOdJj+SPCCrGhzryycLjwcgUSHBtxNA8aIDxf0GLsRh1cKYhB00Gd1lDOS4yGH69+SNn13+TWbVHETFQ==}
+    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
 
   cssstyle@3.0.0:
     resolution: {integrity: sha512-N4u2ABATi3Qplzf0hWbVCdjenim8F3ojEXpBDF5hBpjzW182MjNGLqfmQ0SkSPeQ+V86ZXgeH8aXj6kayd4jgg==}
@@ -10752,6 +10757,12 @@ packages:
   mdn-data@2.0.14:
     resolution: {integrity: sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==}
 
+  mdn-data@2.0.28:
+    resolution: {integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==}
+
+  mdn-data@2.0.30:
+    resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
+
   media-query-parser@2.0.2:
     resolution: {integrity: sha512-1N4qp+jE0pL5Xv4uEcwVUhIkwdUO3S/9gML90nqKA7v7FcOS5vUtatfzok9S9U1EJU8dHWlcv95WLnKmmxZI9w==}
 
@@ -13029,10 +13040,6 @@ packages:
     resolution: {integrity: sha512-bSf16tAFkGeRlUNDjXu8FzaMQt6g2HZJrun7mtMbIPOddxt3GLMSz5VWUWcqTJUPfLEaDIepGxv+bYQW49596A==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  stable@0.1.8:
-    resolution: {integrity: sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==}
-    deprecated: 'Modern JS already guarantees Array#sort() is a stable sort, so this library is deprecated. See the compatibility table on MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#browser_compatibility'
-
   stack-generator@2.0.10:
     resolution: {integrity: sha512-mwnua/hkqM6pF4k8SnmZ2zfETsRUpWXREfA/goT8SLCV4iOFa4bzOX2nDipWAZFPTjLvQB82f5yaodMVhK0yJQ==}
 
@@ -13276,9 +13283,9 @@ packages:
   svg-parser@2.0.4:
     resolution: {integrity: sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==}
 
-  svgo@2.8.0:
-    resolution: {integrity: sha512-+N/Q9kV1+F+UeWYoSiULYo4xYSDQlTgb+ayMobAXPwMnLvop7oxKMo9OzIrX5x3eS4L4f2UHhc9axXwY8DpChg==}
-    engines: {node: '>=10.13.0'}
+  svgo@3.3.2:
+    resolution: {integrity: sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==}
+    engines: {node: '>=14.0.0'}
     hasBin: true
 
   swc-loader@0.2.3:
@@ -16979,7 +16986,7 @@ snapshots:
 
   '@clack/core@0.3.3':
     dependencies:
-      picocolors: 1.0.0
+      picocolors: 1.1.1
       sisteransi: 1.0.5
 
   '@clack/prompts@0.6.3':
@@ -20961,13 +20968,6 @@ snapshots:
       deepmerge: 4.3.1
       prettier: 2.8.8
 
-  '@svgr/plugin-svgo@6.5.1(@svgr/core@6.5.1)':
-    dependencies:
-      '@svgr/core': 6.5.1
-      cosmiconfig: 7.1.0
-      deepmerge: 4.3.1
-      svgo: 2.8.0
-
   '@swc/core-darwin-arm64@1.3.82':
     optional: true
 
@@ -22445,7 +22445,7 @@ snapshots:
       caniuse-lite: 1.0.30001653
       fraction.js: 4.3.7
       normalize-range: 0.1.2
-      picocolors: 1.0.1
+      picocolors: 1.1.1
       postcss: 8.5.1
       postcss-value-parser: 4.2.0
 
@@ -23349,10 +23349,28 @@ snapshots:
       domutils: 2.8.0
       nth-check: 2.1.1
 
+  css-select@5.1.0:
+    dependencies:
+      boolbase: 1.0.0
+      css-what: 6.1.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      nth-check: 2.1.1
+
   css-tree@1.1.3:
     dependencies:
       mdn-data: 2.0.14
       source-map: 0.6.1
+
+  css-tree@2.2.1:
+    dependencies:
+      mdn-data: 2.0.28
+      source-map-js: 1.2.1
+
+  css-tree@2.3.1:
+    dependencies:
+      mdn-data: 2.0.30
+      source-map-js: 1.2.1
 
   css-what@6.1.0: {}
 
@@ -23360,9 +23378,9 @@ snapshots:
 
   cssesc@3.0.0: {}
 
-  csso@4.2.0:
+  csso@5.0.5:
     dependencies:
-      css-tree: 1.1.3
+      css-tree: 2.2.1
 
   cssstyle@3.0.0:
     dependencies:
@@ -27202,6 +27220,10 @@ snapshots:
 
   mdn-data@2.0.14: {}
 
+  mdn-data@2.0.28: {}
+
+  mdn-data@2.0.30: {}
+
   media-query-parser@2.0.2:
     dependencies:
       '@babel/runtime': 7.22.15
@@ -28795,20 +28817,20 @@ snapshots:
   postcss@8.4.32:
     dependencies:
       nanoid: 3.3.7
-      picocolors: 1.0.0
+      picocolors: 1.1.1
       source-map-js: 1.0.2
 
   postcss@8.4.38:
     dependencies:
       nanoid: 3.3.7
-      picocolors: 1.0.1
-      source-map-js: 1.2.0
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
 
   postcss@8.4.41:
     dependencies:
       nanoid: 3.3.7
       picocolors: 1.1.1
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
 
   postcss@8.5.1:
     dependencies:
@@ -30147,8 +30169,6 @@ snapshots:
     dependencies:
       minipass: 7.0.3
 
-  stable@0.1.8: {}
-
   stack-generator@2.0.10:
     dependencies:
       stackframe: 1.3.4
@@ -30418,15 +30438,15 @@ snapshots:
 
   svg-parser@2.0.4: {}
 
-  svgo@2.8.0:
+  svgo@3.3.2:
     dependencies:
       '@trysound/sax': 0.2.0
       commander: 7.2.0
-      css-select: 4.3.0
-      css-tree: 1.1.3
-      csso: 4.2.0
-      picocolors: 1.0.0
-      stable: 0.1.8
+      css-select: 5.1.0
+      css-tree: 2.3.1
+      css-what: 6.1.0
+      csso: 5.0.5
+      picocolors: 1.1.1
 
   swc-loader@0.2.3(@swc/core@1.3.82(@swc/helpers@0.5.15))(webpack@5.88.2(@swc/core@1.3.82(@swc/helpers@0.5.15))(esbuild@0.14.54)):
     dependencies:

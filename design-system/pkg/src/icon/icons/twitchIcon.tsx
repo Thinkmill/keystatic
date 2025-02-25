@@ -1,3 +1,2 @@
-export const twitchIcon = (
-  <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7" />
-);
+/** ![twitchIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMjEgMkgzdjE2aDV2NGw0LTRoNWw0LTR6bS0xMCA5VjdtNSA0VjciLz48L3N2Zz4=) */
+export const twitchIcon = <path d="M21 2H3v16h5v4l4-4h5l4-4zm-10 9V7m5 4V7" />;

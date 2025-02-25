@@ -1,3 +1,4 @@
+/** ![alarmClockOffIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNNi44NyA2Ljg3YTggOCAwIDEgMCAxMS4yNiAxMS4yNk0xOS45IDE0LjI1YTggOCAwIDAgMC05LjE1LTkuMTVNMjIgNmwtMy0zTTYuMjYgMTguNjcgNCAyMU0yIDJsMjAgMjBNNCA0IDIgNiIvPjwvc3ZnPg==) */
 export const alarmClockOffIcon = (
   <path d="M6.87 6.87a8 8 0 1 0 11.26 11.26M19.9 14.25a8 8 0 0 0-9.15-9.15M22 6l-3-3M6.26 18.67 4 21M2 2l20 20M4 4 2 6" />
 );

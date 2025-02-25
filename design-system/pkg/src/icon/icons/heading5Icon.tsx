@@ -1,3 +1,4 @@
+/** ![heading5Icon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNNCAxMmg4TTQgMThWNk0xMiAxOFY2TTE3IDEzdi0zaDRNMTcgMTcuN2MuNC4yLjguMyAxLjMuMyAxLjUgMCAyLjctMS4xIDIuNy0yLjVTMTkuOCAxMyAxOC4zIDEzSDE3Ii8+PC9zdmc+) */
 export const heading5Icon = (
   <path d="M4 12h8M4 18V6M12 18V6M17 13v-3h4M17 17.7c.4.2.8.3 1.3.3 1.5 0 2.7-1.1 2.7-2.5S19.8 13 18.3 13H17" />
 );

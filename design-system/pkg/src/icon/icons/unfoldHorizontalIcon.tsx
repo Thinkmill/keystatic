@@ -1,3 +1,4 @@
+/** ![unfoldHorizontalIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTYgMTJoNk04IDEySDJNMTIgMnYyTTEyIDh2Mk0xMiAxNHYyTTEyIDIwdjJNMTkgMTVsMy0zLTMtM001IDlsLTMgMyAzIDMiLz48L3N2Zz4=) */
 export const unfoldHorizontalIcon = (
   <path d="M16 12h6M8 12H2M12 2v2M12 8v2M12 14v2M12 20v2M19 15l3-3-3-3M5 9l-3 3 3 3" />
 );

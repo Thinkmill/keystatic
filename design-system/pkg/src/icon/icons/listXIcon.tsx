@@ -1,3 +1,4 @@
+/** ![listXIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTEgMTJIM00xNiA2SDNNMTYgMThIM00xOSAxMGwtNCA0TTE1IDEwbDQgNCIvPjwvc3ZnPg==) */
 export const listXIcon = (
   <path d="M11 12H3M16 6H3M16 18H3M19 10l-4 4M15 10l4 4" />
 );
