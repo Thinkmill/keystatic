@@ -1,3 +1,4 @@
+/** ![bluetoothSearchingIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJtNyA3IDEwIDEwLTUgNVYybDUgNUw3IDE3TTIwLjgzIDE0LjgzYTQgNCAwIDAgMCAwLTUuNjZNMTggMTJoLjAxIi8+PC9zdmc+) */
 export const bluetoothSearchingIcon = (
   <path d="m7 7 10 10-5 5V2l5 5L7 17M20.83 14.83a4 4 0 0 0 0-5.66M18 12h.01" />
 );

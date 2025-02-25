@@ -1,3 +1,4 @@
+/** ![bellMinusIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTguNCAxMmMuOCAzLjggMi42IDUgMi42IDVIM3MzLTIgMy05YzAtMy4zIDIuNy02IDYtNiAxLjggMCAzLjQuOCA0LjUgMk0xMC4zIDIxYTEuOTQgMS45NCAwIDAgMCAzLjQgME0xNSA4aDYiLz48L3N2Zz4=) */
 export const bellMinusIcon = (
   <path d="M18.4 12c.8 3.8 2.6 5 2.6 5H3s3-2 3-9c0-3.3 2.7-6 6-6 1.8 0 3.4.8 4.5 2M10.3 21a1.94 1.94 0 0 0 3.4 0M15 8h6" />
 );

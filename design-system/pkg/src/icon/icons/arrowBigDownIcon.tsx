@@ -1,1 +1,2 @@
-export const arrowBigDownIcon = <path d="M15 6v6h4l-7 7-7-7h4V6h6z" />;
+/** ![arrowBigDownIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTUgNnY2aDRsLTcgNy03LTdoNFY2eiIvPjwvc3ZnPg==) */
+export const arrowBigDownIcon = <path d="M15 6v6h4l-7 7-7-7h4V6z" />;

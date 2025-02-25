@@ -1,1 +1,2 @@
+/** ![tornadoIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMjEgNEgzTTE4IDhINk0xOSAxMkg5TTE2IDE2aC02TTExIDIwSDkiLz48L3N2Zz4=) */
 export const tornadoIcon = <path d="M21 4H3M18 8H6M19 12H9M16 16h-6M11 20H9" />;

@@ -1,3 +1,4 @@
+/** ![syringeIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJtMTggMiA0IDRNMTcgN2wzLTNNMTkgOSA4LjcgMTkuM2MtMSAxLTIuNSAxLTMuNCAwbC0uNi0uNmMtMS0xLTEtMi41IDAtMy40TDE1IDVNOSAxMWw0IDRNNSAxOWwtMyAzTTE0IDRsNiA2Ii8+PC9zdmc+) */
 export const syringeIcon = (
   <path d="m18 2 4 4M17 7l3-3M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5M9 11l4 4M5 19l-3 3M14 4l6 6" />
 );

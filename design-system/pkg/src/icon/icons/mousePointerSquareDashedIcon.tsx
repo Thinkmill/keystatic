@@ -1,3 +1,4 @@
+/** ![mousePointerSquareDashedIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNNSAzYTIgMiAwIDAgMC0yIDJNMTkgM2EyIDIgMCAwIDEgMiAyTTEyIDEybDQgMTAgMS43LTQuM0wyMiAxNlpNNSAyMWEyIDIgMCAwIDEtMi0yTTkgM2gxTTkgMjFoMk0xNCAzaDFNMyA5djFNMjEgOXYyTTMgMTR2MSIvPjwvc3ZnPg==) */
 export const mousePointerSquareDashedIcon = (
   <path d="M5 3a2 2 0 0 0-2 2M19 3a2 2 0 0 1 2 2M12 12l4 10 1.7-4.3L22 16ZM5 21a2 2 0 0 1-2-2M9 3h1M9 21h2M14 3h1M3 9v1M21 9v2M3 14v1" />
 );

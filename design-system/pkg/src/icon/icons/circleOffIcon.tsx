@@ -1,3 +1,4 @@
+/** ![circleOffIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJtMiAyIDIwIDIwTTguMzUgMi42OUExMCAxMCAwIDAgMSAyMS4zIDE1LjY1TTE5LjA4IDE5LjA4QTEwIDEwIDAgMSAxIDQuOTIgNC45MiIvPjwvc3ZnPg==) */
 export const circleOffIcon = (
   <path d="m2 2 20 20M8.35 2.69A10 10 0 0 1 21.3 15.65M19.08 19.08A10 10 0 1 1 4.92 4.92" />
 );

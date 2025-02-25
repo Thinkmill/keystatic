@@ -1,3 +1,4 @@
+/** ![flaskConicalOffIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTAgMTAgNC43MiAyMC41NWExIDEgMCAwIDAgLjkgMS40NWgxMi43NmExIDEgMCAwIDAgLjktMS40NWwtMS4yNzItMi41NDJNMTAgMnYyLjM0M00xNCAydjYuMzQzTTguNSAyaDdNNyAxNmg5TTIgMmwyMCAyMCIvPjwvc3ZnPg==) */
 export const flaskConicalOffIcon = (
   <path d="M10 10 4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-1.272-2.542M10 2v2.343M14 2v6.343M8.5 2h7M7 16h9M2 2l20 20" />
 );

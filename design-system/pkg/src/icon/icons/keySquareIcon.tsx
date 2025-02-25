@@ -1,3 +1,4 @@
+/** ![keySquareIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTIuNCAyLjdjLjktLjkgMi41LS45IDMuNCAwbDUuNSA1LjVjLjkuOS45IDIuNSAwIDMuNGwtMy43IDMuN2MtLjkuOS0yLjUuOS0zLjQgMEw4LjcgOS44Yy0uOS0uOS0uOS0yLjUgMC0zLjRaTTE0IDdsMyAzTTkuNCAxMC42IDIgMTh2M2MwIC42LjQgMSAxIDFoNHYtM2gzdi0zaDJsMS40LTEuNCIvPjwvc3ZnPg==) */
 export const keySquareIcon = (
   <path d="M12.4 2.7c.9-.9 2.5-.9 3.4 0l5.5 5.5c.9.9.9 2.5 0 3.4l-3.7 3.7c-.9.9-2.5.9-3.4 0L8.7 9.8c-.9-.9-.9-2.5 0-3.4ZM14 7l3 3M9.4 10.6 2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4" />
 );

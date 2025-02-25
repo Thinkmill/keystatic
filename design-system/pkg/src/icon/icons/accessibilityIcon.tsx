@@ -1,3 +1,4 @@
+/** ![accessibilityIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48Y2lyY2xlIGN4PSIxNiIgY3k9IjQiIHI9IjEiLz48cGF0aCBkPSJtMTggMTkgMS03LTYgMU01IDhsMy0zIDUuNSAzLTIuMzYgMy41TTQuMjQgMTQuNWE1IDUgMCAwIDAgNi44OCA2Ii8+PHBhdGggZD0iTTEzLjc2IDE3LjVhNSA1IDAgMCAwLTYuODgtNiIvPjwvc3ZnPg==) */
 export const accessibilityIcon = (
   <>
     <circle cx={16} cy={4} r={1} />

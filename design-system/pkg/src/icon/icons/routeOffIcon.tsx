@@ -1,3 +1,4 @@
+/** ![routeOffIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTkiIHI9IjMiLz48cGF0aCBkPSJNOSAxOWg4LjVjLjQgMCAuOS0uMSAxLjMtLjJNNS4yIDUuMkEzLjUgMy41MyAwIDAgMCA2LjUgMTJIMTJNMiAybDIwIDIwTTIxIDE1LjNhMy41IDMuNSAwIDAgMC0zLjMtMy4zTTE1IDVoLTQuMyIvPjxjaXJjbGUgY3g9IjE4IiBjeT0iNSIgcj0iMyIvPjwvc3ZnPg==) */
 export const routeOffIcon = (
   <>
     <circle cx={6} cy={19} r={3} />

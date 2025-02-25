@@ -1,4 +1,5 @@
 import { transform } from '@svgr/core';
+import { optimize } from 'svgo';
 import _rawIcons from 'lucide-static';
 import fs from 'fs/promises';
 import path from 'path';
@@ -34,14 +35,25 @@ async function writeIcons() {
   await Promise.all(
     icons.map(async icon => {
       const name = icon.name[0].toLowerCase() + icon.name.slice(1);
-      let code = await transform(
-        icon.data,
-        {
-          icon: true,
-          typescript: true,
-          expandProps: false,
-          template: function (variables, context) {
-            return context.tpl`
+      const optimized = optimize(icon.data, {
+        plugins: [
+          { name: 'preset-default' },
+          {
+            name: 'removeAttrs',
+            params: { attrs: ['class'] },
+          },
+        ],
+      }).data;
+      let code = (
+        await transform(
+          optimized,
+          {
+            icon: true,
+            typescript: true,
+            expandProps: false,
+            template: function (variables, context) {
+              return context.tpl`
+            /** LOCATION_FOR_REPLACEMENT */
             export const ${name} = ${
               variables.jsx.children.length === 1
                 ? variables.jsx.children[0]
@@ -57,14 +69,22 @@ async function writeIcons() {
                   }
             }
             `;
+            },
+            plugins: ['@svgr/plugin-jsx', '@svgr/plugin-prettier'],
           },
-          plugins: [
-            '@svgr/plugin-svgo',
-            '@svgr/plugin-jsx',
-            '@svgr/plugin-prettier',
-          ],
-        },
-        { componentName: name }
+          { componentName: name }
+        )
+      ).replace(
+        'LOCATION_FOR_REPLACEMENT',
+        `![${name}](data:image/svg+xml;base64,${Buffer.from(
+          optimized
+            .replace(
+              /<svg[^>]+>/,
+              '$&<rect fill="#fff" stroke="#fff" width="24" height="24"/>'
+            )
+            .replace(/currentColor/g, '#000'),
+          'utf8'
+        ).toString('base64')})`
       );
       await fs.writeFile(path.join(iconOutDir, `${name}.tsx`), code);
     })

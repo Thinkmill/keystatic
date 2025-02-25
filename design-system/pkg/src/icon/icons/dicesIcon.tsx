@@ -1,3 +1,4 @@
+/** ![dicesIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHg9IjIiIHk9IjEwIiByeD0iMiIgcnk9IjIiLz48cGF0aCBkPSJtMTcuOTIgMTQgMy41LTMuNWEyLjI0IDIuMjQgMCAwIDAgMC0zbC01LTQuOTJhMi4yNCAyLjI0IDAgMCAwLTMgMEwxMCA2TTYgMThoLjAxTTEwIDE0aC4wMU0xNSA2aC4wMU0xOCA5aC4wMSIvPjwvc3ZnPg==) */
 export const dicesIcon = (
   <>
     <rect width={12} height={12} x={2} y={10} rx={2} ry={2} />
