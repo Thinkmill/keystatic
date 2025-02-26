@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.5.46
+
+### Patch Changes
+
+- [#1414](https://github.com/Thinkmill/keystatic/pull/1414) [`0ae5599`](https://github.com/Thinkmill/keystatic/commit/0ae55994ce9867788eb92fe9d493b2658e23bd28) Thanks [@emmatown](https://github.com/emmatown)! - Fix build output when used with TypeScript's `"moduleResolution": "nodenext"` option
+
+- Updated dependencies [[`0ae5599`](https://github.com/Thinkmill/keystatic/commit/0ae55994ce9867788eb92fe9d493b2658e23bd28), [`25351ae`](https://github.com/Thinkmill/keystatic/commit/25351aefc594dfbfdf8c92805f74df63d00750e5)]:
+  - @keystar/ui@0.7.18
+
 ## 0.5.45
 
 ### Patch Changes
