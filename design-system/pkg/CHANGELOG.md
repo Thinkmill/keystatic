@@ -1,5 +1,13 @@
 # @keystar/ui
 
+## 0.0.0-20250226003511
+
+### Patch Changes
+
+- [#1414](https://github.com/Thinkmill/keystatic/pull/1414) [`340867c`](https://github.com/Thinkmill/keystatic/commit/340867cd8ce6d57ecf1348b2f4072c1430da62ec) Thanks [@emmatown](https://github.com/emmatown)! - Fix build output when used with TypeScript's `"moduleResolution": "nodenext"` option
+
+- [#1412](https://github.com/Thinkmill/keystatic/pull/1412) [`25351ae`](https://github.com/Thinkmill/keystatic/commit/25351aefc594dfbfdf8c92805f74df63d00750e5) Thanks [@emmatown](https://github.com/emmatown)! - Add JSDoc previews for icons
+
 ## 0.7.17
 
 ### Patch Changes

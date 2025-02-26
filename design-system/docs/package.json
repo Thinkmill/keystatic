@@ -1,6 +1,6 @@
 {
   "name": "@keystar/docs",
-  "version": "0.0.65",
+  "version": "0.0.0-20250226003511",
   "private": true,
   "license": "MIT",
   "scripts": {

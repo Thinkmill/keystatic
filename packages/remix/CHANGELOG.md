@@ -1,5 +1,14 @@
 # @keystatic/remix
 
+## 0.0.0-20250226003511
+
+### Patch Changes
+
+- [#1414](https://github.com/Thinkmill/keystatic/pull/1414) [`340867c`](https://github.com/Thinkmill/keystatic/commit/340867cd8ce6d57ecf1348b2f4072c1430da62ec) Thanks [@emmatown](https://github.com/emmatown)! - Fix build output when used with TypeScript's `"moduleResolution": "nodenext"` option
+
+- Updated dependencies [[`340867c`](https://github.com/Thinkmill/keystatic/commit/340867cd8ce6d57ecf1348b2f4072c1430da62ec)]:
+  - @keystatic/core@0.0.0-20250226003511
+
 ## 5.0.2
 
 ### Patch Changes

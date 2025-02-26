@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/remix",
-  "version": "5.0.2",
+  "version": "0.0.0-20250226003511",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "react-dom": "^19.0.0"
   },
   "peerDependencies": {
-    "@keystatic/core": "*",
+    "@keystatic/core": "0.0.0-20250226003511",
     "@remix-run/react": "1 || 2",
     "react": "^18.2.0 || ^19.0.0",
     "react-dom": "^18.2.0 || ^19.0.0"

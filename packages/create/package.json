@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/create",
-  "version": "0.0.5",
+  "version": "0.0.0-20250226003511",
   "license": "MIT",
   "bin": {
     "create-keystatic": "./bin.js"
