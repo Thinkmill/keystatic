@@ -62,6 +62,7 @@ function ActionBarInner<T>(
     selectedItemCount,
     isOpen,
     items,
+    buttonLabelBehavior,
   } = props;
 
   let styleProps = useStyleProps(props);
@@ -157,7 +158,7 @@ function ActionBarInner<T>(
             aria-label={stringFormatter.format('actions')}
             prominence="low"
             overflowMode="collapse"
-            buttonLabelBehavior="collapse"
+            buttonLabelBehavior={buttonLabelBehavior}
             onAction={onAction}
             gridArea="actiongroup"
           >
