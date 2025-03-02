@@ -1,5 +1,13 @@
 # @keystatic/templates-remix
 
+## 0.0.48
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.5.47
+  - @keystatic/remix@5.0.3
+
 ## 0.0.47
 
 ### Patch Changes

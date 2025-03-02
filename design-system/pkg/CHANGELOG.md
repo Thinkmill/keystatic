@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.19
+
+### Patch Changes
+
+- [#1415](https://github.com/Thinkmill/keystatic/pull/1415) [`44afc1e`](https://github.com/Thinkmill/keystatic/commit/44afc1e05c8fe03c571b705989f4643d1a69f7bc) Thanks [@gautamsi](https://github.com/gautamsi)! - Fixed `buttonLabelBehavior` for `ActionGroup` not passed by `ActionBar`
+
 ## 0.7.18
 
 ### Patch Changes
