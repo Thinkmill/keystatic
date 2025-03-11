@@ -1,3 +1,4 @@
+/** ![lampWallDownIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTEgMTNoNmwzIDdIOHpNMTQgMTNWOGEyIDIgMCAwIDAtMi0ySDhNNCA5aDJhMiAyIDAgMCAwIDItMlY1YTIgMiAwIDAgMC0yLTJINHoiLz48L3N2Zz4=) */
 export const lampWallDownIcon = (
-  <path d="M11 13h6l3 7H8l3-7ZM14 13V8a2 2 0 0 0-2-2H8M4 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H4v6Z" />
+  <path d="M11 13h6l3 7H8zM14 13V8a2 2 0 0 0-2-2H8M4 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H4z" />
 );

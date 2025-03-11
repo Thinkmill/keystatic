@@ -1,3 +1,4 @@
+/** ![foldHorizontalIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMiAxMmg2TTIyIDEyaC02TTEyIDJ2Mk0xMiA4djJNMTIgMTR2Mk0xMiAyMHYyTTE5IDlsLTMgMyAzIDNNNSAxNWwzLTMtMy0zIi8+PC9zdmc+) */
 export const foldHorizontalIcon = (
   <path d="M2 12h6M22 12h-6M12 2v2M12 8v2M12 14v2M12 20v2M19 9l-3 3 3 3M5 15l3-3-3-3" />
 );

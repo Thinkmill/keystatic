@@ -1,6 +1,7 @@
+/** ![lassoIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNNyAyMmE1IDUgMCAwIDEtMi00TTMuMyAxNEE2LjggNi44IDAgMCAxIDIgMTBjMC00LjQgNC41LTggMTAtOHMxMCAzLjYgMTAgOC00LjUgOC0xMCA4YTEyIDEyIDAgMCAxLTUtMSIvPjxwYXRoIGQ9Ik01IDE4YTIgMiAwIDEgMCAwLTQgMiAyIDAgMCAwIDAgNCIvPjwvc3ZnPg==) */
 export const lassoIcon = (
   <>
     <path d="M7 22a5 5 0 0 1-2-4M3.3 14A6.8 6.8 0 0 1 2 10c0-4.4 4.5-8 10-8s10 3.6 10 8-4.5 8-10 8a12 12 0 0 1-5-1" />
-    <path d="M5 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+    <path d="M5 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
   </>
 );

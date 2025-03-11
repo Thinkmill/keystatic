@@ -1,1 +1,2 @@
-export const lampFloorIcon = <path d="M9 2h6l3 7H6l3-7ZM12 9v13M9 22h6" />;
+/** ![lampFloorIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNOSAyaDZsMyA3SDZ6TTEyIDl2MTNNOSAyMmg2Ii8+PC9zdmc+) */
+export const lampFloorIcon = <path d="M9 2h6l3 7H6zM12 9v13M9 22h6" />;

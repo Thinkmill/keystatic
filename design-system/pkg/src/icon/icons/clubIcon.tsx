@@ -1,3 +1,4 @@
+/** ![clubIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTcuMjggOS4wNWE1LjUgNS41IDAgMSAwLTEwLjU2IDBBNS41IDUuNSAwIDEgMCAxMiAxNy42NmE1LjUgNS41IDAgMSAwIDUuMjgtOC42Wk0xMiAxNy42NlYyMiIvPjwvc3ZnPg==) */
 export const clubIcon = (
   <path d="M17.28 9.05a5.5 5.5 0 1 0-10.56 0A5.5 5.5 0 1 0 12 17.66a5.5 5.5 0 1 0 5.28-8.6ZM12 17.66V22" />
 );

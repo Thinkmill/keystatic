@@ -1,6 +1,7 @@
+/** ![sproutIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNNyAyMGgxME0xMCAyMGM1LjUtMi41LjgtNi40IDMtMTAiLz48cGF0aCBkPSJNOS41IDkuNGMxLjEuOCAxLjggMi4yIDIuMyAzLjctMiAuNC0zLjUuNC00LjgtLjMtMS4yLS42LTIuMy0xLjktMy00LjIgMi44LS41IDQuNCAwIDUuNS44TTE0LjEgNmE3IDcgMCAwIDAtMS4xIDRjMS45LS4xIDMuMy0uNiA0LjMtMS40IDEtMSAxLjYtMi4zIDEuNy00LjYtMi43LjEtNCAxLTQuOSAyIi8+PC9zdmc+) */
 export const sproutIcon = (
   <>
     <path d="M7 20h10M10 20c5.5-2.5.8-6.4 3-10" />
-    <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8zM14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z" />
+    <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2" />
   </>
 );

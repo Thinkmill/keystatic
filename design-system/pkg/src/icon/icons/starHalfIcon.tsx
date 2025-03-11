@@ -1,1 +1,2 @@
+/** ![starHalfIcon](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3QgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZmZmIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz48cGF0aCBkPSJNMTIgMTcuOCA1LjggMjEgNyAxNC4xIDIgOS4zbDctMUwxMiAyIi8+PC9zdmc+) */
 export const starHalfIcon = <path d="M12 17.8 5.8 21 7 14.1 2 9.3l7-1L12 2" />;
