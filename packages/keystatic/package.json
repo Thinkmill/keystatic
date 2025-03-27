@@ -280,6 +280,9 @@
     },
     "#markdoc": "./src/markdoc.js",
     "#base64": "./src/base64.ts",
-    "#react-compiler-runtime": "./src/react-compiler-runtime.ts"
+    "#react-compiler-runtime": {
+      "react-server": "./src/react-compiler-runtime-react-server.ts",
+      "default": "./src/react-compiler-runtime.ts"
+    }
   }
 }
