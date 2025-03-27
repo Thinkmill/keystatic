@@ -1,5 +1,13 @@
 # @keystatic/templates-remix
 
+## 0.0.48
+
+### Patch Changes
+
+- Updated dependencies [[`5d98a35`](https://github.com/Thinkmill/keystatic/commit/5d98a35a0b7691b9fb189bcf1072d6c9aee1d8c9)]:
+  - @keystatic/core@0.5.47
+  - @keystatic/remix@5.0.3
+
 ## 0.0.47
 
 ### Patch Changes
