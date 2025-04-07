@@ -9,13 +9,7 @@ import { checkCircle2Icon } from '@keystar/ui/icon/icons/checkCircle2Icon';
 import { infoIcon } from '@keystar/ui/icon/icons/infoIcon';
 import { alertTriangleIcon } from '@keystar/ui/icon/icons/alertTriangleIcon';
 import { SlotProvider } from '@keystar/ui/slots';
-import {
-  classNames,
-  css,
-  keyframes,
-  tokenSchema,
-  useStyleProps,
-} from '@keystar/ui/style';
+import { classNames, css, tokenSchema, useStyleProps } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
@@ -33,7 +27,6 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
   let {
     toast: {
       key,
-      animation,
       content: { children, tone, actionLabel, onAction, shouldCloseOnAction },
     },
     state,
@@ -101,27 +94,10 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
           '&[data-tone=critical]': {
             background: tokenSchema.color.background.criticalEmphasis,
           },
-
-          // animations
-          '&[data-animation=entering]': {
-            animation: `${slideInAnim} 300ms`,
-          },
-          '&[data-animation=exiting]': {
-            animation: `${fadeOutAnim} 300ms forwards`,
-          },
         }),
         styleProps.className
       )}
-      style={{
-        ...styleProps.style,
-        zIndex: props.toast.priority,
-      }}
-      data-animation={animation}
-      onAnimationEnd={() => {
-        if (animation === 'exiting') {
-          state.remove(key);
-        }
-      }}
+      style={styleProps.style}
     >
       <SlotProvider slots={slots}>
         <div {...contentProps} className={css({ display: 'flex' })}>
@@ -183,15 +159,6 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
     </div>
   );
 }
-
-let slideInAnim = keyframes({
-  from: { transform: `var(--slide-from)` },
-  to: { transform: `var(--slide-to)` },
-});
-let fadeOutAnim = keyframes({
-  from: { opacity: 1 },
-  to: { opacity: 0 },
-});
 
 let _Toast = forwardRef(Toast);
 export { _Toast as Toast };

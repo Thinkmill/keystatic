@@ -1,6 +1,6 @@
 import { FocusRing } from '@react-aria/focus';
 import { useLocale, useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useUNSTABLE_PortalContext } from '@react-aria/overlays';
+import { useUNSAFE_PortalContext } from '@react-aria/overlays';
 import { useTableColumnResize } from '@react-aria/table';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
 import { TableColumnResizeState } from '@react-stately/table';
@@ -153,7 +153,7 @@ function Resizer<T>(
 
 function CursorOverlay(props: PropsWithChildren<{ show: boolean }>) {
   let { show, children } = props;
-  let { getContainer } = useUNSTABLE_PortalContext();
+  let { getContainer } = useUNSAFE_PortalContext();
   return show
     ? ReactDOM.createPortal(children, getContainer?.() ?? document.body)
     : null;
