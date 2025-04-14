@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.5.47
+
+### Patch Changes
+
+- [#1430](https://github.com/Thinkmill/keystatic/pull/1430) [`4a2a671`](https://github.com/Thinkmill/keystatic/commit/4a2a6715103fb900c78c4ef4ffeced2bb0d4765a) Thanks [@emmatown](https://github.com/emmatown)! - Update `@react-aria`/`react-stately` dependencies
+
+- [#1424](https://github.com/Thinkmill/keystatic/pull/1424) [`5d98a35`](https://github.com/Thinkmill/keystatic/commit/5d98a35a0b7691b9fb189bcf1072d6c9aee1d8c9) Thanks [@emmatown](https://github.com/emmatown)! - Fix `DocumentRenderer` usage in server components
+
+- Updated dependencies [[`44afc1e`](https://github.com/Thinkmill/keystatic/commit/44afc1e05c8fe03c571b705989f4643d1a69f7bc), [`4a2a671`](https://github.com/Thinkmill/keystatic/commit/4a2a6715103fb900c78c4ef4ffeced2bb0d4765a)]:
+  - @keystar/ui@0.7.19
+
 ## 0.5.46
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @keystar/ui
 
+## 0.7.19
+
+### Patch Changes
+
+- [#1415](https://github.com/Thinkmill/keystatic/pull/1415) [`44afc1e`](https://github.com/Thinkmill/keystatic/commit/44afc1e05c8fe03c571b705989f4643d1a69f7bc) Thanks [@gautamsi](https://github.com/gautamsi)! - Fixed `buttonLabelBehavior` for `ActionGroup` not passed by `ActionBar`
+
+- [#1430](https://github.com/Thinkmill/keystatic/pull/1430) [`4a2a671`](https://github.com/Thinkmill/keystatic/commit/4a2a6715103fb900c78c4ef4ffeced2bb0d4765a) Thanks [@emmatown](https://github.com/emmatown)! - Update `@react-aria`/`react-stately` dependencies
+
 ## 0.7.18
 
 ### Patch Changes
