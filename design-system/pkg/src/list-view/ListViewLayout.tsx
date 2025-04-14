@@ -3,17 +3,23 @@ import {
   LayoutInfo,
   Rect,
 } from '@react-stately/virtualizer';
-import { LayoutNode, ListLayout } from '@react-stately/layout';
+import {
+  LayoutNode,
+  ListLayout,
+  ListLayoutOptions,
+} from '@react-stately/layout';
 import { Node } from '@react-types/shared';
 
-interface ListViewLayoutProps {
+type ListViewLayoutOptions = ListLayoutOptions & {
   isLoading?: boolean;
-}
+};
 
-export class ListViewLayout<T> extends ListLayout<T, ListViewLayoutProps> {
+export class ListViewLayout<T> extends ListLayout<T, ListViewLayoutOptions> {
   private isLoading: boolean = false;
 
-  update(invalidationContext: InvalidationContext<ListViewLayoutProps>): void {
+  update(
+    invalidationContext: InvalidationContext<ListViewLayoutOptions>
+  ): void {
     this.isLoading = invalidationContext.layoutOptions?.isLoading || false;
     super.update(invalidationContext);
   }

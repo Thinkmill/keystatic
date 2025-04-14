@@ -19,7 +19,6 @@ function getGlobalToastQueue() {
   if (!globalToastQueue) {
     globalToastQueue = new ToastQueue({
       maxVisibleToasts: 1,
-      hasExitAnimation: true,
     });
   }
 
@@ -58,15 +57,8 @@ export function Toaster(props: ToasterProps) {
   let ref = useRef(null);
   toastProviders.add(ref);
 
-  // eslint-disable-next-line arrow-body-style
   useEffect(() => {
     return () => {
-      // When this toast provider unmounts, reset all animations so that
-      // when the new toast provider renders, it is seamless.
-      for (let toast of getGlobalToastQueue().visibleToasts) {
-        toast.animation = undefined;
-      }
-
       // Remove this toast provider, and call subscriptions.
       // This will cause all other instances to re-render,
       // and the first one to become the new active toast provider.
@@ -131,7 +123,6 @@ function addToast(
   let timeout = options.timeout ? Math.max(options.timeout, 5000) : undefined;
   let queue = getGlobalToastQueue();
   let key = queue.add(value, {
-    priority: getPriority(tone, options),
     timeout,
     onClose: options.onClose,
   });
@@ -156,22 +147,3 @@ export const toastQueue = {
     return addToast(children, 'info', options);
   },
 };
-
-// TODO: if a lower priority toast comes in, no way to know until you dismiss
-// the higher priority one.
-const PRIORITY = {
-  // actionable toasts gain 4 priority points. make sure critical toasts are
-  // always at the top.
-  critical: 10,
-  positive: 3,
-  info: 2,
-  neutral: 1,
-};
-
-function getPriority(tone: ToastValue['tone'], options: ToastOptions) {
-  let priority = PRIORITY[tone] || 1;
-  if (options.onAction) {
-    priority += 4;
-  }
-  return priority;
-}
