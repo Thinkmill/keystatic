@@ -26,7 +26,7 @@ export type Collection<
   entryLayout?: EntryLayout;
   format?: Format;
   previewUrl?: string;
-  columns?: string[];
+  columns?: ColumnsConfig<string>;
   template?: string;
   parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
@@ -73,6 +73,50 @@ type UserInterface<Collections, Singletons> = {
 };
 
 type Navigation<K> = K[] | { [section: string]: K[] };
+
+// Columns
+// ----------------------------------------------------------------------------
+type Columns<Key> = {
+  /** The default field and direction used to initially sort the data. */
+  defaultSort: SortDescriptor<Key>;
+  /** Defines which fields to render. */
+  definition: ColumnConfig<Key>[];
+};
+export type ColumnConfig<Key> = {
+  /**
+   * The alignment of the column's contents relative to its allotted width.
+   * @default 'start'
+   */
+  align?: 'start' | 'center' | 'end';
+  /** Whether the column allows sorting. */
+  allowsSorting?: boolean;
+  /**
+   * Whether a column is a [row header](https://www.w3.org/TR/wai-aria-1.1/#rowheader) and should be announced by assistive
+   * technology during row navigation.
+   */
+  isRowHeader?: boolean;
+  /** The key of the column. */
+  key: Key;
+  /**
+   * The label of the column. Defaults to the label of the matching schema
+   * field, by `key`.
+   */
+  label?: string;
+  /** The maximum width of the column. */
+  maxWidth?: ColumnWidth;
+  /** The minimum width of the column. */
+  minWidth?: ColumnWidth;
+  /** The width of the column. */
+  width?: ColumnWidth;
+};
+type ColumnWidth = number | `${number}%`;
+
+type SortDescriptor<Key> = {
+  /** The key of the column to sort by. */
+  column: Key;
+  /** The direction to sort by. */
+  direction: 'ascending' | 'descending';
+};
 
 // Storage
 // ----------------------------------------------------------------------------
@@ -172,6 +216,8 @@ export function config<
   return config;
 }
 
+type ColumnsConfig<FieldKey> = Columns<FieldKey> | FieldKey[];
+
 export function collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends {
@@ -181,17 +227,19 @@ export function collection<
   }[keyof Schema],
 >(
   collection: Collection<Schema, SlugField & string> & {
-    columns?: {
-      [K in keyof Schema]: Schema[K] extends
-        | FormField<
-            any,
-            any,
-            string | number | boolean | Date | null | undefined
-          >
-        | SlugFormField<any, any, any, string>
-        ? K & string
-        : never;
-    }[keyof Schema][];
+    columns?: ColumnsConfig<
+      {
+        [K in keyof Schema]: Schema[K] extends
+          | FormField<
+              any,
+              any,
+              string | number | boolean | Date | null | undefined
+            >
+          | SlugFormField<any, any, any, string>
+          ? K & string
+          : never;
+      }[keyof Schema]
+    >;
   }
 ): Collection<Schema, SlugField & string> {
   return collection;
