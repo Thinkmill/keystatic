@@ -7,6 +7,10 @@
     {
       "matchPackageNames": ["prosemirror-*"],
       "groupName": "prosemirror"
+    },
+    {
+      "matchPackageNames": ["slate**"],
+      "enabled": false
     }
   ]
 }
