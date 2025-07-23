@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.48
+
+### Patch Changes
+
+- [#1439](https://github.com/Thinkmill/keystatic/pull/1439) [`c9aa648`](https://github.com/Thinkmill/keystatic/commit/c9aa648d9809837a96cbe9bbfa620361a12af3b8) Thanks [@emmatown](https://github.com/emmatown)! - Fix entries with a slug of `header` breaking the collection table
+
 ## 0.5.47
 
 ### Patch Changes
