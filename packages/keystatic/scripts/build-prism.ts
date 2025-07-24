@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { fileURLToPath } from 'url';
 
 const languages = [
   'clike',
@@ -45,11 +46,18 @@ const languages = [
   const otherLanguages = (
     await Promise.all(
       languages.map(lang =>
-        fs.readFile(require.resolve(`prismjs/components/prism-${lang}`), 'utf8')
+        fs.readFile(
+          fileURLToPath(
+            import.meta.resolve(`prismjs/components/prism-${lang}`)
+          ),
+          'utf8'
+        )
       )
     )
   ).join('\n\n');
-  const prism = (await fs.readFile(require.resolve('prismjs'), 'utf8'))
+  const prism = (
+    await fs.readFile(fileURLToPath(import.meta.resolve('prismjs')), 'utf8')
+  )
     .replace(
       `if (typeof module !== 'undefined' && module.exports) {
 \tmodule.exports = Prism;
@@ -72,7 +80,7 @@ if (typeof global !== 'undefined') {
       `var _self = globalThis;`
     );
   await fs.writeFile(
-    `${__dirname}/../src/form/fields/document/DocumentEditor/prism.js`,
+    `src/form/fields/document/DocumentEditor/prism.js`,
     '/* eslint-disable */\nglobalThis.Prism = { manual: true };\n' +
       prism +
       '\n' +
