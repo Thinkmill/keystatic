@@ -92,7 +92,11 @@ export function localModeApiHandler(
   config: Config,
   localBaseDirectory: string | undefined
 ) {
-  const baseDirectory = path.resolve(localBaseDirectory ?? process.cwd());
+  // Use the base directory, and if pathPrefix is defined, resolve it relative to the base
+  const baseDir = localBaseDirectory ?? process.cwd();
+  const baseDirectory = config.storage.kind === 'local' && config.storage.pathPrefix
+    ? path.resolve(baseDir, config.storage.pathPrefix)
+    : path.resolve(baseDir);
   return async (
     req: KeystaticRequest,
     params: string[]
@@ -128,6 +132,10 @@ async function tree(
 
 function getIsPathValid(config: Config) {
   const allowedDirectories = getAllowedDirectories(config);
+  // Bypass strict path validation for local storage when pathPrefix is specified
+  if (config.storage.kind === 'local' && (config.storage.pathPrefix)) {
+    return (filepath: string) => !filepath.includes('\\');
+  }
   return (filepath: string) =>
     !filepath.includes('\\') &&
     filepath.split('/').every(x => x !== '.' && x !== '..') &&
@@ -203,17 +211,30 @@ async function update(
   } catch {
     return { status: 400, body: 'Bad data' };
   }
+  // Handle file paths when pathPrefix is configured
+  const pathPrefix = config.storage.kind === 'local' ? config.storage.pathPrefix : undefined;
   for (const addition of updates.additions) {
-    await fs.mkdir(path.dirname(path.join(baseDirectory, addition.path)), {
+    // Construct file path based on whether we have a pathPrefix
+    // If we have a pathPrefix, we need to strip it from the path to avoid duplication
+    const effectivePath = pathPrefix && addition.path.startsWith(pathPrefix)
+      ? addition.path.slice(pathPrefix.length + 1) // +1 for the slash
+      : addition.path;
+    const filePath = path.join(baseDirectory, effectivePath);
+    await fs.mkdir(path.dirname(filePath), {
       recursive: true,
     });
     await fs.writeFile(
-      path.join(baseDirectory, addition.path),
+      filePath,
       addition.contents
     );
   }
   for (const deletion of updates.deletions) {
-    await fs.rm(path.join(baseDirectory, deletion.path), { force: true });
+    // Apply the same path correction for deletions
+    const effectivePath = pathPrefix && deletion.path.startsWith(pathPrefix)
+      ? deletion.path.slice(pathPrefix.length + 1) // +1 for the slash
+      : deletion.path;
+    const filePath = path.join(baseDirectory, effectivePath);
+    await fs.rm(filePath, { force: true });
   }
   return {
     status: 200,
