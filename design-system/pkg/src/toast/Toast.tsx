@@ -170,11 +170,12 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
 function useColorScheme() {
   const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
   const preferred = useProvider();
-  return preferred.colorScheme === 'auto'
-    ? prefersDark
-      ? 'dark'
-      : 'light'
-    : preferred.colorScheme;
+
+  if (preferred.colorScheme === 'auto') {
+    return prefersDark ? 'dark' : 'light';
+  }
+
+  return preferred.colorScheme;
 }
 
 let _Toast = forwardRef(Toast);
