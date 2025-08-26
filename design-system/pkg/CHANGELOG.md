@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.20
+
+### Patch Changes
+
+- [#1449](https://github.com/Thinkmill/keystatic/pull/1449) [`63c767b`](https://github.com/Thinkmill/keystatic/commit/63c767bbb8b9bbc96c30535862bcccfbbc4ea346) Thanks [@jossmac](https://github.com/jossmac)! - Improve "neutral" `Toast` appearance, esp. for dark mode.
+
 ## 0.7.19
 
 ### Patch Changes
