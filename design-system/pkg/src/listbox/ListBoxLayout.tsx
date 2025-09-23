@@ -10,27 +10,21 @@ import {
 } from '@react-stately/layout';
 import { Node } from '@react-types/shared';
 
-interface ListBoxLayoutProps {
+export interface ListBoxLayoutOptions extends ListLayoutOptions {
   isLoading?: boolean;
+  placeholderHeight?: number;
 }
 
-interface ListBoxLayoutOptions extends ListLayoutOptions {
-  placeholderHeight: number;
-  padding: number;
-}
-
-export class ListBoxLayout<T> extends ListLayout<T, ListBoxLayoutProps> {
+export class ListBoxLayout<T> extends ListLayout<T, ListBoxLayoutOptions> {
   private isLoading: boolean = false;
-  private placeholderHeight: number;
-  private padding: number;
+  private placeholderHeight: number | undefined;
 
   constructor(opts: ListBoxLayoutOptions) {
     super(opts);
     this.placeholderHeight = opts.placeholderHeight;
-    this.padding = opts.padding;
   }
 
-  update(invalidationContext: InvalidationContext<ListBoxLayoutProps>): void {
+  update(invalidationContext: InvalidationContext<ListBoxLayoutOptions>): void {
     this.isLoading = invalidationContext.layoutOptions?.isLoading || false;
     super.update(invalidationContext);
   }

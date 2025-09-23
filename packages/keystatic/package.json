@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.5.46",
+  "version": "0.5.48",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -105,7 +105,7 @@
     "dist"
   ],
   "scripts": {
-    "setup": "ts-gql build && tsx scripts/l10n.cts && tsx scripts/build-prism.cts",
+    "setup": "ts-gql build && tsx scripts/l10n.ts && tsx scripts/build-prism.ts",
     "build": "pnpm run setup && next build",
     "dev": "next dev",
     "start": "next start"
@@ -115,22 +115,22 @@
     "@braintree/sanitize-url": "^6.0.2",
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
-    "@internationalized/string": "^3.2.5",
+    "@internationalized/string": "^3.2.6",
     "@keystar/ui": "workspace:^",
     "@markdoc/markdoc": "^0.4.0",
-    "@react-aria/focus": "^3.19.1",
-    "@react-aria/i18n": "^3.12.5",
-    "@react-aria/interactions": "^3.23.0",
-    "@react-aria/label": "^3.7.14",
-    "@react-aria/overlays": "^3.25.0",
-    "@react-aria/selection": "^3.22.0",
-    "@react-aria/utils": "^3.27.0",
-    "@react-aria/visually-hidden": "^3.8.19",
-    "@react-stately/collections": "^3.12.1",
-    "@react-stately/list": "^3.11.2",
-    "@react-stately/overlays": "^3.6.13",
-    "@react-stately/utils": "^3.10.5",
-    "@react-types/shared": "^3.27.0",
+    "@react-aria/focus": "^3.20.2",
+    "@react-aria/i18n": "^3.12.8",
+    "@react-aria/interactions": "^3.25.0",
+    "@react-aria/label": "^3.7.17",
+    "@react-aria/overlays": "^3.27.0",
+    "@react-aria/selection": "^3.24.0",
+    "@react-aria/utils": "^3.28.2",
+    "@react-aria/visually-hidden": "^3.8.22",
+    "@react-stately/collections": "^3.12.3",
+    "@react-stately/list": "^3.12.1",
+    "@react-stately/overlays": "^3.6.15",
+    "@react-stately/utils": "^3.10.6",
+    "@react-types/shared": "^3.29.0",
     "@sindresorhus/slugify": "^1.1.2",
     "@toeverything/y-indexeddb": "^0.10.0-canary.9",
     "@ts-gql/tag": "^0.7.3",
@@ -280,6 +280,9 @@
     },
     "#markdoc": "./src/markdoc.js",
     "#base64": "./src/base64.ts",
-    "#react-compiler-runtime": "./src/react-compiler-runtime.ts"
+    "#react-compiler-runtime": {
+      "react-server": "./src/react-compiler-runtime-react-server.ts",
+      "default": "./src/react-compiler-runtime.ts"
+    }
   }
 }

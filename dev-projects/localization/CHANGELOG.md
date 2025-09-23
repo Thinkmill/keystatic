@@ -1,5 +1,21 @@
 # localization
 
+## 0.1.135
+
+### Patch Changes
+
+- Updated dependencies [[`c9aa648`](https://github.com/Thinkmill/keystatic/commit/c9aa648d9809837a96cbe9bbfa620361a12af3b8)]:
+  - @keystatic/core@0.5.48
+  - @keystatic/next@5.0.4
+
+## 0.1.134
+
+### Patch Changes
+
+- Updated dependencies [[`4a2a671`](https://github.com/Thinkmill/keystatic/commit/4a2a6715103fb900c78c4ef4ffeced2bb0d4765a), [`5d98a35`](https://github.com/Thinkmill/keystatic/commit/5d98a35a0b7691b9fb189bcf1072d6c9aee1d8c9)]:
+  - @keystatic/core@0.5.47
+  - @keystatic/next@5.0.4
+
 ## 0.1.133
 
 ### Patch Changes

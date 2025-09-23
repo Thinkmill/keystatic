@@ -497,7 +497,13 @@ function CollectionTable(
       overflowMode="truncate"
       prominence="low"
       onAction={key => {
-        router.push(getItemPath(props.basePath, props.collection, key));
+        router.push(
+          getItemPath(
+            props.basePath,
+            props.collection,
+            key.toString().slice('key:'.length)
+          )
+        );
       }}
       renderEmptyState={() => (
         <EmptyState
@@ -554,7 +560,7 @@ function CollectionTable(
           );
           if (collection.columns?.length) {
             return (
-              <Row key={item.name}>
+              <Row key={'key:' + item.name}>
                 {[
                   ...(hideStatusColumn ? [] : [statusCell]),
                   nameCell,
@@ -578,9 +584,9 @@ function CollectionTable(
             );
           }
           return hideStatusColumn ? (
-            <Row key={item.name}>{nameCell}</Row>
+            <Row key={'key:' + item.name}>{nameCell}</Row>
           ) : (
-            <Row key={item.name}>
+            <Row key={'key:' + item.name}>
               {statusCell}
               {nameCell}
             </Row>

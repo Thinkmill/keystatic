@@ -12,8 +12,8 @@ import { SlotProvider } from '@keystar/ui/slots';
 import {
   classNames,
   css,
-  keyframes,
   tokenSchema,
+  useMediaQuery,
   useStyleProps,
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
@@ -21,6 +21,7 @@ import { isReactText } from '@keystar/ui/utils';
 
 import intlMessages from './l10n';
 import { ToastProps } from './types';
+import { useProvider } from '../core';
 
 const ICONS = {
   info: infoIcon,
@@ -33,7 +34,6 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
   let {
     toast: {
       key,
-      animation,
       content: { children, tone, actionLabel, onAction, shouldCloseOnAction },
     },
     state,
@@ -51,6 +51,10 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
   let iconLabel =
     tone && tone !== 'neutral' ? stringFormatter.format(tone) : null;
   let icon = tone && tone !== 'neutral' ? ICONS[tone] : null;
+
+  const colorScheme = useColorScheme();
+  const staticColor =
+    tone === 'neutral' && colorScheme === 'dark' ? 'dark' : 'light';
 
   const handleAction = () => {
     if (onAction) {
@@ -90,7 +94,8 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
           // tones
           color: tokenSchema.color.foreground.onEmphasis,
           '&[data-tone=neutral]': {
-            background: tokenSchema.color.scale['slate9'],
+            backgroundColor: tokenSchema.color.background.inverse,
+            color: tokenSchema.color.foreground.inverse,
           },
           '&[data-tone=info]': {
             background: tokenSchema.color.background.accentEmphasis,
@@ -101,27 +106,10 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
           '&[data-tone=critical]': {
             background: tokenSchema.color.background.criticalEmphasis,
           },
-
-          // animations
-          '&[data-animation=entering]': {
-            animation: `${slideInAnim} 300ms`,
-          },
-          '&[data-animation=exiting]': {
-            animation: `${fadeOutAnim} 300ms forwards`,
-          },
         }),
         styleProps.className
       )}
-      style={{
-        ...styleProps.style,
-        zIndex: props.toast.priority,
-      }}
-      data-animation={animation}
-      onAnimationEnd={() => {
-        if (animation === 'exiting') {
-          state.remove(key);
-        }
-      }}
+      style={styleProps.style}
     >
       <SlotProvider slots={slots}>
         <div {...contentProps} className={css({ display: 'flex' })}>
@@ -159,13 +147,7 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
               {isReactText(children) ? <Text>{children}</Text> : children}
             </div>
             {actionLabel && (
-              <Button
-                onPress={handleAction}
-                // prominence="low"
-                static="light"
-                // tone="secondary"
-                // staticColor="white"
-              >
+              <Button onPress={handleAction} static={staticColor}>
                 {actionLabel}
               </Button>
             )}
@@ -173,25 +155,28 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
         </div>
         <div
           className={css({
-            borderInlineStart: `${tokenSchema.size.border.regular} solid #fff3`,
+            borderInlineStart: `${tokenSchema.size.border.regular} solid var(--divider)`,
             paddingInlineStart: tokenSchema.size.space.regular,
+            '--divider': 'color-mix(in srgb, transparent, currentColor 20%)',
           })}
         >
-          <ClearButton static="light" {...closeButtonProps} />
+          <ClearButton static={staticColor} {...closeButtonProps} />
         </div>
       </SlotProvider>
     </div>
   );
 }
 
-let slideInAnim = keyframes({
-  from: { transform: `var(--slide-from)` },
-  to: { transform: `var(--slide-to)` },
-});
-let fadeOutAnim = keyframes({
-  from: { opacity: 1 },
-  to: { opacity: 0 },
-});
+function useColorScheme() {
+  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+  const preferred = useProvider();
+
+  if (preferred.colorScheme === 'auto') {
+    return prefersDark ? 'dark' : 'light';
+  }
+
+  return preferred.colorScheme;
+}
 
 let _Toast = forwardRef(Toast);
 export { _Toast as Toast };

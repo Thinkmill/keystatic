@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { compileString } from '@internationalized/string-compiler';
 
-const localesDir = path.join(__dirname, '../src/app/l10n');
+const localesDir = 'src/app/l10n';
 (async () => {
   const locales: Record<string, Record<string, string>> = {};
   await Promise.all(
