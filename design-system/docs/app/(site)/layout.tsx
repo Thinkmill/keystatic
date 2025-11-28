@@ -28,7 +28,14 @@ export default async function RootLayout({
 }) {
   return (
     <NextRootProvider fontClassName={inter.variable}>
-      <head>{nextRootScript}</head>
+      <head>
+        {nextRootScript}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: /* css */ `html, body { height: 100%; }`,
+          }}
+        />
+      </head>
       <body>
         <Layout navigation={await getNavigation()}>{children}</Layout>
       </body>
