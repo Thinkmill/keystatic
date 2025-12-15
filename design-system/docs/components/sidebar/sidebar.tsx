@@ -1,4 +1,5 @@
-import { Fragment, useEffect } from 'react';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 import { Button } from '@keystar/ui/button';
 import { menuIcon } from '@keystar/ui/icon/icons/menuIcon';
@@ -15,67 +16,55 @@ import { ColorSchemeMenu } from '../theme-switcher';
 
 /** Responsively render sidebar navigation items. */
 export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
-  // const [headerHeight, setHeaderHeight] = useState(NaN);
   const { sidebarIsOpen, closeSidebar, toggleSidebar } = useSidebarContext();
+  const pathname = usePathname();
 
   useEffect(() => {
-    addEventListener('popstate', closeSidebar);
-    return () => {
-      removeEventListener('popstate', closeSidebar);
-    };
-  }, [closeSidebar]);
+    // Close the sidebar when the pathname changes
+    closeSidebar();
+  }, [closeSidebar, pathname]);
 
   return (
-    <Fragment>
-      <div
-        data-open={sidebarIsOpen}
-        className={css({
-          backgroundColor: tokenSchema.color.background.canvas,
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'fixed',
-          zIndex: 1,
+    <div
+      data-open={sidebarIsOpen}
+      className={css({
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'fixed',
+        width: '100%',
+        zIndex: 1,
+        '&[data-open=true]': {
+          height: '100%',
+        },
+        [breakpointQueries.above.mobile]: {
+          height: '100%',
+          width: SIDEBAR_WIDTH,
+        },
+      })}
+    >
+      <SidebarHeader menuIsOpen={sidebarIsOpen} onMenuPress={toggleSidebar} />
 
+      <Box
+        flex
+        minHeight={0}
+        backgroundColor="surface"
+        borderTopEndRadius={{ tablet: 'medium' }}
+        overflow="hidden auto"
+        paddingBottom="xlarge"
+        paddingTop={{ mobile: 'large', tablet: 'xlarge' }}
+        paddingEnd={{ mobile: 'large', tablet: 'xlarge' }}
+        data-open={sidebarIsOpen}
+        UNSAFE_className={css({
           [breakpointQueries.below.tablet]: {
-            width: '100vw',
-            '[data-open=true]': {
-              height: '100%',
+            '&[data-open=false]': {
+              display: 'none',
             },
-          },
-          [breakpointQueries.above.mobile]: {
-            height: '100%',
-            width: SIDEBAR_WIDTH,
           },
         })}
       >
-        <SidebarHeader
-          menuIsOpen={sidebarIsOpen}
-          onMenuPress={toggleSidebar}
-          // onLayout={rect => setHeaderHeight(rect.height)}
-        />
-
-        <Box
-          flex
-          backgroundColor="surface"
-          borderTopEndRadius={{ tablet: 'medium' }}
-          overflow="hidden auto"
-          paddingBottom="xlarge"
-          paddingTop={{ mobile: 'large', tablet: 'xlarge' }}
-          paddingEnd={{ mobile: 'large', tablet: 'xlarge' }}
-          data-open={sidebarIsOpen}
-          UNSAFE_className={css({
-            [breakpointQueries.below.tablet]: {
-              '&[data-open=false]': {
-                display: 'none',
-              },
-            },
-          })}
-        >
-          <NavItems items={items} />
-        </Box>
-      </div>
-      {/* <Box height={headerHeight} isHidden={{ above: 'mobile' }} /> */}
-    </Fragment>
+        <NavItems items={items} />
+      </Box>
+    </div>
   );
 };
 
@@ -84,11 +73,9 @@ export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
 
 function SidebarHeader({
   menuIsOpen,
-  // onLayout,
   onMenuPress,
 }: {
   menuIsOpen: boolean;
-  // onLayout: (rect: DOMRect) => void;
   onMenuPress: () => void;
 }) {
   const menuLabel = 'Open navigation panel';
