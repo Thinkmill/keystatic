@@ -7,7 +7,7 @@ function isValidURL(url: string) {
   return url === sanitizeUrl(url);
 }
 
-const urlPattern = /^https?:\/\//;
+const urlPattern = /^(https?:\/\/|mailto:|tel:)/;
 
 function rangeHasLink(
   $from: ResolvedPos,
