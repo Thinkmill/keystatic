@@ -1,12 +1,19 @@
 import { ButtonGroup, ActionButton } from '@keystar/ui/button';
 import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Flex, Box } from '@keystar/ui/layout';
+import { ProgressCircle } from '@keystar/ui/progress';
 import { tokenSchema } from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
+import { Text } from '@keystar/ui/typography';
 
 import { useIsInDocumentEditor } from '../document/DocumentEditor';
 import { useState, useEffect, useReducer, useId } from 'react';
 import { FormFieldInputProps } from '../../api';
+import {
+  compressImage,
+  formatBytes,
+  type ImageCompressionConfig,
+} from './compress';
 
 export function getUploadedFileObject(
   accept: string
@@ -61,6 +68,11 @@ export function useObjectURL(
   return url;
 }
 
+type CompressionInfo = {
+  originalSize: number;
+  compressedSize: number;
+};
+
 // TODO: button labels ("Choose file", "Remove") need i18n support
 export function ImageFieldInput(
   props: FormFieldInputProps<{
@@ -72,10 +84,14 @@ export function ImageFieldInput(
     description: string | undefined;
     validation: { isRequired?: boolean } | undefined;
     transformFilename: ((originalFile: string) => string) | undefined;
+    compression: ImageCompressionConfig | undefined;
   }
 ) {
   const { value } = props;
   const [blurred, onBlur] = useReducer(() => true, false);
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [compressionInfo, setCompressionInfo] =
+    useState<CompressionInfo | null>(null);
   const isInEditor = useIsInDocumentEditor();
   const objectUrl = useObjectURL(
     value === null ? null : value.data,
@@ -105,29 +121,68 @@ export function ImageFieldInput(
       )}
       <ButtonGroup>
         <ActionButton
+          isDisabled={isCompressing}
           onPress={async () => {
-            const image = await getUploadedImage();
-            if (image) {
-              const extension = image.filename.match(/\.([^.]+$)/)?.[1];
-              if (extension) {
-                props.onChange({
-                  data: image.content,
-                  extension,
-                  filename: props.transformFilename
-                    ? props.transformFilename(image.filename)
-                    : image.filename,
+            const file = await getUploadedFileObject('image/*');
+            if (!file) return;
+
+            const originalExtension = file.name.match(/\.([^.]+$)/)?.[1];
+            if (!originalExtension) return;
+
+            // If compression is configured, compress the image
+            if (props.compression) {
+              setIsCompressing(true);
+              setCompressionInfo(null);
+              try {
+                const result = await compressImage(file, props.compression);
+                setCompressionInfo({
+                  originalSize: result.originalSize,
+                  compressedSize: result.compressedSize,
                 });
+                // Update filename extension if format changed
+                let filename = file.name;
+                if (result.extension !== originalExtension.toLowerCase()) {
+                  filename = file.name.replace(
+                    /\.[^.]+$/,
+                    `.${result.extension}`
+                  );
+                }
+                if (props.transformFilename) {
+                  filename = props.transformFilename(filename);
+                }
+                props.onChange({
+                  data: result.data,
+                  extension: result.extension,
+                  filename,
+                });
+              } finally {
+                setIsCompressing(false);
               }
+            } else {
+              // No compression, use original file
+              const content = new Uint8Array(await file.arrayBuffer());
+              props.onChange({
+                data: content,
+                extension: originalExtension,
+                filename: props.transformFilename
+                  ? props.transformFilename(file.name)
+                  : file.name,
+              });
             }
           }}
         >
-          Choose file
+          {isCompressing ? (
+            <ProgressCircle size="small" aria-label="Compressing" />
+          ) : (
+            'Choose file'
+          )}
         </ActionButton>
         {value !== null && (
           <ActionButton
             prominence="low"
             onPress={() => {
               props.onChange(null);
+              setCompressionInfo(null);
               onBlur();
             }}
           >
@@ -154,6 +209,19 @@ export function ImageFieldInput(
           />
         </Box>
       )}
+      {compressionInfo &&
+        compressionInfo.originalSize !== compressionInfo.compressedSize && (
+          <Text size="small" color="neutralSecondary">
+            {formatBytes(compressionInfo.originalSize)} →{' '}
+            {formatBytes(compressionInfo.compressedSize)} (
+            {Math.round(
+              (1 -
+                compressionInfo.compressedSize / compressionInfo.originalSize) *
+                100
+            )}
+            % smaller)
+          </Text>
+        )}
       {isInEditor && value !== null && (
         <TextField
           label="Filename"

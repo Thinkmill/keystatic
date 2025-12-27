@@ -22,6 +22,7 @@ export const ImageFieldDemo = () => {
         autoFocus={false}
         forceValidation={false}
         transformFilename={undefined}
+        compression={undefined}
       />
     </FieldDemoFrame>
   );
