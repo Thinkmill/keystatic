@@ -1062,16 +1062,10 @@ importers:
       '@types/react':
         specifier: ^19.0.8
         version: 19.0.8
-      set-cookie-parser:
-        specifier: ^2.5.1
-        version: 2.6.0
     devDependencies:
       '@keystatic/core':
         specifier: workspace:^
         version: link:../keystatic
-      '@types/set-cookie-parser':
-        specifier: ^2.4.2
-        version: 2.4.3
       astro:
         specifier: ^5.2.5
         version: 5.2.5(@types/node@22.13.1)(idb-keyval@6.2.1)(rollup@4.34.6)(terser@5.19.4)(tsx@4.8.2)(typescript@5.5.3)
@@ -6363,9 +6357,6 @@ packages:
 
   '@types/serve-static@1.15.2':
     resolution: {integrity: sha512-J2LqtvFYCzaj8pVYKw8klQXrLLk7TBZmQ4ShlcdkELFKGwGMfevMLneMMRkMgZxotOD9wg497LpC7O8PcvAmfw==}
-
-  '@types/set-cookie-parser@2.4.3':
-    resolution: {integrity: sha512-7QhnH7bi+6KAhBB+Auejz1uV9DHiopZqu7LfR/5gZZTkejJV5nYeZZpgfFoE0N8aDsXuiYpfKyfyMatCwQhyTQ==}
 
   '@types/signal-exit@3.0.1':
     resolution: {integrity: sha512-OSitN9PP9E/c4tlt1Qdj3CAz5uHD9Da5rhUqlaKyQRCX1T7Zdpbk6YdeZbR2eiE2ce+NMBgVnMxGqpaPSNQDUQ==}
@@ -21410,10 +21401,6 @@ snapshots:
     dependencies:
       '@types/http-errors': 2.0.1
       '@types/mime': 3.0.1
-      '@types/node': 22.13.1
-
-  '@types/set-cookie-parser@2.4.3':
-    dependencies:
       '@types/node': 22.13.1
 
   '@types/signal-exit@3.0.1': {}
