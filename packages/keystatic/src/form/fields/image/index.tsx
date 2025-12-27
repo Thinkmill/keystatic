@@ -4,6 +4,9 @@ import { FieldDataError } from '../error';
 import { RequiredValidation, assertRequired } from '../utils';
 import { getSrcPrefix } from './getSrcPrefix';
 import { ImageFieldInput } from '#field-ui/image';
+import type { ImageCompressionConfig } from './compress';
+
+export type { ImageCompressionConfig } from './compress';
 
 export function image<IsRequired extends boolean | undefined>({
   label,
@@ -12,6 +15,7 @@ export function image<IsRequired extends boolean | undefined>({
   description,
   publicPath,
   transformFilename,
+  compression,
 }: {
   label: string;
   directory?: string;
@@ -24,6 +28,11 @@ export function image<IsRequired extends boolean | undefined>({
    * When used outside of editor fields, this function will **not** be used. Instead only the extension of the uploaded file is used and the start of the filename is based on the field key.
    */
   transformFilename?: (originalFilename: string) => string;
+  /**
+   * Optional client-side image compression configuration.
+   * When provided, images will be compressed before saving.
+   */
+  compression?: ImageCompressionConfig;
 } & RequiredValidation<IsRequired>): AssetFormField<
   { data: Uint8Array; extension: string; filename: string } | null,
   | { data: Uint8Array; extension: string; filename: string }
@@ -41,6 +50,7 @@ export function image<IsRequired extends boolean | undefined>({
           description={description}
           validation={validation}
           transformFilename={transformFilename}
+          compression={compression}
           {...props}
         />
       );
