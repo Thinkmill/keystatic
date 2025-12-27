@@ -36,10 +36,6 @@ function ObjectFieldInputEntry({
       <div
         className={css({
           gridColumn: `span ${span}`,
-
-          [belowTablet]: {
-            gridColumn: `span ${FIELD_GRID_COLUMNS}`,
-          },
         })}
       >
         <AddToPathProvider part={fieldKey}>
