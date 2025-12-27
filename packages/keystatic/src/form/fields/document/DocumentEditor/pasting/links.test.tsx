@@ -131,3 +131,77 @@ test('pasting a url on a selection with a link inside replaces the selection wit
     </editor>
   `);
 });
+
+test('pasting a mailto: link on some text wraps the text with a link', () => {
+  const editor = makeEditor(
+    <editor>
+      <paragraph>
+        <text>
+          contact <anchor />
+          us
+          <focus /> here
+        </text>
+      </paragraph>
+    </editor>
+  );
+  pasteText(editor, 'mailto:hello@example.com');
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          contact 
+        </text>
+        <link
+          @@isInline={true}
+          href="mailto:hello@example.com"
+        >
+          <text>
+            <anchor />
+            us
+            <focus />
+          </text>
+        </link>
+        <text>
+           here
+        </text>
+      </paragraph>
+    </editor>
+  `);
+});
+
+test('pasting a tel: link on some text wraps the text with a link', () => {
+  const editor = makeEditor(
+    <editor>
+      <paragraph>
+        <text>
+          call <anchor />
+          us
+          <focus /> now
+        </text>
+      </paragraph>
+    </editor>
+  );
+  pasteText(editor, 'tel:+1234567890');
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          call 
+        </text>
+        <link
+          @@isInline={true}
+          href="tel:+1234567890"
+        >
+          <text>
+            <anchor />
+            us
+            <focus />
+          </text>
+        </link>
+        <text>
+           now
+        </text>
+      </paragraph>
+    </editor>
+  `);
+});

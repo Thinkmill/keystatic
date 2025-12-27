@@ -7,7 +7,7 @@ import { deserializeMarkdown } from './markdown';
 import { base64UrlEncode, base64UrlDecode } from '#base64';
 import { isBlock } from '../editor';
 
-const urlPattern = /https?:\/\//;
+const urlPattern = /^(https?:\/\/|mailto:|tel:)/;
 
 function insertFragmentButDifferent(editor: Editor, nodes: Descendant[]) {
   if (isBlock(nodes[0])) {
