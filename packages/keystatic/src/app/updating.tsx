@@ -29,6 +29,13 @@ import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
 import { base64Encode } from '#base64';
+import {
+  calculateSha256,
+  createLfsPointer,
+  shouldUseLfs,
+  uploadToLfs,
+  type LfsConfig,
+} from './lfs';
 
 const textEncoder = new TextEncoder();
 
@@ -210,6 +217,53 @@ export function useUpsertItem(args: {
             branchName: override?.branch ?? currentBranch,
             repositoryNameWithOwner: `${repoInfo.owner}/${repoInfo.name}`,
           };
+          // Get LFS config if available
+          const lfsConfig: LfsConfig | undefined =
+            args.config.storage.kind === 'github'
+              ? args.config.storage.lfs
+              : undefined;
+
+          // Process additions - upload LFS files and create pointers
+          const processedAdditions = await Promise.all(
+            additions.map(async (addition) => {
+              // Check if file should use LFS
+              if (
+                lfsConfig?.enabled &&
+                shouldUseLfs(
+                  addition.path,
+                  addition.contents.byteLength,
+                  lfsConfig
+                )
+              ) {
+                // Calculate SHA256 for LFS
+                const oid = await calculateSha256(addition.contents);
+
+                // Upload to LFS server
+                await uploadToLfs(lfsConfig, {
+                  content: addition.contents,
+                  oid,
+                });
+
+                // Create pointer file content
+                const pointer = createLfsPointer(
+                  oid,
+                  addition.contents.byteLength
+                );
+
+                return {
+                  path: addition.path,
+                  contents: base64Encode(textEncoder.encode(pointer)),
+                };
+              }
+
+              // Non-LFS file: base64 encode as before
+              return {
+                path: addition.path,
+                contents: base64Encode(addition.contents),
+              };
+            })
+          );
+
           const runMutation = (expectedHeadOid: string) =>
             mutate({
               input: {
@@ -217,10 +271,7 @@ export function useUpsertItem(args: {
                 expectedHeadOid,
                 message: { headline: `Update ${args.basePath}` },
                 fileChanges: {
-                  additions: additions.map(addition => ({
-                    ...addition,
-                    contents: base64Encode(addition.contents),
-                  })),
+                  additions: processedAdditions,
                   deletions,
                 },
               },

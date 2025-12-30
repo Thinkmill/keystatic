@@ -11,6 +11,23 @@ import {
   redirect,
 } from './internal-utils';
 
+export type LfsCredentials = {
+  /**
+   * LFS server URL (without bucket path)
+   * @example 'https://lfs.thehyrdra.com'
+   */
+  serverUrl: string;
+  /**
+   * R2 endpoint for signing URLs
+   * @example 'accountid.r2.cloudflarestorage.com'
+   */
+  r2Endpoint: string;
+  /** R2 Access Key ID */
+  accessKeyId: string;
+  /** R2 Secret Access Key */
+  secretAccessKey: string;
+};
+
 export type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
   clientId?: string;
@@ -22,6 +39,11 @@ export type APIRouteConfig = {
   config: Config<any, any>;
   /** Base UI path, default '/keystatic' */
   basePath?: string;
+  /**
+   * LFS credentials for proxying batch requests to the LFS server.
+   * These are injected server-side, keeping secrets out of client code.
+   */
+  lfs?: LfsCredentials;
 };
 
 type InnerAPIRouteConfig = {
@@ -189,6 +211,8 @@ export function makeGenericAPIRouteHandler(
         body: 'It looks like you just tried to create a GitHub App for Keystatic but there is already a GitHub App configured for Keystatic.\n\nYou may be here because you started creating a GitHub App but then started the process again elsewhere and completed it there. You should likely go back to Keystatic and sign in with GitHub to continue.',
       };
     }
+    if (joined === 'lfs/batch') return lfsBatchProxy(req, _config.lfs);
+
     return { status: 404, body: 'Not Found' };
   };
 }
@@ -434,4 +458,87 @@ function immediatelyExpiringCookie(name: string) {
     maxAge: 0,
     expires: new Date(),
   });
+}
+
+const LFS_CONTENT_TYPE = 'application/vnd.git-lfs+json';
+
+/**
+ * Proxy LFS batch requests to the LFS server with server-side credentials.
+ * The bucket is passed as a query parameter from the client.
+ */
+async function lfsBatchProxy(
+  req: KeystaticRequest,
+  lfsCredentials: LfsCredentials | undefined
+): Promise<KeystaticResponse> {
+  if (!lfsCredentials) {
+    return {
+      status: 501,
+      body: JSON.stringify({
+        message: 'LFS is not configured. Add lfs credentials to API route config.',
+      }),
+      headers: [['Content-Type', LFS_CONTENT_TYPE]],
+    };
+  }
+
+  if (req.method !== 'POST') {
+    return {
+      status: 405,
+      body: JSON.stringify({ message: 'Method Not Allowed' }),
+      headers: [
+        ['Content-Type', LFS_CONTENT_TYPE],
+        ['Allow', 'POST'],
+      ],
+    };
+  }
+
+  const url = new URL(req.url, 'http://localhost');
+  const bucket = url.searchParams.get('bucket');
+
+  if (!bucket) {
+    return {
+      status: 400,
+      body: JSON.stringify({ message: 'Missing bucket query parameter' }),
+      headers: [['Content-Type', LFS_CONTENT_TYPE]],
+    };
+  }
+
+  // Build the LFS server URL: https://server/{r2endpoint}/{bucket}/objects/batch
+  const lfsUrl = new URL(
+    `/${lfsCredentials.r2Endpoint}/${bucket}/objects/batch`,
+    lfsCredentials.serverUrl
+  );
+
+  try {
+    // Forward the request to the LFS server with credentials
+    const body = await req.json();
+    const response = await fetch(lfsUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': LFS_CONTENT_TYPE,
+        Accept: LFS_CONTENT_TYPE,
+        Authorization: `Basic ${btoa(
+          `${lfsCredentials.accessKeyId}:${lfsCredentials.secretAccessKey}`
+        )}`,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const responseBody = await response.text();
+
+    return {
+      status: response.status,
+      body: responseBody,
+      headers: [['Content-Type', LFS_CONTENT_TYPE]],
+    };
+  } catch (error) {
+    console.error('LFS proxy error:', error);
+    return {
+      status: 502,
+      body: JSON.stringify({
+        message: 'Failed to connect to LFS server',
+        request_id: bytesToHex(webcrypto.getRandomValues(new Uint8Array(8))),
+      }),
+      headers: [['Content-Type', LFS_CONTENT_TYPE]],
+    };
+  }
 }

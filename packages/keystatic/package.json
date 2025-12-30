@@ -10,7 +10,6 @@
   "type": "module",
   "exports": {
     "./ui": {
-      "development": "./src/app/ui.tsx",
       "types": "./dist/keystatic-core-ui.js",
       "node": {
         "react-server": "./dist/keystatic-core-ui.node.react-server.js",

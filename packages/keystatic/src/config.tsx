@@ -86,6 +86,34 @@ type CommonRemoteStorageConfig = {
   branchPrefix?: string;
 };
 
+// LFS Configuration
+// ----------------------------------------------------------------------------
+
+/**
+ * Git LFS configuration for storing binary files on a custom LFS server
+ * instead of base64-encoding them directly into Git commits.
+ *
+ * Uses a proxy endpoint to inject credentials server-side, keeping secrets
+ * out of client-side code.
+ */
+export type LfsConfig = {
+  /** Enable LFS support */
+  enabled: boolean;
+  /**
+   * Proxy endpoint that handles LFS batch requests with server-side credentials.
+   * The proxy receives the batch request, injects R2 credentials, and forwards
+   * to the LFS server. Bucket is passed as a query parameter.
+   * @default '/api/keystatic/lfs/batch'
+   */
+  proxyEndpoint?: string;
+  /** R2 bucket name (passed to proxy as query parameter) */
+  bucket: string;
+  /** File size threshold in bytes (default: 0 = all matched files) */
+  fileSizeThreshold?: number;
+  /** File patterns to use LFS for (default: common binary patterns) */
+  patterns?: string[];
+};
+
 // Interface
 // ----------------------------------------------------------------------------
 
@@ -113,6 +141,8 @@ type Navigation<K> = K[] | { [section: string]: K[] };
 type GitHubStorageConfig = {
   kind: 'github';
   repo: RepoConfig;
+  /** Optional LFS configuration for binary file storage */
+  lfs?: LfsConfig;
 } & CommonRemoteStorageConfig;
 
 export type GitHubConfig<
