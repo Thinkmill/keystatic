@@ -1,6 +1,6 @@
 {
   "key": "branchName",
-  "value": "지점명",
+  "value": "브랜치 이름",
   "notes": "",
   "type": "git-related"
 }
