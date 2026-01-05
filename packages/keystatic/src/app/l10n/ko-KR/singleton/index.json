@@ -1,6 +1,6 @@
 {
   "key": "singleton",
-  "value": "하나씩 일어나는 것",
+  "value": "싱글톤",
   "notes": "",
   "type": "global"
 }

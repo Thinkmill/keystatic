@@ -1,6 +1,6 @@
 {
   "key": "theDefaultBranchInYourRepository",
-  "value": "리포지토리의 기본 브랜치입니다. 현재 분기에 의존하지 않는 새로운 것을 시작하려면 이것을 선택하십시오.",
+  "value": "리포지토리의 기본 브랜치입니다. 기존 작업과 무관한 새 브랜치를 만들 때 선택하세요.",
   "notes": "",
   "type": "git-related"
 }
