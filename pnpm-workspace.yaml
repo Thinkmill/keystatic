@@ -8,3 +8,6 @@ packages:
   - 'keystatic'
   - 'packages/*'
   - 'templates/*'
+
+# Ensure environment variables defined via NPM scripts work consistently for all operating systems.
+shellEmulator: true
