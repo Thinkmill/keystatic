@@ -318,6 +318,11 @@ describe('toast/Toast', () => {
 
     await user.click(button);
     fireAnimationEnd(toast);
+
+    // TODO: This test fails when running `pnpm test-strict` which enables React Strict Mode
+    // and renders components twice.
+    // Why? Most likely because ToastToggle component is not pure.
+    // The double rendering seem to get its internal state out of sync.
     expect(queryByRole('alert')).toBeNull();
   });
 
