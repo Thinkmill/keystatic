@@ -2,7 +2,7 @@ name: 'Setup Dependencies'
 runs:
   using: 'composite'
   steps:
-    - run: npm install -g corepack@0.31.0
+    - run: npm install -g corepack@0.34.5
       shell: bash
 
     - run: corepack enable
