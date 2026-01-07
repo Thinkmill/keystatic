@@ -1,4 +1,4 @@
-import glob from 'fast-glob';
+import { glob } from 'fs/promises';
 import type StyleDictionary from 'style-dictionary';
 
 import { KeystarStyleDictionary } from '../KeystarStyleDictionary';
@@ -36,9 +36,9 @@ const getStyleDictionaryConfig: StyleDictionaryConfigGenerator = (
   },
 });
 
-export const buildDesignTokens = (
+export const buildDesignTokens = async (
   buildOptions: ConfigGeneratorOptions
-): void => {
+): Promise<void> => {
   // buildFigma(buildOptions);
 
   /** -----------------------------------
@@ -68,7 +68,7 @@ export const buildDesignTokens = (
   /** -----------------------------------
    * Size tokens
    * ----------------------------------- */
-  const sizeFiles = glob.sync('tokens/size/*');
+  const sizeFiles = await Array.fromAsync(glob('tokens/size/*'));
   for (const file of sizeFiles) {
     KeystarStyleDictionary.extend(
       getStyleDictionaryConfig(
@@ -95,7 +95,7 @@ export const buildDesignTokens = (
   /** -----------------------------------
    * JavaScript token schema
    * ----------------------------------- */
-  const allFiles = glob.sync('tokens/**/*.json5');
+  const allFiles = await Array.fromAsync(glob('tokens/**/*.json5'));
   KeystarStyleDictionary.extend(
     getStyleDictionaryConfig(
       `tokenSchema`,
