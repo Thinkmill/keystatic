@@ -1,4 +1,4 @@
-import glob from 'fast-glob';
+import { glob } from 'fs/promises';
 import fs from 'fs';
 import StyleDictionary from 'style-dictionary';
 
@@ -25,14 +25,18 @@ const build = ({
   });
 };
 
-build({
-  // bring themes to the top of the file, but dark must be after light
-  files: glob.sync('dist/css/**/*.css').sort((a, b) => {
-    if (a.includes('theme')) return -1;
-    if (b.includes('theme')) return 1;
-    if (a.includes('dark')) return 1;
-    if (b.includes('dark')) return -1;
-    return 0;
-  }),
-  destination: 'dist/keystar.css',
-});
+async function main() {
+  build({
+    // bring themes to the top of the file, but dark must be after light
+    files: (await Array.fromAsync(glob('dist/css/**/*.css'))).sort((a, b) => {
+      if (a.includes('theme')) return -1;
+      if (b.includes('theme')) return 1;
+      if (a.includes('dark')) return 1;
+      if (b.includes('dark')) return -1;
+      return 0;
+    }),
+    destination: 'dist/keystar.css',
+  });
+}
+
+main();
