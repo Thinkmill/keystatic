@@ -595,9 +595,6 @@ importers:
       emery:
         specifier: ^1.4.1
         version: 1.4.2
-      fast-glob:
-        specifier: ^3.2.12
-        version: 3.3.1
       json5:
         specifier: ^2.2.1
         version: 2.2.3
@@ -1364,9 +1361,6 @@ importers:
       eslint:
         specifier: ^8.18.0
         version: 8.48.0
-      fast-glob:
-        specifier: ^3.2.12
-        version: 3.3.1
       jest-diff:
         specifier: ^29.0.1
         version: 29.6.4
@@ -9035,10 +9029,6 @@ packages:
 
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
-
-  fast-glob@3.3.1:
-    resolution: {integrity: sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg==}
-    engines: {node: '>=8.6.0'}
 
   fast-glob@3.3.2:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
@@ -24826,14 +24816,6 @@ snapshots:
   fast-deep-equal@2.0.1: {}
 
   fast-deep-equal@3.1.3: {}
-
-  fast-glob@3.3.1:
-    dependencies:
-      '@nodelib/fs.stat': 2.0.5
-      '@nodelib/fs.walk': 1.2.8
-      glob-parent: 5.1.2
-      merge2: 1.4.1
-      micromatch: 4.0.5
 
   fast-glob@3.3.2:
     dependencies:
