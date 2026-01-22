@@ -54,7 +54,8 @@ type ElementProps = HTMLAttributes<HTMLDivElement>;
 
 const Content = (props: ElementProps) => {
   return (
-    <Box
+    <Flex
+      direction="column"
       flex
       marginX="auto"
       marginTop={{ mobile: HEADER_HEIGHT, tablet: 'large' }}
@@ -63,6 +64,7 @@ const Content = (props: ElementProps) => {
     >
       {/* PROSE */}
       <Flex
+        flex
         direction="column"
         gap="xlarge"
         // elementType="article"
@@ -75,7 +77,7 @@ const Content = (props: ElementProps) => {
           &copy; {new Date().getFullYear()} @jossmac
         </Text>
       </Box>
-    </Box>
+    </Flex>
   );
 };
 

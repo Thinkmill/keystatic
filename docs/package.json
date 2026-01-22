@@ -28,7 +28,7 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "emery": "^1.4.1",
-    "next": "^15.1.6",
+    "next": "~15.1.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-focus-lock": "^2.9.4",
