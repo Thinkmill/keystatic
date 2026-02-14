@@ -150,6 +150,7 @@ export function ImageFieldInput(
               display: 'block',
               maxHeight: tokenSchema.size.alias.singleLineWidth,
               maxWidth: '100%',
+              width: '100%',
             }}
           />
         </Box>
