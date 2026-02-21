@@ -4,9 +4,6 @@ const textDecoder = new TextDecoder();
 
 const LFS_POINTER_PREFIX = 'version https://git-lfs.github.com/spec/v1';
 
-// .gitattributes parsing
-// ----------------------------------------------------------------------------
-
 export function parseGitAttributes(content: string): string[] {
   return content
     .split('\n')
@@ -42,24 +39,15 @@ function parseAttributes(parts: string[]): Map<string, string | boolean> {
   return attrs;
 }
 
-// Pattern matching
-// ----------------------------------------------------------------------------
-
 export function isLfsTracked(path: string, patterns: string[]): boolean {
   return patterns.some(pattern => minimatch(path, pattern, { matchBase: true }));
 }
-
-// Pointer detection
-// ----------------------------------------------------------------------------
 
 export function isLfsPointer(content: Uint8Array): boolean {
   if (content.byteLength > 200 || content.byteLength < 50) return false;
   const text = textDecoder.decode(content.slice(0, LFS_POINTER_PREFIX.length));
   return text === LFS_POINTER_PREFIX;
 }
-
-// Base64 utilities
-// ----------------------------------------------------------------------------
 
 function uint8ArrayToBase64(data: Uint8Array): string {
   let binary = '';
@@ -77,9 +65,6 @@ function base64ToUint8Array(base64: string): Uint8Array {
   }
   return bytes;
 }
-
-// Server-backed LFS operations
-// ----------------------------------------------------------------------------
 
 export async function processLfsAdditions(
   additions: { path: string; contents: Uint8Array }[],
