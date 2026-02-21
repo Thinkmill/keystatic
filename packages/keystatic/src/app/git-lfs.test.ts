@@ -5,8 +5,6 @@ import {
   parseGitAttributes,
   isLfsTracked,
   isLfsPointer,
-  parseLfsPointer,
-  createLfsPointer,
 } from './git-lfs';
 
 if (!globalThis.crypto) {
@@ -14,6 +12,12 @@ if (!globalThis.crypto) {
 }
 
 const textEncoder = new TextEncoder();
+
+function makeLfsPointer(oid: string, size: number): Uint8Array {
+  return textEncoder.encode(
+    `version https://git-lfs.github.com/spec/v1\noid sha256:${oid}\nsize ${size}\n`
+  );
+}
 
 describe('parseGitAttributes', () => {
   test('extracts LFS patterns from standard .gitattributes', () => {
@@ -76,59 +80,26 @@ describe('isLfsTracked', () => {
   });
 });
 
-describe('isLfsPointer / parseLfsPointer / createLfsPointer', () => {
+describe('isLfsPointer', () => {
   const sampleOid =
     'abc123def456abc123def456abc123def456abc123def456abc123def456abcd1234';
   const sampleSize = 12345;
 
-  test('createLfsPointer produces valid pointer', () => {
-    const pointer = createLfsPointer(sampleOid, sampleSize);
-    const text = new TextDecoder().decode(pointer);
-    expect(text).toBe(
-      `version https://git-lfs.github.com/spec/v1\noid sha256:${sampleOid}\nsize ${sampleSize}\n`
-    );
-  });
-
-  test('isLfsPointer detects valid pointer', () => {
-    const pointer = createLfsPointer(sampleOid, sampleSize);
+  test('detects valid pointer', () => {
+    const pointer = makeLfsPointer(sampleOid, sampleSize);
     expect(isLfsPointer(pointer)).toBe(true);
   });
 
-  test('isLfsPointer rejects non-pointer content', () => {
+  test('rejects non-pointer content', () => {
     expect(isLfsPointer(textEncoder.encode('hello world'))).toBe(false);
     expect(isLfsPointer(new Uint8Array(300))).toBe(false);
     expect(isLfsPointer(new Uint8Array(10))).toBe(false);
   });
 
-  test('parseLfsPointer extracts oid and size', () => {
-    const pointer = createLfsPointer(sampleOid, sampleSize);
-    const parsed = parseLfsPointer(pointer);
-    expect(parsed.oid).toBe(sampleOid);
-    expect(parsed.size).toBe(sampleSize);
-  });
-
-  test('parseLfsPointer throws for missing oid', () => {
-    const content = textEncoder.encode(
-      'version https://git-lfs.github.com/spec/v1\nsize 100\n'
-    );
-    expect(() => parseLfsPointer(content)).toThrow('missing or invalid oid');
-  });
-
-  test('parseLfsPointer throws for missing size', () => {
-    const content = textEncoder.encode(
-      `version https://git-lfs.github.com/spec/v1\noid sha256:${sampleOid}\n`
-    );
-    expect(() => parseLfsPointer(content)).toThrow('missing size');
-  });
-
-  test('roundtrip: create then parse', () => {
+  test('detects pointer with varying oid and size', () => {
     const oid =
       '0000000000000000000000000000000000000000000000000000000000000000';
-    const size = 999999;
-    const pointer = createLfsPointer(oid, size);
+    const pointer = makeLfsPointer(oid, 999999);
     expect(isLfsPointer(pointer)).toBe(true);
-    const parsed = parseLfsPointer(pointer);
-    expect(parsed.oid).toBe(oid);
-    expect(parsed.size).toBe(size);
   });
 });
