@@ -11,7 +11,7 @@ import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
 import { resolveLfsPointers } from './git-lfs';
 import { loadDataFile } from './required-files';
-import { useBaseCommit, useLfsPatterns, useRepoInfo, useTree } from './shell/data';
+import { useBaseCommit, useRepoInfo, useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
 import { TreeNode, getTreeNodeAtPath, TreeEntry, blobSha } from './trees';
 import { LOADING, useData } from './useData';
@@ -210,7 +210,6 @@ export function useItemData(args: UseItemDataArgs) {
   const { current: currentBranch } = useTree();
   const baseCommit = useBaseCommit();
   const repoInfo = useRepoInfo();
-  const lfsPatterns = useLfsPatterns();
 
   const rootTree =
     currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
@@ -281,23 +280,18 @@ export function useItemData(args: UseItemDataArgs) {
           return blob.then(blob => [entry.path, blob] as const);
         });
 
-      const lfsEnabled =
-        args.config.storage.kind === 'github' &&
-        args.config.storage.lfs &&
-        lfsPatterns.length > 0;
+      const isGitHub = args.config.storage.kind === 'github';
 
       const buildResult = async (blobMap: Map<string, Uint8Array>) => {
-        if (lfsEnabled && repoInfo) {
-          blobMap = await resolveLfsPointers(
-            blobMap
-          );
+        if (isGitHub) {
+          blobMap = await resolveLfsPointers(blobMap);
         }
         const { initialState, initialFiles } = parseEntry(_args, blobMap);
         return { initialState, initialFiles, localTreeKey };
       };
 
       if (
-        !lfsEnabled &&
+        !isGitHub &&
         allBlobs.every((x): x is readonly [string, Uint8Array] =>
           Array.isArray(x)
         )
@@ -327,7 +321,6 @@ export function useItemData(args: UseItemDataArgs) {
       baseCommit,
       repoInfo,
       localTreeKey,
-      lfsPatterns,
     ])
   );
 }
