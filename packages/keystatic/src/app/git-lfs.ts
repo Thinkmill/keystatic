@@ -1,4 +1,5 @@
 import { minimatch } from 'minimatch';
+import { base64Decode, base64Encode } from '#base64';
 
 const textDecoder = new TextDecoder();
 
@@ -49,22 +50,7 @@ export function isLfsPointer(content: Uint8Array): boolean {
   return text === LFS_POINTER_PREFIX;
 }
 
-function uint8ArrayToBase64(data: Uint8Array): string {
-  let binary = '';
-  for (let i = 0; i < data.byteLength; i++) {
-    binary += String.fromCharCode(data[i]);
-  }
-  return btoa(binary);
-}
 
-function base64ToUint8Array(base64: string): Uint8Array {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
-}
 
 export async function processLfsAdditions(
   additions: { path: string; contents: Uint8Array }[],
@@ -84,7 +70,7 @@ export async function processLfsAdditions(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       objects: lfsIndices.map(i => ({
-        content: uint8ArrayToBase64(additions[i].contents),
+        content: base64Encode(additions[i].contents),
       })),
     }),
   });
@@ -99,7 +85,7 @@ export async function processLfsAdditions(
     const idx = lfsIndices[i];
     result[idx] = {
       path: additions[idx].path,
-      contents: base64ToUint8Array(data.objects[i].pointer),
+      contents: base64Decode(data.objects[i].pointer),
     };
   }
 
@@ -121,7 +107,7 @@ export async function resolveLfsPointers(
 
   const resolved = new Map(blobs);
   const downloads = pointerEntries.map(async entry => {
-    const encoded = encodeURIComponent(uint8ArrayToBase64(entry.raw));
+    const encoded = encodeURIComponent(base64Encode(entry.raw));
     const response = await fetch(
       `/api/keystatic/github/lfs/download/${encoded}`
     );

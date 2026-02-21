@@ -1,6 +1,7 @@
 import * as cookie from 'cookie';
 import * as s from 'superstruct';
 import { Config } from '..';
+import { base64Decode, base64Encode } from '#base64';
 import {
   KeystaticResponse,
   KeystaticRequest,
@@ -460,22 +461,7 @@ async function lfsBatchRequest(
   });
 }
 
-function base64ToBytes(base64: string): Uint8Array {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
-}
 
-function bytesToBase64(bytes: Uint8Array): string {
-  let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-}
 
 async function computeSha256(content: Uint8Array): Promise<string> {
   const hashBuffer = await crypto.subtle.digest(
@@ -538,7 +524,7 @@ async function githubLfsUpload(
 
   const prepared = await Promise.all(
     payload.objects.map(async obj => {
-      const bytes = base64ToBytes(obj.content);
+      const bytes = base64Decode(obj.content);
       const oid = await computeSha256(bytes);
       return { oid, size: bytes.byteLength, bytes };
     })
@@ -607,7 +593,7 @@ async function githubLfsUpload(
   }
 
   const pointers = prepared.map(p =>
-    bytesToBase64(
+    base64Encode(
       new TextEncoder().encode(createLfsPointer(p.oid, p.size))
     )
   );
@@ -627,7 +613,7 @@ async function githubLfsDownload(
   const lfs = getLfsConfig(req, config);
   if ('error' in lfs) return lfs.error;
 
-  const text = new TextDecoder().decode(base64ToBytes(pointer));
+  const text = new TextDecoder().decode(base64Decode(pointer));
   const parsed = parseLfsPointer(text);
 
   const batchRes = await lfsBatchRequest(
