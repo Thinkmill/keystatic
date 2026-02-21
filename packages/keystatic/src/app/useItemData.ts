@@ -9,8 +9,9 @@ import {
 } from '../form/api';
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
+import { resolveLfsPointers } from './git-lfs';
 import { loadDataFile } from './required-files';
-import { useBaseCommit, useRepoInfo, useTree } from './shell/data';
+import { useBaseCommit, useLfsPatterns, useRepoInfo, useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
 import { TreeNode, getTreeNodeAtPath, TreeEntry, blobSha } from './trees';
 import { LOADING, useData } from './useData';
@@ -209,6 +210,7 @@ export function useItemData(args: UseItemDataArgs) {
   const { current: currentBranch } = useTree();
   const baseCommit = useBaseCommit();
   const repoInfo = useRepoInfo();
+  const lfsPatterns = useLfsPatterns();
 
   const rootTree =
     currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
@@ -279,7 +281,29 @@ export function useItemData(args: UseItemDataArgs) {
           return blob.then(blob => [entry.path, blob] as const);
         });
 
+      const lfsEnabled =
+        args.config.storage.kind === 'github' &&
+        args.config.storage.lfs &&
+        lfsPatterns.length > 0;
+
+      const buildResult = async (blobMap: Map<string, Uint8Array>) => {
+        if (lfsEnabled && repoInfo) {
+          const auth = await getAuth(args.config);
+          if (auth) {
+            blobMap = await resolveLfsPointers(
+              blobMap,
+              repoInfo.owner,
+              repoInfo.name,
+              auth.accessToken
+            );
+          }
+        }
+        const { initialState, initialFiles } = parseEntry(_args, blobMap);
+        return { initialState, initialFiles, localTreeKey };
+      };
+
       if (
+        !lfsEnabled &&
         allBlobs.every((x): x is readonly [string, Uint8Array] =>
           Array.isArray(x)
         )
@@ -296,14 +320,7 @@ export function useItemData(args: UseItemDataArgs) {
         };
       }
 
-      return Promise.all(allBlobs).then(async data => {
-        const { initialState, initialFiles } = parseEntry(_args, new Map(data));
-        return {
-          initialState,
-          initialFiles,
-          localTreeKey,
-        };
-      });
+      return Promise.all(allBlobs).then(data => buildResult(new Map(data)));
     }, [
       hasLoaded,
       tree,
@@ -316,6 +333,7 @@ export function useItemData(args: UseItemDataArgs) {
       baseCommit,
       repoInfo,
       localTreeKey,
+      lfsPatterns,
     ])
   );
 }

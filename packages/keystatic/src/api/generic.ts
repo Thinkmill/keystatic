@@ -155,9 +155,11 @@ export function makeGenericAPIRouteHandler(
     if (joined === 'github/repo-not-found') {
       return githubRepoNotFound(req, config);
     }
+    if (joined === 'github/lfs') {
+      return githubLfsProxy(req);
+    }
     if (joined === 'github/logout') {
-      const cookies = cookie.parse(req.headers.get('cookie') ?? '');
-      const access_token = cookies['keystatic-gh-access-token'];
+      const access_token = getAccessToken(req);
       if (access_token) {
         await fetch(
           `https://api.github.com/applications/${config.clientId}/token`,
@@ -291,6 +293,11 @@ async function getTokenCookies(
   return headers;
 }
 
+function getAccessToken(req: KeystaticRequest): string | undefined {
+  const cookies = cookie.parse(req.headers.get('cookie') ?? '');
+  return cookies['keystatic-gh-access-token'] || undefined;
+}
+
 async function getRefreshToken(
   req: KeystaticRequest,
   config: InnerAPIRouteConfig
@@ -405,6 +412,81 @@ async function createdGithubApp(
     return { status: 400, body: 'App setup only allowed in development' };
   }
   return handleGitHubAppCreation(req, slugEnvVarName);
+}
+
+async function githubLfsProxy(
+  req: KeystaticRequest
+): Promise<KeystaticResponse> {
+  const accessToken = getAccessToken(req);
+  if (!accessToken) {
+    return { status: 401, body: 'Unauthorized' };
+  }
+
+  let payload: {
+    url: string;
+    method: string;
+    headers: Record<string, string>;
+    body?: string;
+  };
+  try {
+    payload = await req.json();
+  } catch {
+    return { status: 400, body: 'Invalid JSON body' };
+  }
+
+  const targetUrl = new URL(payload.url);
+  const allowedHosts = [
+    'github.com',
+    'github-cloud.s3.amazonaws.com',
+    'github-cloud.githubusercontent.com',
+  ];
+  if (
+    !allowedHosts.some(
+      host =>
+        targetUrl.hostname === host ||
+        targetUrl.hostname.endsWith('.' + host)
+    )
+  ) {
+    return {
+      status: 403,
+      body: 'LFS proxy only allows requests to GitHub hosts',
+    };
+  }
+
+  const headers: Record<string, string> = { ...payload.headers };
+  if (targetUrl.hostname === 'github.com') {
+    headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+
+  const body =
+    payload.body != null
+      ? Uint8Array.from(atob(payload.body), c => c.charCodeAt(0))
+      : undefined;
+
+  const response = await fetch(payload.url, {
+    method: payload.method,
+    headers,
+    body,
+  });
+
+  const responseBytes = new Uint8Array(await response.arrayBuffer());
+  const responseHeaders: Record<string, string> = {};
+  const skipHeaders = new Set([
+    'transfer-encoding',
+    'content-encoding',
+    'content-length',
+  ]);
+  for (const [key, value] of response.headers.entries()) {
+    if (!skipHeaders.has(key.toLowerCase())) {
+      responseHeaders[key] = value;
+    }
+  }
+
+  return {
+    status: response.status,
+    headers: responseHeaders,
+    body: responseBytes,
+  };
 }
 
 function immediatelyExpiringCookie(name: string) {
