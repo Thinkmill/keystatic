@@ -159,7 +159,7 @@ export function makeGenericAPIRouteHandler(
     if (joined === 'github/lfs/upload') {
       return githubLfsUpload(req, config.config);
     }
-    if (params.length === 4 && params[0] === 'github' && params[1] === 'lfs' && params[2] === 'download') {
+    if (joined.startsWith('github/lfs/download/')) {
       return githubLfsDownload(params[3], req, config.config);
     }
     if (joined === 'github/logout') {
