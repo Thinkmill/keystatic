@@ -159,8 +159,8 @@ export function makeGenericAPIRouteHandler(
     if (joined === 'github/lfs/upload') {
       return githubLfsUpload(req, config.config);
     }
-    if (joined === 'github/lfs/download') {
-      return githubLfsDownload(req, config.config);
+    if (params.length === 4 && params[0] === 'github' && params[1] === 'lfs' && params[2] === 'download') {
+      return githubLfsDownload(params[3], req, config.config);
     }
     if (joined === 'github/logout') {
       const access_token = getAccessToken(req);
@@ -620,30 +620,22 @@ async function githubLfsUpload(
 }
 
 async function githubLfsDownload(
+  pointer: string,
   req: KeystaticRequest,
   config: Config
 ): Promise<KeystaticResponse> {
   const lfs = getLfsConfig(req, config);
   if ('error' in lfs) return lfs.error;
 
-  let payload: { pointers: Array<{ pointer: string }> };
-  try {
-    payload = await req.json();
-  } catch {
-    return { status: 400, body: 'Invalid JSON body' };
-  }
-
-  const parsed = payload.pointers.map(p => {
-    const text = new TextDecoder().decode(base64ToBytes(p.pointer));
-    return parseLfsPointer(text);
-  });
+  const text = new TextDecoder().decode(base64ToBytes(pointer));
+  const parsed = parseLfsPointer(text);
 
   const batchRes = await lfsBatchRequest(
     lfs.owner,
     lfs.repo,
     lfs.accessToken,
     'download',
-    parsed.map(p => ({ oid: p.oid, size: p.size }))
+    [{ oid: parsed.oid, size: parsed.size }]
   );
   if (!batchRes.ok) {
     return {
@@ -653,29 +645,34 @@ async function githubLfsDownload(
   }
 
   const batch: { objects: LfsBatchResponseObject[] } = await batchRes.json();
-  const downloaded = new Map<string, string>();
+  const obj = batch.objects[0];
 
-  for (const obj of batch.objects) {
-    if (obj.error) continue;
-    const downloadAction = obj.actions?.download;
-    if (!downloadAction) continue;
-
-    const res = await fetch(downloadAction.href, {
-      headers: downloadAction.header ?? {},
-    });
-    if (!res.ok) continue;
-
-    downloaded.set(obj.oid, bytesToBase64(new Uint8Array(await res.arrayBuffer())));
+  if (obj?.error) {
+    return {
+      status: 502,
+      body: `LFS error for ${obj.oid}: ${obj.error.message} (${obj.error.code})`,
+    };
   }
 
-  const results = parsed.map(p => ({
-    content: downloaded.get(p.oid) ?? null,
-  }));
+  const downloadAction = obj?.actions?.download;
+  if (!downloadAction) {
+    return { status: 404, body: 'LFS object not found' };
+  }
+
+  const res = await fetch(downloadAction.href, {
+    headers: downloadAction.header ?? {},
+  });
+  if (!res.ok) {
+    return {
+      status: 502,
+      body: `LFS download failed (${res.status}): ${await res.text()}`,
+    };
+  }
 
   return {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ objects: results }),
+    headers: { 'Content-Type': 'application/octet-stream' },
+    body: new Uint8Array(await res.arrayBuffer()),
   };
 }
 

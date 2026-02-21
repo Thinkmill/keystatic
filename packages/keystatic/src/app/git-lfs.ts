@@ -134,30 +134,16 @@ export async function resolveLfsPointers(
 
   if (pointerEntries.length === 0) return blobs;
 
-  const response = await fetch('/api/keystatic/github/lfs/download', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      pointers: pointerEntries.map(p => ({
-        pointer: uint8ArrayToBase64(p.raw),
-      })),
-    }),
+  const resolved = new Map(blobs);
+  const downloads = pointerEntries.map(async entry => {
+    const encoded = encodeURIComponent(uint8ArrayToBase64(entry.raw));
+    const response = await fetch(
+      `/api/keystatic/github/lfs/download/${encoded}`
+    );
+    if (!response.ok) return;
+    resolved.set(entry.path, new Uint8Array(await response.arrayBuffer()));
   });
 
-  if (!response.ok) {
-    throw new Error(`LFS download failed: ${await response.text()}`);
-  }
-
-  const data: { objects: Array<{ content: string | null }> } =
-    await response.json();
-  const resolved = new Map(blobs);
-
-  for (let i = 0; i < pointerEntries.length; i++) {
-    const content = data.objects[i].content;
-    if (content) {
-      resolved.set(pointerEntries[i].path, base64ToUint8Array(content));
-    }
-  }
-
+  await Promise.all(downloads);
   return resolved;
 }
