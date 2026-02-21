@@ -4,36 +4,7 @@ const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
 const LFS_POINTER_PREFIX = 'version https://git-lfs.github.com/spec/v1';
-const LFS_PROXY_PATH = '/api/keystatic/github/lfs';
-
-// LFS proxy — all requests go through the server to avoid CORS
-// ----------------------------------------------------------------------------
-
-async function lfsProxyFetch(
-  url: string,
-  init: RequestInit
-): Promise<Response> {
-  return fetch(LFS_PROXY_PATH, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      url,
-      method: init.method ?? 'GET',
-      headers: init.headers ?? {},
-      body: init.body != null ? uint8ArrayToBase64(init.body) : undefined,
-    }),
-  });
-}
-
-function uint8ArrayToBase64(data: unknown): string {
-  const bytes =
-    data instanceof Uint8Array ? data : new Uint8Array(data as ArrayBuffer);
-  let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-}
+const LFS_ENDPOINT = '/api/keystatic/github/lfs';
 
 // .gitattributes parsing
 // ----------------------------------------------------------------------------
@@ -133,151 +104,31 @@ async function computeSha256(content: Uint8Array): Promise<string> {
     .join('');
 }
 
-// LFS Batch API
+// Base64 utilities
 // ----------------------------------------------------------------------------
 
-type LfsBatchObject = { oid: string; size: number };
-
-type LfsBatchResponseObject = {
-  oid: string;
-  size: number;
-  authenticated?: boolean;
-  actions?: {
-    upload?: { href: string; header?: Record<string, string> };
-    download?: { href: string; header?: Record<string, string> };
-    verify?: { href: string; header?: Record<string, string> };
-  };
-  error?: { code: number; message: string };
-};
-
-type LfsBatchResponse = {
-  transfer?: string;
-  objects: LfsBatchResponseObject[];
-};
-
-async function lfsBatchRequest(
-  owner: string,
-  repo: string,
-  _token: string,
-  operation: 'upload' | 'download',
-  objects: LfsBatchObject[]
-): Promise<LfsBatchResponse> {
-  const url = `https://github.com/${owner}/${repo}.git/info/lfs/objects/batch`;
-  const response = await lfsProxyFetch(url, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/vnd.git-lfs+json',
-      'Content-Type': 'application/vnd.git-lfs+json',
-    },
-    body: textEncoder.encode(
-      JSON.stringify({
-        operation,
-        transfers: ['basic'],
-        objects,
-      })
-    ),
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(
-      `LFS batch API error (${response.status}): ${body}`
-    );
+function uint8ArrayToBase64(data: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < data.byteLength; i++) {
+    binary += String.fromCharCode(data[i]);
   }
-  return response.json();
+  return btoa(binary);
 }
 
-async function lfsUploadObjects(
-  batchResponse: LfsBatchResponse,
-  objectContents: Map<string, Uint8Array>
-): Promise<void> {
-  for (const obj of batchResponse.objects) {
-    if (obj.error) {
-      throw new Error(
-        `LFS server error for ${obj.oid}: ${obj.error.message} (${obj.error.code})`
-      );
-    }
-    const uploadAction = obj.actions?.upload;
-    if (!uploadAction) continue; // server already has this object
-
-    const content = objectContents.get(obj.oid);
-    if (!content) {
-      throw new Error(`Missing content for LFS object ${obj.oid}`);
-    }
-
-    const uploadResponse = await lfsProxyFetch(uploadAction.href, {
-      method: 'PUT',
-      headers: uploadAction.header ?? {},
-      body: content as unknown as BodyInit,
-    });
-
-    if (!uploadResponse.ok) {
-      const body = await uploadResponse.text();
-      throw new Error(
-        `LFS upload failed for ${obj.oid} (${uploadResponse.status}): ${body}`
-      );
-    }
-
-    if (obj.actions?.verify) {
-      const verifyResponse = await lfsProxyFetch(obj.actions.verify.href, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/vnd.git-lfs+json',
-          ...(obj.actions.verify.header ?? {}),
-        },
-        body: textEncoder.encode(
-          JSON.stringify({ oid: obj.oid, size: obj.size })
-        ),
-      });
-      if (!verifyResponse.ok) {
-        const body = await verifyResponse.text();
-        throw new Error(
-          `LFS verify failed for ${obj.oid} (${verifyResponse.status}): ${body}`
-        );
-      }
-    }
+function base64ToUint8Array(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
   }
+  return bytes;
 }
 
-async function lfsDownloadObjects(
-  batchResponse: LfsBatchResponse
-): Promise<Map<string, Uint8Array>> {
-  const results = new Map<string, Uint8Array>();
-  for (const obj of batchResponse.objects) {
-    if (obj.error) {
-      console.warn(
-        `LFS download error for ${obj.oid}: ${obj.error.message} (${obj.error.code})`
-      );
-      continue;
-    }
-    const downloadAction = obj.actions?.download;
-    if (!downloadAction) {
-      console.warn(`No download action for LFS object ${obj.oid}`);
-      continue;
-    }
-    const response = await lfsProxyFetch(downloadAction.href, {
-      headers: downloadAction.header ?? {},
-    });
-    if (!response.ok) {
-      console.warn(
-        `LFS download failed for ${obj.oid} (${response.status})`
-      );
-      continue;
-    }
-    const buffer = await response.arrayBuffer();
-    results.set(obj.oid, new Uint8Array(buffer));
-  }
-  return results;
-}
-
-// High-level orchestrators
+// Server-backed LFS operations
 // ----------------------------------------------------------------------------
 
 export async function processLfsAdditions(
   additions: { path: string; contents: Uint8Array }[],
-  owner: string,
-  repo: string,
-  token: string,
   patterns: string[]
 ): Promise<{ path: string; contents: Uint8Array }[]> {
   const lfsAdditions: {
@@ -304,19 +155,22 @@ export async function processLfsAdditions(
 
   if (lfsAdditions.length === 0) return result;
 
-  const objectContents = new Map(
-    lfsAdditions.map(a => [a.oid, a.contents])
-  );
+  const response = await fetch(LFS_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      operation: 'upload',
+      objects: lfsAdditions.map(a => ({
+        oid: a.oid,
+        size: a.size,
+        content: uint8ArrayToBase64(a.contents),
+      })),
+    }),
+  });
 
-  const batchResponse = await lfsBatchRequest(
-    owner,
-    repo,
-    token,
-    'upload',
-    lfsAdditions.map(a => ({ oid: a.oid, size: a.size }))
-  );
-
-  await lfsUploadObjects(batchResponse, objectContents);
+  if (!response.ok) {
+    throw new Error(`LFS upload failed: ${await response.text()}`);
+  }
 
   for (const lfsAddition of lfsAdditions) {
     result[lfsAddition.index] = {
@@ -329,10 +183,7 @@ export async function processLfsAdditions(
 }
 
 export async function resolveLfsPointers(
-  blobs: Map<string, Uint8Array>,
-  owner: string,
-  repo: string,
-  token: string
+  blobs: Map<string, Uint8Array>
 ): Promise<Map<string, Uint8Array>> {
   const pointers: { path: string; oid: string; size: number }[] = [];
 
@@ -349,15 +200,25 @@ export async function resolveLfsPointers(
 
   if (pointers.length === 0) return blobs;
 
-  const batchResponse = await lfsBatchRequest(
-    owner,
-    repo,
-    token,
-    'download',
-    pointers.map(p => ({ oid: p.oid, size: p.size }))
-  );
+  const response = await fetch(LFS_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      operation: 'download',
+      objects: pointers.map(p => ({ oid: p.oid, size: p.size })),
+    }),
+  });
 
-  const downloaded = await lfsDownloadObjects(batchResponse);
+  if (!response.ok) {
+    throw new Error(`LFS download failed: ${await response.text()}`);
+  }
+
+  const data: { objects: Array<{ oid: string; content: string }> } =
+    await response.json();
+  const downloaded = new Map<string, Uint8Array>();
+  for (const obj of data.objects) {
+    downloaded.set(obj.oid, base64ToUint8Array(obj.content));
+  }
 
   const resolved = new Map(blobs);
   for (const pointer of pointers) {

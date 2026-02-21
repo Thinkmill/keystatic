@@ -288,15 +288,9 @@ export function useItemData(args: UseItemDataArgs) {
 
       const buildResult = async (blobMap: Map<string, Uint8Array>) => {
         if (lfsEnabled && repoInfo) {
-          const auth = await getAuth(args.config);
-          if (auth) {
-            blobMap = await resolveLfsPointers(
-              blobMap,
-              repoInfo.owner,
-              repoInfo.name,
-              auth.accessToken
-            );
-          }
+          blobMap = await resolveLfsPointers(
+            blobMap
+          );
         }
         const { initialState, initialFiles } = parseEntry(_args, blobMap);
         return { initialState, initialFiles, localTreeKey };

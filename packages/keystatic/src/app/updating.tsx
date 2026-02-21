@@ -29,7 +29,6 @@ import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
 import { base64Encode } from '#base64';
-import { getAuth } from './auth';
 import { processLfsAdditions } from './git-lfs';
 import { useLfsPatterns } from './shell/data';
 
@@ -219,16 +218,10 @@ export function useUpsertItem(args: {
             args.config.storage.lfs &&
             lfsPatterns.length > 0
           ) {
-            const auth = await getAuth(args.config);
-            if (auth) {
-              additions = await processLfsAdditions(
-                additions,
-                repoInfo.owner,
-                repoInfo.name,
-                auth.accessToken,
-                lfsPatterns
-              );
-            }
+            additions = await processLfsAdditions(
+              additions,
+              lfsPatterns
+            );
           }
 
           const runMutation = (expectedHeadOid: string) =>
