@@ -1,7 +1,7 @@
 import * as cookie from 'cookie';
 import * as s from 'superstruct';
 import { Config } from '..';
-import { base64Decode, base64Encode } from '#base64';
+import { base64Decode, base64Encode } from '../base64';
 import { createLfsPointer } from '../app/git-lfs';
 import {
   KeystaticResponse,
