@@ -9,7 +9,7 @@ import {
 } from '../form/api';
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
-import { resolveLfsPointers } from './git-lfs';
+import { isLfsPointer, resolveLfsPointers } from './git-lfs';
 import { loadDataFile } from './required-files';
 import { useBaseCommit, useRepoInfo, useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
@@ -291,21 +291,16 @@ export function useItemData(args: UseItemDataArgs) {
       };
 
       if (
-        !isGitHub &&
         allBlobs.every((x): x is readonly [string, Uint8Array] =>
           Array.isArray(x)
         )
       ) {
-        const { initialFiles, initialState } = parseEntry(
-          _args,
-          new Map(allBlobs)
-        );
-
-        return {
-          initialState,
-          initialFiles,
-          localTreeKey,
-        };
+        const blobMap = new Map(allBlobs);
+        if (isGitHub && [...blobMap.values()].some(isLfsPointer)) {
+          return buildResult(blobMap);
+        }
+        const { initialFiles, initialState } = parseEntry(_args, blobMap);
+        return { initialState, initialFiles, localTreeKey };
       }
 
       return Promise.all(allBlobs).then(data => buildResult(new Map(data)));
