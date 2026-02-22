@@ -9,7 +9,8 @@ import {
 } from '../form/api';
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
-import { downloadLfsPointers, extractLfsPointers } from './git-lfs';
+import { isLfsPointer } from './git-lfs';
+import { base64Encode } from '../base64';
 import { loadDataFile } from './required-files';
 import { useBaseCommit, useRepoInfo, useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
@@ -258,6 +259,8 @@ export function useItemData(args: UseItemDataArgs) {
         schema: args.schema,
         slug: args.slug,
       };
+      type BlobEntry = { path: string; sha: string; blob: Uint8Array };
+
       const allBlobs = locationsForTreeKey
         .flatMap(dir => {
           const node = getTreeNodeAtPath(tree, dir);
@@ -275,58 +278,51 @@ export function useItemData(args: UseItemDataArgs) {
             repoInfo
           );
           if (blob instanceof Uint8Array) {
-            return [entry.path, entry.sha, blob] as const;
+            return { path: entry.path, sha: entry.sha, blob };
           }
-          return blob.then(blob => [entry.path, entry.sha, blob] as const);
+          return blob.then(
+            blob => ({ path: entry.path, sha: entry.sha, blob })
+          );
         });
 
       const isGitHub = args.config.storage.kind === 'github';
 
-      const cacheLfsBlobs = (
-        resolved: Map<string, Uint8Array>,
-        pathToSha: Map<string, string>
-      ) => {
-        for (const [path, content] of resolved) {
-          const sha = pathToSha.get(path);
-          if (sha) {
-            blobCache.set(sha, content);
-            setBlobToPersistedCache(sha, content);
-          }
-        }
+      const resolveLfsBlobs = async (entries: BlobEntry[]) => {
+        const lfsEntries = entries.filter(e => isLfsPointer(e.blob));
+        if (lfsEntries.length === 0) return;
+        await Promise.all(
+          lfsEntries.map(async entry => {
+            const encoded = encodeURIComponent(base64Encode(entry.blob));
+            const response = await fetch(
+              `/api/keystatic/github/lfs/download/${encoded}`
+            );
+            if (!response.ok) return;
+            const blob = new Uint8Array(await response.arrayBuffer());
+            blobCache.set(entry.sha, blob);
+            setBlobToPersistedCache(entry.sha, blob);
+            entry.blob = blob;
+          })
+        );
+      };
+
+      const toBlobMap = (entries: BlobEntry[]) =>
+        new Map(entries.map(e => [e.path, e.blob]));
+
+      const buildResult = async (entries: BlobEntry[]) => {
+        if (isGitHub) await resolveLfsBlobs(entries);
+        const { initialState, initialFiles } = parseEntry(_args, toBlobMap(entries));
+        return { initialState, initialFiles, localTreeKey };
       };
 
       if (
-        allBlobs.every((x): x is readonly [string, string, Uint8Array] =>
-          Array.isArray(x)
+        allBlobs.every(
+          (x): x is BlobEntry => x instanceof Promise === false
         )
       ) {
-        const blobMap = new Map(allBlobs.map(([path, , blob]) => [path, blob]));
-        const lfsPointers = isGitHub ? extractLfsPointers(blobMap) : [];
-        if (lfsPointers.length > 0) {
-          const pathToSha = new Map(allBlobs.map(([path, sha]) => [path, sha]));
-          return downloadLfsPointers(lfsPointers).then(resolved => {
-            cacheLfsBlobs(resolved, pathToSha);
-            const merged = new Map([...blobMap, ...resolved]);
-            const { initialFiles, initialState } = parseEntry(_args, merged);
-            return { initialState, initialFiles, localTreeKey };
-          });
-        }
-        const { initialFiles, initialState } = parseEntry(_args, blobMap);
-        return { initialState, initialFiles, localTreeKey };
+        return buildResult(allBlobs);
       }
 
-      return Promise.all(allBlobs).then(async data => {
-        let blobMap = new Map(data.map(([path, , blob]) => [path, blob]));
-        const lfsPointers = isGitHub ? extractLfsPointers(blobMap) : [];
-        if (lfsPointers.length > 0) {
-          const pathToSha = new Map(data.map(([path, sha]) => [path, sha]));
-          const resolved = await downloadLfsPointers(lfsPointers);
-          cacheLfsBlobs(resolved, pathToSha);
-          blobMap = new Map([...blobMap, ...resolved]);
-        }
-        const { initialState, initialFiles } = parseEntry(_args, blobMap);
-        return { initialState, initialFiles, localTreeKey };
-      });
+      return Promise.all(allBlobs).then(buildResult);
     }, [
       hasLoaded,
       tree,
