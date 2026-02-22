@@ -45,12 +45,9 @@ export function isLfsTracked(path: string, patterns: string[]): boolean {
 }
 
 export function isLfsPointer(content: Uint8Array): boolean {
-  if (content.byteLength > 200 || content.byteLength < 50) return false;
   const text = textDecoder.decode(content.slice(0, LFS_POINTER_PREFIX.length));
   return text === LFS_POINTER_PREFIX;
 }
-
-
 
 export async function processLfsAdditions(
   additions: { path: string; contents: Uint8Array }[],
