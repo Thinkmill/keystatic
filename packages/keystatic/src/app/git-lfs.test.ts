@@ -5,6 +5,7 @@ import {
   parseGitAttributes,
   isLfsTracked,
   isLfsPointer,
+  createLfsPointer,
 } from './git-lfs';
 
 if (!globalThis.crypto) {
@@ -14,9 +15,7 @@ if (!globalThis.crypto) {
 const textEncoder = new TextEncoder();
 
 function makeLfsPointer(oid: string, size: number): Uint8Array {
-  return textEncoder.encode(
-    `version https://git-lfs.github.com/spec/v1\noid sha256:${oid}\nsize ${size}\n`
-  );
+  return textEncoder.encode(createLfsPointer(oid, size));
 }
 
 describe('parseGitAttributes', () => {

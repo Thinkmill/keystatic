@@ -2,6 +2,7 @@ import * as cookie from 'cookie';
 import * as s from 'superstruct';
 import { Config } from '..';
 import { base64Decode, base64Encode } from '#base64';
+import { createLfsPointer } from '../app/git-lfs';
 import {
   KeystaticResponse,
   KeystaticRequest,
@@ -471,10 +472,6 @@ async function computeSha256(content: Uint8Array): Promise<string> {
   return Array.from(new Uint8Array(hashBuffer))
     .map(b => b.toString(16).padStart(2, '0'))
     .join('');
-}
-
-function createLfsPointer(oid: string, size: number): string {
-  return `version https://git-lfs.github.com/spec/v1\noid sha256:${oid}\nsize ${size}\n`;
 }
 
 function parseLfsPointer(text: string): { oid: string; size: number } {

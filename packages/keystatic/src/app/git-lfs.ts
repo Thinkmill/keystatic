@@ -49,6 +49,10 @@ export function isLfsPointer(content: Uint8Array): boolean {
   return text === LFS_POINTER_PREFIX;
 }
 
+export function createLfsPointer(oid: string, size: number): string {
+  return `${LFS_POINTER_PREFIX}\noid sha256:${oid}\nsize ${size}\n`;
+}
+
 export async function processLfsAdditions(
   additions: { path: string; contents: Uint8Array }[],
   patterns: string[]
