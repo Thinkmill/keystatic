@@ -49,6 +49,26 @@ export function isLfsPointer(content: Uint8Array): boolean {
   return text === LFS_POINTER_PREFIX;
 }
 
+export function parseLfsPointer(text: string): { oid: string; size: number } {
+  const lines = text.split('\n').filter(l => l.trim().length > 0);
+  const pairs = new Map<string, string>();
+  for (const line of lines) {
+    const spaceIdx = line.indexOf(' ');
+    if (spaceIdx !== -1) {
+      pairs.set(line.slice(0, spaceIdx), line.slice(spaceIdx + 1));
+    }
+  }
+  const oidRaw = pairs.get('oid');
+  if (!oidRaw?.startsWith('sha256:')) {
+    throw new Error('Invalid LFS pointer: missing or invalid oid');
+  }
+  const sizeRaw = pairs.get('size');
+  if (!sizeRaw) {
+    throw new Error('Invalid LFS pointer: missing size');
+  }
+  return { oid: oidRaw.slice('sha256:'.length), size: parseInt(sizeRaw, 10) };
+}
+
 export function createLfsPointer(oid: string, size: number): string {
   return `${LFS_POINTER_PREFIX}\noid sha256:${oid}\nsize ${size}\n`;
 }

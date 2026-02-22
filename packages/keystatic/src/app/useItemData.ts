@@ -9,8 +9,7 @@ import {
 } from '../form/api';
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
-import { isLfsPointer } from './git-lfs';
-import { base64Encode } from '../base64';
+import { isLfsPointer, parseLfsPointer } from './git-lfs';
 import { loadDataFile } from './required-files';
 import { useBaseCommit, useRepoInfo, useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
@@ -290,11 +289,19 @@ export function useItemData(args: UseItemDataArgs) {
       const resolveLfsBlobs = async (entries: BlobEntry[]) => {
         const lfsEntries = entries.filter(e => isLfsPointer(e.blob));
         if (lfsEntries.length === 0) return;
+        const textDecoder = new TextDecoder();
         await Promise.all(
           lfsEntries.map(async entry => {
-            const encoded = encodeURIComponent(base64Encode(entry.blob));
+            const { oid, size } = parseLfsPointer(
+              textDecoder.decode(entry.blob)
+            );
             const response = await fetch(
-              `/api/keystatic/github/lfs/download/${encoded}`
+              '/api/keystatic/github/lfs/download',
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ oid, size }),
+              }
             );
             if (!response.ok) return;
             const blob = new Uint8Array(await response.arrayBuffer());

@@ -6,6 +6,7 @@ import {
   isLfsTracked,
   isLfsPointer,
   createLfsPointer,
+  parseLfsPointer,
 } from './git-lfs';
 
 if (!globalThis.crypto) {
@@ -100,5 +101,31 @@ describe('isLfsPointer', () => {
       '0000000000000000000000000000000000000000000000000000000000000000';
     const pointer = makeLfsPointer(oid, 999999);
     expect(isLfsPointer(pointer)).toBe(true);
+  });
+});
+
+describe('parseLfsPointer', () => {
+  test('parses a valid pointer', () => {
+    const oid =
+      'abc123def456abc123def456abc123def456abc123def456abc123def456abcd1234';
+    const size = 999999;
+    const text = createLfsPointer(oid, size);
+    expect(parseLfsPointer(text)).toEqual({ oid, size });
+  });
+
+  test('throws on missing oid', () => {
+    const text = 'version https://git-lfs.github.com/spec/v1\nsize 100\n';
+    expect(() => parseLfsPointer(text)).toThrow('missing or invalid oid');
+  });
+
+  test('throws on invalid oid prefix', () => {
+    const text =
+      'version https://git-lfs.github.com/spec/v1\noid md5:abc123\nsize 100\n';
+    expect(() => parseLfsPointer(text)).toThrow('missing or invalid oid');
+  });
+
+  test('throws on missing size', () => {
+    const text = `version https://git-lfs.github.com/spec/v1\noid sha256:abc123\n`;
+    expect(() => parseLfsPointer(text)).toThrow('missing size');
   });
 });

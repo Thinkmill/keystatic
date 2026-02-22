@@ -161,8 +161,8 @@ export function makeGenericAPIRouteHandler(
     if (joined === 'github/lfs/upload') {
       return githubLfsUpload(req, config.config);
     }
-    if (joined.startsWith('github/lfs/download/')) {
-      return githubLfsDownload(params[3], req, config.config);
+    if (joined === 'github/lfs/download') {
+      return githubLfsDownload(req, config.config);
     }
     if (joined === 'github/logout') {
       const access_token = getAccessToken(req);
@@ -474,26 +474,6 @@ async function computeSha256(content: Uint8Array): Promise<string> {
     .join('');
 }
 
-function parseLfsPointer(text: string): { oid: string; size: number } {
-  const lines = text.split('\n').filter(l => l.trim().length > 0);
-  const pairs = new Map<string, string>();
-  for (const line of lines) {
-    const spaceIdx = line.indexOf(' ');
-    if (spaceIdx !== -1) {
-      pairs.set(line.slice(0, spaceIdx), line.slice(spaceIdx + 1));
-    }
-  }
-  const oidRaw = pairs.get('oid');
-  if (!oidRaw?.startsWith('sha256:')) {
-    throw new Error('Invalid LFS pointer: missing or invalid oid');
-  }
-  const sizeRaw = pairs.get('size');
-  if (!sizeRaw) {
-    throw new Error('Invalid LFS pointer: missing size');
-  }
-  return { oid: oidRaw.slice('sha256:'.length), size: parseInt(sizeRaw, 10) };
-}
-
 type LfsBatchResponseObject = {
   oid: string;
   size: number;
@@ -603,22 +583,25 @@ async function githubLfsUpload(
 }
 
 async function githubLfsDownload(
-  pointer: string,
   req: KeystaticRequest,
   config: Config
 ): Promise<KeystaticResponse> {
   const lfs = getLfsConfig(req, config);
   if ('error' in lfs) return lfs.error;
 
-  const text = new TextDecoder().decode(base64Decode(pointer));
-  const parsed = parseLfsPointer(text);
+  let payload: { oid: string; size: number };
+  try {
+    payload = await req.json();
+  } catch {
+    return { status: 400, body: 'Invalid JSON body' };
+  }
 
   const batchRes = await lfsBatchRequest(
     lfs.owner,
     lfs.repo,
     lfs.accessToken,
     'download',
-    [{ oid: parsed.oid, size: parsed.size }]
+    [{ oid: payload.oid, size: payload.size }]
   );
   if (!batchRes.ok) {
     return {
