@@ -286,12 +286,13 @@ export function useItemData(args: UseItemDataArgs) {
 
       const isGitHub = args.config.storage.kind === 'github';
 
-      const resolveLfsBlobs = async (entries: BlobEntry[]) => {
-        const lfsEntries = entries.filter(e => isLfsPointer(e.blob));
-        if (lfsEntries.length === 0) return;
+      const resolveLfsBlobs = async (
+        entries: BlobEntry[]
+      ): Promise<BlobEntry[]> => {
         const textDecoder = new TextDecoder();
-        await Promise.all(
-          lfsEntries.map(async entry => {
+        return Promise.all(
+          entries.map(async entry => {
+            if (!isLfsPointer(entry.blob)) return entry;
             const { oid, size } = parseLfsPointer(
               textDecoder.decode(entry.blob)
             );
@@ -303,11 +304,11 @@ export function useItemData(args: UseItemDataArgs) {
                 body: JSON.stringify({ oid, size }),
               }
             );
-            if (!response.ok) return;
+            if (!response.ok) return entry;
             const blob = new Uint8Array(await response.arrayBuffer());
             blobCache.set(entry.sha, blob);
             setBlobToPersistedCache(entry.sha, blob);
-            entry.blob = blob;
+            return { ...entry, blob };
           })
         );
       };
@@ -316,8 +317,8 @@ export function useItemData(args: UseItemDataArgs) {
         new Map(entries.map(e => [e.path, e.blob]));
 
       const buildResult = async (entries: BlobEntry[]) => {
-        if (isGitHub) await resolveLfsBlobs(entries);
-        const { initialState, initialFiles } = parseEntry(_args, toBlobMap(entries));
+        const resolved = isGitHub ? await resolveLfsBlobs(entries) : entries;
+        const { initialState, initialFiles } = parseEntry(_args, toBlobMap(resolved));
         return { initialState, initialFiles, localTreeKey };
       };
 
