@@ -89,21 +89,25 @@ export async function processLfsAdditions(
   return result;
 }
 
-export async function resolveLfsPointers(
-  blobs: Map<string, Uint8Array>
-): Promise<Map<string, Uint8Array>> {
-  const pointerEntries: { path: string; raw: Uint8Array }[] = [];
+export type LfsPointerEntry = { path: string; raw: Uint8Array };
 
+export function extractLfsPointers(
+  blobs: Map<string, Uint8Array>
+): LfsPointerEntry[] {
+  const pointers: LfsPointerEntry[] = [];
   for (const [path, content] of blobs) {
     if (isLfsPointer(content)) {
-      pointerEntries.push({ path, raw: content });
+      pointers.push({ path, raw: content });
     }
   }
+  return pointers;
+}
 
-  if (pointerEntries.length === 0) return blobs;
-
-  const resolved = new Map(blobs);
-  const downloads = pointerEntries.map(async entry => {
+export async function downloadLfsPointers(
+  pointers: LfsPointerEntry[]
+): Promise<Map<string, Uint8Array>> {
+  const resolved = new Map<string, Uint8Array>();
+  const downloads = pointers.map(async entry => {
     const encoded = encodeURIComponent(base64Encode(entry.raw));
     const response = await fetch(
       `/api/keystatic/github/lfs/download/${encoded}`

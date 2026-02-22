@@ -9,7 +9,7 @@ import {
 } from '../form/api';
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
-import { isLfsPointer, resolveLfsPointers } from './git-lfs';
+import { downloadLfsPointers, extractLfsPointers } from './git-lfs';
 import { loadDataFile } from './required-files';
 import { useBaseCommit, useRepoInfo, useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
@@ -282,28 +282,34 @@ export function useItemData(args: UseItemDataArgs) {
 
       const isGitHub = args.config.storage.kind === 'github';
 
-      const buildResult = async (blobMap: Map<string, Uint8Array>) => {
-        if (isGitHub) {
-          blobMap = await resolveLfsPointers(blobMap);
-        }
-        const { initialState, initialFiles } = parseEntry(_args, blobMap);
-        return { initialState, initialFiles, localTreeKey };
-      };
-
       if (
         allBlobs.every((x): x is readonly [string, Uint8Array] =>
           Array.isArray(x)
         )
       ) {
         const blobMap = new Map(allBlobs);
-        if (isGitHub && [...blobMap.values()].some(isLfsPointer)) {
-          return buildResult(blobMap);
+        const lfsPointers = isGitHub ? extractLfsPointers(blobMap) : [];
+        if (lfsPointers.length > 0) {
+          return downloadLfsPointers(lfsPointers).then(resolved => {
+            const merged = new Map([...blobMap, ...resolved]);
+            const { initialFiles, initialState } = parseEntry(_args, merged);
+            return { initialState, initialFiles, localTreeKey };
+          });
         }
         const { initialFiles, initialState } = parseEntry(_args, blobMap);
         return { initialState, initialFiles, localTreeKey };
       }
 
-      return Promise.all(allBlobs).then(data => buildResult(new Map(data)));
+      return Promise.all(allBlobs).then(async data => {
+        let blobMap = new Map(data);
+        const lfsPointers = isGitHub ? extractLfsPointers(blobMap) : [];
+        if (lfsPointers.length > 0) {
+          const resolved = await downloadLfsPointers(lfsPointers);
+          blobMap = new Map([...blobMap, ...resolved]);
+        }
+        const { initialState, initialFiles } = parseEntry(_args, blobMap);
+        return { initialState, initialFiles, localTreeKey };
+      });
     }, [
       hasLoaded,
       tree,
