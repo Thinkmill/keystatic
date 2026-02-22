@@ -275,22 +275,37 @@ export function useItemData(args: UseItemDataArgs) {
             repoInfo
           );
           if (blob instanceof Uint8Array) {
-            return [entry.path, blob] as const;
+            return [entry.path, entry.sha, blob] as const;
           }
-          return blob.then(blob => [entry.path, blob] as const);
+          return blob.then(blob => [entry.path, entry.sha, blob] as const);
         });
 
       const isGitHub = args.config.storage.kind === 'github';
 
+      const cacheLfsBlobs = (
+        resolved: Map<string, Uint8Array>,
+        pathToSha: Map<string, string>
+      ) => {
+        for (const [path, content] of resolved) {
+          const sha = pathToSha.get(path);
+          if (sha) {
+            blobCache.set(sha, content);
+            setBlobToPersistedCache(sha, content);
+          }
+        }
+      };
+
       if (
-        allBlobs.every((x): x is readonly [string, Uint8Array] =>
+        allBlobs.every((x): x is readonly [string, string, Uint8Array] =>
           Array.isArray(x)
         )
       ) {
-        const blobMap = new Map(allBlobs);
+        const blobMap = new Map(allBlobs.map(([path, , blob]) => [path, blob]));
         const lfsPointers = isGitHub ? extractLfsPointers(blobMap) : [];
         if (lfsPointers.length > 0) {
+          const pathToSha = new Map(allBlobs.map(([path, sha]) => [path, sha]));
           return downloadLfsPointers(lfsPointers).then(resolved => {
+            cacheLfsBlobs(resolved, pathToSha);
             const merged = new Map([...blobMap, ...resolved]);
             const { initialFiles, initialState } = parseEntry(_args, merged);
             return { initialState, initialFiles, localTreeKey };
@@ -301,10 +316,12 @@ export function useItemData(args: UseItemDataArgs) {
       }
 
       return Promise.all(allBlobs).then(async data => {
-        let blobMap = new Map(data);
+        let blobMap = new Map(data.map(([path, , blob]) => [path, blob]));
         const lfsPointers = isGitHub ? extractLfsPointers(blobMap) : [];
         if (lfsPointers.length > 0) {
+          const pathToSha = new Map(data.map(([path, sha]) => [path, sha]));
           const resolved = await downloadLfsPointers(lfsPointers);
+          cacheLfsBlobs(resolved, pathToSha);
           blobMap = new Map([...blobMap, ...resolved]);
         }
         const { initialState, initialFiles } = parseEntry(_args, blobMap);
