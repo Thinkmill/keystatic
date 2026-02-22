@@ -462,10 +462,8 @@ async function lfsBatchRequest(
   });
 }
 
-
-
 async function computeSha256(content: Uint8Array): Promise<string> {
-  const hashBuffer = await crypto.subtle.digest(
+  const hashBuffer = await webcrypto.subtle.digest(
     'SHA-256',
     content as unknown as ArrayBuffer
   );
