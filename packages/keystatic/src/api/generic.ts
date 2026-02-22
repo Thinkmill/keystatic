@@ -14,6 +14,8 @@ import { bytesToHex } from '../hex';
 import { decryptValue, encryptValue } from './encryption';
 import { parseRepoConfig } from '../app/repo-config';
 
+const USER_AGENT = 'keystatic';
+
 export type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
   clientId?: string;
@@ -453,6 +455,7 @@ async function lfsBatchRequest(
       Accept: 'application/vnd.git-lfs+json',
       'Content-Type': 'application/vnd.git-lfs+json',
       Authorization: `Bearer ${accessToken}`,
+      'User-Agent': USER_AGENT,
     },
     body: JSON.stringify({
       operation,
@@ -471,6 +474,7 @@ async function computeSha256(content: Uint8Array): Promise<string> {
     .map(b => b.toString(16).padStart(2, '0'))
     .join('');
 }
+
 
 type LfsBatchResponseObject = {
   oid: string;
@@ -539,7 +543,7 @@ async function githubLfsUpload(
 
     const uploadRes = await fetch(uploadAction.href, {
       method: 'PUT',
-      headers: uploadAction.header ?? {},
+      headers: { 'User-Agent': USER_AGENT, ...(uploadAction.header ?? {}) },
       body: item.bytes as unknown as BodyInit,
     });
     if (!uploadRes.ok) {
@@ -554,6 +558,7 @@ async function githubLfsUpload(
         method: 'POST',
         headers: {
           'Content-Type': 'application/vnd.git-lfs+json',
+          'User-Agent': USER_AGENT,
           ...(obj.actions.verify.header ?? {}),
         },
         body: JSON.stringify({ oid: obj.oid, size: obj.size }),
@@ -624,7 +629,7 @@ async function githubLfsDownload(
   }
 
   const res = await fetch(downloadAction.href, {
-    headers: downloadAction.header ?? {},
+    headers: { 'User-Agent': USER_AGENT, ...(downloadAction.header ?? {}) },
   });
   if (!res.ok) {
     return {
