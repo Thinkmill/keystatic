@@ -17,6 +17,7 @@ import { LOADING, useData } from './useData';
 import {
   FormatInfo,
   getEntryDataFilepath,
+  getKeystaticApiBasePath,
   getPathPrefix,
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
@@ -380,7 +381,7 @@ export function fetchBlob(
     }
     return (
       isLocal
-        ? fetch(`/api/keystatic/blob/${oid}/${filepath}`, {
+        ? fetch(`${getKeystaticApiBasePath(config)}/blob/${oid}/${filepath}`, {
             headers: { 'no-cors': '1' },
           })
         : fetchGitHubBlob(config, oid, filepath, commitSha, repoInfo)

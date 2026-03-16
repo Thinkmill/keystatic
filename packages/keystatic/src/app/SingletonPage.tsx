@@ -30,6 +30,7 @@ import {
   isGitHubConfig,
   useShowRestoredDraftMessage,
 } from './utils';
+import { useAppState } from './shell/context';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
@@ -93,6 +94,7 @@ function SingletonPageInner(
   const { schema, singletonConfig } = useSingleton(props.singleton);
 
   const router = useRouter();
+  const { basePath } = useAppState();
 
   const previewHref = useMemo(() => {
     if (!singletonConfig.previewUrl) return undefined;
@@ -305,7 +307,7 @@ function SingletonPageInner(
               branchOid={baseCommit}
               onCreate={async newBranch => {
                 router.push(
-                  `/keystatic/branch/${encodeURIComponent(
+                  `${basePath}/branch/${encodeURIComponent(
                     newBranch
                   )}/singleton/${encodeURIComponent(props.singleton)}`
                 );

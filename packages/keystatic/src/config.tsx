@@ -46,6 +46,28 @@ type CommonConfig<Collections, Singletons> = {
   locale?: Locale;
   cloud?: { project: string };
   ui?: UserInterface<Collections, Singletons>;
+  /**
+   * Base path prefix for all Keystatic routes.
+   *
+   * Use this when your application is served under a subpath (e.g. Astro's
+   * `base` option). The value should include a leading slash but no trailing
+   * slash — for example `'/blog'`.
+   *
+   * When set, the Keystatic UI will be served at `{basePath}/keystatic/` and
+   * the API routes at `{basePath}/api/keystatic/`.
+   *
+   * @default '' (no prefix — routes are `/keystatic/` and `/api/keystatic/`)
+   *
+   * @example
+   * ```ts
+   * config({
+   *   basePath: '/blog',
+   *   storage: { kind: 'github', repo: 'owner/repo' },
+   *   // ...
+   * })
+   * ```
+   */
+  basePath?: string;
 };
 
 type CommonRemoteStorageConfig = {

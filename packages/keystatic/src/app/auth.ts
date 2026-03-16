@@ -1,6 +1,7 @@
 import { parse } from 'cookie';
 import * as s from 'superstruct';
 import { Config } from '../config';
+import { getKeystaticApiBasePath } from './utils';
 
 const storedTokenSchema = s.object({
   token: s.string(),
@@ -54,9 +55,10 @@ export async function getAuth(config: Config) {
 
   if (config.storage.kind === 'github' && !token) {
     if (!_refreshTokenPromise) {
+      const apiBase = getKeystaticApiBasePath(config);
       _refreshTokenPromise = (async () => {
         try {
-          const res = await fetch('/api/keystatic/github/refresh-token', {
+          const res = await fetch(`${apiBase}/github/refresh-token`, {
             method: 'POST',
           });
           if (res.status === 200) {

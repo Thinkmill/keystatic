@@ -20,10 +20,15 @@ export function useConfig(): Config {
 // Meta context
 // -----------------------------------------------------------------------------
 
-type AppStateType = { basePath: string };
+type AppStateType = {
+  basePath: string;
+  /** Base path for API fetch calls (e.g. '/api/keystatic' or '/blog/api/keystatic'). */
+  apiBasePath: string;
+};
 
 export const AppStateContext = createContext<AppStateType>({
   basePath: '/keystatic',
+  apiBasePath: '/api/keystatic',
 });
 
 export function useAppState() {

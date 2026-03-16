@@ -30,6 +30,7 @@ import {
 } from '../useData';
 import {
   getEntriesInCollectionWithTreeKey,
+  getKeystaticApiBasePath,
   isGitHubConfig,
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
@@ -51,11 +52,12 @@ import {
 import { CollabProvider } from './collab';
 import { EmptyRepo } from './empty-repo';
 
-export function fetchLocalTree(sha: string) {
+export function fetchLocalTree(sha: string, config: Config) {
   if (treeCache.has(sha)) {
     return treeCache.get(sha)!;
   }
-  const promise = fetch('/api/keystatic/tree', { headers: { 'no-cors': '1' } })
+  const apiBase = getKeystaticApiBasePath(config);
+  const promise = fetch(`${apiBase}/tree`, { headers: { 'no-cors': '1' } })
     .then(x => x.json())
     .then(async (entries: TreeEntry[]) => hydrateTreeCacheWithEntries(entries));
   treeCache.set(sha, promise);
@@ -77,7 +79,7 @@ export function LocalAppShellProvider(props: {
   const [currentTreeSha, setCurrentTreeSha] = useState<string>('initial');
 
   const tree = useData(
-    useCallback(() => fetchLocalTree(currentTreeSha), [currentTreeSha])
+    useCallback(() => fetchLocalTree(currentTreeSha, props.config), [currentTreeSha, props.config])
   );
 
   const allTreeData = useMemo(
@@ -365,10 +367,11 @@ export function GitHubAppShellProvider(props: {
     return getChangedData(props.config, allTreeData.scoped.merged.data);
   }, [allTreeData, props.config]);
 
+  const apiBase = getKeystaticApiBasePath(props.config);
   useEffect(() => {
     if (error?.response?.status === 401) {
       if (isGitHubConfig(props.config)) {
-        window.location.href = `/api/keystatic/github/login?from=${router.params
+        window.location.href = `${apiBase}/github/login?from=${router.params
           .map(encodeURIComponent)
           .join('/')}`;
       } else {
@@ -386,11 +389,11 @@ export function GitHubAppShellProvider(props: {
           (err?.originalError as any)?.type === 'FORBIDDEN'
       )
     ) {
-      window.location.href = `/api/keystatic/github/repo-not-found?from=${router.params
+      window.location.href = `${apiBase}/github/repo-not-found?from=${router.params
         .map(encodeURIComponent)
         .join('/')}`;
     }
-  }, [error, router, repo?.id, props.config]);
+  }, [error, router, repo?.id, props.config, apiBase]);
   const branches = useMemo((): Map<string, BranchInfo> => {
     return new Map<string, BranchInfo>(
       repo?.refs?.nodes?.flatMap(x => {

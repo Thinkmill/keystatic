@@ -3,6 +3,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -29,6 +30,8 @@ import { RepoNotFound } from './onboarding/repo-not-found';
 import { AppSlugProvider } from './onboarding/install-app';
 import { useRouter, RouterProvider } from './router';
 import {
+  getKeystaticApiBasePath,
+  getKeystaticBasePath,
   isCloudConfig,
   isGitHubConfig,
   isLocalConfig,
@@ -43,6 +46,7 @@ import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
 import { assertValidRepoConfig } from './repo-config';
 import { NotFoundBoundary, notFound } from './not-found';
+import { AppStateContext } from './shell/context';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -69,17 +73,19 @@ function parseParamsWithoutBranch(params: string[]) {
 function RedirectToBranch(props: { config: Config }) {
   const { push } = useRouter();
   const { data, error } = useContext(GitHubAppShellDataContext)!;
+  const apiBase = getKeystaticApiBasePath(props.config);
+  const uiBase = getKeystaticBasePath(props.config);
   useEffect(() => {
     if (error?.response?.status === 401) {
       if (props.config.storage.kind === 'github') {
-        window.location.href = '/api/keystatic/github/login';
+        window.location.href = `${apiBase}/github/login`;
       } else {
         redirectToCloudAuth('', props.config);
       }
     }
     if (data?.repository?.defaultBranchRef) {
       push(
-        `/keystatic/branch/${encodeURIComponent(
+        `${uiBase}/branch/${encodeURIComponent(
           data.repository.defaultBranchRef.name
         )}`
       );
@@ -91,9 +97,9 @@ function RedirectToBranch(props: { config: Config }) {
           'NOT_FOUND') ||
       (error?.graphQLErrors?.[0]?.originalError as any)?.type === 'FORBIDDEN'
     ) {
-      window.location.href = '/api/keystatic/github/repo-not-found';
+      window.location.href = `${apiBase}/github/repo-not-found`;
     }
-  }, [data, error, push, props.config]);
+  }, [data, error, push, props.config, apiBase, uiBase]);
   return null;
 }
 
@@ -139,11 +145,12 @@ function PageInner({ config }: { config: Config }) {
       return <Text>Not found</Text>;
     }
     branch = params[1];
-    basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
+    const uiBase = getKeystaticBasePath(config);
+    basePath = `${uiBase}/branch/${encodeURIComponent(branch)}`;
     parsedParams = parseParamsWithoutBranch(params.slice(2));
   } else {
     parsedParams = parseParamsWithoutBranch(params);
-    basePath = '/keystatic';
+    basePath = getKeystaticBasePath(config);
   }
   return wrapper(
     <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
@@ -229,10 +236,11 @@ function AuthWrapper(props: {
   }
   if (state === 'explicit-auth') {
     if (props.config.storage.kind === 'github') {
+      const apiBase = getKeystaticApiBasePath(props.config);
       return (
         <Flex justifyContent="center" alignItems="center" height="100vh">
           <Button
-            href={`/api/keystatic/github/login${
+            href={`${apiBase}/github/login${
               router.params.length
                 ? `?${new URLSearchParams({
                     from: router.params.map(encodeURIComponent).join('/'),
@@ -292,15 +300,22 @@ export function Keystatic(props: {
     assertValidRepoConfig(props.config.storage.repo);
   }
 
+  const appState = useMemo(() => ({
+    basePath: getKeystaticBasePath(props.config),
+    apiBasePath: getKeystaticApiBasePath(props.config),
+  }), [props.config]);
+
   return (
     <ClientOnly>
       <RedirectToLoopback>
         <AppSlugProvider value={props.appSlug}>
-          <RouterProvider>
-            <Provider config={props.config}>
-              <PageInner config={props.config} />
-            </Provider>
-          </RouterProvider>
+          <AppStateContext.Provider value={appState}>
+            <RouterProvider>
+              <Provider config={props.config}>
+                <PageInner config={props.config} />
+              </Provider>
+            </RouterProvider>
+          </AppStateContext.Provider>
         </AppSlugProvider>
       </RedirectToLoopback>
     </ClientOnly>

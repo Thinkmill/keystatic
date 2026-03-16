@@ -10,6 +10,10 @@ import { handleGitHubAppCreation, localModeApiHandler } from '#api-handler';
 import { webcrypto } from '#webcrypto';
 import { bytesToHex } from '../hex';
 import { decryptValue, encryptValue } from './encryption';
+import {
+  getKeystaticApiBasePath,
+  getKeystaticBasePath,
+} from '../app/utils';
 
 export type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -62,6 +66,12 @@ export function makeGenericAPIRouteHandler(
     config: _config.config,
   };
 
+  const apiBasePath = getKeystaticApiBasePath(_config2.config);
+  const uiBasePath = getKeystaticBasePath(_config2.config);
+  const stripRegex = new RegExp(
+    `^${apiBasePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\/?`
+  );
+
   const getParams = (req: KeystaticRequest) => {
     let url;
     try {
@@ -76,7 +86,7 @@ export function makeGenericAPIRouteHandler(
       );
     }
     return url.pathname
-      .replace(/^\/api\/keystatic\/?/, '')
+      .replace(stripRegex, '')
       .split('/')
       .map(x => decodeURIComponent(x))
       .filter(Boolean);
@@ -119,14 +129,14 @@ export function makeGenericAPIRouteHandler(
       const params = getParams(req);
       const joined = params.join('/');
       if (joined === 'github/created-app') {
-        return createdGithubApp(req, options?.slugEnvName);
+        return createdGithubApp(req, options?.slugEnvName, _config2.config);
       }
       if (
         joined === 'github/login' ||
         joined === 'github/repo-not-found' ||
         joined === 'github/logout'
       ) {
-        return redirect('/keystatic/setup');
+        return redirect(`${uiBasePath}/setup`);
       }
       return { status: 404, body: 'Not Found' };
     };
@@ -172,7 +182,7 @@ export function makeGenericAPIRouteHandler(
           }
         );
       }
-      return redirect('/keystatic', [
+      return redirect(uiBasePath, [
         ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')],
         ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')],
       ]);
@@ -252,7 +262,7 @@ async function githubOauthCallback(
       status: 200,
     };
   }
-  return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
+  return redirect(`${getKeystaticBasePath(config.config)}${from ? `/${from}` : ''}`, headers);
 }
 
 async function getTokenCookies(
@@ -355,7 +365,7 @@ async function githubRepoNotFound(
 ): Promise<KeystaticResponse> {
   const headers = await refreshGitHubAuth(req, config);
   if (headers) {
-    return redirect('/keystatic/repo-not-found', headers);
+    return redirect(`${getKeystaticBasePath(config.config)}/repo-not-found`, headers);
   }
   return githubLogin(req, config);
 }
@@ -375,7 +385,7 @@ async function githubLogin(
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set(
     'redirect_uri',
-    `${reqUrl.origin}/api/keystatic/github/oauth/callback`
+    `${reqUrl.origin}${getKeystaticApiBasePath(config.config)}/github/oauth/callback`
   );
   if (from === '/') {
     return redirect(url.toString());
@@ -399,12 +409,13 @@ async function githubLogin(
 
 async function createdGithubApp(
   req: KeystaticRequest,
-  slugEnvVarName: string | undefined
+  slugEnvVarName: string | undefined,
+  config?: Config
 ): Promise<KeystaticResponse> {
   if (process.env.NODE_ENV !== 'development') {
     return { status: 400, body: 'App setup only allowed in development' };
   }
-  return handleGitHubAppCreation(req, slugEnvVarName);
+  return handleGitHubAppCreation(req, slugEnvVarName, config);
 }
 
 function immediatelyExpiringCookie(name: string) {

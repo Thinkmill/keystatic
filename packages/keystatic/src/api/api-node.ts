@@ -8,6 +8,7 @@ import {
   redirect,
 } from './internal-utils';
 import { readToDirEntries, getAllowedDirectories } from './read-local';
+import { getKeystaticBasePath } from '../app/utils';
 import { blobSha } from '../app/trees';
 import { randomBytes } from 'node:crypto';
 import { base64UrlDecode } from '#base64';
@@ -34,7 +35,8 @@ const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function handleGitHubAppCreation(
   req: KeystaticRequest,
-  slugEnvVarName: string | undefined
+  slugEnvVarName: string | undefined,
+  config?: Config
 ): Promise<KeystaticResponse> {
   const searchParams = new URL(req.url, 'https://localhost').searchParams;
   const code = searchParams.get('code');
@@ -85,7 +87,8 @@ ${
   const newEnv = prevEnv ? `${prevEnv}\n\n${toAddToEnv}` : toAddToEnv;
   await fs.writeFile('.env', newEnv);
   await wait(200);
-  return redirect('/keystatic/created-github-app?slug=' + ghAppDataResult.slug);
+  const uiBase = config ? getKeystaticBasePath(config) : '/keystatic';
+  return redirect(`${uiBase}/created-github-app?slug=` + ghAppDataResult.slug);
 }
 
 export function localModeApiHandler(

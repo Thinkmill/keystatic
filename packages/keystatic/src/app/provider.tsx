@@ -27,6 +27,7 @@ import { Config } from '../config';
 import { ThemeProvider, useTheme } from './shell/theme';
 import { parseRepoConfig } from './repo-config';
 import { useRouter } from './router';
+import { getKeystaticApiBasePath } from './utils';
 
 // NOTE: scroll behaviour is handled by shell components
 injectGlobal({ body: { overflow: 'hidden' } });
@@ -69,7 +70,7 @@ export function createUrqlClient(config: Config): Client {
               !authState
             ) {
               if (config.storage.kind === 'github') {
-                window.location.href = '/api/keystatic/github/login';
+                window.location.href = `${getKeystaticApiBasePath(config)}/github/login`;
               } else {
                 redirectToCloudAuth('', config);
               }

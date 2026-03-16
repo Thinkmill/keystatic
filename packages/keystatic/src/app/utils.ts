@@ -21,6 +21,32 @@ import { useEffectEvent } from '@react-aria/utils';
 
 export * from './path-utils';
 
+/**
+ * Returns the normalized base path prefix from config (e.g. '' or '/blog').
+ * Strips trailing slashes so consumers can concatenate safely.
+ */
+export function getConfigBasePath(config: Config): string {
+  const raw = config.basePath ?? '';
+  // Normalize: ensure leading slash (if non-empty), strip trailing slash
+  if (!raw) return '';
+  const normalized = raw.startsWith('/') ? raw : `/${raw}`;
+  return normalized.endsWith('/') ? normalized.slice(0, -1) : normalized;
+}
+
+/**
+ * Returns the Keystatic UI base path, e.g. '/keystatic' or '/blog/keystatic'.
+ */
+export function getKeystaticBasePath(config: Config): string {
+  return `${getConfigBasePath(config)}/keystatic`;
+}
+
+/**
+ * Returns the Keystatic API base path, e.g. '/api/keystatic' or '/blog/api/keystatic'.
+ */
+export function getKeystaticApiBasePath(config: Config): string {
+  return `${getConfigBasePath(config)}/api/keystatic`;
+}
+
 export function getCollection(config: Config, collection: string) {
   return config.collections![collection];
 }
@@ -211,7 +237,7 @@ export async function redirectToCloudAuth(from: string, config: Config) {
   url.searchParams.set('client_id', config.cloud.project);
   url.searchParams.set(
     'redirect_uri',
-    `${window.location.origin}/keystatic/cloud/oauth/callback`
+    `${window.location.origin}${getKeystaticBasePath(config)}/cloud/oauth/callback`
   );
   url.searchParams.set('response_type', 'code');
   url.searchParams.set('code_challenge_method', 'S256');

@@ -36,6 +36,11 @@ import "@keystatic/core/ui";
 `
         );
 
+        // Astro's `base` config already prefixes injected route patterns,
+        // so we use bare /keystatic and /api/keystatic patterns here.
+        // The config.basePath option in @keystatic/core handles the
+        // runtime path resolution for fetch calls, redirects, etc.
+
         injectRoute({
           // @ts-ignore
           entryPoint: '@keystatic/astro/internal/keystatic-astro-page.astro',

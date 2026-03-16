@@ -16,6 +16,7 @@ import {
 } from './shell/data';
 import { hydrateBlobCache } from './useItemData';
 import { FormatInfo, getEntryDataFilepath, getPathPrefix } from './path-utils';
+import { getKeystaticApiBasePath } from './utils';
 import {
   getTreeNodeAtPath,
   TreeEntry,
@@ -304,7 +305,7 @@ export function useUpsertItem(args: {
           }
           throw new Error('Failed to update');
         } else {
-          const res = await fetch('/api/keystatic/update', {
+          const res = await fetch(`${getKeystaticApiBasePath(args.config)}/update`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -362,6 +363,7 @@ export function useDeleteItem(args: {
   basePath: string;
   initialFiles: string[];
   storage: Config['storage'];
+  config: Config;
 }) {
   const [state, setState] = useState<
     | { kind: 'idle' }
@@ -443,7 +445,7 @@ export function useDeleteItem(args: {
           setState({ kind: 'updated' });
           return true;
         } else {
-          const res = await fetch('/api/keystatic/update', {
+          const res = await fetch(`${getKeystaticApiBasePath(args.config)}/update`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
