@@ -154,6 +154,7 @@ function ItemPageInner(
     initialFiles: props.initialFiles,
     storage: config.storage,
     basePath: currentBasePath,
+    config,
   });
 
   const onDelete = useEventCallback(async () => {
@@ -298,7 +299,7 @@ function ItemPageInner(
             <CreateBranchDuringUpdateDialog
               branchOid={baseCommit}
               onCreate={async newBranch => {
-                const itemBasePath = `/keystatic/branch/${encodeURIComponent(
+                const itemBasePath = `${props.basePath}/branch/${encodeURIComponent(
                   newBranch
                 )}/collection/${encodeURIComponent(collection)}/item/`;
                 router.push(itemBasePath + encodeURIComponent(itemSlug));

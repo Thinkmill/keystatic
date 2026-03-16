@@ -596,7 +596,7 @@ function CreateItemInner(props: {
             branchOid={baseCommit}
             onCreate={async newBranch => {
               router.push(
-                `/keystatic/branch/${encodeURIComponent(
+                `${props.basePath}/branch/${encodeURIComponent(
                   newBranch
                 )}/collection/${encodeURIComponent(props.collection)}/create`
               );
@@ -606,7 +606,7 @@ function CreateItemInner(props: {
                 const slug = getSlugFromState(collectionConfig, props.state);
 
                 router.push(
-                  `/keystatic/branch/${encodeURIComponent(
+                  `${props.basePath}/branch/${encodeURIComponent(
                     newBranch
                   )}/collection/${encodeURIComponent(
                     props.collection

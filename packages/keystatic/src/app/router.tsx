@@ -4,8 +4,10 @@ import React, {
   startTransition,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
+import { useAppState } from './shell/context';
 
 export type Router = {
   push: (path: string) => void;
@@ -19,13 +21,21 @@ export type Router = {
 const RouterContext = createContext<Router | null>(null);
 
 export function RouterProvider(props: { children: ReactNode }) {
+  const { basePath } = useAppState();
   const [url, setUrl] = useState(() => window.location.href);
+
+  // Build a regex that strips the keystatic base path prefix.
+  // e.g. basePath='/blog/keystatic' → /^\/blog\/keystatic\/?/
+  const stripRegex = useMemo(
+    () => new RegExp(`^${basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\/?`),
+    [basePath]
+  );
 
   function navigate(url: string, replace: boolean) {
     const newUrl = new URL(url, window.location.href);
     if (
       newUrl.origin !== window.location.origin ||
-      !newUrl.pathname.startsWith('/keystatic')
+      !newUrl.pathname.startsWith(basePath)
     ) {
       window.location.assign(newUrl);
       return;
@@ -42,7 +52,7 @@ export function RouterProvider(props: { children: ReactNode }) {
     navigate(path, false);
   }
   const parsedUrl = new URL(url);
-  const replaced = parsedUrl.pathname.replace(/^\/keystatic\/?/, '');
+  const replaced = parsedUrl.pathname.replace(stripRegex, '');
   const params =
     replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
   const router = {

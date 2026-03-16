@@ -7,8 +7,11 @@ import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 import { GitHubConfig } from '../..';
 import { parseRepoConfig } from '../repo-config';
+import { getKeystaticApiBasePath, getKeystaticBasePath } from '../utils';
 
 export function KeystaticSetup(props: { config: GitHubConfig }) {
+  const uiBase = getKeystaticBasePath(props.config);
+  const apiBase = getKeystaticApiBasePath(props.config);
   const [deployedURL, setDeployedURL] = useState('');
   const [organization, setOrganization] = useState('');
   return (
@@ -77,17 +80,17 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
               parseRepoConfig(props.config.storage.repo).owner
             } Keystatic`,
             url: deployedURL
-              ? new URL('/keystatic', deployedURL).toString()
-              : `${window.location.origin}/keystatic`,
+              ? new URL(uiBase, deployedURL).toString()
+              : `${window.location.origin}${uiBase}`,
             public: true,
-            redirect_url: `${window.location.origin}/api/keystatic/github/created-app`,
+            redirect_url: `${window.location.origin}${apiBase}/github/created-app`,
             callback_urls: [
-              `${window.location.origin}/api/keystatic/github/oauth/callback`,
-              `http://127.0.0.1/api/keystatic/github/oauth/callback`,
+              `${window.location.origin}${apiBase}/github/oauth/callback`,
+              `http://127.0.0.1${apiBase}/github/oauth/callback`,
               ...(deployedURL
                 ? [
                     new URL(
-                      '/api/keystatic/github/oauth/callback',
+                      `${apiBase}/github/oauth/callback`,
                       deployedURL
                     ).toString(),
                   ]

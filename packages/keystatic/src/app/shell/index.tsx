@@ -4,7 +4,7 @@ import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
 
 import { Config } from '../../config';
 
-import { isGitHubConfig, isLocalConfig } from '../utils';
+import { getKeystaticApiBasePath, isGitHubConfig, isLocalConfig } from '../utils';
 
 import { AppStateContext, ConfigContext } from './context';
 import {
@@ -66,7 +66,7 @@ export const AppShell = (props: {
 
   const inner = (
     <ConfigContext.Provider value={props.config}>
-      <AppStateContext.Provider value={{ basePath: props.basePath }}>
+      <AppStateContext.Provider value={{ basePath: props.basePath, apiBasePath: getKeystaticApiBasePath(props.config) }}>
         <SidebarProvider>
           <MainPanelLayout>
             <BranchNotFound>{content}</BranchNotFound>

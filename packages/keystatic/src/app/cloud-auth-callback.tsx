@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import * as s from 'superstruct';
 import { Config } from '../config';
 import { useRouter } from './router';
+import { useAppState } from './shell/context';
 import { KEYSTATIC_CLOUD_API_URL, KEYSTATIC_CLOUD_HEADERS } from './utils';
 import { Flex } from '@keystar/ui/layout';
 
@@ -20,6 +21,7 @@ const tokenResponseSchema = s.type({
 
 export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
   const router = useRouter();
+  const { basePath } = useAppState();
   const url = new URL(window.location.href);
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');
@@ -44,7 +46,7 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
           body: new URLSearchParams({
             code,
             client_id: project,
-            redirect_uri: `${window.location.origin}/keystatic/cloud/oauth/callback`,
+            redirect_uri: `${window.location.origin}${basePath}/cloud/oauth/callback`,
             code_verifier: storedState.code_verifier,
             grant_type: 'authorization_code',
           }).toString(),
@@ -70,12 +72,12 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
             validUntil: Date.now() + parsed.expires_in * 1000,
           })
         );
-        router.push(`/keystatic/${storedState.from}`);
+        router.push(`${basePath}/${storedState.from}`);
       })().catch(error => {
         setError(error);
       });
     }
-  }, [code, state, router, storedState, config]);
+  }, [code, state, router, storedState, config, basePath]);
   if (!config.cloud?.project) {
     return <Text>Missing Keystatic Cloud config</Text>;
   }

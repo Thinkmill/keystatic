@@ -7,7 +7,7 @@ import {
 } from '../../../app/shell/collab';
 import { useCloudInfo } from '../../../app/shell/data';
 import { useRouter } from '../../../app/router';
-import { useConfig } from '../../../app/shell/context';
+import { useAppState, useConfig } from '../../../app/shell/context';
 import { areArraysEqual } from '../document/DocumentEditor/document-features-normalization';
 import { Avatar } from '@keystar/ui/avatar';
 import { css } from '@keystar/ui/style';
@@ -19,6 +19,7 @@ function CollabAddToPathProvider(props: {
   const yjsInfo = useYjsIfAvailable();
   const cloudInfo = useCloudInfo();
   const router = useRouter();
+  const { basePath } = useAppState();
   const awarenessStates = useAwarenessStates();
   const avatarsAtPath = useMemo(() => {
     if (!yjsInfo || yjsInfo === 'loading' || !cloudInfo) {
@@ -29,7 +30,7 @@ function CollabAddToPathProvider(props: {
       if (
         clientId === yjsInfo.awareness.clientID ||
         !val.user ||
-        router.href !== `/keystatic/branch/${val.branch}/${val.location}` ||
+        router.href !== `${basePath}/branch/${val.branch}/${val.location}` ||
         !Array.isArray(val.path) ||
         !areArraysEqual(val.path, props.path)
       ) {
@@ -38,7 +39,7 @@ function CollabAddToPathProvider(props: {
       avatars.push(val.user);
     }
     return avatars;
-  }, [yjsInfo, cloudInfo, awarenessStates, router.href, props.path]);
+  }, [yjsInfo, cloudInfo, awarenessStates, router.href, basePath, props.path]);
   return (
     <div
       data-ks-path={JSON.stringify(props.path)}
