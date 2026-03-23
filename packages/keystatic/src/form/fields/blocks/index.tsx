@@ -4,10 +4,11 @@ import {
   ArrayField,
   ConditionalField,
   BasicFormField,
-  fields,
 } from '../../api';
 import { select as selectField } from '../select';
 import { BlocksFieldInput } from '#field-ui/blocks';
+import { conditional } from '../conditional';
+import { array } from '../array';
 
 export function blocks<Schemas extends Record<string, ComponentSchema>>(
   blocks: {
@@ -45,7 +46,7 @@ export function blocks<Schemas extends Record<string, ComponentSchema>>(
       value: key,
     })),
   });
-  const element = fields.conditional<
+  const element = conditional<
     BasicFormField<keyof Schemas & string>,
     Schemas
   >(
@@ -55,7 +56,7 @@ export function blocks<Schemas extends Record<string, ComponentSchema>>(
     ) as Schemas
   );
   return {
-    ...fields.array(element, {
+    ...array(element, {
       label: opts.label,
       description: opts.description,
       validation: opts.validation,
