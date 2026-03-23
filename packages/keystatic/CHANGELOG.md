@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.0-test-20260323041527
+
+### Patch Changes
+
+- Updated dependencies [[`63c767b`](https://github.com/Thinkmill/keystatic/commit/63c767bbb8b9bbc96c30535862bcccfbbc4ea346)]:
+  - @keystar/ui@0.0.0-test-20260323041527
+
 ## 0.5.48
 
 ### Patch Changes
