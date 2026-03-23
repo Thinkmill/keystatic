@@ -1,7 +1,7 @@
 import { getSlugFromState } from '../app/utils';
 import { ComponentSchema } from './api';
 import { SlugFieldInfo } from './fields/text/path-slug-context';
-import { PropValidationError } from './parse-props';
+import { PropValidationError } from './prop-validation-error';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
 import { validateArrayLength } from './validate-array-length';
 import { toFormattedFormDataError } from './error-formatting';
