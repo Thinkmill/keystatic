@@ -2,4 +2,4 @@
 "@keystatic/core": patch
 ---
 
-Update korean translations
+Update Korean translations
