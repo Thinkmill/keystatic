@@ -1,5 +1,22 @@
 # @keystatic/core
 
+## 0.0.0-test-20260323050841
+
+### Patch Changes
+
+- [#1465](https://github.com/Thinkmill/keystatic/pull/1465) [`6006584`](https://github.com/Thinkmill/keystatic/commit/60065843fd73da2d9ed973f6d478bd7159fce883) Thanks [@Greenheart](https://github.com/Greenheart)! - Only redirect to loopback if the storage uses OAuth redirects.
+
+- [#1485](https://github.com/Thinkmill/keystatic/pull/1485) [`bb2bc34`](https://github.com/Thinkmill/keystatic/commit/bb2bc34c3f0a35e1033f9927293e1d9f61eda4fd) Thanks [@williamwmarx](https://github.com/williamwmarx)! - Add support for `mailto:` and `tel:` links in document and markdoc editors
+
+  Previously, pasting `mailto:` or `tel:` links would not create a hyperlink because the URL validation only accepted `http://` and `https://` schemes. This change expands the URL pattern to include `mailto:` and `tel:` protocols, allowing users to create email and phone links by pasting.
+
+- [`fdd8459`](https://github.com/Thinkmill/keystatic/commit/fdd845951f2046ca0f2f8287003ad36f23001302) Thanks [@emmatown](https://github.com/emmatown)! - Remove circular dependencies
+
+- [#1487](https://github.com/Thinkmill/keystatic/pull/1487) [`ded5ea7`](https://github.com/Thinkmill/keystatic/commit/ded5ea7dcfc59ea3d9358ba8af778a39167c9d50) Thanks [@bh2980](https://github.com/bh2980)! - Update Korean translations
+
+- Updated dependencies [[`fdd8459`](https://github.com/Thinkmill/keystatic/commit/fdd845951f2046ca0f2f8287003ad36f23001302), [`63c767b`](https://github.com/Thinkmill/keystatic/commit/63c767bbb8b9bbc96c30535862bcccfbbc4ea346)]:
+  - @keystar/ui@0.0.0-test-20260323050841
+
 ## 0.5.48
 
 ### Patch Changes

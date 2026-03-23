@@ -1,5 +1,13 @@
 # @keystar/ui
 
+## 0.0.0-test-20260323050841
+
+### Patch Changes
+
+- [`fdd8459`](https://github.com/Thinkmill/keystatic/commit/fdd845951f2046ca0f2f8287003ad36f23001302) Thanks [@emmatown](https://github.com/emmatown)! - Remove circular dependencies
+
+- [#1449](https://github.com/Thinkmill/keystatic/pull/1449) [`63c767b`](https://github.com/Thinkmill/keystatic/commit/63c767bbb8b9bbc96c30535862bcccfbbc4ea346) Thanks [@jossmac](https://github.com/jossmac)! - Improve "neutral" `Toast` appearance, esp. for dark mode.
+
 ## 0.7.19
 
 ### Patch Changes
