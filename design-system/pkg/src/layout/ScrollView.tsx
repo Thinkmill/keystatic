@@ -24,7 +24,7 @@ import {
   tokenSchema,
   transition,
 } from '@keystar/ui/style';
-import { useGridStyleProps } from '.';
+import { useGridStyleProps } from './resolvers';
 
 export type ScrollDirection = 'vertical' | 'horizontal';
 export type ScrollIndicator = 'start' | 'end' | 'both' | 'none';
