@@ -1,5 +1,5 @@
 import { FieldDataError } from './fields/error';
-import { PropValidationError } from './parse-props';
+import { PropValidationError } from './prop-validation-error';
 
 function flattenErrors(error: unknown): unknown[] {
   if (error instanceof AggregateError) {
