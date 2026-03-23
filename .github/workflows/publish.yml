@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 10
     environment: Release
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: true # needed for git push
