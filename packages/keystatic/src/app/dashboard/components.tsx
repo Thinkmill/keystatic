@@ -67,6 +67,7 @@ export const DashboardCard = (
     <Flex
       alignItems="center"
       backgroundColor="canvas"
+      borderRadius="medium"
       padding="large"
       position="relative"
     >
