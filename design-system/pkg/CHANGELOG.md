@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.21
+
+### Patch Changes
+
+- [#1523](https://github.com/Thinkmill/keystatic/pull/1523) [`cd6d68b`](https://github.com/Thinkmill/keystatic/commit/cd6d68b7d280ba02956c5da483d3555f576111f1) Thanks [@emmatown](https://github.com/emmatown)! - Fix `disabledKeys` on `ActionBar`
+
 ## 0.7.20
 
 ### Patch Changes
