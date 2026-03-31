@@ -1,0 +1,88 @@
+# .github/workflows/translate-post.yml
+#
+# Triggered from Keystatic via useWorkflow('translate-post.yml').
+# Duplicates a post and translates it using an LLM.
+
+name: Translate Post
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Source post slug
+        required: true
+        type: string
+      title:
+        description: Source post title
+        required: true
+        type: string
+      language:
+        description: Target language code (es, fr, de, ja)
+        required: true
+        type: string
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Read source post
+        id: read
+        run: |
+          POST_DIR="posts/${{ inputs.slug }}"
+          if [ ! -d "$POST_DIR" ]; then
+            echo "::error::Post not found: ${{ inputs.slug }}"
+            exit 1
+          fi
+          CONTENT=$(cat "$POST_DIR/content.mdoc" 2>/dev/null || echo "")
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Translate content
+        id: translate
+        uses: actions/github-script@v7
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        with:
+          script: |
+            // In production, call a real translation API here.
+            // This example uses a simple prefix for demonstration.
+            const lang = '${{ inputs.language }}'.toUpperCase();
+            const title = `[${lang}] ${{ inputs.title }}`;
+            const slug = `${{ inputs.language }}-${{ inputs.slug }}`;
+
+            core.setOutput('translated_title', title);
+            core.setOutput('translated_slug', slug);
+
+      - name: Create translated post
+        run: |
+          SLUG="${{ steps.translate.outputs.translated_slug }}"
+          TITLE="${{ steps.translate.outputs.translated_title }}"
+          POST_DIR="posts/$SLUG"
+
+          mkdir -p "$POST_DIR"
+
+          # Copy and modify frontmatter
+          cat > "$POST_DIR/index.yaml" << YAML
+          title: $TITLE
+          slug: $SLUG
+          YAML
+
+          # Copy content (in production, this would be translated)
+          cp "posts/${{ inputs.slug }}/content.mdoc" "$POST_DIR/content.mdoc" 2>/dev/null || true
+
+      - name: Commit translated post
+        run: |
+          git config user.name "keystatic-bot"
+          git config user.email "bot@keystatic.com"
+          git add "posts/${{ steps.translate.outputs.translated_slug }}"
+          git commit -m "feat: Add ${{ inputs.language }} translation of ${{ inputs.slug }}"
+          git push

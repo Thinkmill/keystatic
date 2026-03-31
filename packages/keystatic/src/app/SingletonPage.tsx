@@ -65,6 +65,8 @@ import { clipboardPasteIcon } from '@keystar/ui/icon/icons/clipboardPasteIcon';
 import { clipboardCopyIcon } from '@keystar/ui/icon/icons/clipboardCopyIcon';
 import { setValueToPreviewProps } from '../form/get-value';
 import { toastQueue } from '@keystar/ui/toast';
+import { ActionButtons } from './action-buttons';
+import { useActions } from './useActions';
 
 type SingletonPageProps = {
   singleton: string;
@@ -166,6 +168,11 @@ function SingletonPageInner(
     return actions;
   }, [previewHref, viewHref]);
 
+  const visibleActions = useActions({
+    singleton: props.singleton,
+    data: props.state as Record<string, unknown>,
+  });
+
   const formID = 'singleton-form';
 
   const baseCommit = useBaseCommit();
@@ -227,6 +234,13 @@ function SingletonPageInner(
           )}
         </Flex>
         <PresenceAvatars />
+        <ActionButtons
+          actions={visibleActions}
+          singleton={props.singleton}
+          data={props.state as Record<string, unknown>}
+          storage={{ kind: props.config.storage.kind }}
+          onUpdate={async () => {}}
+        />
         <ActionGroup
           buttonLabelBehavior="hide"
           overflowMode="collapse"

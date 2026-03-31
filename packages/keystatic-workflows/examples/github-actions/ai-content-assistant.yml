@@ -1,0 +1,145 @@
+# .github/workflows/ai-content-assistant.yml
+#
+# Triggered from Keystatic via useWorkflow('ai-content-assistant.yml').
+# Uses an LLM to generate a summary, suggest SEO titles, and auto-tag a post.
+
+name: AI Content Assistant
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Post slug
+        required: true
+        type: string
+      title:
+        description: Post title
+        required: true
+        type: string
+      task:
+        description: "Task to perform: summary, suggest-titles, generate-tags"
+        required: true
+        type: choice
+        options:
+          - summary
+          - suggest-titles
+          - generate-tags
+
+jobs:
+  ai-assist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read post content
+        id: read
+        run: |
+          POST_DIR="posts/${{ inputs.slug }}"
+          CONTENT=""
+          if [ -f "$POST_DIR/content.mdoc" ]; then
+            CONTENT=$(head -c 3000 "$POST_DIR/content.mdoc")
+          fi
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Generate summary
+        if: inputs.task == 'summary'
+        id: summary
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: [{
+                  role: 'user',
+                  content: `Summarize this blog post in 2-3 sentences for a meta description.\n\nTitle: ${{ inputs.title }}\n\nContent:\n${`${{ steps.read.outputs.content }}`.slice(0, 2000)}`,
+                }],
+                max_tokens: 200,
+              }),
+            });
+            const data = await response.json();
+            const summary = data.choices[0].message.content;
+            core.setOutput('result', JSON.stringify({ task: 'summary', summary }));
+
+      - name: Suggest SEO titles
+        if: inputs.task == 'suggest-titles'
+        id: titles
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: [{
+                  role: 'user',
+                  content: `Suggest 3 SEO-optimized alternative titles (50-60 chars each) for:\n\nCurrent: ${{ inputs.title }}\n\nContent:\n${`${{ steps.read.outputs.content }}`.slice(0, 2000)}\n\nReturn one per line, no numbering.`,
+                }],
+                max_tokens: 200,
+              }),
+            });
+            const data = await response.json();
+            const suggestions = data.choices[0].message.content.split('\n').filter(Boolean);
+            core.setOutput('result', JSON.stringify({ task: 'suggest-titles', suggestions }));
+
+      - name: Generate tags
+        if: inputs.task == 'generate-tags'
+        id: tags
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: [{
+                  role: 'user',
+                  content: `Suggest 3-7 tags for this blog post as a comma-separated list (lowercase, hyphenated).\n\nTitle: ${{ inputs.title }}\n\nContent:\n${`${{ steps.read.outputs.content }}`.slice(0, 2000)}`,
+                }],
+                max_tokens: 100,
+              }),
+            });
+            const data = await response.json();
+            const tags = data.choices[0].message.content.split(',').map(t => t.trim().toLowerCase());
+            core.setOutput('result', JSON.stringify({ task: 'generate-tags', tags }));
+
+      - name: Save result artifact
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const result =
+              `${{ steps.summary.outputs.result }}` ||
+              `${{ steps.titles.outputs.result }}` ||
+              `${{ steps.tags.outputs.result }}` ||
+              '{}';
+            fs.writeFileSync('ai-result.json', result);
+
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-result
+          path: ai-result.json
+          retention-days: 1

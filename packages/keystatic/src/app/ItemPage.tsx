@@ -92,6 +92,8 @@ import { ErrorBoundary } from './error-boundary';
 import { copyEntryToClipboard, getPastedEntry } from './entry-clipboard';
 import { setValueToPreviewProps } from '../form/get-value';
 import { toastQueue } from '@keystar/ui/toast';
+import { ActionButtons } from './action-buttons';
+import { useActions } from './useActions';
 
 type ItemPageProps = {
   collection: string;
@@ -259,6 +261,10 @@ function ItemPageInner(
             onReset={props.onReset}
             viewHref={viewHref}
             previewHref={previewHref}
+            collection={collection}
+            itemSlug={itemSlug}
+            state={props.state}
+            config={config}
           />
         }
         {...props}
@@ -552,6 +558,10 @@ function HeaderActions(props: {
   onPaste: () => void;
   previewHref?: string;
   viewHref?: string;
+  collection: string;
+  itemSlug: string;
+  state: Record<string, unknown>;
+  config: Config;
 }) {
   let {
     formID,
@@ -564,11 +574,22 @@ function HeaderActions(props: {
     onPaste,
     previewHref,
     viewHref,
+    collection,
+    itemSlug,
+    state,
+    config,
   } = props;
   const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
   const [duplicateAlertIsOpen, setDuplicateAlertOpen] = useState(false);
+
+  const visibleActions = useActions({
+    collection,
+    slug: itemSlug,
+    data: state as Record<string, unknown>,
+  });
+
   const menuActions = useMemo(() => {
     type ActionType = {
       icon: ReactElement;
@@ -664,6 +685,14 @@ function HeaderActions(props: {
     <Flex alignItems="center" gap={{ mobile: 'small', tablet: 'regular' }}>
       <PresenceAvatars />
       {indicatorElement}
+      <ActionButtons
+        actions={visibleActions}
+        collection={collection}
+        slug={itemSlug}
+        data={state as Record<string, unknown>}
+        storage={{ kind: config.storage.kind }}
+        onUpdate={async () => {}}
+      />
       <ActionGroup
         buttonLabelBehavior="hide"
         overflowMode="collapse"

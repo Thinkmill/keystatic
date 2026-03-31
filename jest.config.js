@@ -1,6 +1,6 @@
 /** @type {import('jest').Config} */
 const config = {
-  projects: ['<rootDir>/design-system', '<rootDir>/packages/keystatic'],
+  projects: ['<rootDir>/design-system', '<rootDir>/packages/keystatic', '<rootDir>/packages/keystatic-workflows'],
   collectCoverageFrom: [
     '**/packages/**/*.{ts,tsx}',
     '!**/dist/**',

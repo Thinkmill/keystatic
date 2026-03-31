@@ -1,0 +1,144 @@
+---
+title: Hooks
+summary: >-
+  React to content lifecycle events with before and after hooks on collections
+  and singletons.
+---
+
+Hooks let you run custom logic when content is created, saved, or deleted. They are registered at runtime using the `registerHooks` function from `@keystatic/core`.
+
+## Hook events
+
+Six lifecycle events are available:
+
+| Event | When it fires | Can cancel? |
+|---|---|---|
+| `beforeCreate` | Before a new entry is created | Yes |
+| `afterCreate` | After a new entry is created | No |
+| `beforeSave` | Before an existing entry is saved | Yes |
+| `afterSave` | After an existing entry is saved | No |
+| `beforeDelete` | Before an entry is deleted | Yes |
+| `afterDelete` | After an entry is deleted | No |
+
+## Registering hooks
+
+Use `registerHooks` to attach hooks to a collection or singleton:
+
+```typescript
+import { registerHooks } from '@keystatic/core';
+
+registerHooks({ collection: 'posts' }, {
+  beforeSave: [
+    async (ctx) => {
+      console.log(`Saving post: ${ctx.slug}`);
+    },
+  ],
+  afterSave: [
+    async (ctx) => {
+      console.log(`Post saved: ${ctx.slug}`);
+    },
+  ],
+});
+```
+
+For singletons:
+
+```typescript
+registerHooks({ singleton: 'settings' }, {
+  afterSave: [
+    async (ctx) => {
+      console.log('Settings updated');
+    },
+  ],
+});
+```
+
+## Hook context
+
+Every hook receives a context object with information about the operation:
+
+```typescript
+type HookContext = {
+  event: HookEvent;         // which event triggered this hook
+  trigger: 'event' | 'manual';
+  collection?: string;      // collection name (if applicable)
+  singleton?: string;       // singleton name (if applicable)
+  slug?: string;            // entry slug (collections only)
+  data: Record<string, unknown>;  // current field values
+  previousData?: Record<string, unknown>;  // previous values (for updates)
+  storage: { kind: 'local' | 'github' | 'cloud' };
+};
+```
+
+After hooks also receive an `update` function for writing back to the entry:
+
+```typescript
+afterSave: [
+  async (ctx) => {
+    // Update a field on the entry after save
+    await ctx.update({ lastModified: new Date().toISOString() });
+  },
+],
+```
+
+## Cancelling operations
+
+`before*` hooks can cancel the operation by returning `{ cancel: true }`:
+
+```typescript
+beforeSave: [
+  async (ctx) => {
+    const title = ctx.data.title as string;
+    if (title.length < 3) {
+      return { cancel: true, reason: 'Title must be at least 3 characters' };
+    }
+  },
+],
+```
+
+When a hook cancels, subsequent hooks do not run and a toast notification displays the reason to the editor.
+
+## Modifying data
+
+`before*` hooks can also modify the data before it is saved:
+
+```typescript
+beforeSave: [
+  async (ctx) => {
+    return {
+      data: {
+        ...ctx.data,
+        updatedAt: new Date().toISOString(),
+      },
+    };
+  },
+],
+```
+
+Modified data is passed to subsequent hooks and to the save operation.
+
+## Execution order
+
+1. `before*` hooks run **sequentially** — first cancellation wins
+2. The actual operation (create/save/delete) runs
+3. `after*` hooks run **in parallel** — errors are logged but don't block
+
+When both global and resource-level hooks exist, global hooks run first.
+
+## Global hooks
+
+Register hooks that run for all collections and singletons using `registerGlobalHooks`:
+
+```typescript
+import { registerGlobalHooks } from '@keystatic/core';
+
+registerGlobalHooks({
+  afterSave: [
+    async (ctx) => {
+      console.log(`Content saved: ${ctx.collection || ctx.singleton}`);
+    },
+  ],
+});
+```
+
+Global hooks execute before resource-level hooks.

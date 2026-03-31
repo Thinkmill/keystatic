@@ -80,6 +80,21 @@ navGroups:
           discriminant: page
           value: content-components
         status: default
+      - label: Hooks
+        link:
+          discriminant: page
+          value: hooks
+        status: new
+      - label: Actions
+        link:
+          discriminant: page
+          value: actions
+        status: new
+      - label: Workflows
+        link:
+          discriminant: page
+          value: workflows
+        status: new
   - groupName: Recipes
     items:
       - label: Use Astro's Image component

@@ -1,0 +1,30 @@
+{
+  "name": "@keystatic/workflows",
+  "version": "0.1.0",
+  "description": "GitHub Actions workflow adapter for Keystatic hooks and actions",
+  "license": "MIT",
+  "main": "dist/keystatic-workflows.cjs.js",
+  "module": "dist/keystatic-workflows.esm.js",
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/keystatic-workflows.cjs.mjs",
+        "default": "./dist/keystatic-workflows.cjs.js"
+      },
+      "module": "./dist/keystatic-workflows.esm.js",
+      "import": "./dist/keystatic-workflows.cjs.mjs",
+      "default": "./dist/keystatic-workflows.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "@keystatic/core": ">=0.5.0"
+  },
+  "devDependencies": {
+    "@keystatic/core": "workspace:*",
+    "typescript": "^5.5.3"
+  }
+}
