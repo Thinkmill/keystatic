@@ -1,7 +1,8 @@
 import { ButtonGroup, ActionButton } from '@keystar/ui/button';
 import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Flex, Box } from '@keystar/ui/layout';
-import { tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 import { TextField } from '@keystar/ui/text-field';
 
 import { useIsInDocumentEditor } from '../document/DocumentEditor';
@@ -169,5 +170,31 @@ export function ImageFieldInput(
           <FieldMessage>{props.label} is required</FieldMessage>
         )}
     </Flex>
+  );
+}
+
+export function ImageCell({ value }: { value: string | null }) {
+  const [errored, setErrored] = useState(false);
+  if (!value) return null;
+  if (errored) {
+    return (
+      <Text color="neutralTertiary" size="small">
+        {value}
+      </Text>
+    );
+  }
+  return (
+    <img
+      src={value}
+      alt=""
+      onError={() => setErrored(true)}
+      className={css({
+        width: tokenSchema.size.scale[400],
+        height: tokenSchema.size.scale[400],
+        objectFit: 'cover',
+        borderRadius: tokenSchema.size.radius.small,
+        flexShrink: 0,
+      })}
+    />
   );
 }
