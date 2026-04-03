@@ -4,6 +4,7 @@ import { ReactElement } from 'react';
 import { ComponentSchema, FormField, SlugFormField } from './form/api';
 import type { Locale } from './app/l10n/locales';
 import { RepoConfig } from './app/repo-config';
+import { CollectionReader, SingletonReader } from './reader/generic';
 
 // Common
 // ----------------------------------------------------------------------------
@@ -73,6 +74,7 @@ export type Collection<
   schema: Schema;
   beforeSave?: BeforeSaveCallback;
   beforeDelete?: BeforeDeleteCallback;
+  reader?: CollectionReader<Schema, SlugField>;
 };
 
 export type Singleton<Schema extends Record<string, ComponentSchema>> = {
@@ -83,6 +85,7 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   previewUrl?: string;
   schema: Schema;
   beforeSave?: BeforeSaveCallback;
+  reader?: SingletonReader<Schema>;
 };
 
 type CommonConfig<Collections, Singletons> = {

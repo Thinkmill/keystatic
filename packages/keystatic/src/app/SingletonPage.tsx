@@ -566,13 +566,42 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     }, [dirpath, format, props.singleton, singletonConfig.schema])
   );
 
-  const itemData = useItemData({
-    config: props.config,
-    dirpath,
-    schema: singletonConfig.schema,
-    format,
-    slug: undefined,
-  });
+  const itemData = singletonConfig.reader
+    ? useData(
+        useCallback(async () => {
+          let data: any;
+
+          try {
+            data = await singletonConfig.reader!.read();
+          } catch {
+            return 'not-found' as const;
+          }
+          
+          if (!data) {
+            return 'not-found' as const;
+          }
+          
+          const initialFiles: string[] = [];
+          const initialState: Record<string, unknown> = {};
+
+          for (const [key, value] of Object.entries(data)) {
+            initialState[key] = value;
+          }
+
+          return {
+            initialState,
+            initialFiles,
+            localTreeKey: '',
+          };
+        }, [singletonConfig])
+      )
+    : useItemData({
+        config: props.config,
+        dirpath,
+        schema: singletonConfig.schema,
+        format,
+        slug: undefined,
+      });
   const currentBranch = useCurrentBranch();
 
   const key = `${currentBranch}/${props.singleton}`;
