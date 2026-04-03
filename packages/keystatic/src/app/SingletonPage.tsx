@@ -436,6 +436,7 @@ function LocalSingletonPage(
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
     slug: undefined,
+    beforeSave: singletonConfig.beforeSave,
   });
   const update = useEventCallback(_update);
 
@@ -490,6 +491,7 @@ function CollabSingletonPage(
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
     slug: undefined,
+    beforeSave: singletonConfig.beforeSave,
   });
   const update = useEventCallback(_update);
 

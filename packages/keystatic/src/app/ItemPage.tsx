@@ -154,6 +154,7 @@ function ItemPageInner(
     initialFiles: props.initialFiles,
     storage: config.storage,
     basePath: currentBasePath,
+    beforeDelete: collectionConfig.beforeDelete,
   });
 
   const onDelete = useEventCallback(async () => {
@@ -432,6 +433,7 @@ function LocalItemPage(
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
     slug: { field: collectionConfig.slugField, value: slug },
+    beforeSave: collectionConfig.beforeSave,
   });
 
   useEffect(() => {

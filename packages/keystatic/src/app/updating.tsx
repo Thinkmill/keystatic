@@ -1,6 +1,12 @@
 import { gql } from '@ts-gql/tag/no-transform';
 import { assert } from 'emery';
-import { useContext, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { ComponentSchema, fields } from '../form/api';
 import { dump } from 'js-yaml';
@@ -29,6 +35,7 @@ import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
 import { base64Encode } from '#base64';
+import { BeforeDeleteCallback, BeforeSaveCallback } from '../config';
 
 const textEncoder = new TextEncoder();
 
@@ -115,6 +122,7 @@ export function useUpsertItem(args: {
   currentLocalTreeKey: string | undefined;
   basePath: string;
   slug: { value: string; field: string } | undefined;
+  beforeSave?: BeforeSaveCallback;
 }) {
   const [state, setState] = useState<
     | { kind: 'idle' }
@@ -126,6 +134,7 @@ export function useUpsertItem(args: {
   >({
     kind: 'idle',
   });
+  const stateRef = useRef(state);
   const baseCommit = useBaseCommit();
   const currentBranch = useCurrentBranch();
   const setTreeSha = useSetTreeSha();
@@ -134,8 +143,11 @@ export function useUpsertItem(args: {
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
 
-  return [
-    state,
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  const doSave = useCallback(
     async (override?: { sha: string; branch: string }): Promise<boolean> => {
       try {
         const unscopedTree =
@@ -237,8 +249,6 @@ export function useUpsertItem(args: {
               return false;
             }
             if (gqlError.type === 'STALE_DATA') {
-              // we don't want this to go into the cache yet
-              // so we create a new client just for this
               const refData = await createUrqlClient(args.config)
                 .query(FetchRef, {
                   owner: repoInfo.owner,
@@ -332,6 +342,50 @@ export function useUpsertItem(args: {
         return false;
       }
     },
+    [
+      args.config,
+      args.schema,
+      args.format,
+      args.state,
+      args.slug,
+      args.basePath,
+      args.initialFiles,
+      args.currentLocalTreeKey,
+      unscopedTreeData,
+      repoInfo,
+      appSlug,
+      currentBranch,
+      baseCommit,
+      mutate,
+      setTreeSha,
+    ]
+  );
+
+  return [
+    state,
+    async (override?: { sha: string; branch: string }): Promise<boolean> => {
+      if (args.beforeSave) {
+        try {
+          setState({ kind: 'loading' });
+          const hasUpdated = await args.beforeSave({
+            item: args.state as Record<string, unknown>,
+            action: args.initialFiles === undefined ? 'create' : 'update',
+            keystaticSave: async () => doSave(override),
+          });
+          if (hasUpdated) {
+            stateRef.current.kind === 'loading' && setState({ kind: 'updated' });
+            return true;
+          } else {
+            stateRef.current.kind === 'loading' && setState({ kind: 'error', error: new Error('Save failed') });
+            return false;
+          }
+        } catch (error) {
+          stateRef.current.kind === 'loading' && setState({ kind: 'error', error: error as Error });
+          return false;
+        }
+      }
+      return doSave(override);
+    },
     () => {
       setState({ kind: 'idle' });
     },
@@ -362,6 +416,8 @@ export function useDeleteItem(args: {
   basePath: string;
   initialFiles: string[];
   storage: Config['storage'];
+  beforeDelete?: BeforeDeleteCallback;
+  collectionName?: string;
 }) {
   const [state, setState] = useState<
     | { kind: 'idle' }
@@ -372,6 +428,7 @@ export function useDeleteItem(args: {
   >({
     kind: 'idle',
   });
+  const stateRef = useRef(state);
   const baseCommit = useBaseCommit();
   const currentBranch = useCurrentBranch();
 
@@ -380,92 +437,132 @@ export function useDeleteItem(args: {
   const repoInfo = useRepoInfo();
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
+  
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  const doDelete = useCallback(async (): Promise<boolean> => {
+    try {
+      const unscopedTree =
+        unscopedTreeData.kind === 'loaded'
+          ? unscopedTreeData.data.tree
+          : undefined;
+      if (!unscopedTree) return false;
+      if (
+        args.storage.kind === 'github' &&
+        repoInfo &&
+        !repoInfo.hasWritePermission &&
+        appSlug?.value
+      ) {
+        setState({ kind: 'needs-fork' });
+        return false;
+      }
+      setState({ kind: 'loading' });
+      const deletions = args.initialFiles.map(
+        x => (getPathPrefix(args.storage) ?? '') + x
+      );
+      const updatedTree = await updateTreeWithChanges(unscopedTree, {
+        additions: [],
+        deletions,
+      });
+      await hydrateTreeCacheWithEntries(updatedTree.entries);
+      if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
+        if (!repoInfo) {
+          throw new Error('Repo info not loaded');
+        }
+        const { error } = await mutate({
+          input: {
+            branch: {
+              repositoryNameWithOwner: `${repoInfo.owner}/${repoInfo.name}`,
+              branchName: currentBranch,
+            },
+            message: { headline: `Delete ${args.basePath}` },
+            expectedHeadOid: baseCommit,
+            fileChanges: {
+              deletions: deletions.map(path => ({ path })),
+            },
+          },
+        });
+        if (
+          error?.graphQLErrors.some(
+            err =>
+              'type' in err &&
+              err.type === 'FORBIDDEN' &&
+              err.message === 'Resource not accessible by integration'
+          )
+        ) {
+          throw new Error(
+            `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${repoInfo.owner}/${repoInfo.name}`
+          );
+        }
+        if (error) {
+          throw error;
+        }
+        setState({ kind: 'updated' });
+        return true;
+      } else {
+        const res = await fetch('/api/keystatic/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'no-cors': '1',
+          },
+          body: JSON.stringify({
+            additions: [],
+            deletions: deletions.map(path => ({ path })),
+          }),
+        });
+        if (!res.ok) {
+          throw new Error(await res.text());
+        }
+        const newTree: TreeEntry[] = await res.json();
+        const { tree } = await hydrateTreeCacheWithEntries(newTree);
+        setTreeSha(await treeSha(tree));
+        setState({ kind: 'updated' });
+        return true;
+      }
+    } catch (err) {
+      setState({ kind: 'error', error: err as Error });
+      return false;
+    }
+  }, [
+    args.storage,
+    args.basePath,
+    args.initialFiles,
+    unscopedTreeData,
+    repoInfo,
+    appSlug,
+    currentBranch,
+    baseCommit,
+    mutate,
+    setTreeSha,
+  ]);
 
   return [
     state,
     async () => {
-      try {
-        const unscopedTree =
-          unscopedTreeData.kind === 'loaded'
-            ? unscopedTreeData.data.tree
-            : undefined;
-        if (!unscopedTree) return false;
-        if (
-          args.storage.kind === 'github' &&
-          repoInfo &&
-          !repoInfo.hasWritePermission &&
-          appSlug?.value
-        ) {
-          setState({ kind: 'needs-fork' });
+      if (args.beforeDelete) {
+        try {
+          setState({ kind: 'loading' });
+          const wasDeleted = await args.beforeDelete({
+            basePath: args.basePath,
+            initialFiles: args.initialFiles,
+            keystaticDelete: async () => doDelete(),
+          });
+          if (wasDeleted) {
+            stateRef.current.kind === 'loading' && setState({ kind: 'updated' });
+            return true;
+          } else {
+            stateRef.current.kind === 'loading' && setState({ kind: 'error', error: new Error('Delete failed') });
+            return false;
+          }
+        } catch (error) {
+          stateRef.current.kind === 'loading' && setState({ kind: 'error', error: error as Error });
           return false;
         }
-        setState({ kind: 'loading' });
-        const deletions = args.initialFiles.map(
-          x => (getPathPrefix(args.storage) ?? '') + x
-        );
-        const updatedTree = await updateTreeWithChanges(unscopedTree, {
-          additions: [],
-          deletions,
-        });
-        await hydrateTreeCacheWithEntries(updatedTree.entries);
-        if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
-          if (!repoInfo) {
-            throw new Error('Repo info not loaded');
-          }
-          const { error } = await mutate({
-            input: {
-              branch: {
-                repositoryNameWithOwner: `${repoInfo.owner}/${repoInfo.name}`,
-                branchName: currentBranch,
-              },
-              message: { headline: `Delete ${args.basePath}` },
-              expectedHeadOid: baseCommit,
-              fileChanges: {
-                deletions: deletions.map(path => ({ path })),
-              },
-            },
-          });
-          if (
-            error?.graphQLErrors.some(
-              err =>
-                'type' in err &&
-                err.type === 'FORBIDDEN' &&
-                err.message === 'Resource not accessible by integration'
-            )
-          ) {
-            throw new Error(
-              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${repoInfo.owner}/${repoInfo.name}`
-            );
-          }
-          if (error) {
-            throw error;
-          }
-          setState({ kind: 'updated' });
-          return true;
-        } else {
-          const res = await fetch('/api/keystatic/update', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'no-cors': '1',
-            },
-            body: JSON.stringify({
-              additions: [],
-              deletions: deletions.map(path => ({ path })),
-            }),
-          });
-          if (!res.ok) {
-            throw new Error(await res.text());
-          }
-          const newTree: TreeEntry[] = await res.json();
-          const { tree } = await hydrateTreeCacheWithEntries(newTree);
-          setTreeSha(await treeSha(tree));
-          setState({ kind: 'updated' });
-          return true;
-        }
-      } catch (err) {
-        setState({ kind: 'error', error: err as Error });
       }
+      return doDelete();
     },
     () => {
       setState({ kind: 'idle' });
