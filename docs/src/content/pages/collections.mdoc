@@ -107,6 +107,155 @@ testimonials: collection({
 
 `template` — the path to a content file (existing collection entry or "template") to use as a starting point for new entries.
 
+### Hook: before save
+
+`beforeSave` — allows you to execute a function before an entry is saved by Keystatic. This hook can be useful when you need 
+to perform complex validations, transformations, or other logic before the data is stored.
+
+```typescript
+beforeSave(args: BeforeSaveCallbackArgs): Promise<boolean>;
+```
+
+**Parameters**
+
+The hook receives a single object of type BeforeSaveCallbackArgs that contains the following information:
+
+```typescript
+type BeforeSaveCallbackArgs = {
+  item: Record<string, unknown>;
+  action: 'create' | 'update';
+  keystaticSave: () => Promise<boolean>;
+};
+```
+
+`item`: Contains the information of the entry being saved.\
+`action`: Indicates the type of operation being performed.\
+`keystaticSave`: Function that executes the normal saving of Keystatic. This function handles success and error by 
+default and returns the result; therefore, it's not necessary to throw an error when `keystaticSave` has been invoked.
+
+**Return**
+
+The return value must be of type `Promise<boolean>`, and will indicate whether the changes were saved or not:\
+`true`: Indicates that the save was successful. It can return true without using `keystaticSave()` to simulate a valid 
+save without the keystatic actually storing the changes.\
+`false`: Indicates that the save process failed. Ideally, it should only return false if `keystaticSave()` was used and 
+returned false, since `keystaticSave()` will handle the error internally. In any other case, the correct approach would 
+be throw an Error instance to display the correct error message to the user, if no error is thrown, the default error message 
+will be displayed.
+
+**Example**
+
+```typescript
+testimonials: collection({
+  label: 'Testimonials',
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } }),
+  },
+  slugField: 'title',
+  beforeSave: async ({item, keystaticSave, action}: BeforeSaveCallbackArgs) => {
+    // Send data to external service
+    const res = await fetch(`https://api.example.com/${action}/testimonial`, {
+      method: 'POST',
+      body: JSON.stringify(item),
+    });
+
+    if (res.status !== 200)
+      throw new Error('Save failed: Failed to send data to external service');
+    
+    const saveResult = await keystaticSave();
+
+    if (!saveResult) {
+      const rollback_action = action === 'create' ? 'delete' : 'update';
+      await fetch(`https://api.example.com/${rollback_action}/testimonial`, {
+        method: 'POST',
+        body: JSON.stringify({
+          ...item,
+          action: 'rollback'
+        }),
+      });
+      // keystaticSave() function already handled the error, 
+      // so is not needed to throw an error here
+    }
+
+    return saveResult;
+  },
+}),
+```
+
+### Hook: before delete
+
+`beforeDelete` — allows you to execute a function before an entry is deleted by Keystatic. This hook can be useful when you need 
+to perform validations or other logic before the data is deleted.
+
+```typescript
+beforeDelete(args: BeforeDeleteCallbackArgs): Promise<boolean>;
+```
+
+**Parameters**
+
+The hook receives a single object of type BeforeDeleteCallbackArgs that contains the following information:
+
+```typescript
+type BeforeDeleteCallbackArgs = {
+  basePath: string;
+  initialFiles: string[];
+  keystaticDelete: () => Promise<boolean>;
+};
+```
+
+`basePath`: The base path of the collection.\
+`initialFiles`: An array of file paths that will be deleted.\
+`keystaticDelete`: Function that executes the normal deletion of Keystatic. This function handles success and error 
+by default and returns the result; therefore, it's not necessary to throw an error when `keystaticDelete` has been invoked.
+
+**Return**
+
+The return value must be of type `Promise<boolean>`, and will indicate whether the deletion was successful or not:\
+`true`: Indicates that the deletion was successful. You can return true without using `keystaticDelete()` to simulate a valid 
+deletion without the keystatic actually deleting the entry.\
+`false`: Indicates that the deletion process failed. Ideally, it should only return false if `keystaticDelete()` was used and 
+returned false, since `keystaticDelete()` will handle the error internally. In any other case, the correct approach would 
+be throw an Error instance to display the correct error message to the user, if no error is thrown, the default error message 
+will be displayed.
+
+**Example**
+
+```typescript
+testimonials: collection({
+  label: 'Testimonials',
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } }),
+  },
+  slugField: 'title',
+  beforeDelete: async ({basePath, initialFiles, keystaticDelete}: BeforeDeleteCallbackArgs) => {
+    // Send data to external service
+    const res = await fetch('https://api.example.com/delete/testimonial', {
+      method: 'POST',
+      body: JSON.stringify({basePath}),
+    });
+
+    if (res.status !== 200)
+      throw new Error('Delete failed: Failed to delete data from external service');
+    
+    const deleteResult = await keystaticDelete();
+
+    if (!deleteResult) {
+      await fetch('https://api.example.com/delete/testimonial', {
+        method: 'POST',
+        body: JSON.stringify({
+          basePath,
+          action: 'rollback'
+        }),
+      });
+      // keystaticDelete() function already handled the error, 
+      // so is not needed to throw an error here
+    }
+
+    return deleteResult;
+  },
+}),
+```
+
 ---
 
 ## Type signature

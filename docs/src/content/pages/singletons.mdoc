@@ -64,6 +64,64 @@ Learn more about the `path` option on the [Content Organisation](/docs/content-o
 
 `schema` — defines the fields that the singleton should have.
 
+### Hook: before save
+
+`beforeSave` — allows you to execute a function before a singleton is saved by Keystatic. This hook can be useful when you need 
+to perform complex validations, transformations, or other logic before the data is stored.
+
+```typescript
+beforeSave(args: BeforeSaveCallbackArgs): Promise<boolean>;
+```
+
+**Parameters**
+
+The hook receives a single object of type BeforeSaveCallbackArgs that contains the following information:
+
+```typescript
+type BeforeSaveCallbackArgs = {
+  item: Record<string, unknown>;
+  action: 'create' | 'update';
+  keystaticSave: () => Promise<boolean>;
+};
+```
+
+`item`: Contains the information of the entry being saved.\
+`action`: Indicates the type of operation being performed.\
+`keystaticSave`: Function that executes the normal saving of Keystatic. This function handles success and error by 
+default and returns the result; therefore, it's not necessary to throw an error when `keystaticSave` has been invoked.
+
+**Return**
+
+The return value must be of type `Promise<boolean>`, and will indicate whether the changes were saved or not:\
+`true`: Indicates that the save was successful. It can return true without using `keystaticSave()` to simulate a valid 
+save without the keystatic actually storing the changes.\
+`false`: Indicates that the save process failed. Ideally, it should only return false if `keystaticSave()` was used and 
+returned false, since `keystaticSave()` will handle the error internally. In any other case, the correct approach would 
+be throw an Error instance to display the correct error message to the user, if no error is thrown, the default error message 
+will be displayed.
+
+**Example**
+
+```typescript
+settings: singleton({
+  label: 'Settings',
+  schema: {
+    weatherApiKey: fields.text({ label: 'Weather API Key' }),
+  },
+  beforeSave: async ({item, keystaticSave, action}: BeforeSaveCallbackArgs) => {
+    // Check if the API key is valid
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=London&appid=${item.weatherApiKey}`);
+
+    if (res.status === 401)
+      throw new Error('Save failed: Invalid API key');
+    else if (res.status !== 200)
+      throw new Error('Save failed: Failed to validate API key');
+
+    return keystaticSave();
+  },
+}),
+```
+
 ---
 
 ## Type signature
