@@ -107,6 +107,11 @@ testimonials: collection({
 
 `template` — the path to a content file (existing collection entry or "template") to use as a starting point for new entries.
 
+### Reader
+
+`reader` — allows you to provide a custom reader for the collection. 
+This can be useful when you need to fetch data from an external source or perform custom logic before returning the data.
+
 ### Hook: before save
 
 `beforeSave` — allows you to execute a function before an entry is saved by Keystatic. This hook can be useful when you need 

@@ -64,6 +64,11 @@ Learn more about the `path` option on the [Content Organisation](/docs/content-o
 
 `schema` — defines the fields that the singleton should have.
 
+### Reader
+
+`reader` — allows you to provide a custom reader for the singleton. 
+This can be useful when you need to fetch data from an external source or perform custom logic before returning the data.
+
 ### Hook: before save
 
 `beforeSave` — allows you to execute a function before a singleton is saved by Keystatic. This hook can be useful when you need 
