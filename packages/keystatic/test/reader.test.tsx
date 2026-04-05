@@ -307,3 +307,137 @@ test('errors', async () => {
     text: Must be a string]
   `);
 });
+
+const customReaderPosts = [
+  {
+    slug: 'custom-post-1',
+    entry: {
+      title: 'Custom Post 1',
+      publishDate: '2024-01-01',
+      heroImage: 'image1.png',
+      content: [{ type: 'paragraph', children: [{ text: 'Content 1' }] }],
+      authors: [
+        {
+          name: 'Author 1',
+          bio: [{ type: 'paragraph', children: [{ text: 'Bio 1' }] }],
+        },
+      ],
+    },
+  },
+  {
+    slug: 'custom-post-2',
+    entry: {
+      title: 'Custom Post 2',
+      publishDate: '2024-02-01',
+      heroImage: 'image2.png',
+      content: [{ type: 'paragraph', children: [{ text: 'Content 2' }] }],
+      authors: [],
+    },
+  },
+];
+
+const customReaderConfig = config({
+  storage: { kind: 'local' },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      slugField: 'title',
+      path: 'posts/*',
+      reader: (() => {
+        const data = customReaderPosts;
+        return {
+          read: async (slug: string, ..._: any[]) => {
+            const entry = data.find((item: any) => item.slug === slug);
+            return entry?.entry ?? null;
+          },
+          readOrThrow: async (slug: string, ..._: any[]) => {
+            const entry = data.find((item: any) => item.slug === slug);
+            if (!entry) {
+              throw new Error(
+                `Entry "${slug}" not found in collection "posts"`
+              );
+            }
+            return entry.entry;
+          },
+          all: async () => data,
+          list: async () => data.map((item: any) => item.slug),
+        };
+      })() as any,
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        publishDate: fields.date({ label: 'Publish Date' }),
+        heroImage: fields.image({ label: 'Hero Image' }),
+        content: fields.document({
+          label: 'Content',
+          formatting: true,
+          dividers: true,
+          links: true,
+        }),
+        authors: fields.array(
+          fields.object({
+            name: fields.text({ label: 'Name' }),
+            bio: fields.document({
+              label: 'Bio',
+              formatting: true,
+              dividers: true,
+              links: true,
+            }),
+          }),
+          { label: 'Authors', itemLabel: props => props.fields.name.value }
+        ),
+      },
+    }),
+  },
+});
+
+test('custom reader list', async () => {
+  const reader = createReader(
+    path.join(pkgDir, 'test-data'),
+    customReaderConfig
+  );
+  const result = await reader.collections.posts.list();
+  expect(result).toEqual(['custom-post-1', 'custom-post-2']);
+});
+
+test('custom reader read', async () => {
+  const reader = createReader(
+    path.join(pkgDir, 'test-data'),
+    customReaderConfig
+  );
+  const result = await reader.collections.posts.read('custom-post-1');
+  expect(result).toEqual({
+    title: 'Custom Post 1',
+    publishDate: '2024-01-01',
+    heroImage: 'image1.png',
+    content: [{ type: 'paragraph', children: [{ text: 'Content 1' }] }],
+    authors: [{ name: 'Author 1', bio: [{ type: 'paragraph', children: [{ text: 'Bio 1' }] }] }],
+  });
+});
+
+test('custom reader readOrThrow throws for non-existent', async () => {
+  const reader = createReader(
+    path.join(pkgDir, 'test-data'),
+    customReaderConfig
+  );
+  await expect(
+    reader.collections.posts.readOrThrow('non-existent')
+  ).rejects.toThrow('Entry "non-existent" not found in collection "posts"');
+});
+
+test('custom reader all', async () => {
+  const reader = createReader(
+    path.join(pkgDir, 'test-data'),
+    customReaderConfig
+  );
+  const result = await reader.collections.posts.all();
+  expect(result).toEqual(customReaderPosts);
+});
+
+test('custom reader read returns null for non-existent', async () => {
+  const reader = createReader(
+    path.join(pkgDir, 'test-data'),
+    customReaderConfig
+  );
+  const result = await reader.collections.posts.read('non-existent');
+  expect(result).toBeNull();
+});
