@@ -93,7 +93,11 @@ function renderItemOrGroup(itemOrGroup: ItemOrGroup) {
       endElement={endElement}
     >
       {typeof itemOrGroup.entryCount === 'number' ? (
-        <Text color="neutralSecondary">
+        <Text
+          color="neutralSecondary"
+          size="small"
+          UNSAFE_style={{ lineHeight: '1.7' }}
+        >
           {pluralize(itemOrGroup.entryCount, {
             singular: 'entry',
             plural: 'entries',
