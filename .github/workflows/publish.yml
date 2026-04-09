@@ -2,6 +2,14 @@ name: Publish
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'The npm tag to publish to'
+        required: true
+        type: choice
+        options:
+          - latest
+          - test
 
 permissions:
   contents: write
@@ -11,9 +19,10 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
-    environment: release
+    timeout-minutes: 10
+    environment: Release
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: true # needed for git push
@@ -27,10 +36,21 @@ jobs:
           git config --global user.name 'Thinkmill Release Bot'
           git config --global user.email 'automation+github@thinkmill.com.au'
 
-      - name: npm publish, git tag
-        run: pnpm changeset publish
+      - name: version packages
+        if: inputs.tag != 'latest'
+        run: |
+          pnpm changeset version --snapshot ${{ inputs.tag }}
+          git commit -a -m 'rc'
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: git push origin --follow-tags
+      - name: npm publish, git tag
+        run: pnpm changeset publish --tag ${{ inputs.tag }}
+
+      # reset, then we have a tagged dangling commit
+      - name: git push
+        if: inputs.tag != 'latest'
+        run: |
+          git reset HEAD~1 --hard
+
+      - run: git push origin --tags

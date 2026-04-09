@@ -161,6 +161,7 @@ function ActionBarInner<T>(
             buttonLabelBehavior={buttonLabelBehavior}
             onAction={onAction}
             gridArea="actiongroup"
+            disabledKeys={props.disabledKeys}
           >
             {children}
           </ActionGroup>

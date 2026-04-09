@@ -5,18 +5,7 @@ import { FormField, FormFieldStoredValue, JsonYamlValue } from '..';
 import { FieldDataError } from './fields/error';
 import { validateArrayLength } from './validate-array-length';
 import { getInitialPropsValue } from './initial-values';
-
-export class PropValidationError extends Error {
-  path: ReadonlyPropPath;
-  schema: ComponentSchema;
-  cause: unknown;
-  constructor(cause: unknown, path: ReadonlyPropPath, schema: ComponentSchema) {
-    super(`field error at ${path.join('.')}`, { cause });
-    this.path = path;
-    this.schema = schema;
-    this.cause = cause;
-  }
-}
+import { PropValidationError } from './prop-validation-error';
 
 function toFormFieldStoredValue(
   val: JsonYamlValue | undefined

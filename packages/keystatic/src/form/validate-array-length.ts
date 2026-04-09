@@ -1,7 +1,7 @@
 import { ArrayField, ComponentSchema } from '..';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
 import { FieldDataError } from './fields/error';
-import { PropValidationError } from './parse-props';
+import { PropValidationError } from './prop-validation-error';
 
 export function validateArrayLength(
   schema: ArrayField<ComponentSchema>,

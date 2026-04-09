@@ -1,5 +1,23 @@
 # @voussoir/docs
 
+## 0.0.70
+
+### Patch Changes
+
+- Updated dependencies [[`cd6d68b`](https://github.com/Thinkmill/keystatic/commit/cd6d68b7d280ba02956c5da483d3555f576111f1)]:
+  - @keystar/ui@0.7.21
+  - @keystatic/core@0.5.50
+  - @keystatic/next@5.0.4
+
+## 0.0.69
+
+### Patch Changes
+
+- Updated dependencies [[`e049a3d`](https://github.com/Thinkmill/keystatic/commit/e049a3d74afd4397a12f5d6104d3e63d5a9797ba), [`6006584`](https://github.com/Thinkmill/keystatic/commit/60065843fd73da2d9ed973f6d478bd7159fce883), [`ed066f0`](https://github.com/Thinkmill/keystatic/commit/ed066f0bc74037fc7f1f5fb2792e483fc091fd1d), [`bb2bc34`](https://github.com/Thinkmill/keystatic/commit/bb2bc34c3f0a35e1033f9927293e1d9f61eda4fd), [`fe3dc55`](https://github.com/Thinkmill/keystatic/commit/fe3dc55763165dfe38910ac558fe0ad97410d536), [`ded5ea7`](https://github.com/Thinkmill/keystatic/commit/ded5ea7dcfc59ea3d9358ba8af778a39167c9d50), [`63c767b`](https://github.com/Thinkmill/keystatic/commit/63c767bbb8b9bbc96c30535862bcccfbbc4ea346)]:
+  - @keystatic/core@0.5.49
+  - @keystar/ui@0.7.20
+  - @keystatic/next@5.0.4
+
 ## 0.0.68
 
 ### Patch Changes

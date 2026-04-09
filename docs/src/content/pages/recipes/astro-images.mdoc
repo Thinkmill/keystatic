@@ -8,14 +8,14 @@ Astro provides a [built-in `<Image />` component](https://docs.astro.build/en/gu
 
 This guides walks you through the configuration needed to use the `<Image />` component with the [image field](/docs/fields/image) in Keystatic.
 
-## The assets directory in Astro
+## Storing images in Astro's `src/` directory
 
-To make use of Astro's `<Image />` component, you need to store your images in the `src/assets` directory in your project.
+To make use of Astro's `<Image />` component, you need to store your images somewhere within the `src/` directory of your project. A common convention is `src/assets`, but any subdirectory under `src/` will work.
 
-You can do so using the `directory` option in the Keystatic config.
+You can control where Keystatic stores images using the `directory` option in the Keystatic config.
 
 {% aside icon="☝️" %}
-We recommend creating a path alias for the `src/assets` directory in your `.tsconfig.json` file — it simplifies referencing the path to that directory:
+We recommend creating a path alias for your images directory in your `.tsconfig.json` file — it simplifies referencing the path to that directory. Here's an example using the common `src/assets` convention:
 
 ```ts 
 // .tsconfig.json
@@ -56,7 +56,7 @@ image: fields.image({
 })
 ```
 
-As long as the image path stored is within the `src/assets` directory, Astro will be able to process it into image metadata that the `<Image />` component can use.
+As long as the image path stored is within the `src/` directory, Astro will be able to process it into image metadata that the `<Image />` component can use.
 
 ---
 
@@ -90,7 +90,7 @@ Using Astro assets within [content components](/docs/content-components) is a li
 Since the image is not stored in the frontmatter data but directly within the content body, you'll need to dynamically import the image inside the component you're using to render that content component.
 
 {% aside icon="⚠️" %}
-The `publicPath` for those images must start with `/src/assets` for the dynamic import to work in Astro 😅 
+The `publicPath` for those images must start with `/src/` for the dynamic import to work in Astro.
 {% /aside %}
 
 Here's how you should configure the image field inside content components:
@@ -104,7 +104,7 @@ captionImage: block({
       label: 'Image',
       directory: 'src/assets/images/posts',
 
-      // start with /src/assets
+      // start with /src/
       publicPath: '/src/assets/images/posts/'
 
     }),

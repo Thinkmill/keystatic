@@ -1,5 +1,31 @@
 # @keystatic/core
 
+## 0.5.50
+
+### Patch Changes
+
+- Updated dependencies [[`cd6d68b`](https://github.com/Thinkmill/keystatic/commit/cd6d68b7d280ba02956c5da483d3555f576111f1)]:
+  - @keystar/ui@0.7.21
+
+## 0.5.49
+
+### Patch Changes
+
+- [#1505](https://github.com/Thinkmill/keystatic/pull/1505) [`e049a3d`](https://github.com/Thinkmill/keystatic/commit/e049a3d74afd4397a12f5d6104d3e63d5a9797ba) Thanks [@eremannisto](https://github.com/eremannisto)! - Fix background bleeding from dashboard cards border radius
+
+- [#1465](https://github.com/Thinkmill/keystatic/pull/1465) [`6006584`](https://github.com/Thinkmill/keystatic/commit/60065843fd73da2d9ed973f6d478bd7159fce883) Thanks [@Greenheart](https://github.com/Greenheart)! - Only redirect to loopback if the storage uses OAuth redirects.
+
+- [#1485](https://github.com/Thinkmill/keystatic/pull/1485) [`bb2bc34`](https://github.com/Thinkmill/keystatic/commit/bb2bc34c3f0a35e1033f9927293e1d9f61eda4fd) Thanks [@williamwmarx](https://github.com/williamwmarx)! - Add support for `mailto:` and `tel:` links in document and markdoc editors
+
+  Previously, pasting `mailto:` or `tel:` links would not create a hyperlink because the URL validation only accepted `http://` and `https://` schemes. This change expands the URL pattern to include `mailto:` and `tel:` protocols, allowing users to create email and phone links by pasting.
+
+- [#1519](https://github.com/Thinkmill/keystatic/pull/1519) [`fe3dc55`](https://github.com/Thinkmill/keystatic/commit/fe3dc55763165dfe38910ac558fe0ad97410d536) Thanks [@emmatown](https://github.com/emmatown)! - Remove circular dependencies
+
+- [#1487](https://github.com/Thinkmill/keystatic/pull/1487) [`ded5ea7`](https://github.com/Thinkmill/keystatic/commit/ded5ea7dcfc59ea3d9358ba8af778a39167c9d50) Thanks [@bh2980](https://github.com/bh2980)! - Update Korean translations
+
+- Updated dependencies [[`ed066f0`](https://github.com/Thinkmill/keystatic/commit/ed066f0bc74037fc7f1f5fb2792e483fc091fd1d), [`fe3dc55`](https://github.com/Thinkmill/keystatic/commit/fe3dc55763165dfe38910ac558fe0ad97410d536), [`63c767b`](https://github.com/Thinkmill/keystatic/commit/63c767bbb8b9bbc96c30535862bcccfbbc4ea346)]:
+  - @keystar/ui@0.7.20
+
 ## 0.5.48
 
 ### Patch Changes

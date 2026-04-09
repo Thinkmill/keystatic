@@ -1,5 +1,21 @@
 # @keystar/ui
 
+## 0.7.21
+
+### Patch Changes
+
+- [#1523](https://github.com/Thinkmill/keystatic/pull/1523) [`cd6d68b`](https://github.com/Thinkmill/keystatic/commit/cd6d68b7d280ba02956c5da483d3555f576111f1) Thanks [@emmatown](https://github.com/emmatown)! - Fix `disabledKeys` on `ActionBar`
+
+## 0.7.20
+
+### Patch Changes
+
+- [#1507](https://github.com/Thinkmill/keystatic/pull/1507) [`ed066f0`](https://github.com/Thinkmill/keystatic/commit/ed066f0bc74037fc7f1f5fb2792e483fc091fd1d) Thanks [@eremannisto](https://github.com/eremannisto)! - Fix badges below below `24px` breaking the pill shape
+
+- [#1519](https://github.com/Thinkmill/keystatic/pull/1519) [`fe3dc55`](https://github.com/Thinkmill/keystatic/commit/fe3dc55763165dfe38910ac558fe0ad97410d536) Thanks [@emmatown](https://github.com/emmatown)! - Remove circular dependencies
+
+- [#1449](https://github.com/Thinkmill/keystatic/pull/1449) [`63c767b`](https://github.com/Thinkmill/keystatic/commit/63c767bbb8b9bbc96c30535862bcccfbbc4ea346) Thanks [@jossmac](https://github.com/jossmac)! - Improve "neutral" `Toast` appearance, esp. for dark mode.
+
 ## 0.7.19
 
 ### Patch Changes

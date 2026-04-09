@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useState,
+  Fragment,
 } from 'react';
 
 import { Button } from '@keystar/ui/button';
@@ -269,6 +270,10 @@ function AuthWrapper(props: {
   return null;
 }
 
+/**
+ * Use loopback instead of localhost to follow OAuth best practices.
+ * Learn more: https://datatracker.ietf.org/doc/html/rfc8252#section-8.3
+ */
 function RedirectToLoopback(props: { children: ReactNode }) {
   useEffect(() => {
     if (window.location.hostname === 'localhost') {
@@ -292,9 +297,13 @@ export function Keystatic(props: {
     assertValidRepoConfig(props.config.storage.repo);
   }
 
+  // The loopback redirect is only needed if the storage uses OAuth callbacks.
+  const Wrapper =
+    props.config.storage.kind === 'local' ? Fragment : RedirectToLoopback;
+
   return (
     <ClientOnly>
-      <RedirectToLoopback>
+      <Wrapper>
         <AppSlugProvider value={props.appSlug}>
           <RouterProvider>
             <Provider config={props.config}>
@@ -302,7 +311,7 @@ export function Keystatic(props: {
             </Provider>
           </RouterProvider>
         </AppSlugProvider>
-      </RedirectToLoopback>
+      </Wrapper>
     </ClientOnly>
   );
 }

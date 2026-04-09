@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs/promises';
 import nonPromiseFs from 'fs';
 import outdent from 'outdent';
-import fastGlob from 'fast-glob';
 import onExit from 'signal-exit';
 import { tmpdir } from 'os';
 import { randomUUID } from 'crypto';
@@ -66,7 +65,7 @@ expect.addSnapshotSerializer({
 const dirPrintingSymbol = Symbol('dir printing symbol');
 
 export async function getFiles(dir: string, glob: string[] = ['**']) {
-  const files = await fastGlob(glob, { cwd: dir });
+  const files = await Array.fromAsync(fs.glob(glob, { cwd: dir }));
   const filesObj: Record<string, string> = {
     [dirPrintingSymbol]: true,
   };
