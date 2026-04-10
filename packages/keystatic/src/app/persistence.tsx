@@ -78,7 +78,13 @@ type Key =
       collection: string,
       duplicateSlug?: string,
     ]
-  | readonly [kind: 'singleton', singleton: string];
+  | readonly [kind: 'singleton', singleton: string]
+  | readonly [
+      kind: 'standalone-page',
+      singleton: string,
+      route: string,
+      scope?: string,
+    ];
 
 // the as anys are because the indexeddb types dont't accept readonly arrays
 

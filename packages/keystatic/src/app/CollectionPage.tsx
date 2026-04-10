@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { Selection } from '@react-types/shared';
 
 import { ActionButton, Button } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
@@ -17,9 +18,13 @@ import { searchXIcon } from '@keystar/ui/icon/icons/searchXIcon';
 import { diffIcon } from '@keystar/ui/icon/icons/diffIcon';
 import { plusSquareIcon } from '@keystar/ui/icon/icons/plusSquareIcon';
 import { dotSquareIcon } from '@keystar/ui/icon/icons/dotSquareIcon';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { downloadIcon } from '@keystar/ui/icon/icons/downloadIcon';
 import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { SearchField } from '@keystar/ui/search-field';
+import { ActionBar, ActionBarContainer, Item } from '@keystar/ui/action-bar';
+import { toastQueue } from '@keystar/ui/toast';
 import {
   breakpointQueries,
   css,
@@ -36,6 +41,7 @@ import {
   SortDescriptor,
 } from '@keystar/ui/table';
 import { Heading, Text } from '@keystar/ui/typography';
+import { Flex } from '@keystar/ui/layout';
 
 import { Config } from '../config';
 import { sortBy } from './collection-sort';
@@ -64,6 +70,14 @@ import { fetchBlob } from './useItemData';
 import { loadDataFile } from './required-files';
 import { parseProps } from '../form/parse-props';
 import { useData } from './useData';
+import {
+  FilterPanel,
+  ActiveFilterChips,
+  FilterValue,
+  DEFAULT_FILTERS,
+} from './FilterPanel';
+import { ViewModeToggle, ViewMode } from './ViewModeToggle';
+import { CollectionGridView } from './CollectionViews';
 
 type CollectionPageProps = {
   collection: string;
@@ -81,6 +95,8 @@ export function CollectionPage(props: CollectionPageProps) {
   const [searchTerm, setSearchTerm] = useState(
     new URLSearchParams(router.search).get('search') ?? ''
   );
+  const [filters, setFilters] = useState<FilterValue>(DEFAULT_FILTERS);
+  const [viewMode, setViewMode] = useState<ViewMode>('table');
 
   const setSearchTermFromForm = useCallback(
     (value: string) => {
@@ -107,8 +123,17 @@ export function CollectionPage(props: CollectionPageProps) {
         )}/create`}
         searchTerm={searchTerm}
         onSearchTermChange={setSearchTermFromForm}
+        filters={filters}
+        onFiltersChange={setFilters}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
-      <CollectionPageContent searchTerm={debouncedSearchTerm} {...props} />
+      <CollectionPageContent
+        searchTerm={debouncedSearchTerm}
+        filters={filters}
+        viewMode={viewMode}
+        {...props}
+      />
     </PageRoot>
   );
 }
@@ -118,8 +143,19 @@ function CollectionPageHeader(props: {
   collectionLabel: string;
   searchTerm: string;
   onSearchTermChange: (value: string) => void;
+  filters: FilterValue;
+  onFiltersChange: (filters: FilterValue) => void;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
 }) {
-  const { collectionLabel, createHref } = props;
+  const {
+    collectionLabel,
+    createHref,
+    filters,
+    onFiltersChange,
+    viewMode,
+    onViewModeChange,
+  } = props;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const isAboveMobile = useMediaQuery(breakpointQueries.above.mobile);
   const [searchVisible, setSearchVisible] = useState(isAboveMobile);
@@ -150,72 +186,79 @@ function CollectionPageHeader(props: {
 
   return (
     <PageHeader>
-      <Heading elementType="h1" id="page-title" size="small" flex minWidth={0}>
-        {collectionLabel}
-      </Heading>
-      <div
-        role="search"
-        style={{
-          display: searchVisible ? 'block' : 'none',
-        }}
-      >
-        <SearchField
-          ref={searchRef}
-          aria-label={stringFormatter.format('search')} // TODO: l10n "Search {collection}"?
-          onChange={props.onSearchTermChange}
-          onClear={() => {
-            props.onSearchTermChange('');
-            if (!isAboveMobile) {
-              // the timeout ensures that the "add" button isn't pressed
-              setTimeout(() => {
-                setSearchVisible(false);
-              }, 250);
-            }
-          }}
-          onBlur={() => {
-            if (!isAboveMobile && props.searchTerm === '') {
-              setSearchVisible(false);
-            }
-          }}
-          placeholder={stringFormatter.format('search')}
-          value={props.searchTerm}
-          width="scale.2400"
-        />
-      </div>
-      <ActionButton
-        aria-label="show search"
-        isHidden={searchVisible || { above: 'mobile' }}
-        onPress={() => {
-          setSearchVisible(true);
-          // NOTE: this hack is to force the search field to focus, and invoke
-          // the software keyboard on mobile safari
-          let tempInput = document.createElement('input');
-          tempInput.style.position = 'absolute';
-          tempInput.style.opacity = '0';
-          document.body.appendChild(tempInput);
-          tempInput.focus();
-
-          setTimeout(() => {
-            searchRef.current?.focus();
-            tempInput.remove();
-          }, 0);
-        }}
-      >
-        <Icon src={searchIcon} />
-      </ActionButton>
-      <Button
-        marginStart="auto"
-        prominence="high"
-        href={createHref}
-        isHidden={searchVisible ? { below: 'tablet' } : undefined}
-      >
-        {stringFormatter.format('add')}
-      </Button>
+      <Flex direction="column" gap="regular" flex>
+        <Flex alignItems="center" gap="regular">
+          <Heading elementType="h1" id="page-title" size="small" flex minWidth={0}>
+            {collectionLabel}
+          </Heading>
+          <div
+            role="search"
+            style={{
+              display: searchVisible ? 'block' : 'none',
+              minWidth: 0,
+              maxWidth: '100%',
+            }}
+          >
+            <SearchField
+              ref={searchRef}
+              aria-label={stringFormatter.format('search')}
+              onChange={props.onSearchTermChange}
+              onClear={() => {
+                props.onSearchTermChange('');
+                if (!isAboveMobile) {
+                  setTimeout(() => {
+                    setSearchVisible(false);
+                  }, 250);
+                }
+              }}
+              onBlur={() => {
+                if (!isAboveMobile && props.searchTerm === '') {
+                  setSearchVisible(false);
+                }
+              }}
+              placeholder={stringFormatter.format('search')}
+              value={props.searchTerm}
+              width={isAboveMobile ? 'scale.2400' : 'scale.2000'}
+            />
+          </div>
+          <ActionButton
+            aria-label="show search"
+            isHidden={searchVisible || { above: 'mobile' }}
+            onPress={() => {
+              setSearchVisible(true);
+              requestAnimationFrame(() => {
+                searchRef.current?.focus();
+              });
+            }}
+          >
+            <Icon src={searchIcon} />
+          </ActionButton>
+          <FilterPanel
+            filters={filters}
+            onFiltersChange={onFiltersChange}
+            showStatusFilter={true}
+          />
+          <ViewModeToggle value={viewMode} onChange={onViewModeChange} />
+          <Button
+            marginStart="auto"
+            prominence="high"
+            href={createHref}
+            isHidden={searchVisible ? { below: 'tablet' } : undefined}
+          >
+            {stringFormatter.format('add')}
+          </Button>
+        </Flex>
+        <ActiveFilterChips filters={filters} onFiltersChange={onFiltersChange} />
+      </Flex>
     </PageHeader>
   );
 }
 
-type CollectionPageContentProps = CollectionPageProps & { searchTerm: string };
+type CollectionPageContentProps = CollectionPageProps & {
+  searchTerm: string;
+  filters: FilterValue;
+  viewMode: ViewMode;
+};
 function CollectionPageContent(props: CollectionPageContentProps) {
   const trees = useTree();
 
@@ -299,6 +342,7 @@ function CollectionTable(
     column: SLUG,
     direction: 'ascending',
   });
+  let [selectedKeys, setSelectedKeys] = useState<Selection>(new Set());
   let hideStatusColumn =
     isLocalMode || currentBranch === repoInfo?.defaultBranch;
 
@@ -427,10 +471,25 @@ function CollectionTable(
   }, [entriesWithStatus, mainFiles]);
 
   const filteredItems = useMemo(() => {
-    return entriesWithData.filter(item =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [entriesWithData, searchTerm]);
+    return entriesWithData.filter(item => {
+      // Search filter
+      const matchesSearch = item.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      // Status filter
+      const { filters } = props;
+      const hasStatusFilter =
+        filters.status.added || filters.status.changed || filters.status.unchanged;
+      const matchesStatus =
+        !hasStatusFilter ||
+        (filters.status.added && item.status === 'Added') ||
+        (filters.status.changed && item.status === 'Changed') ||
+        (filters.status.unchanged && item.status === 'Unchanged');
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [entriesWithData, searchTerm, props.filters]);
   const sortedItems = useMemo(() => {
     return [...filteredItems].sort((a, b) => {
       const readCol = (
@@ -487,48 +546,131 @@ function CollectionTable(
         ];
   }, [collection, hideStatusColumn]);
 
-  return (
-    <TableView
-      aria-labelledby="page-title"
-      selectionMode="none"
-      onSortChange={setSortDescriptor}
-      sortDescriptor={sortDescriptor}
-      density="spacious"
-      overflowMode="truncate"
-      prominence="low"
-      onAction={key => {
-        router.push(
-          getItemPath(
-            props.basePath,
-            props.collection,
-            key.toString().slice('key:'.length)
-          )
-        );
-      }}
-      renderEmptyState={() => (
-        <EmptyState
-          icon={searchXIcon}
-          title="No results"
-          message={`No items matching "${searchTerm}" were found.`}
-        />
-      )}
-      flex
-      marginTop={{ tablet: 'large' }}
-      marginBottom={{ mobile: 'regular', tablet: 'xlarge' }}
-      UNSAFE_className={css({
-        marginInline: tokenSchema.size.space.regular,
-        [breakpointQueries.above.mobile]: {
-          marginInline: `calc(${tokenSchema.size.space.xlarge} - ${tokenSchema.size.space.medium})`,
-        },
-        [breakpointQueries.above.tablet]: {
-          marginInline: `calc(${tokenSchema.size.space.xxlarge} - ${tokenSchema.size.space.medium})`,
-        },
+  // Handle bulk actions
+  const handleBulkAction = useCallback(
+    (action: React.Key) => {
+      const selectedSlugs = selectedKeys === 'all'
+        ? sortedItems.map(item => item.name)
+        : Array.from(selectedKeys).map(key => key.toString().slice('key:'.length));
 
-        '[role=rowheader]': {
-          cursor: 'pointer',
-        },
-      })}
-    >
+      switch (action) {
+        case 'delete':
+          // Delete will be handled by a confirmation dialog
+          break;
+        case 'export':
+          // Export selected entries as JSON
+          const exportData = sortedItems
+            .filter(item => selectedSlugs.includes(item.name))
+            .map(item => ({
+              slug: item.name,
+              status: item.status,
+              data: item.data,
+            }));
+          const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+            type: 'application/json',
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${props.collection}-export.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          toastQueue.positive(`Exported ${selectedSlugs.length} entries`);
+          setSelectedKeys(new Set());
+          break;
+        case 'duplicate':
+          if (selectedSlugs.length === 1) {
+            router.push(
+              `${props.basePath}/collection/${encodeURIComponent(
+                props.collection
+              )}/item/${encodeURIComponent(selectedSlugs[0])}`
+            );
+          }
+          break;
+      }
+    },
+    [selectedKeys, sortedItems, props.collection, props.basePath, router]
+  );
+
+  const selectedCount =
+    selectedKeys === 'all' ? sortedItems.length : selectedKeys.size;
+
+  // Render grid or list view
+  if (props.viewMode === 'grid') {
+    return (
+      <ActionBarContainer height="100%">
+        <CollectionGridView
+          items={sortedItems}
+          basePath={props.basePath}
+          collection={props.collection}
+          selectedKeys={selectedKeys}
+          onSelectionChange={setSelectedKeys}
+          columns={collection.columns?.map(c => ({ key: c, label: c }))}
+        />
+        <ActionBar
+          selectedItemCount={selectedCount}
+          onAction={handleBulkAction}
+          onClearSelection={() => setSelectedKeys(new Set())}
+        >
+          <Item key="export">
+            <Icon src={downloadIcon} />
+            <Text>Export</Text>
+          </Item>
+          <Item key="delete">
+            <Icon src={trash2Icon} />
+            <Text>Delete</Text>
+          </Item>
+        </ActionBar>
+      </ActionBarContainer>
+    );
+  }
+
+  // Default table view
+  return (
+    <ActionBarContainer height="100%">
+      <TableView
+        aria-labelledby="page-title"
+        selectionMode="multiple"
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+        sortDescriptor={sortDescriptor}
+        density="spacious"
+        overflowMode="truncate"
+        prominence="low"
+        onAction={key => {
+          router.push(
+            getItemPath(
+              props.basePath,
+              props.collection,
+              key.toString().slice('key:'.length)
+            )
+          );
+        }}
+        renderEmptyState={() => (
+          <EmptyState
+            icon={searchXIcon}
+            title="No results"
+            message={`No items matching "${searchTerm}" were found.`}
+          />
+        )}
+        flex
+        marginTop={{ tablet: 'large' }}
+        marginBottom={{ mobile: 'regular', tablet: 'xlarge' }}
+        UNSAFE_className={css({
+          marginInline: tokenSchema.size.space.regular,
+          [breakpointQueries.above.mobile]: {
+            marginInline: `calc(${tokenSchema.size.space.xlarge} - ${tokenSchema.size.space.medium})`,
+          },
+          [breakpointQueries.above.tablet]: {
+            marginInline: `calc(${tokenSchema.size.space.xxlarge} - ${tokenSchema.size.space.medium})`,
+          },
+
+          '[role=rowheader]': {
+            cursor: 'pointer',
+          },
+        })}
+      >
       <TableHeader columns={columns}>
         {({ name, key, ...options }) =>
           key === STATUS ? (
@@ -594,6 +736,21 @@ function CollectionTable(
         }}
       </TableBody>
     </TableView>
+    <ActionBar
+      selectedItemCount={selectedCount}
+      onAction={handleBulkAction}
+      onClearSelection={() => setSelectedKeys(new Set())}
+    >
+      <Item key="export">
+        <Icon src={downloadIcon} />
+        <Text>Export</Text>
+      </Item>
+      <Item key="delete">
+        <Icon src={trash2Icon} />
+        <Text>Delete</Text>
+      </Item>
+    </ActionBar>
+  </ActionBarContainer>
   );
 }
 

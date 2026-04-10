@@ -1,0 +1,40 @@
+items:
+  - title: HI
+    isHomepage: true
+    slug:
+      name: HI
+      slug: hi
+    blocks:
+      - discriminant: hero
+        value:
+          eyebrow: Keystatic Pages
+          heading: Keystatic Pages
+          subheading: This homepage shows both collection posts and singleton-built pages loaded through the reader API.
+          primaryCtaLabel: Click here to visit the Admin UI
+          primaryCtaHref: /keystatic
+      - discriminant: content
+        value:
+          heading: Pages
+          body: This project starts with a singleton page created in the page builder.
+      - discriminant: content
+        value:
+          heading: Posts
+          body: Use the posts collection for blog posts at /posts/slug.
+      - discriminant: featureGrid
+        value:
+          title: Why this template
+          items:
+            - title: Block-based pages
+              description: Build and reorder sections visually from the Admin UI.
+            - title: Git-backed content
+              description: Content updates are saved as files in your repository.
+            - title: Frontend navigation
+              description: Navigation items are generated from singleton pages.
+      - discriminant: faq
+        value:
+          title: Frequently asked questions
+          items:
+            - question: How do I edit this page?
+              answer: Open /keystatic and edit the first page in the Pages singleton.
+            - question: Can I add more blocks?
+              answer: Yes, extend pageBlocks in keystatic.config and render the new block type in the frontend route.

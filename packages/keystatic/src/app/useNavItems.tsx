@@ -5,15 +5,22 @@ import { Config, NAVIGATION_DIVIDER_KEY } from '../config';
 import l10nMessages from './l10n';
 import { useAppState, useConfig } from './shell/context';
 import { useChanged } from './shell/data';
+import {
+  getStandalonePageCreatePath,
+  useStandalonePages,
+} from './standalone-pages';
+
+type ItemKind = 'action' | 'collection' | 'page' | 'singleton';
 
 type ItemData = {
-  key: string;
-  href: string;
-  label: string;
   changed: number | boolean;
   entryCount?: number;
-  children?: undefined;
+  href: string;
   isDivider?: undefined;
+  itemKind: ItemKind;
+  key: string;
+  label: string;
+  children?: undefined;
 };
 export type ItemDivider = {
   key?: undefined;
@@ -27,35 +34,111 @@ export type ItemOrGroup =
       key?: undefined;
       isDivider?: undefined;
       title: string;
+      createHref?: string;
       children: Item[];
     };
 
 export function useNavItems(): ItemOrGroup[] {
-  let { basePath } = useAppState();
-  let config = useConfig();
-  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  let changeMap = useChanged();
+  const { basePath } = useAppState();
+  const config = useConfig();
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const changeMap = useChanged();
+  const standalonePages = useStandalonePages(basePath);
+  const standalonePageSingletonKey = standalonePages.singleton?.key;
+  const standalonePageCreateHref =
+    standalonePageSingletonKey && standalonePages.collections.length
+      ? getStandalonePageCreatePath(
+          config,
+          basePath,
+          standalonePageSingletonKey
+        )
+      : undefined;
 
+  const standalonePageKeys = new Set(
+    standalonePages.collections.map(collection => collection.key)
+  );
   const collectionKeys = Object.keys(config.collections || {});
-  const singletonKeys = Object.keys(config.singletons || {});
-  const items = config.ui?.navigation || {
-    ...(!!collectionKeys.length && {
-      [stringFormatter.format('collections')]: collectionKeys,
-    }),
-    ...(!!singletonKeys.length && {
-      [stringFormatter.format('singletons')]: singletonKeys,
-    }),
-  };
-  const options = { basePath, changeMap, config };
+  const contentCollectionKeys = collectionKeys.filter(
+    key => !standalonePageKeys.has(key)
+  );
+  const singletonKeys = Object.keys(config.singletons || {}).filter(
+    key => key !== standalonePageSingletonKey
+  );
 
-  if (Array.isArray(items)) {
-    return items.map(key => populateItemData(key, options));
+  if (config.ui?.navigation) {
+    const options = {
+      basePath,
+      changeMap,
+      config,
+      standalonePageCreateHref,
+      standalonePageSingletonKey,
+    };
+    if (Array.isArray(config.ui.navigation)) {
+      return config.ui.navigation.map(key => populateItemData(key, options));
+    }
+    return Object.entries(config.ui.navigation).map(([section, keys]) => ({
+      title: section,
+      children: keys.map(key => populateItemData(key, options)),
+    }));
   }
 
-  return Object.entries(items).map(([section, keys]) => ({
-    title: section,
-    children: keys.map(key => populateItemData(key, options)),
-  }));
+  const pageCreateHref =
+    standalonePages.collections.length === 1
+      ? standalonePages.collections[0].createHref
+      : undefined;
+
+  const pageChildren =
+    standalonePages.items.length > 0
+      ? standalonePages.items.map(item => ({
+          changed: item.changed,
+          href: item.href,
+          itemKind: 'page' as const,
+          key: item.id,
+          label: item.label,
+        }))
+      : standalonePages.isLoading
+      ? []
+      : pageCreateHref
+      ? [
+          {
+            changed: false,
+            href: pageCreateHref,
+            itemKind: 'action' as const,
+            key: 'create-standalone-page',
+            label: 'Create page',
+          },
+        ]
+      : [];
+
+  const sections: ItemOrGroup[] = [];
+
+  if (standalonePages.collections.length) {
+    sections.push({
+      title: 'Pages',
+      createHref: pageCreateHref,
+      children: pageChildren,
+    });
+  }
+
+  if (contentCollectionKeys.length) {
+    sections.push({
+      title: stringFormatter.format('collections'),
+      children: contentCollectionKeys.map(key =>
+        populateItemData(key, { basePath, changeMap, config })
+      ),
+    });
+  }
+
+  if (singletonKeys.length) {
+    sections.push({
+      title: stringFormatter.format('singletons'),
+      children: singletonKeys.map(key =>
+        populateItemData(key, { basePath, changeMap, config })
+      ),
+    });
+  }
+
+  return sections;
 }
 
 function populateItemData(
@@ -64,16 +147,22 @@ function populateItemData(
     basePath: string;
     changeMap: ReturnType<typeof useChanged>;
     config: Config;
+    standalonePageCreateHref?: string;
+    standalonePageSingletonKey?: string;
   }
 ): Item {
-  let { basePath, changeMap, config } = options;
+  const {
+    basePath,
+    changeMap,
+    config,
+    standalonePageCreateHref,
+    standalonePageSingletonKey,
+  } = options;
 
-  // divider
   if (key === NAVIGATION_DIVIDER_KEY) {
     return { isDivider: true };
   }
 
-  // collection
   if (config.collections && key in config.collections) {
     const href = `${basePath}/collection/${encodeURIComponent(key)}`;
     const changes = changeMap.collections.get(key);
@@ -81,18 +170,33 @@ function populateItemData(
       ? changes.changed.size + changes.added.size + changes.removed.size
       : 0;
 
-    const label = config.collections[key].label;
-
-    return { key, href, label, changed, entryCount: changes?.totalCount };
+    return {
+      changed,
+      entryCount: changes?.totalCount,
+      href,
+      itemKind: 'collection',
+      key,
+      label: config.collections[key].label,
+    };
   }
 
-  // singleton
   if (config.singletons && key in config.singletons) {
-    const href = `${basePath}/singleton/${encodeURIComponent(key)}`;
-    const changed = changeMap.singletons.has(key);
-    const label = config.singletons[key].label;
-
-    return { key, href, label, changed };
+    if (key === standalonePageSingletonKey && standalonePageCreateHref) {
+      return {
+        changed: changeMap.singletons.has(key),
+        href: standalonePageCreateHref,
+        itemKind: 'action',
+        key: `${key}-create-page`,
+        label: 'Create page',
+      };
+    }
+    return {
+      changed: changeMap.singletons.has(key),
+      href: `${basePath}/singleton/${encodeURIComponent(key)}`,
+      itemKind: 'singleton',
+      key,
+      label: config.singletons[key].label,
+    };
   }
 
   throw new Error(`Unknown navigation key: "${key}".`);

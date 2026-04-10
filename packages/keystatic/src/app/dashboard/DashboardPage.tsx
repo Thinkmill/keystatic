@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 
 import { Avatar } from '@keystar/ui/avatar';
-import { Box, Flex, Grid, VStack, Divider } from '@keystar/ui/layout';
+import { Box, Flex, Grid, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { Heading, Text } from '@keystar/ui/typography';
@@ -12,18 +13,29 @@ import l10nMessages from '../l10n';
 import { useCloudInfo } from '../shell/data';
 import { PageBody, PageHeader, PageRoot } from '../shell/page';
 import { useViewer } from '../shell/viewer-data';
+import { isLocalConfig } from '../utils';
+import { useRecentItems } from '../shell/navigation-history';
 
+import { ActivityFeed } from './ActivityFeed';
 import { BranchSection } from './BranchSection';
 import { DashboardCards } from './DashboardCards';
-import { StatsCards } from './StatsCards';
-import { ActivityFeed } from './ActivityFeed';
 import { QuickActions } from './QuickActions';
-import { isLocalConfig } from '../utils';
+import { StatsCards } from './StatsCards';
 
 export function DashboardPage(props: { config: Config; basePath: string }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const viewer = useViewer();
   const cloudInfo = useCloudInfo();
+  const { addRecentItem } = useRecentItems();
+
+  useEffect(() => {
+    addRecentItem({
+      type: 'singleton',
+      key: 'dashboard',
+      label: 'Dashboard',
+      href: props.basePath,
+    });
+  }, [addRecentItem, props.basePath]);
 
   const user = viewer
     ? { name: viewer.name ?? viewer.login, avatarUrl: viewer.avatarUrl }
@@ -33,58 +45,31 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
     <PageRoot containerWidth="large">
       <PageHeader>
         <Flex
-          justifyContent="space-between"
           alignItems="center"
-          width="100%"
+          justifyContent="space-between"
           gap="regular"
-          UNSAFE_className={css({
-            flexWrap: 'wrap',
-            rowGap: tokenSchema.size.space.medium,
-          })}
+          width="100%"
+          wrap
         >
-          <Heading
-            elementType="h1"
-            id="page-title"
-            size="small"
-            UNSAFE_style={{ lineHeight: 1.5 }}
-          >
-            {stringFormatter.format('dashboard')}
-          </Heading>
+          <VStack gap="xsmall">
+            <Heading elementType="h1" id="page-title" size="small">
+              {stringFormatter.format('dashboard')}
+            </Heading>
+            <Text color="neutralSecondary" size="small">
+              Manage content, follow recent changes, and jump back into editing.
+            </Text>
+          </VStack>
           <QuickActions />
         </Flex>
       </PageHeader>
       <PageBody isScrollable>
-        <Flex direction="column" gap="xxlarge">
+        <Flex direction="column" gap="xlarge">
           <DashboardHero user={user} manageAccount={!!cloudInfo} />
-
-          {/* Stats Overview */}
           <StatsCards />
-
           {!isLocalConfig(props.config) && <BranchSection />}
-
-          {/* Section divider with label */}
-          <Flex alignItems="center" gap="large">
-            <Divider flex />
-            <Text size="small" color="neutralTertiary" weight="semibold">
-              CONTENT
-            </Text>
-            <Divider flex />
-          </Flex>
-
-          {/* Main Content Grid */}
-          <Grid
-            columns={{ mobile: '1fr', tablet: '1fr 1fr', desktop: '2fr 1fr' }}
-            gap="xxlarge"
-          >
-            {/* Collections Section */}
-            <Box>
-              <DashboardCards />
-            </Box>
-
-            {/* Activity Feed */}
-            <Box>
-              <ActivityFeed maxItems={8} />
-            </Box>
+          <Grid columns={{ mobile: '1fr', tablet: '1.55fr 1fr' }} gap="xlarge">
+            <DashboardCards />
+            <ActivityFeed maxItems={8} />
           </Grid>
         </Flex>
       </PageBody>
@@ -100,102 +85,90 @@ function DashboardHero({
   manageAccount: boolean;
 }) {
   const displayName = user?.name ?? 'Creator';
-  const eyebrow = user ? 'Content Hub' : 'Local Content Studio';
+  const eyebrow = user ? 'Content Studio' : 'Local Workspace';
   const description = user
-    ? 'Pick a collection to edit, review pending changes, or create new content.'
-    : 'You are running in local mode. Create and edit content directly in your repository.';
+    ? 'Everything you need to edit, review, and publish is collected here.'
+    : 'You are working locally. Content edits save directly into your repository.';
 
   return (
-    <Box
-      borderRadius="large"
-      overflow="hidden"
-      UNSAFE_className={css({
-        position: 'relative',
-        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-        background: `linear-gradient(135deg, ${tokenSchema.color.background.surface} 0%, ${tokenSchema.color.background.canvas} 100%)`,
-        boxShadow: `0 8px 32px ${tokenSchema.color.shadow.muted}, 0 0 0 1px ${tokenSchema.color.border.muted}`,
-
-        '::before': {
-          content: '""',
-          position: 'absolute',
-          inset: '-30% 30% 20% -30%',
-          backgroundImage: `radial-gradient(circle at center, ${tokenSchema.color.scale.indigo5}, transparent 65%)`,
-          opacity: 0.5,
-          pointerEvents: 'none',
-          animation: 'pulse 8s ease-in-out infinite',
-        },
-        '::after': {
-          content: '""',
-          position: 'absolute',
-          inset: '40% -25% -35% 40%',
-          backgroundImage: `radial-gradient(circle at center, ${tokenSchema.color.scale.cyan6}, transparent 70%)`,
-          opacity: 0.35,
-          pointerEvents: 'none',
-          animation: 'pulse 6s ease-in-out infinite reverse',
-        },
-        '@keyframes pulse': {
-          '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-          '50%': { opacity: 0.6, transform: 'scale(1.05)' },
-        },
-      })}
-    >
-      <Flex
-        alignItems="center"
-        gap="xlarge"
-        position="relative"
-        zIndex={1}
-        paddingX={{ mobile: 'large', tablet: 'xxlarge' }}
-        paddingY={{ mobile: 'xlarge', tablet: 'xxlarge' }}
+    <Grid columns={{ mobile: '1fr', tablet: '1.6fr 1fr' }} gap="large">
+      <Box
+        borderRadius="large"
+        padding={{ mobile: 'large', tablet: 'xlarge' }}
+        UNSAFE_className={css({
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+          background: `linear-gradient(135deg, ${tokenSchema.color.scale.indigo3} 0%, ${tokenSchema.color.background.surface} 55%, ${tokenSchema.color.scale.green3} 100%)`,
+          boxShadow: `0 18px 34px ${tokenSchema.color.shadow.muted}`,
+        })}
       >
-        <Box
-          UNSAFE_className={css({
-            padding: tokenSchema.size.space.small,
-            borderRadius: '50%',
-            background: `linear-gradient(135deg, ${tokenSchema.color.scale.indigo4}, ${tokenSchema.color.scale.cyan4})`,
-            boxShadow: `0 8px 24px ${tokenSchema.color.shadow.emphasis}`,
-          })}
-        >
+        <Flex alignItems="center" gap="large" wrap>
           <Avatar src={user?.avatarUrl} name={displayName} size="large" />
-        </Box>
+          <VStack gap="small" minWidth={0}>
+            <Text
+              size="small"
+              weight="semibold"
+              color="accent"
+              UNSAFE_className={css({
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              })}
+            >
+              {eyebrow}
+            </Text>
+            <Heading
+              elementType="p"
+              size="large"
+              UNSAFE_style={{ lineHeight: 1.2 }}
+            >
+              Welcome back, {displayName}
+            </Heading>
+            <Text color="neutralSecondary" UNSAFE_style={{ lineHeight: 1.7 }}>
+              {description}
+            </Text>
+            {manageAccount && user && (
+              <TextLink href="https://keystatic.cloud/account">
+                Manage account
+              </TextLink>
+            )}
+          </VStack>
+        </Flex>
+      </Box>
+
+      <Box
+        borderRadius="large"
+        padding={{ mobile: 'large', tablet: 'xlarge' }}
+        UNSAFE_className={css({
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+          backgroundColor: tokenSchema.color.background.surface,
+          boxShadow: `0 14px 28px ${tokenSchema.color.shadow.muted}`,
+        })}
+      >
         <VStack gap="medium">
           <Text
             size="small"
-            color="accent"
-            weight="bold"
+            weight="semibold"
+            color="neutralSecondary"
             UNSAFE_className={css({
+              letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              lineHeight: 1.5,
             })}
           >
-            {eyebrow}
+            Focus today
           </Text>
-          <Heading
-            size="large"
-            elementType="p"
-            UNSAFE_style={{
-              fontWeight: tokenSchema.typography.fontWeight.bold,
-              lineHeight: 1.3,
-            }}
-          >
-            Welcome back, {displayName}
+          <Heading elementType="p" size="small">
+            Pick a page, collection, or setting and keep the editing flow
+            moving.
           </Heading>
-          <Text
-            color="neutralSecondary"
-            size="regular"
-            UNSAFE_style={{ lineHeight: 1.7, maxWidth: '600px' }}
-          >
-            {description}
+          <Text color="neutralSecondary" size="small">
+            The admin is tuned for quick jumps: use the sidebar, dashboard
+            cards, or search with{' '}
+            <Text elementType="span" weight="semibold">
+              Ctrl K
+            </Text>
+            .
           </Text>
-          {manageAccount && user && (
-            <Box paddingTop="small">
-              <TextLink href="https://keystatic.cloud/account">
-                Manage Account →
-              </TextLink>
-            </Box>
-          )}
         </VStack>
-      </Flex>
-    </Box>
+      </Box>
+    </Grid>
   );
 }

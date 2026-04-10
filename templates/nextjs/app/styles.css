@@ -1,9 +1,8 @@
 html {
-  max-width: 70ch;
-  padding: 3rem 1rem;
-  margin: auto;
-  line-height: 1.75;
-  font-size: 1.25rem;
+  max-width: 100vw;
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
   font-family: sans-serif;
 }
 

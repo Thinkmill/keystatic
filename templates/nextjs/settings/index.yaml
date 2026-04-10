@@ -1,0 +1,4 @@
+navigation:
+  - label: HI
+    slug: hi
+    visible: true

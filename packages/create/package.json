@@ -11,7 +11,7 @@
     "directory": "packages/create"
   },
   "scripts": {
-    "dev": "node ."
+    "dev": "tsx src/index.ts"
   },
   "main": "dist/keystatic-create.cjs.js",
   "module": "dist/keystatic-create.esm.js",

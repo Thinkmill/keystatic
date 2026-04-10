@@ -15,8 +15,12 @@ import {
 } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
-import { Divider, ScrollView, HStack, VStack, Box } from '@keystar/ui/layout';
-import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
+import { Box, Divider, HStack, ScrollView, VStack } from '@keystar/ui/layout';
+import { Icon } from '@keystar/ui/icon';
+import { clockIcon } from '@keystar/ui/icon/icons/clockIcon';
+import { searchIcon } from '@keystar/ui/icon/icons/searchIcon';
+import { starIcon } from '@keystar/ui/icon/icons/starIcon';
+import { NavGroup, NavItem, NavList } from '@keystar/ui/nav-list';
 import { Blanket } from '@keystar/ui/overlays';
 import { StatusLight } from '@keystar/ui/status-light';
 import {
@@ -26,30 +30,27 @@ import {
   transition,
   useBreakpoint,
 } from '@keystar/ui/style';
-import { Text, Kbd } from '@keystar/ui/typography';
+import { Kbd, Text } from '@keystar/ui/typography';
 import { usePrevious } from '@keystar/ui/utils';
-import { Icon } from '@keystar/ui/icon';
-import { searchIcon } from '@keystar/ui/icon/icons/searchIcon';
-import { starIcon } from '@keystar/ui/icon/icons/starIcon';
-import { clockIcon } from '@keystar/ui/icon/icons/clockIcon';
 
+import { BranchPicker } from '../../branch-selection';
 import l10nMessages from '../../l10n';
+import { pluralize } from '../../pluralize';
 import { useRouter } from '../../router';
 import { ItemOrGroup, useNavItems } from '../../useNavItems';
 import { isLocalConfig } from '../../utils';
-import { pluralize } from '../../pluralize';
-
 import { useBrand } from '../common';
 import { SIDE_PANEL_ID } from '../constants';
-import { GitMenu, ThemeMenu, UserActions } from './components';
-import { BranchPicker } from '../../branch-selection';
-import { useAppState, useConfig } from '../context';
 import { useCommandPalette } from '../CommandPalette';
+import { useAppState, useConfig } from '../context';
 import { useFavorites, useRecentItems } from '../navigation-history';
 
+import { GitMenu, ThemeMenu, UserActions } from './components';
+
 const SidebarContext = createContext<OverlayTriggerState | null>(null);
+
 export function useSidebar() {
-  let context = useContext(SidebarContext);
+  const context = useContext(SidebarContext);
   if (!context) {
     throw new Error('useSidebar must be within a SidebarProvider');
   }
@@ -57,17 +58,18 @@ export function useSidebar() {
 }
 
 const breakpointNames = typedKeys(breakpoints);
+
 export function SidebarProvider(props: { children: ReactNode }) {
   const matchedBreakpoints = useBreakpoint();
   const state = useOverlayTriggerState({
     defaultOpen: matchedBreakpoints.includes('desktop'),
   });
 
-  let breakpointIndex = breakpointNames.indexOf(matchedBreakpoints[0]);
-  let previousIndex = usePrevious(breakpointIndex) || 0;
+  const breakpointIndex = breakpointNames.indexOf(matchedBreakpoints[0]);
+  const previousIndex = usePrevious(breakpointIndex) || 0;
 
   useUpdateEffect(() => {
-    let larger = previousIndex < breakpointIndex;
+    const larger = previousIndex < breakpointIndex;
     if (larger && breakpointIndex >= 2) {
       state.open();
     } else if (breakpointIndex < 2) {
@@ -84,7 +86,12 @@ export function SidebarProvider(props: { children: ReactNode }) {
 
 export function SidebarPanel() {
   return (
-    <VStack backgroundColor="surface" height="100%">
+    <VStack
+      height="100%"
+      UNSAFE_className={css({
+        background: `linear-gradient(180deg, ${tokenSchema.color.background.surface} 0%, ${tokenSchema.color.background.canvas} 100%)`,
+      })}
+    >
       <SidebarHeader />
       <SidebarSearch />
       <SidebarGitActions />
@@ -94,49 +101,124 @@ export function SidebarPanel() {
   );
 }
 
+function SidebarHeader() {
+  const isLocalNoCloud = useIsLocalNoCloud();
+  const { brandMark } = useBrand();
+
+  return (
+    <Box
+      paddingX="medium"
+      paddingY="regular"
+      UNSAFE_className={css({
+        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+        background: `linear-gradient(135deg, ${tokenSchema.color.scale.indigo3} 0%, ${tokenSchema.color.background.surface} 55%, ${tokenSchema.color.scale.green3} 100%)`,
+      })}
+    >
+      <div
+        className={css({
+          display: 'grid',
+          gridTemplateColumns: '1fr auto 1fr',
+          alignItems: 'center',
+          gap: tokenSchema.size.space.regular,
+          minHeight: tokenSchema.size.element.xlarge,
+        })}
+      >
+        <Box />
+        <Box
+          UNSAFE_className={css({
+            color: tokenSchema.color.foreground.neutralEmphasis,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minWidth: 0,
+            '& :first-child': {
+              flexShrink: 0,
+            },
+          })}
+        >
+          <Box
+            UNSAFE_className={css({
+              width: '112px',
+              height: '50px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'transform 160ms ease',
+              '&:hover': {
+                transform: 'translateY(-1px)',
+              },
+            })}
+          >
+            {brandMark}
+          </Box>
+        </Box>
+        <Box
+          justifySelf="end"
+          minWidth={0}
+          UNSAFE_className={css({
+            display: 'flex',
+            justifyContent: 'flex-end',
+          })}
+        >
+          {isLocalNoCloud ? <ThemeMenu /> : null}
+        </Box>
+      </div>
+    </Box>
+  );
+}
+
 function SidebarSearch() {
   const { open } = useCommandPalette();
 
   return (
-    <Box paddingX="medium" paddingY="small">
+    <Box paddingX="medium" paddingY="medium">
       <Box
         role="button"
         tabIndex={0}
         onClick={open}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
+        onKeyDown={event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
             open();
           }
         }}
-        borderRadius="medium"
+        borderRadius="large"
         paddingX="regular"
-        paddingY="small"
+        paddingY="regular"
         UNSAFE_className={css({
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           gap: tokenSchema.size.space.regular,
-          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-          backgroundColor: tokenSchema.color.background.canvas,
-          transition: transition(['border-color', 'background-color', 'box-shadow']),
-          boxShadow: `0 1px 2px ${tokenSchema.color.shadow.muted}`,
+          width: '100%',
+          minWidth: 0,
+          maxWidth: '100%',
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+          backgroundColor: tokenSchema.color.background.surface,
+          boxShadow: `0 10px 18px ${tokenSchema.color.shadow.muted}`,
+          transition: transition([
+            'border-color',
+            'box-shadow',
+            'transform',
+            'background-color',
+          ]),
           '&:hover': {
-            borderColor: tokenSchema.color.scale.indigo6,
-            backgroundColor: tokenSchema.color.alias.backgroundHovered,
-            boxShadow: `0 2px 8px ${tokenSchema.color.shadow.regular}`,
+            transform: 'translateY(-1px)',
+            borderColor: tokenSchema.color.border.accent,
+            boxShadow: `0 14px 26px ${tokenSchema.color.shadow.regular}`,
           },
-          '&:focus': {
-            outline: 'none',
-            borderColor: tokenSchema.color.scale.indigo7,
-            boxShadow: `0 0 0 2px ${tokenSchema.color.scale.indigo4}`,
+          '&:focus-visible': {
+            outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
+            outlineOffset: tokenSchema.size.alias.focusRingGap,
           },
         })}
       >
         <Box
+          borderRadius="full"
+          padding="xsmall"
           UNSAFE_className={css({
-            padding: '4px',
-            borderRadius: '50%',
             backgroundColor: tokenSchema.color.scale.indigo3,
             display: 'flex',
             alignItems: 'center',
@@ -145,177 +227,70 @@ function SidebarSearch() {
         >
           <Icon src={searchIcon} size="small" color="accent" />
         </Box>
-        <Text color="neutralSecondary" flex size="small">
-          Search anything...
+        <Text color="neutralSecondary" flex minWidth={0} size="small" truncate>
+          Search admin UI...
         </Text>
-        <HStack gap="xsmall">
-          <Kbd>⌘K</Kbd>
+        <HStack
+          gap="xsmall"
+          isHidden={{ below: 'tablet' }}
+          UNSAFE_className={css({ flexShrink: 0 })}
+        >
+          <Kbd>Ctrl</Kbd>
+          <Kbd>K</Kbd>
         </HStack>
       </Box>
     </Box>
   );
 }
 
-function SidebarHeader() {
-  let isLocalNoCloud = useIsLocalNoCloud();
-  let { brandMark, brandName } = useBrand();
-
-  return (
-    <Box
-      UNSAFE_className={css({
-        position: 'relative',
-        overflow: 'hidden',
-        background: `linear-gradient(135deg, ${tokenSchema.color.background.surface} 0%, ${tokenSchema.color.background.canvas} 100%)`,
-        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-        '::before': {
-          content: '""',
-          position: 'absolute',
-          top: '-50%',
-          left: '-30%',
-          width: '100%',
-          height: '150%',
-          backgroundImage: `radial-gradient(circle at center, ${tokenSchema.color.scale.indigo4}, transparent 70%)`,
-          opacity: 0.2,
-          pointerEvents: 'none',
-          animation: 'drift 15s ease-in-out infinite',
-        },
-        '::after': {
-          content: '""',
-          position: 'absolute',
-          bottom: '-50%',
-          right: '-30%',
-          width: '100%',
-          height: '150%',
-          backgroundImage: `radial-gradient(circle at center, ${tokenSchema.color.scale.cyan5}, transparent 70%)`,
-          opacity: 0.15,
-          pointerEvents: 'none',
-          animation: 'drift 18s ease-in-out infinite reverse',
-        },
-        '@keyframes drift': {
-          '0%, 100%': { transform: 'translate(0, 0)' },
-          '50%': { transform: 'translate(8px, 8px)' },
-        },
-      })}
-    >
-      <HStack
-        alignItems="center"
-        gap="regular"
-        paddingY="regular"
-        paddingX="medium"
-        minHeight={{ mobile: 'element.large', tablet: 'element.xlarge' }}
-        position="relative"
-      >
-        <HStack
-          flex
-          alignItems="center"
-          gap="regular"
-          UNSAFE_className={css({
-            // let consumers use "currentColor" in SVG for their brand mark
-            color: tokenSchema.color.foreground.neutralEmphasis,
-
-            // ensure that the brand mark doesn't get squashed
-            '& :first-child': {
-              flexShrink: 0,
-            },
-          })}
-        >
-          <Box
-            UNSAFE_className={css({
-              padding: '6px',
-              borderRadius: tokenSchema.size.radius.regular,
-              background: `linear-gradient(135deg, ${tokenSchema.color.scale.indigo3}, ${tokenSchema.color.scale.cyan3})`,
-              boxShadow: `0 4px 16px ${tokenSchema.color.shadow.muted}, inset 0 1px 1px ${tokenSchema.color.scale.indigo2}`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                boxShadow: `0 6px 24px ${tokenSchema.color.shadow.regular}, inset 0 1px 1px ${tokenSchema.color.scale.indigo2}`,
-                transform: 'translateY(-2px)',
-              },
-            })}
-          >
-            {brandMark}
-          </Box>
-
-          <VStack gap="xsmall">
-            <Text 
-              color="neutralEmphasis" 
-              weight="bold" 
-              truncate
-              UNSAFE_style={{ 
-                letterSpacing: '-0.01em',
-                lineHeight: 1.3,
-                fontSize: '15px',
-              }}
-            >
-              {brandName}
-            </Text>
-            <Text 
-              size="small" 
-              color="neutralTertiary"
-              UNSAFE_style={{ 
-                fontSize: '10px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                lineHeight: 1.4,
-                fontWeight: '600',
-              }}
-            >
-              CMS
-            </Text>
-          </VStack>
-        </HStack>
-        {isLocalNoCloud && <ThemeMenu />}
-      </HStack>
-    </Box>
-  );
-}
-
-// when local mode w/o cloud there's no user actions, so we hide the footer and
-// move the theme menu to the header
-function SidebarFooter() {
-  let isLocalNoCloud = useIsLocalNoCloud();
-  if (isLocalNoCloud) {
-    return null;
-  }
-  return (
-    <Box
-      UNSAFE_className={css({
-        borderTop: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-        background: `linear-gradient(0deg, ${tokenSchema.color.background.canvas} 0%, ${tokenSchema.color.background.surface} 100%)`,
-      })}
-    >
-      <HStack
-        alignItems="center"
-        paddingY="regular"
-        paddingX="medium"
-        gap="regular"
-      >
-        <UserActions />
-        <ThemeMenu />
-      </HStack>
-    </Box>
-  );
-}
-
-// no git actions in local mode
 function SidebarGitActions() {
-  let config = useConfig();
+  const config = useConfig();
   if (isLocalConfig(config)) {
     return null;
   }
+
   return (
-    <Box
-      UNSAFE_className={css({
-        borderTop: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-      })}
-    >
-      <HStack gap="regular" paddingY="regular" paddingX="medium">
-        <BranchPicker />
-        <GitMenu />
-      </HStack>
+    <Box paddingX="medium" paddingBottom="medium">
+      <Box
+        borderRadius="large"
+        padding="medium"
+        UNSAFE_className={css({
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+          backgroundColor: tokenSchema.color.background.surface,
+          boxShadow: `0 10px 18px ${tokenSchema.color.shadow.muted}`,
+        })}
+      >
+        <HStack gap="regular">
+          <BranchPicker />
+          <GitMenu />
+        </HStack>
+      </Box>
+    </Box>
+  );
+}
+
+function SidebarFooter() {
+  const isLocalNoCloud = useIsLocalNoCloud();
+  if (isLocalNoCloud) {
+    return null;
+  }
+
+  return (
+    <Box padding="medium" paddingTop="small">
+      <Box
+        borderRadius="large"
+        padding="medium"
+        UNSAFE_className={css({
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+          backgroundColor: tokenSchema.color.background.surface,
+          boxShadow: `0 10px 18px ${tokenSchema.color.shadow.muted}`,
+        })}
+      >
+        <HStack alignItems="center" gap="regular">
+          <UserActions />
+          <ThemeMenu />
+        </HStack>
+      </Box>
     </Box>
   );
 }
@@ -324,13 +299,12 @@ export function SidebarDialog() {
   const state = useSidebar();
   const router = useRouter();
 
-  // close the sidebar when the route changes
   useUpdateEffect(() => {
     state.close();
   }, [router.href]);
 
-  let dialogRef = useRef<HTMLDivElement>(null);
-  let { modalProps, underlayProps } = useModalOverlay(
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const { modalProps, underlayProps } = useModalOverlay(
     { isDismissable: true },
     state,
     dialogRef
@@ -344,16 +318,11 @@ export function SidebarDialog() {
         id={SIDE_PANEL_ID}
         ref={dialogRef}
         {...modalProps}
-        // styles
         className={css({
-          backgroundColor: tokenSchema.color.background.surface,
-          boxShadow: `${tokenSchema.size.shadow.large} ${tokenSchema.color.shadow.regular}`,
           display: 'flex',
           flexDirection: 'column',
           inset: 0,
           insetInlineEnd: 'auto',
-          // ensure that there's always enough of gutter for the user to press
-          // and exit the sidebar
           maxWidth: `calc(100% - ${tokenSchema.size.element.medium})`,
           minWidth: tokenSchema.size.scale[3000],
           outline: 0,
@@ -362,13 +331,11 @@ export function SidebarDialog() {
           transform: 'translateX(-100%)',
           visibility: 'hidden',
           zIndex: 10,
-
-          // exit animation
+          boxShadow: `${tokenSchema.size.shadow.large} ${tokenSchema.color.shadow.regular}`,
           transition: [
             transition('transform', {
               easing: 'easeIn',
               duration: 'short',
-              // delay: 'short',
             }),
             transition('visibility', {
               delay: 'regular',
@@ -376,21 +343,15 @@ export function SidebarDialog() {
               easing: 'linear',
             }),
           ].join(', '),
-
           '&[data-visible=true]': {
             transform: 'translateX(0)',
-            // enter animation
             transition: transition('transform', { easing: 'easeOut' }),
             pointerEvents: 'auto',
             visibility: 'visible',
           },
         })}
       >
-        <SidebarHeader />
-        <SidebarSearch />
-        <SidebarGitActions />
-        <SidebarNav />
-        <SidebarFooter />
+        <SidebarPanel />
         <DismissButton onDismiss={state.close} />
       </div>
     </>
@@ -406,132 +367,145 @@ export function SidebarNav() {
   const { recentItems } = useRecentItems();
 
   return (
-    <ScrollView flex paddingY="large" paddingEnd="medium">
-      <VStack gap="small">
-        <NavList>
-          <NavItem
-            href={basePath}
-            aria-current={isCurrent(basePath, { exact: true })}
-          >
-            <Text UNSAFE_style={{ lineHeight: 1.5 }}>
-              {stringFormatter.format('dashboard')}
-            </Text>
-          </NavItem>
-        </NavList>
+    <ScrollView flex paddingX="medium" paddingBottom="medium">
+      <VStack gap="medium">
+        <SidebarSectionCard>
+          <NavList>
+            <NavItem
+              href={basePath}
+              aria-current={isCurrent(basePath, { exact: true })}
+            >
+              <Text UNSAFE_style={{ lineHeight: 1.5 }}>
+                {stringFormatter.format('dashboard')}
+              </Text>
+            </NavItem>
+          </NavList>
+        </SidebarSectionCard>
 
-        {/* Favorites Section */}
         {favorites.length > 0 && (
-          <Box paddingTop="regular">
-            <NavList>
-              <NavGroup
-                title={
-                  <HStack gap="small" alignItems="center" paddingBottom="xsmall">
-                    <Box
-                      UNSAFE_className={css({
-                        padding: '3px',
-                        borderRadius: '4px',
-                        backgroundColor: tokenSchema.color.scale.amber3,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      })}
-                    >
-                      <Icon src={starIcon} size="small" color="pending" />
-                    </Box>
-                    <Text 
-                      size="small" 
-                      weight="semibold" 
-                      color="neutralSecondary"
-                      UNSAFE_style={{ 
-                        textTransform: 'uppercase', 
-                        letterSpacing: '0.05em',
-                        fontSize: '11px',
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      Favorites
-                    </Text>
-                  </HStack>
-                }
-              >
-                {favorites.map(fav => (
+          <SidebarSectionCard>
+            <VStack gap="small">
+              <SidebarSectionTitle
+                icon={starIcon}
+                label="Favorites"
+                tone="amber"
+              />
+              <NavList>
+                {favorites.map(item => (
                   <NavItem
-                    key={fav.key}
-                    href={fav.href}
-                    aria-current={isCurrent(fav.href)}
+                    key={item.key}
+                    href={item.href}
+                    aria-current={isCurrent(item.href)}
                   >
-                    <Text truncate UNSAFE_style={{ lineHeight: 1.5 }}>{fav.label}</Text>
+                    <Text truncate UNSAFE_style={{ lineHeight: 1.5 }}>
+                      {item.label}
+                    </Text>
                   </NavItem>
                 ))}
-              </NavGroup>
-            </NavList>
-          </Box>
+              </NavList>
+            </VStack>
+          </SidebarSectionCard>
         )}
 
-        {/* Recent Items Section */}
         {recentItems.length > 0 && (
-          <Box paddingTop="regular">
-            <NavList>
-              <NavGroup
-                title={
-                  <HStack gap="small" alignItems="center" paddingBottom="xsmall">
-                    <Box
-                      UNSAFE_className={css({
-                        padding: '3px',
-                        borderRadius: '4px',
-                        backgroundColor: tokenSchema.color.scale.slate3,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      })}
-                    >
-                      <Icon src={clockIcon} size="small" color="neutralSecondary" />
-                    </Box>
-                    <Text 
-                      size="small" 
-                      weight="semibold" 
-                      color="neutralSecondary"
-                      UNSAFE_style={{ 
-                        textTransform: 'uppercase', 
-                        letterSpacing: '0.05em',
-                        fontSize: '11px',
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      Recent
-                    </Text>
-                  </HStack>
-                }
-              >
+          <SidebarSectionCard>
+            <VStack gap="small">
+              <SidebarSectionTitle
+                icon={clockIcon}
+                label="Recent"
+                tone="slate"
+              />
+              <NavList>
                 {recentItems.slice(0, 5).map(item => (
                   <NavItem
                     key={item.href}
                     href={item.href}
                     aria-current={isCurrent(item.href)}
                   >
-                    <Text truncate size="small" UNSAFE_style={{ lineHeight: 1.5 }}>{item.label}</Text>
+                    <Text truncate UNSAFE_style={{ lineHeight: 1.5 }}>
+                      {item.label}
+                    </Text>
                   </NavItem>
                 ))}
-              </NavGroup>
-            </NavList>
-          </Box>
+              </NavList>
+            </VStack>
+          </SidebarSectionCard>
         )}
 
-        {/* Regular Navigation with proper spacing */}
-        <Box paddingTop="medium">
+        <SidebarSectionCard>
           <NavList>
-            {navItems.map((item, i) => (
-              <NavItemOrGroup key={i} itemOrGroup={item} />
+            {navItems.map((item, index) => (
+              <NavItemOrGroup itemOrGroup={item} key={index} />
             ))}
           </NavList>
-        </Box>
+        </SidebarSectionCard>
       </VStack>
     </ScrollView>
   );
 }
 
-// Utils
-// ----------------------------------------------------------------------------
+function SidebarSectionCard(props: { children: ReactNode }) {
+  return (
+    <Box
+      borderRadius="large"
+      padding="small"
+      UNSAFE_className={css({
+        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+        backgroundColor: tokenSchema.color.background.surface,
+        boxShadow: `0 10px 18px ${tokenSchema.color.shadow.muted}`,
+      })}
+    >
+      {props.children}
+    </Box>
+  );
+}
+
+function SidebarSectionTitle(props: {
+  icon: typeof starIcon;
+  label: string;
+  tone: 'amber' | 'slate';
+}) {
+  const backgroundColor =
+    props.tone === 'amber'
+      ? tokenSchema.color.scale.amber3
+      : tokenSchema.color.scale.slate3;
+  const iconClassName = css({
+    color:
+      props.tone === 'amber'
+        ? tokenSchema.color.scale.amber9
+        : tokenSchema.color.scale.slate8,
+  });
+
+  return (
+    <HStack gap="small" alignItems="center" paddingBottom="xsmall">
+      <Box
+        UNSAFE_className={css({
+          padding: '3px',
+          borderRadius: '4px',
+          backgroundColor,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        })}
+      >
+        <Icon src={props.icon} size="small" UNSAFE_className={iconClassName} />
+      </Box>
+      <Text
+        size="small"
+        weight="semibold"
+        color="neutralSecondary"
+        UNSAFE_style={{
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+          fontSize: '11px',
+          lineHeight: 1.4,
+        }}
+      >
+        {props.label}
+      </Text>
+    </HStack>
+  );
+}
 
 function useIsLocalNoCloud() {
   const config = useConfig();
@@ -553,10 +527,9 @@ function useIsCurrent() {
   );
 }
 
-// Renderers
-// ----------------------------------------------------------------------------
 function NavItemOrGroup({ itemOrGroup }: { itemOrGroup: ItemOrGroup }) {
   const isCurrent = useIsCurrent();
+
   if (itemOrGroup.isDivider) {
     return <Divider />;
   }
@@ -564,37 +537,17 @@ function NavItemOrGroup({ itemOrGroup }: { itemOrGroup: ItemOrGroup }) {
   if (itemOrGroup.children) {
     return (
       <Box paddingTop="medium">
-        <NavGroup 
-          title={
-            <Text 
-              size="small" 
-              weight="semibold" 
-              color="neutralSecondary"
-              UNSAFE_style={{ 
-                textTransform: 'uppercase', 
-                letterSpacing: '0.05em',
-                fontSize: '11px',
-                lineHeight: 1.4,
-              }}
-            >
-              {itemOrGroup.title}
-            </Text>
-          }
-        >
-          {itemOrGroup.children.map((child, i) => (
-            <NavItemOrGroup itemOrGroup={child} key={i} />
+        <NavGroup title={itemOrGroup.title}>
+          {itemOrGroup.children.map((child, index) => (
+            <NavItemOrGroup itemOrGroup={child} key={index} />
           ))}
         </NavGroup>
       </Box>
     );
   }
 
-  let changeElement = (() => {
-    if (!itemOrGroup.changed) {
-      return null;
-    }
-
-    return typeof itemOrGroup.changed === 'number' ? (
+  const changeElement =
+    !itemOrGroup.changed ? null : typeof itemOrGroup.changed === 'number' ? (
       <Badge tone="accent" marginStart="auto">
         <Text>{itemOrGroup.changed}</Text>
         <Text visuallyHidden>
@@ -613,12 +566,11 @@ function NavItemOrGroup({ itemOrGroup }: { itemOrGroup: ItemOrGroup }) {
         role="status"
       />
     );
-  })();
 
   return (
     <NavItem href={itemOrGroup.href} aria-current={isCurrent(itemOrGroup.href)}>
-      <Text 
-        truncate 
+      <Text
+        truncate
         title={itemOrGroup.label}
         UNSAFE_style={{ lineHeight: 1.5 }}
       >

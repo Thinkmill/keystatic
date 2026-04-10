@@ -58,7 +58,7 @@ export function PageBuilderPreview({
 }) {
   return (
     <VStack gap="large" paddingY="xlarge" paddingX="large">
-      {components.map((component) => renderComponent(component))}
+      {components.map(component => renderComponent(component))}
     </VStack>
   );
 }
@@ -103,7 +103,7 @@ function renderComponent(component: PageComponent): ReactNode {
                 {component.title}
               </Heading>
             )}
-            {component.children.map((child) => renderComponent(child))}
+            {component.children.map(child => renderComponent(child))}
           </VStack>
         </Box>
       );
@@ -150,7 +150,7 @@ function renderComponent(component: PageComponent): ReactNode {
       return (
         <Box
           key={component.id}
-          height={spacerHeights[component.height]}
+          UNSAFE_style={{ height: spacerHeights[component.height] }}
         />
       );
   }

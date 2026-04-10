@@ -56,13 +56,20 @@ import { copyEntryToClipboard, getPastedEntry } from './entry-clipboard';
 import { clipboardCopyIcon } from '@keystar/ui/icon/icons/clipboardCopyIcon';
 import { clipboardPasteIcon } from '@keystar/ui/icon/icons/clipboardPasteIcon';
 import { ActionGroup, Item } from '@keystar/ui/action-group';
-import { Text } from '@keystar/ui/typography';
+import { Heading, Text } from '@keystar/ui/typography';
 import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
+import {
+  getStandalonePageCreatePath,
+  getStandalonePagePath,
+} from './standalone-pages';
+
+type EntryRouteKind = 'collection' | 'standalone-page';
 
 function CreateItemWrapper(props: {
   collection: string;
   config: Config;
   basePath: string;
+  routeKind?: EntryRouteKind;
 }) {
   const router = useRouter();
   const duplicateSlug = useMemo(() => {
@@ -232,6 +239,7 @@ function CreateItemWrapper(props: {
         collection={props.collection}
         config={props.config}
         basePath={props.basePath}
+        routeKind={props.routeKind}
         draft={draftData.kind === 'loaded' ? draftData.data : undefined}
         duplicateSlug={duplicateSlug}
         initialState={duplicateInitalStateWithUpdatedSlug}
@@ -243,6 +251,7 @@ function CreateItemWrapper(props: {
       collection={props.collection}
       config={props.config}
       basePath={props.basePath}
+      routeKind={props.routeKind}
       duplicateSlug={duplicateSlug}
       initialState={duplicateInitalStateWithUpdatedSlug}
       map={mapData.data}
@@ -261,6 +270,7 @@ function CreateItemLocal(props: {
   collection: string;
   config: Config;
   basePath: string;
+  routeKind: EntryRouteKind | undefined;
   duplicateSlug: string | null;
   draft: { state: Record<string, unknown>; savedAt: Date } | undefined;
   initialState: Record<string, unknown> | undefined;
@@ -343,9 +353,11 @@ function CreateItemLocal(props: {
     <CreateItemInner
       basePath={props.basePath}
       collection={props.collection}
+      config={props.config}
       createResult={createResult}
       createItem={createItem}
       resetCreateItemState={resetCreateItemState}
+      routeKind={props.routeKind}
       state={state}
       slug={slug}
       previewProps={previewProps}
@@ -360,6 +372,7 @@ function CreateItemCollab(props: {
   collection: string;
   config: Config;
   basePath: string;
+  routeKind: EntryRouteKind | undefined;
   duplicateSlug: string | null;
   initialState: Record<string, unknown> | undefined;
   map: Y.Map<unknown>;
@@ -389,9 +402,11 @@ function CreateItemCollab(props: {
     <CreateItemInner
       basePath={props.basePath}
       collection={props.collection}
+      config={props.config}
       createResult={createResult}
       createItem={createItem}
       resetCreateItemState={resetCreateItemState}
+      routeKind={props.routeKind}
       state={state}
       slug={slug}
       previewProps={previewProps}
@@ -413,9 +428,11 @@ function CreateItemCollab(props: {
 function CreateItemInner(props: {
   basePath: string;
   collection: string;
+  config: Config;
   createResult: ReturnType<typeof useUpsertItem>[0];
   createItem: ReturnType<typeof useUpsertItem>[1];
   resetCreateItemState: ReturnType<typeof useUpsertItem>[2];
+  routeKind: EntryRouteKind | undefined;
   state: Record<string, unknown>;
   slug: string;
   previewProps: GenericPreviewProps<
@@ -435,6 +452,7 @@ function CreateItemInner(props: {
   const formatInfo = getCollectionFormat(config, props.collection);
 
   const baseCommit = useBaseCommit();
+  const isStandalonePage = props.routeKind === 'standalone-page';
 
   let collectionPath = `${props.basePath}/collection/${encodeURIComponent(
     props.collection
@@ -456,8 +474,18 @@ function CreateItemInner(props: {
     }
     if (await props.createItem()) {
       const slug = getSlugFromState(collectionConfig, props.state);
-      router.push(`${collectionPath}/item/${encodeURIComponent(slug)}`);
-      toastQueue.positive('Entry created', { timeout: 5000 }); // TODO: l10n
+      router.push(
+        getItemHref({
+          basePath: props.basePath,
+          collection: props.collection,
+          config: props.config,
+          routeKind: props.routeKind,
+          slug,
+        })
+      );
+      toastQueue.positive(isStandalonePage ? 'Page created' : 'Entry created', {
+        timeout: 5000,
+      }); // TODO: l10n
     }
   };
 
@@ -491,6 +519,11 @@ function CreateItemInner(props: {
     createResult.kind === 'loading' || createResult.kind === 'updated';
 
   const formID = 'item-create-form';
+  const standalonePageTitle = getStandalonePageTitle(
+    collectionConfig,
+    props.state,
+    'Create page'
+  );
   const breadcrumbItems = useMemo(
     () => [
       {
@@ -509,7 +542,19 @@ function CreateItemInner(props: {
     <>
       <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
         <PageHeader>
-          <HeaderBreadcrumbs items={breadcrumbItems} />
+          {isStandalonePage ? (
+            <Flex direction="column" gap="xsmall" flex minWidth={0}>
+              <Heading elementType="h1" id="page-title" size="small">
+                {standalonePageTitle}
+              </Heading>
+              <Text color="neutralSecondary" size="small">
+                This page will appear in the sidebar as its own destination
+                after you save it.
+              </Text>
+            </Flex>
+          ) : (
+            <HeaderBreadcrumbs items={breadcrumbItems} />
+          )}
           <PresenceAvatars />
           {isLoading && (
             <ProgressCircle
@@ -595,10 +640,16 @@ function CreateItemInner(props: {
           <CreateBranchDuringUpdateDialog
             branchOid={baseCommit}
             onCreate={async newBranch => {
+              const newBasePath = `/keystatic/branch/${encodeURIComponent(
+                newBranch
+              )}`;
               router.push(
-                `/keystatic/branch/${encodeURIComponent(
-                  newBranch
-                )}/collection/${encodeURIComponent(props.collection)}/create`
+                getCreateHref({
+                  basePath: newBasePath,
+                  collection: props.collection,
+                  config: props.config,
+                  routeKind: props.routeKind,
+                })
               );
               if (
                 await props.createItem({ branch: newBranch, sha: baseCommit })
@@ -606,11 +657,13 @@ function CreateItemInner(props: {
                 const slug = getSlugFromState(collectionConfig, props.state);
 
                 router.push(
-                  `/keystatic/branch/${encodeURIComponent(
-                    newBranch
-                  )}/collection/${encodeURIComponent(
-                    props.collection
-                  )}/item/${encodeURIComponent(slug)}`
+                  getItemHref({
+                    basePath: newBasePath,
+                    collection: props.collection,
+                    config: props.config,
+                    routeKind: props.routeKind,
+                    slug,
+                  })
                 );
               }
             }}
@@ -632,7 +685,13 @@ function CreateItemInner(props: {
               if (await props.createItem()) {
                 const slug = getSlugFromState(collectionConfig, props.state);
                 router.push(
-                  `${collectionPath}/item/${encodeURIComponent(slug)}`
+                  getItemHref({
+                    basePath: props.basePath,
+                    collection: props.collection,
+                    config: props.config,
+                    routeKind: props.routeKind,
+                    slug,
+                  })
                 );
               }
             }}
@@ -664,3 +723,65 @@ const menuActions = [
 ];
 
 export { CreateItemWrapper as CreateItem };
+
+function getCreateHref(props: {
+  basePath: string;
+  collection: string;
+  config: Config;
+  routeKind: EntryRouteKind | undefined;
+}) {
+  if (props.routeKind === 'standalone-page') {
+    return getStandalonePageCreatePath(
+      props.config,
+      props.basePath,
+      props.collection
+    );
+  }
+  return `${props.basePath}/collection/${encodeURIComponent(
+    props.collection
+  )}/create`;
+}
+
+function getItemHref(props: {
+  basePath: string;
+  collection: string;
+  config: Config;
+  routeKind: EntryRouteKind | undefined;
+  slug: string;
+}) {
+  if (props.routeKind === 'standalone-page') {
+    return getStandalonePagePath(
+      props.config,
+      props.basePath,
+      props.collection,
+      props.slug
+    );
+  }
+  return `${props.basePath}/collection/${encodeURIComponent(
+    props.collection
+  )}/item/${encodeURIComponent(props.slug)}`;
+}
+
+function getStandalonePageTitle(
+  collectionConfig: {
+    slugField: string;
+    schema: Record<string, ComponentSchema>;
+  },
+  state: Record<string, unknown>,
+  fallback: string
+) {
+  const slugField = collectionConfig.schema[collectionConfig.slugField];
+  const value = state[collectionConfig.slugField];
+  if (
+    slugField.kind === 'form' &&
+    slugField.formKind === 'slug' &&
+    value &&
+    typeof value === 'object' &&
+    'name' in value &&
+    typeof value.name === 'string' &&
+    value.name.trim()
+  ) {
+    return value.name.trim();
+  }
+  return fallback;
+}

@@ -44,12 +44,41 @@ import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
 import { assertValidRepoConfig } from './repo-config';
 import { NotFoundBoundary, notFound } from './not-found';
+import { StandalonePageEditor } from './StandalonePageEditor';
+import {
+  getStandalonePageCreatePath,
+  getStandalonePageSingleton,
+  parseStandalonePageRoute,
+  useStandalonePages,
+} from './standalone-pages';
 
-function parseParamsWithoutBranch(params: string[]) {
+function parseParamsWithoutBranch(config: Config, params: string[]) {
   if (params.length === 0) {
     return {};
   }
+  const standalonePageRoute = parseStandalonePageRoute(config, params);
+  if (standalonePageRoute) {
+    return standalonePageRoute.kind === 'create'
+      ? {
+          kind: 'page-create' as const,
+          pageKey: standalonePageRoute.key,
+          sourceKind: standalonePageRoute.sourceKind,
+        }
+      : {
+          kind: 'page-edit' as const,
+          pageKey: standalonePageRoute.key,
+          slug: standalonePageRoute.slug,
+          sourceKind: standalonePageRoute.sourceKind,
+        };
+  }
   if (params.length === 2 && params[0] === 'singleton') {
+    const standalonePageSingleton = getStandalonePageSingleton(config);
+    if (standalonePageSingleton?.key === params[1]) {
+      return {
+        kind: 'page-root-redirect' as const,
+        pageKey: params[1],
+      };
+    }
     return { singleton: params[1] };
   }
   if (params.length < 2 || params[0] !== 'collection') return null;
@@ -64,6 +93,38 @@ function parseParamsWithoutBranch(params: string[]) {
     const slug = params[3];
     return { collection, kind: 'edit' as const, slug };
   }
+  return null;
+}
+
+function RedirectStandalonePageSingleton(props: {
+  basePath: string;
+  config: Config;
+  singleton: string;
+}) {
+  const router = useRouter();
+  const standalonePages = useStandalonePages(props.basePath);
+
+  useEffect(() => {
+    if (standalonePages.isLoading) {
+      return;
+    }
+    const href =
+      standalonePages.items[0]?.href ??
+      getStandalonePageCreatePath(
+        props.config,
+        props.basePath,
+        props.singleton
+      );
+    router.replace(href);
+  }, [
+    props.basePath,
+    props.config,
+    props.singleton,
+    router,
+    standalonePages.isLoading,
+    standalonePages.items,
+  ]);
+
   return null;
 }
 
@@ -141,9 +202,9 @@ function PageInner({ config }: { config: Config }) {
     }
     branch = params[1];
     basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
-    parsedParams = parseParamsWithoutBranch(params.slice(2));
+    parsedParams = parseParamsWithoutBranch(config, params.slice(2));
   } else {
-    parsedParams = parseParamsWithoutBranch(params);
+    parsedParams = parseParamsWithoutBranch(config, params);
     basePath = '/keystatic';
   }
   return wrapper(
@@ -163,30 +224,72 @@ function PageInner({ config }: { config: Config }) {
       >
         {parsedParams === null ? (
           <AlwaysNotFound />
-        ) : parsedParams.collection ? (
-          parsedParams.kind === 'create' ? (
+        ) : parsedParams.kind === 'create' && parsedParams.collection ? (
+          <CreateItem
+            key={parsedParams.collection}
+            collection={parsedParams.collection}
+            config={config}
+            basePath={basePath}
+          />
+        ) : parsedParams.kind === 'edit' && parsedParams.collection ? (
+          <ItemPage
+            key={parsedParams.collection}
+            collection={parsedParams.collection}
+            basePath={basePath}
+            config={config}
+            itemSlug={parsedParams.slug}
+          />
+        ) : parsedParams.kind === 'page-create' ? (
+          parsedParams.sourceKind === 'singleton' ? (
+            <StandalonePageEditor
+              key={`page-create-${parsedParams.pageKey}`}
+              basePath={basePath}
+              config={config}
+              mode="create"
+              singleton={parsedParams.pageKey}
+            />
+          ) : (
             <CreateItem
-              key={parsedParams.collection}
-              collection={parsedParams.collection}
+              key={`page-create-${parsedParams.pageKey}`}
+              collection={parsedParams.pageKey}
               config={config}
               basePath={basePath}
+              routeKind="standalone-page"
             />
-          ) : parsedParams.kind === 'edit' ? (
+          )
+        ) : parsedParams.kind === 'page-edit' ? (
+          parsedParams.sourceKind === 'singleton' ? (
+            <StandalonePageEditor
+              key={`page-edit-${parsedParams.pageKey}-${parsedParams.slug}`}
+              basePath={basePath}
+              config={config}
+              mode="edit"
+              singleton={parsedParams.pageKey}
+              slug={parsedParams.slug}
+            />
+          ) : (
             <ItemPage
-              key={parsedParams.collection}
-              collection={parsedParams.collection}
+              key={`page-edit-${parsedParams.pageKey}`}
+              collection={parsedParams.pageKey}
               basePath={basePath}
               config={config}
               itemSlug={parsedParams.slug}
-            />
-          ) : (
-            <CollectionPage
-              key={parsedParams.collection}
-              basePath={basePath}
-              collection={parsedParams.collection}
-              config={config as unknown as Config}
+              routeKind="standalone-page"
             />
           )
+        ) : parsedParams.kind === 'page-root-redirect' ? (
+          <RedirectStandalonePageSingleton
+            basePath={basePath}
+            config={config}
+            singleton={parsedParams.pageKey}
+          />
+        ) : parsedParams.collection ? (
+          <CollectionPage
+            key={parsedParams.collection}
+            basePath={basePath}
+            collection={parsedParams.collection}
+            config={config as unknown as Config}
+          />
         ) : parsedParams.singleton ? (
           <SingletonPage
             key={parsedParams.singleton}

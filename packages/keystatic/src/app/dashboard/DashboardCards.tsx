@@ -17,7 +17,8 @@ import {
 export function DashboardCards() {
   const navItems = useNavItems();
   const hasSections = navItems.some(item => 'children' in item);
-  const items = navItems.map(item => renderItemOrGroup(item));
+  let dividerCount = 0;
+  const items = navItems.map(item => renderItemOrGroup(item, () => dividerCount++));
 
   return hasSections ? (
     <>{items}</>
@@ -28,11 +29,13 @@ export function DashboardCards() {
   );
 }
 
-let dividerCount = 0;
-function renderItemOrGroup(itemOrGroup: ItemOrGroup) {
+function renderItemOrGroup(
+  itemOrGroup: ItemOrGroup,
+  getNextDividerCount: () => number
+) {
   if (itemOrGroup.isDivider) {
     return (
-      <Flex key={dividerCount++} gridColumn={FILL_COLS}>
+      <Flex key={`divider-${getNextDividerCount()}`} gridColumn={FILL_COLS}>
         <Divider
           alignSelf="center"
           size="medium"
@@ -44,9 +47,24 @@ function renderItemOrGroup(itemOrGroup: ItemOrGroup) {
 
   if (itemOrGroup.children) {
     return (
-      <DashboardSection key={itemOrGroup.title} title={itemOrGroup.title}>
+      <DashboardSection
+        key={itemOrGroup.title}
+        title={itemOrGroup.title}
+        endElement={
+          itemOrGroup.createHref ? (
+            <ActionButton
+              aria-label={`Create in ${itemOrGroup.title}`}
+              href={itemOrGroup.createHref}
+            >
+              <Icon src={plusIcon} />
+            </ActionButton>
+          ) : undefined
+        }
+      >
         <DashboardGrid>
-          {itemOrGroup.children.map(child => renderItemOrGroup(child))}
+          {itemOrGroup.children.map(child =>
+            renderItemOrGroup(child, getNextDividerCount)
+          )}
         </DashboardGrid>
       </DashboardSection>
     );
@@ -70,8 +88,10 @@ function renderItemOrGroup(itemOrGroup: ItemOrGroup) {
   })();
 
   let endElement = (() => {
-    // entry counts are only available for collections
-    if (typeof itemOrGroup.entryCount !== 'number') {
+    if (
+      typeof itemOrGroup.entryCount !== 'number' ||
+      itemOrGroup.itemKind !== 'collection'
+    ) {
       return changeElement;
     }
 
@@ -92,7 +112,15 @@ function renderItemOrGroup(itemOrGroup: ItemOrGroup) {
       href={itemOrGroup.href}
       endElement={endElement}
     >
-      {typeof itemOrGroup.entryCount === 'number' ? (
+      {itemOrGroup.itemKind === 'action' ? (
+        <Text
+          color="neutralSecondary"
+          size="small"
+          UNSAFE_style={{ lineHeight: '1.7' }}
+        >
+          Open the standalone page builder.
+        </Text>
+      ) : typeof itemOrGroup.entryCount === 'number' ? (
         <Text
           color="neutralSecondary"
           size="small"

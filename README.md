@@ -73,6 +73,74 @@ Note: if you are getting an error with `pnpm`, make sure you're using
 
 ---
 
+## Custom Page Builder Blocks (Template Projects)
+
+If you are building custom singleton pages with a block-based page builder in
+the template projects, use this workflow:
+
+1. Add a block schema to `pageBlocks` in your template `keystatic.config`.
+2. Render the same block key in your frontend page route switch
+   (`block.discriminant`).
+3. Wrap each rendered block in its own `<section>` so editors can compose pages
+   visually in any order.
+
+### Example: Add a FAQ block
+
+In your template `keystatic.config`:
+
+```ts
+faq: {
+  label: 'FAQ',
+  schema: fields.object({
+    title: fields.text({ label: 'Title' }),
+    items: fields.array(
+      fields.object({
+        question: fields.text({ label: 'Question' }),
+        answer: fields.text({ label: 'Answer', multiline: true }),
+      }),
+      { label: 'FAQ items' }
+    ),
+  }),
+},
+```
+
+In your frontend page renderer:
+
+```ts
+case 'faq':
+  return (
+    <section key={key}>
+      {block.value.title ? <h2>{block.value.title}</h2> : null}
+      {(block.value.items ?? []).map((item, i) => (
+        <article key={`${key}-faq-${i}`}>
+          <h3>{item.question}</h3>
+          <p>{item.answer}</p>
+        </article>
+      ))}
+    </section>
+  );
+```
+
+### Practical tips
+
+- Keep block keys stable (`hero`, `faq`, `stats`) and match them exactly in the
+  renderer switch.
+- Use `fields.image` and `fields.file` with explicit `directory` and
+  `publicPath` values.
+- Prefer reusable block patterns (hero, content, media, CTA, testimonials) over
+  one-off variants.
+- If you update block schemas after creating content, older entries may need a
+  migration or manual edit.
+
+### Frontend vs Admin UI styling
+
+- Scope public-site styles to frontend files/routes.
+- Avoid global `html`/`body` resets that can leak into admin routes.
+- If needed, gate frontend-only UI with route checks (for example hide frontend
+  navbar under `/keystatic`).
+
+---
+
 ## License
 
 Copyright (c) 2023

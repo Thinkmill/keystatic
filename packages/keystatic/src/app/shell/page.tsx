@@ -3,10 +3,10 @@ import { createContext, PropsWithChildren, useContext, useRef } from 'react';
 
 import { ActionButton } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
-import { panelLeftOpenIcon } from '@keystar/ui/icon/icons/panelLeftOpenIcon';
 import { panelLeftCloseIcon } from '@keystar/ui/icon/icons/panelLeftCloseIcon';
-import { panelRightOpenIcon } from '@keystar/ui/icon/icons/panelRightOpenIcon';
+import { panelLeftOpenIcon } from '@keystar/ui/icon/icons/panelLeftOpenIcon';
 import { panelRightCloseIcon } from '@keystar/ui/icon/icons/panelRightCloseIcon';
+import { panelRightOpenIcon } from '@keystar/ui/icon/icons/panelRightOpenIcon';
 import { Box, BoxProps, Flex } from '@keystar/ui/layout';
 import { css, tokenSchema, VoussoirTheme } from '@keystar/ui/style';
 
@@ -17,6 +17,7 @@ import { useSidebar } from './sidebar';
 type PageContextValue = {
   containerWidth: keyof VoussoirTheme['size']['container'] | 'none';
 };
+
 const PageContext = createContext<PageContextValue>({
   containerWidth: 'medium',
 });
@@ -33,9 +34,11 @@ export const PageRoot = ({
         id={MAIN_PANEL_ID}
         flex
         height="100%"
-        // fix flexbox issues
         minHeight={0}
         minWidth={0}
+        UNSAFE_className={css({
+          background: `linear-gradient(180deg, ${tokenSchema.color.background.canvas} 0%, ${tokenSchema.color.scale.slate2} 100%)`,
+        })}
       >
         {children}
       </Flex>
@@ -54,7 +57,18 @@ export const PageHeader = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <Box borderBottom="muted" elementType="header" flexShrink={0}>
+    <Box
+      elementType="header"
+      flexShrink={0}
+      UNSAFE_className={css({
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+        backdropFilter: 'blur(16px)',
+        backgroundColor: tokenSchema.color.background.surface,
+        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+      })}
+    >
       <Flex
         alignItems="center"
         gap={{ mobile: 'small', tablet: 'regular' }}
@@ -86,13 +100,7 @@ export const PageBody = ({
 }: PropsWithChildren<{ isScrollable?: boolean }>) => {
   return (
     <ScrollView isDisabled={!isScrollable}>
-      <PageContainer
-        // padding on the container so descendants can use sticky positioning
-        // with simple relative offsets
-        paddingY="xxlarge"
-      >
-        {children}
-      </PageContainer>
+      <PageContainer paddingY="xlarge">{children}</PageContainer>
     </ScrollView>
   );
 };
@@ -109,7 +117,6 @@ export const PageContainer = (props: BoxProps) => {
       minHeight={0}
       minWidth={0}
       maxWidth={maxWidth}
-      // marginX="auto"
       paddingX={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
       {...props}
     />

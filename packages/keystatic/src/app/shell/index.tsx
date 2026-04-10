@@ -18,6 +18,9 @@ import {
 import { SidebarProvider } from './sidebar';
 import { MainPanelLayout } from './panels';
 import { EmptyState } from './empty-state';
+import { ActivityProvider } from '../dashboard/ActivityFeed';
+import { CommandPaletteProvider } from './CommandPalette';
+import { NavigationHistoryProvider } from './navigation-history';
 
 function BranchNotFound(props: { children: ReactNode }) {
   const branches = useBranches();
@@ -67,11 +70,17 @@ export const AppShell = (props: {
   const inner = (
     <ConfigContext.Provider value={props.config}>
       <AppStateContext.Provider value={{ basePath: props.basePath }}>
-        <SidebarProvider>
-          <MainPanelLayout>
-            <BranchNotFound>{content}</BranchNotFound>
-          </MainPanelLayout>
-        </SidebarProvider>
+        <NavigationHistoryProvider>
+          <ActivityProvider>
+            <CommandPaletteProvider>
+              <SidebarProvider>
+                <MainPanelLayout>
+                  <BranchNotFound>{content}</BranchNotFound>
+                </MainPanelLayout>
+              </SidebarProvider>
+            </CommandPaletteProvider>
+          </ActivityProvider>
+        </NavigationHistoryProvider>
       </AppStateContext.Provider>
     </ConfigContext.Provider>
   );

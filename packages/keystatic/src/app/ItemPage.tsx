@@ -61,6 +61,7 @@ import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
 import { useBaseCommit, useCurrentBranch, useRepoInfo } from './shell/data';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
+import { useRecentItems } from './shell/navigation-history';
 import { useSlugFieldInfo } from './slugs';
 import { delDraft, getDraft, setDraft } from './persistence';
 import { PresenceAvatars } from './presence';
@@ -92,6 +93,14 @@ import { ErrorBoundary } from './error-boundary';
 import { copyEntryToClipboard, getPastedEntry } from './entry-clipboard';
 import { setValueToPreviewProps } from '../form/get-value';
 import { toastQueue } from '@keystar/ui/toast';
+import { PreviewPanel, PreviewToggle, SplitEditor } from './PreviewPanel';
+import {
+  getStandalonePageCreatePath,
+  getStandalonePagePath,
+} from './standalone-pages';
+import { useTrackActivity } from './dashboard/ActivityFeed';
+
+type EntryRouteKind = 'collection' | 'standalone-page';
 
 type ItemPageProps = {
   collection: string;
@@ -101,6 +110,7 @@ type ItemPageProps = {
   itemSlug: string;
   localTreeKey: string;
   basePath: string;
+  routeKind?: EntryRouteKind;
 };
 
 const storedValSchema = s.type({
@@ -141,12 +151,47 @@ function ItemPageInner(
   const currentBranch = useCurrentBranch();
   const repoInfo = useRepoInfo();
   const [forceValidation, setForceValidation] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const trackActivity = useTrackActivity();
   const previewHref = collectionConfig.previewUrl
     ? collectionConfig.previewUrl
         .replace('{slug}', props.itemSlug)
         .replace('{branch}', currentBranch)
     : undefined;
   const { push, replace } = router;
+  const isStandalonePage = props.routeKind === 'standalone-page';
+  const standalonePageTitle = getStandalonePageTitle(
+    collectionConfig,
+    props.state,
+    itemSlug
+  );
+
+  // Track this item as recently viewed
+  const { addRecentItem } = useRecentItems();
+  useEffect(() => {
+    addRecentItem({
+      type: 'entry',
+      key: `${collection}/${itemSlug}`,
+      label: isStandalonePage ? standalonePageTitle : itemSlug,
+      href: getItemHref({
+        basePath: props.basePath,
+        collection,
+        config,
+        routeKind: props.routeKind,
+        slug: itemSlug,
+      }),
+      collectionKey: collection,
+    });
+  }, [
+    addRecentItem,
+    collection,
+    config,
+    isStandalonePage,
+    itemSlug,
+    props.basePath,
+    props.routeKind,
+    standalonePageTitle,
+  ]);
 
   const slugInfo = useSlugFieldInfo(collection, itemSlug);
 
@@ -159,15 +204,22 @@ function ItemPageInner(
   const onDelete = useEventCallback(async () => {
     // TODO: delete multiplayer draft
     if (await deleteItem()) {
-      push(`${props.basePath}/collection/${encodeURIComponent(collection)}`);
+      push(
+        isStandalonePage
+          ? props.basePath
+          : `${props.basePath}/collection/${encodeURIComponent(collection)}`
+      );
     }
   });
 
   const onDuplicate = () => {
     push(
-      `${props.basePath}/collection/${encodeURIComponent(
-        collection
-      )}/create?duplicate=${itemSlug}`
+      `${getCreateHref({
+        basePath: props.basePath,
+        collection,
+        config,
+        routeKind: props.routeKind,
+      })}?duplicate=${encodeURIComponent(itemSlug)}`
     );
   };
   const isSavingDisabled = updateResult.kind === 'loading' || !props.hasChanged;
@@ -180,11 +232,23 @@ function ItemPageInner(
     }
     const slug = getSlugFromState(collectionConfig, props.state);
     const hasUpdated = await parentOnUpdate();
+    if (hasUpdated) {
+      trackActivity(
+        'updated',
+        collectionConfig.label,
+        slug,
+        isStandalonePage ? standalonePageTitle : slug
+      );
+    }
     if (hasUpdated && slug !== itemSlug) {
       replace(
-        `${props.basePath}/collection/${encodeURIComponent(
-          collection
-        )}/item/${encodeURIComponent(slug)}`
+        getItemHref({
+          basePath: props.basePath,
+          collection,
+          config,
+          routeKind: props.routeKind,
+          slug,
+        })
       );
     }
     return hasUpdated;
@@ -248,19 +312,26 @@ function ItemPageInner(
     <>
       <ItemPageShell
         headerActions={
-          <HeaderActions
-            formID={formID}
-            isLoading={updateResult.kind === 'loading'}
-            hasChanged={props.hasChanged}
-            onDelete={onDelete}
-            onDuplicate={onDuplicate}
-            onCopy={onCopy}
-            onPaste={onPaste}
-            onReset={props.onReset}
-            viewHref={viewHref}
-            previewHref={previewHref}
-          />
+          <Flex gap="regular" alignItems="center">
+            <PreviewToggle
+              isPreviewOpen={isPreviewOpen}
+              onToggle={() => setIsPreviewOpen(!isPreviewOpen)}
+            />
+            <HeaderActions
+              formID={formID}
+              isLoading={updateResult.kind === 'loading'}
+              hasChanged={props.hasChanged}
+              onDelete={onDelete}
+              onDuplicate={onDuplicate}
+              onCopy={onCopy}
+              onPaste={onPaste}
+              onReset={props.onReset}
+              viewHref={viewHref}
+              previewHref={previewHref}
+            />
+          </Flex>
         }
+        title={isStandalonePage ? standalonePageTitle : undefined}
         {...props}
       >
         {updateResult.kind === 'error' && (
@@ -269,26 +340,37 @@ function ItemPageInner(
         {deleteResult.kind === 'error' && (
           <Notice tone="critical">{deleteResult.error.message}</Notice>
         )}
-        <Box
-          id={formID}
-          height="100%"
-          minHeight={0}
-          minWidth={0}
-          elementType="form"
-          onSubmit={(event: FormEvent) => {
-            if (event.target !== event.currentTarget) return;
-            event.preventDefault();
-            onUpdate();
-          }}
+        <SplitEditor
+          isPreviewOpen={isPreviewOpen}
+          preview={
+            <PreviewPanel
+              data={props.state}
+              schema={collectionConfig.schema}
+              title={itemSlug}
+            />
+          }
         >
-          <FormForEntry
-            previewProps={props.previewProps as any}
-            forceValidation={forceValidation}
-            entryLayout={collectionConfig.entryLayout}
-            formatInfo={formatInfo}
-            slugField={slugInfo}
-          />
-        </Box>
+          <Box
+            id={formID}
+            height="100%"
+            minHeight={0}
+            minWidth={0}
+            elementType="form"
+            onSubmit={(event: FormEvent) => {
+              if (event.target !== event.currentTarget) return;
+              event.preventDefault();
+              onUpdate();
+            }}
+          >
+            <FormForEntry
+              previewProps={props.previewProps as any}
+              forceValidation={forceValidation}
+              entryLayout={collectionConfig.entryLayout}
+              formatInfo={formatInfo}
+              slugField={slugInfo}
+            />
+          </Box>
+        </SplitEditor>
         <DialogContainer
           // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
           // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
@@ -300,8 +382,16 @@ function ItemPageInner(
               onCreate={async newBranch => {
                 const itemBasePath = `/keystatic/branch/${encodeURIComponent(
                   newBranch
-                )}/collection/${encodeURIComponent(collection)}/item/`;
-                router.push(itemBasePath + encodeURIComponent(itemSlug));
+                )}`;
+                router.push(
+                  getItemHref({
+                    basePath: itemBasePath,
+                    collection,
+                    config,
+                    routeKind: props.routeKind,
+                    slug: itemSlug,
+                  })
+                );
                 const slug = getSlugFromState(collectionConfig, props.state);
 
                 const hasUpdated = await parentOnUpdate({
@@ -309,7 +399,15 @@ function ItemPageInner(
                   sha: baseCommit,
                 });
                 if (hasUpdated && slug !== itemSlug) {
-                  router.replace(itemBasePath + encodeURIComponent(slug));
+                  router.replace(
+                    getItemHref({
+                      basePath: itemBasePath,
+                      collection,
+                      config,
+                      routeKind: props.routeKind,
+                      slug,
+                    })
+                  );
                 }
               }}
               reason={updateResult.reason}
@@ -332,9 +430,13 @@ function ItemPageInner(
                   const hasUpdated = await props.onUpdate();
                   if (hasUpdated && slug !== itemSlug) {
                     router.replace(
-                      `${props.basePath}/collection/${encodeURIComponent(
-                        collection
-                      )}/item/${encodeURIComponent(slug)}`
+                      getItemHref({
+                        basePath: props.basePath,
+                        collection,
+                        config,
+                        routeKind: props.routeKind,
+                        slug,
+                      })
                     );
                   }
                 }}
@@ -356,9 +458,11 @@ function ItemPageInner(
                 onCreate={async () => {
                   await deleteItem();
                   router.push(
-                    `${props.basePath}/collection/${encodeURIComponent(
-                      collection
-                    )}`
+                    isStandalonePage
+                      ? props.basePath
+                      : `${props.basePath}/collection/${encodeURIComponent(
+                          collection
+                        )}`
                   );
                 }}
                 onDismiss={resetDeleteItem}
@@ -839,6 +943,7 @@ type ItemPageWrapperProps = {
   itemSlug: string;
   config: Config;
   basePath: string;
+  routeKind?: EntryRouteKind;
 };
 
 function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
@@ -1025,6 +1130,7 @@ function ItemPageWrapper(
         initialFiles={itemData.initialFiles}
         localTreeKey={itemData.localTreeKey}
         map={mapData}
+        routeKind={props.routeKind}
       />
     );
   }
@@ -1038,6 +1144,7 @@ function ItemPageWrapper(
       initialFiles={itemData.initialFiles}
       draft={loadedDraft}
       localTreeKey={itemData.localTreeKey}
+      routeKind={props.routeKind}
     />
   );
 }
@@ -1046,6 +1153,7 @@ function ItemPageShell(
   props: ItemPageWrapperProps & {
     children: ReactNode;
     headerActions?: ReactNode;
+    title?: string;
   }
 ) {
   const collectionConfig = getCollection(props.config, props.collection);
@@ -1062,7 +1170,19 @@ function ItemPageShell(
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
       <PageHeader>
-        <HeaderBreadcrumbs items={breadcrumbItems} />
+        {props.routeKind === 'standalone-page' ? (
+          <Flex direction="column" gap="xsmall" flex minWidth={0}>
+            <Heading elementType="h1" id="page-title" size="small">
+              {props.title ?? props.itemSlug}
+            </Heading>
+            <Text color="neutralSecondary" size="small">
+              This page lives on its own route and in the sidebar, separate from
+              collection browsing.
+            </Text>
+          </Flex>
+        ) : (
+          <HeaderBreadcrumbs items={breadcrumbItems} />
+        )}
         {props.headerActions}
       </PageHeader>
 
@@ -1072,3 +1192,65 @@ function ItemPageShell(
 }
 
 export { ItemPageOuterWrapper as ItemPage };
+
+function getCreateHref(props: {
+  basePath: string;
+  collection: string;
+  config: Config;
+  routeKind: EntryRouteKind | undefined;
+}) {
+  if (props.routeKind === 'standalone-page') {
+    return getStandalonePageCreatePath(
+      props.config,
+      props.basePath,
+      props.collection
+    );
+  }
+  return `${props.basePath}/collection/${encodeURIComponent(
+    props.collection
+  )}/create`;
+}
+
+function getItemHref(props: {
+  basePath: string;
+  collection: string;
+  config: Config;
+  routeKind: EntryRouteKind | undefined;
+  slug: string;
+}) {
+  if (props.routeKind === 'standalone-page') {
+    return getStandalonePagePath(
+      props.config,
+      props.basePath,
+      props.collection,
+      props.slug
+    );
+  }
+  return `${props.basePath}/collection/${encodeURIComponent(
+    props.collection
+  )}/item/${encodeURIComponent(props.slug)}`;
+}
+
+function getStandalonePageTitle(
+  collectionConfig: {
+    slugField: string;
+    schema: Record<string, ComponentSchema>;
+  },
+  state: Record<string, unknown>,
+  fallback: string
+) {
+  const slugField = collectionConfig.schema[collectionConfig.slugField];
+  const value = state[collectionConfig.slugField];
+  if (
+    slugField.kind === 'form' &&
+    slugField.formKind === 'slug' &&
+    value &&
+    typeof value === 'object' &&
+    'name' in value &&
+    typeof value.name === 'string' &&
+    value.name.trim()
+  ) {
+    return value.name.trim();
+  }
+  return fallback;
+}

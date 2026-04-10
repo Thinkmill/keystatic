@@ -52,6 +52,456 @@ const components = {
   }),
 };
 
+const pageBuilderComponents = {
+  section: component({
+    label: 'Section',
+    chromeless: true,
+    schema: {
+      title: fields.text({ label: 'Section title' }),
+      content: fields.child({
+        kind: 'block',
+        formatting: 'inherit',
+        componentBlocks: 'inherit',
+        placeholder: 'Write section content...',
+      }),
+    },
+    preview: props => (
+      <div
+        style={{ border: '1px dashed #cbd5e1', borderRadius: 8, padding: 12 }}
+      >
+        {props.fields.title.value ? (
+          <NotEditable>
+            <h3 style={{ marginBottom: 8 }}>{props.fields.title.value}</h3>
+          </NotEditable>
+        ) : null}
+        {props.fields.content.element}
+      </div>
+    ),
+  }),
+  twoColumns: component({
+    label: 'Two Columns',
+    chromeless: true,
+    schema: {
+      left: fields.child({
+        kind: 'block',
+        formatting: 'inherit',
+        componentBlocks: 'inherit',
+        placeholder: 'Left column...',
+      }),
+      right: fields.child({
+        kind: 'block',
+        formatting: 'inherit',
+        componentBlocks: 'inherit',
+        placeholder: 'Right column...',
+      }),
+    },
+    preview: props => (
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div
+          style={{ border: '1px dashed #cbd5e1', borderRadius: 8, padding: 8 }}
+        >
+          {props.fields.left.element}
+        </div>
+        <div
+          style={{ border: '1px dashed #cbd5e1', borderRadius: 8, padding: 8 }}
+        >
+          {props.fields.right.element}
+        </div>
+      </div>
+    ),
+  }),
+  callToAction: component({
+    label: 'Call To Action',
+    schema: {
+      text: fields.text({ label: 'Text', multiline: true }),
+      buttonLabel: fields.text({ label: 'Button label' }),
+      buttonHref: fields.text({ label: 'Button href' }),
+    },
+    preview: props => (
+      <NotEditable>
+        <div
+          style={{
+            borderRadius: 10,
+            border: '1px solid #bfdbfe',
+            background: '#eff6ff',
+            padding: 12,
+          }}
+        >
+          <p style={{ margin: 0 }}>
+            {props.fields.text.value || 'CTA text...'}
+          </p>
+          <p style={{ margin: '8px 0 0', fontSize: 12, color: '#1e3a8a' }}>
+            {props.fields.buttonLabel.value || 'Button'} →{' '}
+            {props.fields.buttonHref.value || '/'}
+          </p>
+        </div>
+      </NotEditable>
+    ),
+  }),
+  imageBlock: component({
+    label: 'Image',
+    schema: {
+      image: fields.image({
+        label: 'Image',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+      alt: fields.text({ label: 'Alt text' }),
+      caption: fields.text({ label: 'Caption', multiline: true }),
+    },
+    preview: props => (
+      <NotEditable>
+        <div
+          style={{
+            border: '1px dashed #cbd5e1',
+            borderRadius: 10,
+            padding: 12,
+          }}
+        >
+          <p style={{ margin: 0 }}>
+            {props.fields.image.value ? 'Image selected' : 'Upload an image'}
+          </p>
+        </div>
+      </NotEditable>
+    ),
+  }),
+  videoBlock: component({
+    label: 'Video',
+    schema: {
+      video: fields.file({
+        label: 'Video file',
+        directory: 'public/page-builder/videos',
+        publicPath: '/page-builder/videos/',
+      }),
+      poster: fields.image({
+        label: 'Poster image',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+      caption: fields.text({ label: 'Caption', multiline: true }),
+    },
+    preview: props => (
+      <NotEditable>
+        <div
+          style={{
+            border: '1px dashed #cbd5e1',
+            borderRadius: 10,
+            padding: 12,
+          }}
+        >
+          <p style={{ margin: 0 }}>
+            {props.fields.video.value?.filename || 'Upload a video file'}
+          </p>
+        </div>
+      </NotEditable>
+    ),
+  }),
+  fileBlock: component({
+    label: 'File',
+    schema: {
+      file: fields.file({
+        label: 'File',
+        directory: 'public/page-builder/files',
+        publicPath: '/page-builder/files/',
+      }),
+      label: fields.text({ label: 'Link label' }),
+      description: fields.text({ label: 'Description', multiline: true }),
+    },
+    preview: props => (
+      <NotEditable>
+        <div
+          style={{
+            border: '1px dashed #cbd5e1',
+            borderRadius: 10,
+            padding: 12,
+          }}
+        >
+          <p style={{ margin: 0 }}>
+            {props.fields.label.value ||
+              props.fields.file.value?.filename ||
+              'Upload a file'}
+          </p>
+        </div>
+      </NotEditable>
+    ),
+  }),
+  textBlock: component({
+    label: 'Text',
+    schema: {
+      text: fields.child({
+        kind: 'block',
+        formatting: 'inherit',
+        placeholder: 'Write text...',
+      }),
+    },
+    preview: props => (
+      <div
+        style={{
+          border: '1px dashed #cbd5e1',
+          borderRadius: 10,
+          padding: 12,
+        }}
+      >
+        {props.fields.text.element}
+      </div>
+    ),
+  }),
+  imageWithText: component({
+    label: 'Image With Text',
+    schema: {
+      title: fields.text({ label: 'Title' }),
+      image: fields.image({
+        label: 'Image',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+      alt: fields.text({ label: 'Alt text' }),
+      content: fields.child({
+        kind: 'block',
+        formatting: 'inherit',
+        placeholder: 'Write text next to the image...',
+      }),
+      imagePosition: fields.select({
+        label: 'Image position',
+        options: [
+          { label: 'Left', value: 'left' },
+          { label: 'Right', value: 'right' },
+        ],
+        defaultValue: 'left',
+      }),
+    },
+    preview: props => (
+      <div style={{ border: '1px dashed #cbd5e1', borderRadius: 10, padding: 12 }}>
+        <p style={{ margin: 0 }}>{props.fields.title.value || 'Image With Text'}</p>
+      </div>
+    ),
+  }),
+  videoHeader: component({
+    label: 'Video Header',
+    schema: {
+      title: fields.text({ label: 'Title' }),
+      subtitle: fields.text({ label: 'Subtitle', multiline: true }),
+      video: fields.file({
+        label: 'Video',
+        directory: 'public/page-builder/videos',
+        publicPath: '/page-builder/videos/',
+      }),
+      poster: fields.image({
+        label: 'Poster image',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+    },
+    preview: props => (
+      <div style={{ border: '1px dashed #cbd5e1', borderRadius: 10, padding: 12 }}>
+        <p style={{ margin: 0 }}>{props.fields.title.value || 'Video Header'}</p>
+      </div>
+    ),
+  }),
+  contentBlock: component({
+    label: 'Content',
+    schema: {
+      eyebrow: fields.text({ label: 'Eyebrow' }),
+      heading: fields.text({ label: 'Heading' }),
+      body: fields.child({
+        kind: 'block',
+        formatting: 'inherit',
+        placeholder: 'Write your content...',
+      }),
+    },
+    preview: props => (
+      <div style={{ border: '1px dashed #cbd5e1', borderRadius: 10, padding: 12 }}>
+        <p style={{ margin: 0 }}>{props.fields.heading.value || 'Content Block'}</p>
+      </div>
+    ),
+  }),
+};
+
+const pageBlocks = {
+  hero: {
+    label: 'Hero',
+    schema: fields.object({
+      eyebrow: fields.text({ label: 'Eyebrow' }),
+      heading: fields.text({ label: 'Heading' }),
+      subheading: fields.text({ label: 'Subheading', multiline: true }),
+      backgroundImage: fields.image({
+        label: 'Background image',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+      primaryCtaLabel: fields.text({ label: 'Primary button label' }),
+      primaryCtaHref: fields.text({ label: 'Primary button link' }),
+      secondaryCtaLabel: fields.text({ label: 'Secondary button label' }),
+      secondaryCtaHref: fields.text({ label: 'Secondary button link' }),
+    }),
+  },
+  content: {
+    label: 'Content',
+    schema: fields.object({
+      eyebrow: fields.text({ label: 'Eyebrow' }),
+      heading: fields.text({ label: 'Heading' }),
+      body: fields.text({ label: 'Body', multiline: true }),
+    }),
+  },
+  image: {
+    label: 'Image',
+    schema: fields.object({
+      image: fields.image({
+        label: 'Image',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+      alt: fields.text({ label: 'Alt text' }),
+      caption: fields.text({ label: 'Caption', multiline: true }),
+    }),
+  },
+  videoHeader: {
+    label: 'Video Hero',
+    schema: fields.object({
+      title: fields.text({ label: 'Title' }),
+      subtitle: fields.text({ label: 'Subtitle', multiline: true }),
+      video: fields.file({
+        label: 'Video',
+        directory: 'public/page-builder/videos',
+        publicPath: '/page-builder/videos/',
+      }),
+      poster: fields.image({
+        label: 'Poster image',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+    }),
+  },
+  imageWithText: {
+    label: 'Image With Text',
+    schema: fields.object({
+      title: fields.text({ label: 'Title' }),
+      image: fields.image({
+        label: 'Image',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+      alt: fields.text({ label: 'Alt text' }),
+      content: fields.text({ label: 'Content', multiline: true }),
+      imagePosition: fields.select({
+        label: 'Image position',
+        options: [
+          { label: 'Left', value: 'left' },
+          { label: 'Right', value: 'right' },
+        ],
+        defaultValue: 'left',
+      }),
+    }),
+  },
+  file: {
+    label: 'File',
+    schema: fields.object({
+      file: fields.file({
+        label: 'File',
+        directory: 'public/page-builder/files',
+        publicPath: '/page-builder/files/',
+      }),
+      label: fields.text({ label: 'Link label' }),
+      description: fields.text({ label: 'Description', multiline: true }),
+    }),
+  },
+  stats: {
+    label: 'Stats',
+    schema: fields.object({
+      title: fields.text({ label: 'Title' }),
+      items: fields.array(
+        fields.object({
+          label: fields.text({ label: 'Label' }),
+          value: fields.text({ label: 'Value' }),
+        }),
+        {
+          label: 'Stats',
+          itemLabel: props => props.fields.label.value || props.fields.value.value,
+        }
+      ),
+    }),
+  },
+  testimonial: {
+    label: 'Testimonial',
+    schema: fields.object({
+      quote: fields.text({ label: 'Quote', multiline: true }),
+      name: fields.text({ label: 'Name' }),
+      role: fields.text({ label: 'Role' }),
+      avatar: fields.image({
+        label: 'Avatar',
+        directory: 'public/page-builder/images',
+        publicPath: '/page-builder/images/',
+      }),
+    }),
+  },
+  spacer: {
+    label: 'Spacer',
+    schema: fields.object({
+      size: fields.select({
+        label: 'Size',
+        options: [
+          { label: 'Small', value: 'small' },
+          { label: 'Medium', value: 'medium' },
+          { label: 'Large', value: 'large' },
+        ],
+        defaultValue: 'medium',
+      }),
+    }),
+  },
+  featureGrid: {
+    label: 'Feature Grid',
+    schema: fields.object({
+      title: fields.text({ label: 'Title' }),
+      items: fields.array(
+        fields.object({
+          title: fields.text({ label: 'Item title' }),
+          description: fields.text({ label: 'Description', multiline: true }),
+        }),
+        {
+          label: 'Features',
+          itemLabel: props => props.fields.title.value || 'Feature',
+        }
+      ),
+    }),
+  },
+  faq: {
+    label: 'FAQ',
+    schema: fields.object({
+      title: fields.text({ label: 'Title' }),
+      items: fields.array(
+        fields.object({
+          question: fields.text({ label: 'Question' }),
+          answer: fields.text({ label: 'Answer', multiline: true }),
+        }),
+        {
+          label: 'FAQ items',
+          itemLabel: props => props.fields.question.value || 'Question',
+        }
+      ),
+    }),
+  },
+  logoCloud: {
+    label: 'Logo Cloud',
+    schema: fields.object({
+      title: fields.text({ label: 'Title' }),
+      logos: fields.array(
+        fields.object({
+          name: fields.text({ label: 'Name' }),
+          logo: fields.image({
+            label: 'Logo',
+            directory: 'public/page-builder/images',
+            publicPath: '/page-builder/images/',
+          }),
+        }),
+        {
+          label: 'Logos',
+          itemLabel: props => props.fields.name.value || 'Logo',
+        }
+      ),
+    }),
+  },
+};
+
 export default config({
   storage: {
     kind: 'github',
@@ -395,11 +845,63 @@ export default config({
     }),
   },
   singletons: {
+    pages: singleton({
+      label: 'Pages',
+      path: 'pages/index',
+      schema: {
+        items: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Page title' }),
+            isHomepage: fields.checkbox({
+              label: 'Use as homepage (/)',
+              defaultValue: false,
+            }),
+            slug: fields.slug({ name: { label: 'Slug' } }),
+            excerpt: fields.text({
+              label: 'Excerpt',
+              description: 'Short description shown above content.',
+              multiline: true,
+            }),
+            blocks: fields.blocks(pageBlocks, {
+              label: 'Page blocks',
+            }),
+          }),
+          {
+            label: 'Pages',
+            itemLabel: props =>
+              props.fields.title.value ||
+              props.fields.slug.value.slug ||
+              'Untitled page',
+          }
+        ),
+      },
+    }),
     settings: singleton({
       label: 'Settings',
       schema: {
         something: fields.checkbox({ label: 'Something' }),
         logo: fields.image({ label: 'Logo' }),
+        navigation: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Label' }),
+            slug: fields.text({
+              label: 'Page slug',
+              description:
+                'Use the page slug without a leading slash, for example: about/team',
+            }),
+            visible: fields.checkbox({
+              label: 'Visible in navigation',
+              defaultValue: true,
+            }),
+          }),
+          {
+            label: 'Navigation',
+            itemLabel: props =>
+              props.fields.label.value ||
+              props.fields.slug.value ||
+              'Navigation item',
+          }
+        ),
       },
     }),
     markdoc: singleton({
