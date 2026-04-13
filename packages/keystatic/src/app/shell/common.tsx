@@ -50,12 +50,12 @@ function AnimatedBrandMark({ colorScheme }: { colorScheme: 'light' | 'dark' }) {
     createElement('defs', null, [
       createElement(
         'style',
-        null,
+        { key: 'style' },
         `.cls-1{fill:none;}.cls-2{fill:${darkFill};}.cls-3{opacity:0.2;}.cls-4{clip-path:url(#clip-path);}.cls-5{fill:#0069fe;}.cls-6{opacity:0.4;}.cls-7{clip-path:url(#clip-path-2);}.cls-8{opacity:0.7;}.cls-9{clip-path:url(#clip-path-3);}`
       ),
       createElement(
         'clipPath',
-        { id: 'clip-path' },
+        { id: 'clip-path', key: 'clip-path' },
         createElement('rect', {
           className: 'cls-1',
           x: '0.15',
@@ -66,7 +66,7 @@ function AnimatedBrandMark({ colorScheme }: { colorScheme: 'light' | 'dark' }) {
       ),
       createElement(
         'clipPath',
-        { id: 'clip-path-2' },
+        { id: 'clip-path-2', key: 'clip-path-2' },
         createElement('rect', {
           className: 'cls-1',
           x: '0.49',
@@ -77,7 +77,7 @@ function AnimatedBrandMark({ colorScheme }: { colorScheme: 'light' | 'dark' }) {
       ),
       createElement(
         'clipPath',
-        { id: 'clip-path-3' },
+        { id: 'clip-path-3', key: 'clip-path-3' },
         createElement('rect', {
           className: 'cls-1',
           y: '218.77',

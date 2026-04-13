@@ -24,6 +24,7 @@ const templates = {
 };
 
 type PackageInfo = {
+  version: string;
   dist: {
     tarball: string;
   };
@@ -91,6 +92,59 @@ function setPackageVersion(
   if (pkgJson.devDependencies?.[packageName]) {
     pkgJson.devDependencies[packageName] = version;
   }
+}
+
+async function getLatestPackageVersion(packageName: string) {
+  const packageInfo = await fetch(`${registryDomain}/${packageName}/latest`).then(
+    response => response.json() as Promise<PackageInfo>
+  );
+  return `^${packageInfo.version}`;
+}
+
+async function maybeNormalizeTemplatePackageVersions(ctx: Context) {
+  const packageJsonPath = path.join(ctx.cwd, 'package.json');
+  const pkgJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
+  const frameworkPkgName = frameworkPackageName[ctx.framework];
+
+  const coreVersion =
+    pkgJson.dependencies?.['@keystatic/core'] ??
+    pkgJson.devDependencies?.['@keystatic/core'];
+  const frameworkVersion =
+    pkgJson.dependencies?.[frameworkPkgName] ??
+    pkgJson.devDependencies?.[frameworkPkgName];
+
+  const coreNeedsNormalization =
+    coreVersion === undefined || coreVersion.startsWith('workspace:');
+  const frameworkNeedsNormalization =
+    frameworkVersion === undefined || frameworkVersion.startsWith('workspace:');
+
+  if (!coreNeedsNormalization && !frameworkNeedsNormalization) {
+    return;
+  }
+
+  const versions = await Promise.all([
+    coreNeedsNormalization
+      ? getLatestPackageVersion('@keystatic/core')
+      : Promise.resolve(coreVersion),
+    frameworkNeedsNormalization
+      ? getLatestPackageVersion(frameworkPkgName)
+      : Promise.resolve(frameworkVersion),
+  ]);
+
+  setPackageVersion(pkgJson, '@keystatic/core', versions[0]!);
+  setPackageVersion(pkgJson, frameworkPkgName, versions[1]!);
+
+  if (!pkgJson.dependencies) {
+    pkgJson.dependencies = {};
+  }
+  if (!pkgJson.dependencies['@keystatic/core']) {
+    pkgJson.dependencies['@keystatic/core'] = versions[0]!;
+  }
+  if (!pkgJson.dependencies[frameworkPkgName]) {
+    pkgJson.dependencies[frameworkPkgName] = versions[1]!;
+  }
+
+  writeFileSync(packageJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
 }
 
 function maybeApplyLocalPackageOverrides(ctx: Context) {
@@ -191,6 +245,7 @@ export const createProject = async (ctx: Context) => {
     rmSync(tarballFile);
     }
 
+    await maybeNormalizeTemplatePackageVersions(ctx);
     maybeApplyLocalPackageOverrides(ctx);
   } catch (err: any) {
     rmdirSync(ctx.cwd);

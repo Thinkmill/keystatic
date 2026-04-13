@@ -233,13 +233,15 @@ export function GitHubAppShellDataProvider(props: {
   });
 
   const pageInfo = moreRefsState.data?.repository?.refs?.pageInfo;
-  if (
-    pageInfo?.hasNextPage &&
-    pageInfo.endCursor !== cursorState &&
-    pageInfo.endCursor
-  ) {
-    setCursorState(pageInfo.endCursor);
-  }
+  useEffect(() => {
+    if (
+      pageInfo?.hasNextPage &&
+      pageInfo.endCursor &&
+      pageInfo.endCursor !== cursorState
+    ) {
+      setCursorState(pageInfo.endCursor);
+    }
+  }, [cursorState, pageInfo?.endCursor, pageInfo?.hasNextPage]);
 
   if (
     state.data?.repository?.owner &&

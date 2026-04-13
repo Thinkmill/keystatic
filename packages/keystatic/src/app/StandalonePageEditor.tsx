@@ -365,13 +365,6 @@ function StandalonePageEditorLocal(
     props.localTreeKey
   );
 
-  if (
-    editorState.localTreeKey !== props.localTreeKey ||
-    editorState.routeKey !== routeKey
-  ) {
-    setEditorState(buildInitialEditorState());
-  }
-
   const onPreviewPropsChange = useCallback(
     (cb: (state: Record<string, unknown>) => Record<string, unknown>) => {
       setEditorState(state => ({
@@ -398,10 +391,29 @@ function StandalonePageEditorLocal(
     editorState.state
   );
   const currentPage = currentItems[editorState.pageIndex];
-
   if (editorState.pageIndex < 0 || !pagePreview || !currentPage) {
     notFound();
   }
+
+  const { key: pagePreviewKey, ...pagePreviewProps } =
+    pagePreview as GenericPreviewProps<ComponentSchema, unknown> & {
+      key?: string;
+    };
+
+  useEffect(() => {
+    if (
+      editorState.localTreeKey !== props.localTreeKey ||
+      editorState.routeKey !== routeKey
+    ) {
+      setEditorState(buildInitialEditorState());
+    }
+  }, [
+    buildInitialEditorState,
+    editorState.localTreeKey,
+    editorState.routeKey,
+    props.localTreeKey,
+    routeKey,
+  ]);
 
   const pageSlugInfo = {
     field: props.standalonePageSingleton.slugField,
@@ -652,7 +664,8 @@ function StandalonePageEditorLocal(
               }}
             >
               <FormValueContentFromPreviewProps
-                {...pagePreview}
+                key={pagePreviewKey}
+                {...pagePreviewProps}
                 autoFocus
                 forceValidation={forceValidation}
                 slugField={pageSlugInfo}

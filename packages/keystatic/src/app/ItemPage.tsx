@@ -499,9 +499,11 @@ function LocalItemPage(
 
   useShowRestoredDraftMessage(draft, state, localTreeKey);
 
-  if (localTreeKeyInState !== localTreeKey) {
-    setState({ state: initialState, localTreeKey });
-  }
+  useEffect(() => {
+    if (localTreeKeyInState !== localTreeKey) {
+      setState({ state: initialState, localTreeKey });
+    }
+  }, [initialState, localTreeKey, localTreeKeyInState]);
 
   const onPreviewPropsChange = useCallback(
     (
@@ -548,7 +550,14 @@ function LocalItemPage(
         slug: { field: collectionConfig.slugField, value: slug },
         state,
       });
-      const files = new Map(serialized.map(x => [x.path, x.contents]));
+      const files = new Map<string, Uint8Array<ArrayBuffer>>(
+        serialized.map(
+          x => [x.path, x.contents as Uint8Array<ArrayBuffer>] as [
+            string,
+            Uint8Array<ArrayBuffer>
+          ]
+        )
+      );
       const data: s.Infer<typeof storedValSchema> = {
         beforeTreeKey: localTreeKey,
         slug,
