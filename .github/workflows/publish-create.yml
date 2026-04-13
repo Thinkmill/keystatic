@@ -1,0 +1,48 @@
+name: Publish create-itgkey
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    name: Publish to GitHub Packages
+    runs-on: ubuntu-latest
+    if: github.repository == 'deropiee/itgkey'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install corepack
+        run: npm install -g corepack@0.34.5
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build:packages
+
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Publish @deropiee/create-itgkey
+        run: npm publish --no-git-checks
+        working-directory: packages/create
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

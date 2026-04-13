@@ -1,14 +1,17 @@
 {
-  "name": "@keystatic/create",
-  "version": "0.0.6",
+  "name": "@deropiee/create-itgkey",
+  "version": "0.1.0",
   "license": "MIT",
   "bin": {
-    "create-keystatic": "./bin.js"
+    "create-itgkey": "./bin.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Thinkmill/keystatic/",
+    "url": "https://github.com/deropiee/itgkey/",
     "directory": "packages/create"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "dev": "tsx src/index.ts"

@@ -17,17 +17,24 @@ import color from 'picocolors';
 import tar from 'tar';
 import { Context } from '..';
 
-const registryDomain = 'https://registry.npmjs.org';
-// These templates reference their npm package name
-const templates = {
-  nextjs: '@keystatic/templates-nextjs',
+const GITHUB_REPO = 'deropiee/itgkey';
+const GITHUB_BRANCH = 'main';
+
+// The GitHub archive URL for the repository
+const githubArchiveUrl = `https://github.com/${GITHUB_REPO}/archive/refs/heads/${GITHUB_BRANCH}.tar.gz`;
+
+// When GitHub creates an archive, all files are prefixed with "{repo}-{branch}/"
+const archiveRepoPrefix = `${GITHUB_REPO.split('/')[1]}-${GITHUB_BRANCH}`;
+
+type PackageJson = {
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
 };
+
+const registryDomain = 'https://registry.npmjs.org';
 
 type PackageInfo = {
   version: string;
-  dist: {
-    tarball: string;
-  };
 };
 
 type KeystaticFramework = Context['framework'];
@@ -36,17 +43,12 @@ const frameworkPackageName: Record<KeystaticFramework, string> = {
   'Next.js': '@keystatic/next',
 };
 
-const frameworkPackageDir: Record<KeystaticFramework, string> = {
-  'Next.js': 'next',
-};
-
 const frameworkTemplateDir: Record<KeystaticFramework, string> = {
   'Next.js': 'nextjs',
 };
 
-type PackageJson = {
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
+const frameworkPackageDir: Record<KeystaticFramework, string> = {
+  'Next.js': 'next',
 };
 
 const toPosixPath = (value: string) => value.replaceAll('\\', '/');
@@ -199,50 +201,59 @@ function maybeCopyLocalTemplate(ctx: Context) {
   return true;
 }
 
+async function downloadGithubTemplate(ctx: Context) {
+  const templateSubdir = frameworkTemplateDir[ctx.framework];
+  // GitHub archive path prefix: "{repo}-{branch}/templates/{framework}/"
+  const archivePrefix = `${archiveRepoPrefix}/templates/${templateSubdir}/`;
+  // Number of path components to strip to get files relative to the template root
+  // e.g. "itgkey-main/templates/nextjs/app/page.tsx" -> "app/page.tsx" (strip 3)
+  const stripComponents = 3;
+
+  if (!existsSync(ctx.cwd)) {
+    mkdirSync(ctx.cwd, { recursive: true });
+  }
+
+  const tarballFile = path.join(ctx.cwd, 'template.tgz');
+  const response = await fetch(githubArchiveUrl);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to download template from GitHub: ${response.status} ${response.statusText}`
+    );
+  }
+
+  const stream = createWriteStream(tarballFile);
+  if (!response.body) {
+    throw new Error('No response body received from GitHub archive download');
+  }
+  await promisify(pipeline)(response.body as NodeJS.ReadableStream, stream);
+
+  // Extract only the matching template subdirectory, stripping its path prefix
+  await tar.extract({
+    file: tarballFile,
+    cwd: ctx.cwd,
+    strip: stripComponents,
+    filter: (entryPath: string) => entryPath.startsWith(archivePrefix),
+  });
+
+  rmSync(tarballFile);
+}
+
 export const createProject = async (ctx: Context) => {
   const spin = spinner();
   log.step(
     `Creating your ${color.green(
-      `⚡️ Keystatic ${ctx.framework}`
+      `⚡️ itgkey ${ctx.framework}`
     )} project at ${color.blue(ctx.projectName)}`
   );
 
   spin.start(`Preparing template and creating files...`);
 
-  const templatesLookup: Record<Context['framework'], string> = {
-    'Next.js': templates.nextjs,
-  };
-
-  const template = templatesLookup[ctx.framework];
-
   try {
     const usedLocalTemplate = maybeCopyLocalTemplate(ctx);
 
     if (!usedLocalTemplate) {
-    const templateTarballOverride = process.env.KEYSTATIC_TEMPLATE_TARBALL;
-
-    // Get latest package info from npm if no local override is provided.
-    const templateTarballUrl = templateTarballOverride
-      ? templateTarballOverride
-      : (
-          await fetch(`${registryDomain}/${template}/latest`).then(
-            response => response.json() as Promise<PackageInfo>
-          )
-        ).dist.tarball;
-
-    if (!existsSync(ctx.cwd)) {
-      mkdirSync(ctx.cwd);
-    }
-
-    // Stream latest tarball to the specified directory
-    const tarballFile = `${ctx.cwd}/template.tgz`;
-    const tarballResponse = await fetch(templateTarballUrl);
-    const stream = createWriteStream(tarballFile);
-    await promisify(pipeline)(tarballResponse.body as any, stream);
-
-    // npm packages come in a directory named 'package'. Use strip to remove the directory.
-    await tar.extract({ file: tarballFile, cwd: ctx.cwd, strip: 1 });
-    rmSync(tarballFile);
+      await downloadGithubTemplate(ctx);
     }
 
     await maybeNormalizeTemplatePackageVersions(ctx);

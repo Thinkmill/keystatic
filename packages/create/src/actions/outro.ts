@@ -29,7 +29,7 @@ export const outro = (ctx: Context) => {
   if (usingLocalRepo) {
     note(
       [
-        color.reset('This project is linked to your local Keystatic fork.'),
+        color.reset('This project is linked to your local itgkey fork.'),
         color.reset(
           'Keep the fork dependencies installed and rebuild packages after changes to apply updates here.'
         ),
@@ -38,8 +38,8 @@ export const outro = (ctx: Context) => {
     );
   }
 
-  log.message(`If you have any questions or feedback reach out to us at:
-https://github.com/Thinkmill/keystatic/discussions`);
+  log.message(`If you have any questions or feedback, open a discussion at:
+https://github.com/deropiee/itgkey/discussions`);
 
   outroPrompt(`Happy coding ⚡️`);
 };
