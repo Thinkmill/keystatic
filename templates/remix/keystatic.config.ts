@@ -4,7 +4,7 @@ import {
   collection,
   component,
   singleton,
-} from '@keystatic/core';
+} from '@itgkey/core';
 
 const pageBuilderAssetDirectories = {
   files: {
@@ -131,3 +131,4 @@ export default config({
     }),
   },
 });
+

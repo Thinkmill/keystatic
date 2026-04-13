@@ -1,11 +1,14 @@
 {
-  "name": "@keystatic/templates-nextjs",
+  "name": "@itgkey/templates-nextjs",
   "version": "0.0.64",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Thinkmill/keystatic/",
+    "url": "https://github.com/itgkey/itgkey/",
     "directory": "templates/nextjs"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "next build",
@@ -13,8 +16,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@keystatic/core": "workspace:^",
-    "@keystatic/next": "workspace:^",
+    "@itgkey/core": "workspace:^",
+    "@itgkey/next": "workspace:^",
     "@markdoc/markdoc": "^0.4.0",
     "next": "~15.5.15",
     "react": "^19.0.0",

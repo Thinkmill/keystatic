@@ -1,5 +1,5 @@
 {
-  "name": "@deropiee/create-itgkey",
+  "name": "@itgkey/create-itgkey",
   "version": "0.1.0",
   "license": "MIT",
   "bin": {
@@ -7,26 +7,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/deropiee/itgkey/",
+    "url": "https://github.com/itgkey/itgkey/",
     "directory": "packages/create"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "scripts": {
     "dev": "tsx src/index.ts"
   },
-  "main": "dist/keystatic-create.cjs.js",
-  "module": "dist/keystatic-create.esm.js",
+  "main": "dist/itgkey-create-itgkey.cjs.js",
+  "module": "dist/itgkey-create-itgkey.esm.js",
   "exports": {
     ".": {
       "types": {
-        "import": "./dist/keystatic-create.cjs.mjs",
-        "default": "./dist/keystatic-create.cjs.js"
+        "import": "./dist/itgkey-create-itgkey.cjs.mjs",
+        "default": "./dist/itgkey-create-itgkey.cjs.js"
       },
-      "module": "./dist/keystatic-create.esm.js",
-      "import": "./dist/keystatic-create.cjs.mjs",
-      "default": "./dist/keystatic-create.cjs.js"
+      "module": "./dist/itgkey-create-itgkey.esm.js",
+      "import": "./dist/itgkey-create-itgkey.cjs.mjs",
+      "default": "./dist/itgkey-create-itgkey.cjs.js"
     },
     "./package.json": "./package.json"
   },

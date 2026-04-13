@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   APIRouteConfig,
   makeGenericAPIRouteHandler,
-} from '@keystatic/core/api/generic';
+} from '@itgkey/core/api/generic';
 import { createWatcher } from './watch';
 import { getReaderKey, getResolvedDirectories } from './utils';
 
@@ -103,3 +103,4 @@ export function makeAPIRouteHandler(_config: APIRouteConfig) {
     res.status(status ?? 200).send(body);
   };
 }
+

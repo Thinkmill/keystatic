@@ -1,7 +1,7 @@
 import {
   APIRouteConfig,
   makeGenericAPIRouteHandler,
-} from '@keystatic/core/api/generic';
+} from '@itgkey/core/api/generic';
 
 export async function handleLoader(
   _config: APIRouteConfig,
@@ -18,3 +18,4 @@ export async function handleLoader(
 
   return new Response(body, { headers, status });
 }
+

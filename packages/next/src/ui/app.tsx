@@ -1,5 +1,5 @@
-import { Config } from '@keystatic/core';
-import { Keystatic } from '@keystatic/core/ui';
+import { Config } from '@itgkey/core';
+import { Keystatic } from '@itgkey/core/ui';
 
 export function makePage(config: Config<any, any>) {
   return function Page() {
@@ -11,3 +11,4 @@ const appSlug = {
   envName: 'NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
   value: process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG,
 };
+

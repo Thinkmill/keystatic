@@ -1,6 +1,6 @@
 import 'server-only';
 import { Suspense } from 'react';
-import { Reader } from '@keystatic/core/reader';
+import { Reader } from '@itgkey/core/reader';
 import { ReaderRefreshClient } from './reader-refresh-client';
 import { getReaderKey, getResolvedDirectories } from './utils';
 
@@ -28,3 +28,4 @@ export function ReaderRefresh(props: { reader: Reader<any, any> }) {
     </Suspense>
   );
 }
+

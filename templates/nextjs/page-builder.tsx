@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { component, fields } from '@keystatic/core';
+import { component, fields } from '@itgkey/core';
 
 const pageBuilderAssetDirectories = {
   files: {
@@ -571,3 +571,4 @@ export const pageBuilderRenderers = {
     </figure>
   ),
 };
+

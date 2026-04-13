@@ -1,12 +1,15 @@
 {
-  "name": "@keystatic/templates-remix",
+  "name": "@itgkey/templates-remix",
   "type": "module",
   "version": "0.0.51",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Thinkmill/keystatic/",
+    "url": "https://github.com/itgkey/itgkey/",
     "directory": "templates/remix"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "remix vite:build",
@@ -15,8 +18,8 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@keystatic/core": "workspace:^",
-    "@keystatic/remix": "workspace:^",
+    "@itgkey/core": "workspace:^",
+    "@itgkey/remix": "workspace:^",
     "@markdoc/markdoc": "^0.4.0",
     "@remix-run/css-bundle": "^2.9.2",
     "@remix-run/node": "^2.9.2",

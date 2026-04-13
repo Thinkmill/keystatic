@@ -1,11 +1,14 @@
 {
-  "name": "@keystatic/templates-astro",
+  "name": "@itgkey/templates-astro",
   "version": "0.0.63",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Thinkmill/keystatic/",
+    "url": "https://github.com/itgkey/itgkey/",
     "directory": "templates/astro"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "astro dev",
@@ -17,8 +20,8 @@
   "dependencies": {
     "@astrojs/markdoc": "^0.12.9",
     "@astrojs/react": "^4.2.0",
-    "@keystatic/astro": "workspace:^",
-    "@keystatic/core": "workspace:^",
+    "@itgkey/astro": "workspace:^",
+    "@itgkey/core": "workspace:^",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "astro": "^5.2.5",

@@ -1,7 +1,7 @@
 import {
   APIRouteConfig,
   makeGenericAPIRouteHandler,
-} from '@keystatic/core/api/generic';
+} from '@itgkey/core/api/generic';
 
 export function makeRouteHandler(_config: APIRouteConfig) {
   const handler = makeGenericAPIRouteHandler(_config, {
@@ -19,3 +19,4 @@ export function makeRouteHandler(_config: APIRouteConfig) {
   }
   return { GET: wrappedHandler, POST: wrappedHandler };
 }
+

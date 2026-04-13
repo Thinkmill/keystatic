@@ -30,23 +30,23 @@ export default function keystatic(): AstroIntegration {
         mkdirSync(dotAstroDir, { recursive: true });
         writeFileSync(
           new URL('keystatic-imports.js', dotAstroDir),
-          `import "@keystatic/astro/ui";
-import "@keystatic/astro/api";
-import "@keystatic/core/ui";
+          `import "@itgkey/astro/ui";
+import "@itgkey/astro/api";
+import "@itgkey/core/ui";
 `
         );
 
         injectRoute({
           // @ts-ignore
-          entryPoint: '@keystatic/astro/internal/keystatic-astro-page.astro',
-          entrypoint: '@keystatic/astro/internal/keystatic-astro-page.astro',
+          entryPoint: '@itgkey/astro/internal/keystatic-astro-page.astro',
+          entrypoint: '@itgkey/astro/internal/keystatic-astro-page.astro',
           pattern: '/keystatic/[...params]',
           prerender: false,
         });
         injectRoute({
           // @ts-ignore
-          entryPoint: '@keystatic/astro/internal/keystatic-api.js',
-          entrypoint: '@keystatic/astro/internal/keystatic-api.js',
+          entryPoint: '@itgkey/astro/internal/keystatic-api.js',
+          entrypoint: '@itgkey/astro/internal/keystatic-api.js',
           pattern: '/api/keystatic/[...params]',
           prerender: false,
         });
@@ -54,3 +54,4 @@ import "@keystatic/core/ui";
     },
   };
 }
+

@@ -1,17 +1,20 @@
 {
-  "name": "@keystatic/astro",
+  "name": "@itgkey/astro",
   "version": "5.0.6",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Thinkmill/keystatic/",
+    "url": "https://github.com/itgkey/itgkey/",
     "directory": "packages/astro"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "type": "module",
   "exports": {
-    "./ui": "./dist/keystatic-astro-ui.js",
-    "./api": "./dist/keystatic-astro-api.js",
-    ".": "./dist/keystatic-astro.js",
+    "./ui": "./dist/itgkey-astro-ui.js",
+    "./api": "./dist/itgkey-astro-api.js",
+    ".": "./dist/itgkey-astro.js",
     "./package.json": "./package.json",
     "./internal/keystatic-api.js": "./internal/keystatic-api.js",
     "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
@@ -35,14 +38,14 @@
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
-    "@keystatic/core": "workspace:^",
+    "@itgkey/core": "workspace:^",
     "@types/set-cookie-parser": "^2.4.2",
     "astro": "^5.2.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "peerDependencies": {
-    "@keystatic/core": "*",
+    "@itgkey/core": "*",
     "astro": "2 || 3 || 4 || 5",
     "react": "^18.2.0 || ^19.0.0",
     "react-dom": "^18.2.0 || ^19.0.0"

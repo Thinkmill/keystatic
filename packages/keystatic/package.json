@@ -1,103 +1,106 @@
 {
-  "name": "@keystatic/core",
+  "name": "@itgkey/core",
   "version": "0.5.50",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Thinkmill/keystatic/",
+    "url": "https://github.com/itgkey/itgkey/",
     "directory": "packages/keystatic"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "type": "module",
   "exports": {
     "./ui": {
-      "types": "./dist/keystatic-core-ui.js",
+      "types": "./dist/itgkey-core-ui.js",
       "node": {
-        "react-server": "./dist/keystatic-core-ui.node.react-server.js",
-        "default": "./dist/keystatic-core-ui.node.js"
+        "react-server": "./dist/itgkey-core-ui.node.react-server.js",
+        "default": "./dist/itgkey-core-ui.node.js"
       },
-      "react-server": "./dist/keystatic-core-ui.react-server.js",
-      "worker": "./dist/keystatic-core-ui.worker.js",
-      "default": "./dist/keystatic-core-ui.js"
+      "react-server": "./dist/itgkey-core-ui.react-server.js",
+      "worker": "./dist/itgkey-core-ui.worker.js",
+      "default": "./dist/itgkey-core-ui.js"
     },
     ".": {
-      "types": "./dist/keystatic-core.js",
+      "types": "./dist/itgkey-core.js",
       "node": {
-        "react-server": "./dist/keystatic-core.node.react-server.js",
-        "default": "./dist/keystatic-core.node.js"
+        "react-server": "./dist/itgkey-core.node.react-server.js",
+        "default": "./dist/itgkey-core.node.js"
       },
-      "react-server": "./dist/keystatic-core.react-server.js",
-      "worker": "./dist/keystatic-core.worker.js",
-      "default": "./dist/keystatic-core.js"
+      "react-server": "./dist/itgkey-core.react-server.js",
+      "worker": "./dist/itgkey-core.worker.js",
+      "default": "./dist/itgkey-core.js"
     },
     "./api/utils": {
-      "types": "./dist/keystatic-core-api-utils.js",
+      "types": "./dist/itgkey-core-api-utils.js",
       "node": {
-        "react-server": "./dist/keystatic-core-api-utils.node.react-server.js",
-        "default": "./dist/keystatic-core-api-utils.node.js"
+        "react-server": "./dist/itgkey-core-api-utils.node.react-server.js",
+        "default": "./dist/itgkey-core-api-utils.node.js"
       },
-      "react-server": "./dist/keystatic-core-api-utils.react-server.js",
-      "worker": "./dist/keystatic-core-api-utils.worker.js",
-      "default": "./dist/keystatic-core-api-utils.js"
+      "react-server": "./dist/itgkey-core-api-utils.react-server.js",
+      "worker": "./dist/itgkey-core-api-utils.worker.js",
+      "default": "./dist/itgkey-core-api-utils.js"
     },
     "./renderer": {
-      "types": "./dist/keystatic-core-renderer.js",
+      "types": "./dist/itgkey-core-renderer.js",
       "node": {
-        "react-server": "./dist/keystatic-core-renderer.node.react-server.js",
-        "default": "./dist/keystatic-core-renderer.node.js"
+        "react-server": "./dist/itgkey-core-renderer.node.react-server.js",
+        "default": "./dist/itgkey-core-renderer.node.js"
       },
-      "react-server": "./dist/keystatic-core-renderer.react-server.js",
-      "worker": "./dist/keystatic-core-renderer.worker.js",
-      "default": "./dist/keystatic-core-renderer.js"
+      "react-server": "./dist/itgkey-core-renderer.react-server.js",
+      "worker": "./dist/itgkey-core-renderer.worker.js",
+      "default": "./dist/itgkey-core-renderer.js"
     },
     "./api/generic": {
-      "types": "./dist/keystatic-core-api-generic.js",
+      "types": "./dist/itgkey-core-api-generic.js",
       "node": {
-        "react-server": "./dist/keystatic-core-api-generic.node.react-server.js",
-        "default": "./dist/keystatic-core-api-generic.node.js"
+        "react-server": "./dist/itgkey-core-api-generic.node.react-server.js",
+        "default": "./dist/itgkey-core-api-generic.node.js"
       },
-      "react-server": "./dist/keystatic-core-api-generic.react-server.js",
-      "worker": "./dist/keystatic-core-api-generic.worker.js",
-      "default": "./dist/keystatic-core-api-generic.js"
+      "react-server": "./dist/itgkey-core-api-generic.react-server.js",
+      "worker": "./dist/itgkey-core-api-generic.worker.js",
+      "default": "./dist/itgkey-core-api-generic.js"
     },
     "./reader": {
-      "types": "./dist/keystatic-core-reader.js",
+      "types": "./dist/itgkey-core-reader.js",
       "node": {
-        "react-server": "./dist/keystatic-core-reader.node.react-server.js",
-        "default": "./dist/keystatic-core-reader.node.js"
+        "react-server": "./dist/itgkey-core-reader.node.react-server.js",
+        "default": "./dist/itgkey-core-reader.node.js"
       },
-      "react-server": "./dist/keystatic-core-reader.react-server.js",
-      "worker": "./dist/keystatic-core-reader.worker.js",
-      "default": "./dist/keystatic-core-reader.js"
+      "react-server": "./dist/itgkey-core-reader.react-server.js",
+      "worker": "./dist/itgkey-core-reader.worker.js",
+      "default": "./dist/itgkey-core-reader.js"
     },
     "./reader/github": {
-      "types": "./dist/keystatic-core-reader-github.js",
+      "types": "./dist/itgkey-core-reader-github.js",
       "node": {
-        "react-server": "./dist/keystatic-core-reader-github.node.react-server.js",
-        "default": "./dist/keystatic-core-reader-github.node.js"
+        "react-server": "./dist/itgkey-core-reader-github.node.react-server.js",
+        "default": "./dist/itgkey-core-reader-github.node.js"
       },
-      "react-server": "./dist/keystatic-core-reader-github.react-server.js",
-      "worker": "./dist/keystatic-core-reader-github.worker.js",
-      "default": "./dist/keystatic-core-reader-github.js"
+      "react-server": "./dist/itgkey-core-reader-github.react-server.js",
+      "worker": "./dist/itgkey-core-reader-github.worker.js",
+      "default": "./dist/itgkey-core-reader-github.js"
     },
     "./content-components": {
-      "types": "./dist/keystatic-core-content-components.js",
+      "types": "./dist/itgkey-core-content-components.js",
       "node": {
-        "react-server": "./dist/keystatic-core-content-components.node.react-server.js",
-        "default": "./dist/keystatic-core-content-components.node.js"
+        "react-server": "./dist/itgkey-core-content-components.node.react-server.js",
+        "default": "./dist/itgkey-core-content-components.node.js"
       },
-      "react-server": "./dist/keystatic-core-content-components.react-server.js",
-      "worker": "./dist/keystatic-core-content-components.worker.js",
-      "default": "./dist/keystatic-core-content-components.js"
+      "react-server": "./dist/itgkey-core-content-components.react-server.js",
+      "worker": "./dist/itgkey-core-content-components.worker.js",
+      "default": "./dist/itgkey-core-content-components.js"
     },
     "./component-blocks": {
-      "types": "./dist/keystatic-core-component-blocks.js",
+      "types": "./dist/itgkey-core-component-blocks.js",
       "node": {
-        "react-server": "./dist/keystatic-core-component-blocks.node.react-server.js",
-        "default": "./dist/keystatic-core-component-blocks.node.js"
+        "react-server": "./dist/itgkey-core-component-blocks.node.react-server.js",
+        "default": "./dist/itgkey-core-component-blocks.node.js"
       },
-      "react-server": "./dist/keystatic-core-component-blocks.react-server.js",
-      "worker": "./dist/keystatic-core-component-blocks.worker.js",
-      "default": "./dist/keystatic-core-component-blocks.js"
+      "react-server": "./dist/itgkey-core-component-blocks.react-server.js",
+      "worker": "./dist/itgkey-core-component-blocks.worker.js",
+      "default": "./dist/itgkey-core-component-blocks.js"
     },
     "./package.json": "./package.json"
   },

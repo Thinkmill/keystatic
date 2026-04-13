@@ -1,7 +1,7 @@
 import {
   APIRouteConfig,
   makeGenericAPIRouteHandler,
-} from '@keystatic/core/api/generic';
+} from '@itgkey/core/api/generic';
 import type { APIContext } from 'astro';
 import { parseString } from 'set-cookie-parser';
 
@@ -101,3 +101,4 @@ function tryOrUndefined<T>(fn: () => T): T | undefined {
     return undefined;
   }
 }
+

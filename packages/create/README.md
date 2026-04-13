@@ -1,10 +1,10 @@
-# @keystatic/create
+# @itgkey/create
 
-The `@keystatic/create` packages allows users to create a Keystatic project
+The `@itgkey/create` packages allows users to create a Keystatic project
 direct from their CLI.
 
 ```bash
-npx create @keystatic
+npx @itgkey/create-itgkey
 ```
 
 ## Templates
@@ -30,3 +30,4 @@ To run locally use the command `pnpm dev:create`.
 
 When asked for a directory to make the project in, you can specify absolute
 paths i.e. `/Users/janedoe/projects/keystatic-test`
+

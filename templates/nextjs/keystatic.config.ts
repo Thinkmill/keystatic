@@ -1,4 +1,4 @@
-import { config, collection, fields, singleton } from '@keystatic/core';
+import { config, collection, fields, singleton } from '@itgkey/core';
 import { pageBuilderComponents } from './page-builder';
 
 export const markdocConfig = fields.markdoc.createMarkdocConfig({
@@ -262,3 +262,4 @@ export default config({
     }),
   },
 });
+

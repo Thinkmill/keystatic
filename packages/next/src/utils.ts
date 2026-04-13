@@ -1,5 +1,5 @@
-import { Config } from '@keystatic/core';
-import { getAllowedDirectories } from '@keystatic/core/api/utils';
+import { Config } from '@itgkey/core';
+import { getAllowedDirectories } from '@itgkey/core/api/utils';
 import path from 'path';
 import fs from 'fs/promises';
 import { createHash } from 'crypto';
@@ -40,3 +40,4 @@ export async function getReaderKey(directories: string[]) {
   );
   return createHash('sha1').update(data).digest('hex');
 }
+

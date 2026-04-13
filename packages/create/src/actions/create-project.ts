@@ -17,7 +17,7 @@ import color from 'picocolors';
 import tar from 'tar';
 import { Context } from '..';
 
-const GITHUB_REPO = 'deropiee/itgkey';
+const GITHUB_REPO = 'itgkey/itgkey';
 const GITHUB_BRANCH = 'main';
 
 // The GitHub archive URL for the repository
@@ -40,7 +40,7 @@ type PackageInfo = {
 type KeystaticFramework = Context['framework'];
 
 const frameworkPackageName: Record<KeystaticFramework, string> = {
-  'Next.js': '@keystatic/next',
+  'Next.js': '@itgkey/next',
 };
 
 const frameworkTemplateDir: Record<KeystaticFramework, string> = {
@@ -109,8 +109,8 @@ async function maybeNormalizeTemplatePackageVersions(ctx: Context) {
   const frameworkPkgName = frameworkPackageName[ctx.framework];
 
   const coreVersion =
-    pkgJson.dependencies?.['@keystatic/core'] ??
-    pkgJson.devDependencies?.['@keystatic/core'];
+    pkgJson.dependencies?.['@itgkey/core'] ??
+    pkgJson.devDependencies?.['@itgkey/core'];
   const frameworkVersion =
     pkgJson.dependencies?.[frameworkPkgName] ??
     pkgJson.devDependencies?.[frameworkPkgName];
@@ -126,21 +126,21 @@ async function maybeNormalizeTemplatePackageVersions(ctx: Context) {
 
   const versions = await Promise.all([
     coreNeedsNormalization
-      ? getLatestPackageVersion('@keystatic/core')
+      ? getLatestPackageVersion('@itgkey/core')
       : Promise.resolve(coreVersion),
     frameworkNeedsNormalization
       ? getLatestPackageVersion(frameworkPkgName)
       : Promise.resolve(frameworkVersion),
   ]);
 
-  setPackageVersion(pkgJson, '@keystatic/core', versions[0]!);
+  setPackageVersion(pkgJson, '@itgkey/core', versions[0]!);
   setPackageVersion(pkgJson, frameworkPkgName, versions[1]!);
 
   if (!pkgJson.dependencies) {
     pkgJson.dependencies = {};
   }
-  if (!pkgJson.dependencies['@keystatic/core']) {
-    pkgJson.dependencies['@keystatic/core'] = versions[0]!;
+  if (!pkgJson.dependencies['@itgkey/core']) {
+    pkgJson.dependencies['@itgkey/core'] = versions[0]!;
   }
   if (!pkgJson.dependencies[frameworkPkgName]) {
     pkgJson.dependencies[frameworkPkgName] = versions[1]!;
@@ -163,7 +163,7 @@ function maybeApplyLocalPackageOverrides(ctx: Context) {
   const coreLink = `file:${toPosixPath(path.join(localRepoRoot, 'packages', 'keystatic'))}`;
   const frameworkLink = `file:${toPosixPath(path.join(localRepoRoot, 'packages', frameworkPkgDir))}`;
 
-  setPackageVersion(pkgJson, '@keystatic/core', coreLink);
+  setPackageVersion(pkgJson, '@itgkey/core', coreLink);
   setPackageVersion(pkgJson, frameworkPkgName, frameworkLink);
 
   writeFileSync(packageJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
@@ -226,7 +226,10 @@ async function downloadGithubTemplate(ctx: Context) {
   if (!response.body) {
     throw new Error('No response body received from GitHub archive download');
   }
-  await promisify(pipeline)(response.body as NodeJS.ReadableStream, stream);
+  await promisify(pipeline)(
+    response.body as unknown as NodeJS.ReadableStream,
+    stream
+  );
 
   // Extract only the matching template subdirectory, stripping its path prefix
   await tar.extract({
@@ -266,3 +269,4 @@ export const createProject = async (ctx: Context) => {
 
   spin.stop('Done ✅');
 };
+
