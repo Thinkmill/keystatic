@@ -143,7 +143,8 @@ export const integrate = async (ctx: Context) => {
   );
 
   if (ctx.installDependencies) {
-    spin.message('Installing dependencies...');
+    spin.stop('Files added.');
+    spin.start('Installing dependencies...');
     const ok = installRuntimeDependencies(ctx.packageManager, ctx.projectDir);
     ctx.installStatus = ok ? 'installed' : 'failed';
     if (!ok) {

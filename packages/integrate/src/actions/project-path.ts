@@ -9,7 +9,7 @@ export const projectPath = async (ctx: Context) => {
   const target =
     pathArg ??
     (await text({
-      message: 'Where is your existing Next.js project?',
+      message: 'Where is your existing Next.js project? (use . for current directory)',
       defaultValue: '.',
       placeholder: '.',
     }));
