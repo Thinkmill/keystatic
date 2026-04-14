@@ -17,7 +17,7 @@ import color from 'picocolors';
 import tar from 'tar';
 import { Context } from '..';
 
-const GITHUB_REPO = 'itgkey/itgkey';
+const GITHUB_REPO = 'deropiee/itgkey';
 const GITHUB_BRANCH = 'main';
 
 // The GitHub archive URL for the repository
