@@ -18,6 +18,7 @@
     "clean": "git clean -fXd",
     "docs": "pnpm --filter=keystatic-docs dev",
     "dev:create": "pnpm --filter=create dev",
+    "dev:integrate": "pnpm --filter=@itgkey/integrate-itgkey dev",
     "dev:localization": "pnpm --filter=localization dev",
     "dev:docs": "pnpm --filter=keystatic-docs dev",
     "dev:designsystem": "pnpm --filter=@keystar/docs dev",

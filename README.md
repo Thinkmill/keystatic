@@ -8,37 +8,126 @@ and Astro, designed to fit into your workflow.
 
 ## Scaffold a new itgkey project
 
-The quickest way to get started is with the `create-itgkey` CLI, distributed
-via GitHub Packages.
-
-### Option A — convenience installer (handles auth for you)
+The quickest way to get started is with npm:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/deropiee/itgkey/main/install.sh | bash -s my-app-name
+npx @itgkey/create-itgkey@latest my-app-name
 ```
 
-The script will prompt for a [GitHub Personal Access Token](https://github.com/settings/tokens/new?scopes=read:packages)
-with the `read:packages` scope the first time it runs, then configure your
-local `~/.npmrc` automatically.
+Then run:
 
-### Option B — manual setup
+```sh
+cd my-app-name
+npm install
+npm run dev
+```
 
-1. Create a [GitHub PAT](https://github.com/settings/tokens/new?scopes=read:packages)
-   with the `read:packages` scope.
+No GitHub PAT or custom npm registry setup is required.
 
-2. Add the registry to your `~/.npmrc` (one-time):
+---
 
-   ```sh
-   echo "@deropiee:registry=https://npm.pkg.github.com" >> ~/.npmrc
-   echo "//npm.pkg.github.com/:_authToken=<YOUR_PAT_HERE>"  >> ~/.npmrc
-   ```
-   Replace `<YOUR_PAT_HERE>` with the token you created.
+## Add itgkey to an existing Next.js app (minimal steps)
 
-3. Scaffold any time:
+If you already have a Next.js app and want the least amount of manual work,
+use this App Router setup.
 
-   ```sh
-   npx @deropiee/create-itgkey my-app-name
-   ```
+Quickest way:
+
+```sh
+npx @itgkey/integrate-itgkey@latest
+```
+
+Or target a specific app directory:
+
+```sh
+npx @itgkey/integrate-itgkey@latest ./my-next-app
+```
+
+The CLI writes the required files and can install dependencies for you.
+
+Manual setup (if preferred):
+
+1. Install dependencies:
+
+```sh
+npm install @itgkey/core@latest @itgkey/next@latest @markdoc/markdoc
+```
+
+2. Add `keystatic.config.ts` at your project root:
+
+```ts
+import { config, collection, fields } from '@itgkey/core';
+
+export default config({
+  storage: { kind: 'local' },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      slugField: 'title',
+      path: 'posts/*',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.markdoc({ label: 'Content' }),
+      },
+    }),
+  },
+});
+```
+
+3. Add API route file at `app/api/keystatic/[...params]/route.ts`:
+
+```ts
+import { makeRouteHandler } from '@itgkey/next/route-handler';
+import keystaticConfig from '../../../../keystatic.config';
+
+export const { POST, GET } = makeRouteHandler({
+  config: keystaticConfig,
+});
+```
+
+4. Add admin UI files:
+
+`app/keystatic/keystatic.tsx`
+
+```tsx
+'use client';
+
+import { makePage } from '@itgkey/next/ui/app';
+import config from '../../keystatic.config';
+
+export default makePage(config);
+```
+
+`app/keystatic/layout.tsx`
+
+```tsx
+import KeystaticApp from './keystatic';
+
+export default function RootLayout() {
+  return <KeystaticApp />;
+}
+```
+
+`app/keystatic/[[...params]]/page.tsx`
+
+```tsx
+export default function Page() {
+  return null;
+}
+```
+
+5. Run your app and open `/keystatic`.
+
+If your project uses `src/app`, place these files under `src/app/...` instead.
+
+Reference implementation in this repo:
+
+- [templates/nextjs/keystatic.config.ts](templates/nextjs/keystatic.config.ts)
+- [templates/nextjs/app/api/keystatic/[...params]/route.ts](templates/nextjs/app/api/keystatic/%5B...params%5D/route.ts)
+- [templates/nextjs/app/keystatic/keystatic.tsx](templates/nextjs/app/keystatic/keystatic.tsx)
+- [templates/nextjs/app/keystatic/layout.tsx](templates/nextjs/app/keystatic/layout.tsx)
+- [templates/nextjs/app/keystatic/[[...params]]/page.tsx](templates/nextjs/app/keystatic/%5B%5B...params%5D%5D/page.tsx)
 
 ---
 
