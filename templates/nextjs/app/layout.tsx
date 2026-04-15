@@ -11,12 +11,16 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   );
   const navItems =
     settings?.navigation
-      ?.filter(item => item.visible && pageMap.has(normalizePageSlug(item.slug)))
+      ?.filter(
+        item =>
+          item.visible &&
+          pageMap.has(normalizePageSlug(getPageSlug(item.slug as any)))
+      )
       .map(item => {
-        const slug = normalizePageSlug(item.slug);
+        const slug = normalizePageSlug(getPageSlug(item.slug as any));
         return {
-          href: `/${slug}`,
-          label: item.label || pageMap.get(slug) || slug,
+          href: slug ? `/${slug}` : '/',
+          label: item.title || pageMap.get(slug) || slug,
         };
       }) ?? [];
 

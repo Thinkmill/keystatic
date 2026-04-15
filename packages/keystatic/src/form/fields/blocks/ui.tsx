@@ -572,6 +572,18 @@ function SearchableBlockList(props: {
       ),
     [normalizedSearchTerm, props.options]
   );
+  const groupedOptions = useMemo(() => {
+    const grouped = new Map<
+      string,
+      readonly { label: string; value: string | boolean }[]
+    >();
+    for (const option of filteredOptions) {
+      const category = categorizeBlockLabel(option.label);
+      const existing = grouped.get(category);
+      grouped.set(category, existing ? [...existing, option] : [option]);
+    }
+    return [...grouped.entries()].sort(([a], [b]) => a.localeCompare(b));
+  }, [filteredOptions]);
 
   return (
     <VStack gap="regular">
@@ -592,19 +604,29 @@ function SearchableBlockList(props: {
           border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
         })}
       >
-        {filteredOptions.length ? (
-          <VStack gap="small">
-            {filteredOptions.map(option => (
-              <Button
-                key={option.value.toString()}
-                prominence="low"
-                onPress={() => {
-                  props.onAdd(option.value);
-                  props.onClose();
-                }}
-              >
-                {option.label}
-              </Button>
+        {groupedOptions.length ? (
+          <VStack gap="medium">
+            {groupedOptions.map(([category, options]) => (
+              <VStack key={category} gap="small" alignItems="stretch">
+                <Text color="neutralSecondary" size="small" weight="semibold">
+                  {category}
+                </Text>
+                <VStack gap="xsmall" alignItems="stretch">
+                  {options.map(option => (
+                    <Button
+                      key={option.value.toString()}
+                      prominence="low"
+                      onPress={() => {
+                        props.onAdd(option.value);
+                        props.onClose();
+                      }}
+                      UNSAFE_style={{ justifyContent: 'flex-start' }}
+                    >
+                      {option.label}
+                    </Button>
+                  ))}
+                </VStack>
+              </VStack>
             ))}
           </VStack>
         ) : (
@@ -615,6 +637,28 @@ function SearchableBlockList(props: {
       </Box>
     </VStack>
   );
+}
+
+function categorizeBlockLabel(label: string): string {
+  const normalizedLabel = label.toLowerCase();
+
+  if (/(hero|header|cta|call to action|banner)/.test(normalizedLabel)) {
+    return 'Hero and Marketing';
+  }
+  if (/(content|text|section|faq|testimonial|quote)/.test(normalizedLabel)) {
+    return 'Content';
+  }
+  if (/(image|video|gallery|logo|media|avatar)/.test(normalizedLabel)) {
+    return 'Media';
+  }
+  if (/(feature|grid|card|stats|list)/.test(normalizedLabel)) {
+    return 'Layout and Lists';
+  }
+  if (/(file|download|link)/.test(normalizedLabel)) {
+    return 'Files and Links';
+  }
+
+  return 'Other';
 }
 
 function EmptyBuilderState(props: {

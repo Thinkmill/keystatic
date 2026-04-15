@@ -99,6 +99,7 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.markdoc({
           label: 'Content',
+          components: pageBuilderComponents as any,
           options: {
             image: {
               directory: 'src/assets/images/posts',

@@ -202,7 +202,13 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        content: fields.markdoc({ label: 'Content' }),
+        content: fields.markdoc({
+          label: 'Content',
+          components: pageBuilderComponents as any,
+        }),
+        blocks: fields.blocks(pageBlocks, {
+          label: 'Post blocks',
+        }),
       },
     }),
   },
@@ -213,11 +219,16 @@ export default config({
       schema: {
         navigation: fields.array(
           fields.object({
-            label: fields.text({ label: 'Label' }),
-            slug: fields.text({
-              label: 'Page slug',
-              description:
-                'Use the same slug value as the page route (without leading slash).',
+            title: fields.text({
+              label: 'Page title',
+              description: 'Label shown in the navigation menu.',
+            }),
+            slug: fields.slug({
+              name: {
+                label: 'Route source text',
+                description:
+                  'Used to generate the route slug. Spaces are automatically converted.',
+              },
             }),
             visible: fields.checkbox({
               label: 'Visible in navigation',
@@ -227,8 +238,8 @@ export default config({
           {
             label: 'Navigation',
             itemLabel: props =>
-              props.fields.label.value ||
-              props.fields.slug.value ||
+              props.fields.title.value ||
+              props.fields.slug.value.slug ||
               'Navigation item',
           }
         ),

@@ -17,7 +17,12 @@ const pageBuilderAssetDirectories = {
 } as const;
 
 export function normalizePageSlug(slug: string) {
-  return slug.replace(/^\/+|\/+$/g, '');
+  return slug
+    .trim()
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase();
 }
 
 export function getPageSlug(
