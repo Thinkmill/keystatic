@@ -18,6 +18,7 @@ import { searchXIcon } from '@keystar/ui/icon/icons/searchXIcon';
 import { diffIcon } from '@keystar/ui/icon/icons/diffIcon';
 import { plusSquareIcon } from '@keystar/ui/icon/icons/plusSquareIcon';
 import { dotSquareIcon } from '@keystar/ui/icon/icons/dotSquareIcon';
+import { checkCircle2Icon } from '@keystar/ui/icon/icons/checkCircle2Icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { downloadIcon } from '@keystar/ui/icon/icons/downloadIcon';
 import { TextLink } from '@keystar/ui/link';
@@ -471,11 +472,16 @@ function CollectionTable(
   }, [entriesWithStatus, mainFiles]);
 
   const filteredItems = useMemo(() => {
+    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+
     return entriesWithData.filter(item => {
       // Search filter
-      const matchesSearch = item.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      const matchesSearch =
+        normalizedSearchTerm === '' ||
+        item.name.toLowerCase().includes(normalizedSearchTerm) ||
+        getSearchableValues(item.data).some(value =>
+          value.toLowerCase().includes(normalizedSearchTerm)
+        );
 
       // Status filter
       const { filters } = props;
@@ -692,6 +698,8 @@ function CollectionTable(
                 <Icon color="positive" src={plusSquareIcon} />
               ) : item.status === 'Changed' ? (
                 <Icon color="accent" src={dotSquareIcon} />
+                  ) : item.status === 'Unchanged' ? (
+                    <Icon color="neutralSecondary" src={checkCircle2Icon} />
               ) : null}
             </Cell>
           );
@@ -763,6 +771,33 @@ function getItemPath(
     collection
   )}/item/${encodeURIComponent(key)}`;
 }
+
+function getSearchableValues(value: unknown): string[] {
+  if (value == null) {
+    return [];
+  }
+
+  if (typeof value === 'string') {
+    return value ? [value] : [];
+  }
+
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return [String(value)];
+  }
+
+  if (Array.isArray(value)) {
+    return value.flatMap(getSearchableValues);
+  }
+
+  if (typeof value === 'object') {
+    return Object.values(value as Record<string, unknown>).flatMap(
+      getSearchableValues
+    );
+  }
+
+  return [];
+}
+
 export function useDebouncedValue<T>(value: T, delay = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 

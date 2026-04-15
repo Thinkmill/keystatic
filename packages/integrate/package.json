@@ -1,6 +1,6 @@
 {
   "name": "@itgkey/integrate-itgkey",
-  "version": "0.1.1",
+  "version": "0.4.2",
   "license": "MIT",
   "bin": {
     "integrate-itgkey": "./bin.js"

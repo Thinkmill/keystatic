@@ -9,6 +9,7 @@ export type Context = {
   projectDir: string;
   packageManager: string;
   appDir: 'app' | 'src/app';
+  routeMode: 'preserve' | 'replace';
   installDependencies: boolean;
   installStatus: 'installed' | 'skipped' | 'failed';
   createdFiles: string[];
@@ -23,6 +24,7 @@ async function main() {
     projectDir: process.cwd(),
     packageManager: getPackageManager().name,
     appDir: 'app',
+    routeMode: 'preserve',
     installDependencies: true,
     installStatus: 'skipped',
     createdFiles: [],

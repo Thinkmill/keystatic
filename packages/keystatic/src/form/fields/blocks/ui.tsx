@@ -1,9 +1,10 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useField } from '@react-aria/label';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
 import { ActionButton, Button } from '@keystar/ui/button';
+import { Dialog, DialogTrigger } from '@keystar/ui/dialog';
 import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
@@ -12,6 +13,8 @@ import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Box, Divider, Flex, Grid, VStack } from '@keystar/ui/layout';
 import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
+import { SearchField } from '@keystar/ui/search-field';
+import { Content } from '@keystar/ui/slots';
 import { css, tokenSchema, transition } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
@@ -497,6 +500,37 @@ function AddBlockButton(props: {
   onAdd: (discriminant: string | boolean, index?: number) => void;
   options: readonly { label: string; value: string | boolean }[];
 }) {
+  const sortedOptions = useMemo(
+    () =>
+      [...props.options].sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })
+      ),
+    [props.options]
+  );
+
+  if (sortedOptions.length > 12) {
+    return (
+      <DialogTrigger>
+        <Button prominence="high">
+          <Icon src={plusIcon} />
+          <Text>Add block</Text>
+        </Button>
+        {close => (
+          <Dialog>
+            <Heading>Add block</Heading>
+            <Content>
+              <SearchableBlockList
+                options={sortedOptions}
+                onAdd={props.onAdd}
+                onClose={close}
+              />
+            </Content>
+          </Dialog>
+        )}
+      </DialogTrigger>
+    );
+  }
+
   return (
     <MenuTrigger>
       <Button prominence="high">
@@ -504,9 +538,9 @@ function AddBlockButton(props: {
         <Text>Add block</Text>
       </Button>
       <Menu
-        items={props.options}
+        items={sortedOptions}
         onAction={value => {
-          const option = props.options.find(
+          const option = sortedOptions.find(
             item => item.value.toString() === value.toString()
           );
           if (option) {
@@ -521,6 +555,65 @@ function AddBlockButton(props: {
         )}
       </Menu>
     </MenuTrigger>
+  );
+}
+
+function SearchableBlockList(props: {
+  options: readonly { label: string; value: string | boolean }[];
+  onAdd: (discriminant: string | boolean, index?: number) => void;
+  onClose: () => void;
+}) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+  const filteredOptions = useMemo(
+    () =>
+      props.options.filter(option =>
+        option.label.toLowerCase().includes(normalizedSearchTerm)
+      ),
+    [normalizedSearchTerm, props.options]
+  );
+
+  return (
+    <VStack gap="regular">
+      <SearchField
+        aria-label="Search blocks"
+        autoFocus
+        value={searchTerm}
+        onChange={setSearchTerm}
+        onClear={() => setSearchTerm('')}
+        placeholder="Search block type"
+      />
+      <Box
+        borderRadius="large"
+        overflow="auto"
+        maxHeight="scale.4600"
+        padding="small"
+        UNSAFE_className={css({
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+        })}
+      >
+        {filteredOptions.length ? (
+          <VStack gap="small">
+            {filteredOptions.map(option => (
+              <Button
+                key={option.value.toString()}
+                prominence="low"
+                onPress={() => {
+                  props.onAdd(option.value);
+                  props.onClose();
+                }}
+              >
+                {option.label}
+              </Button>
+            ))}
+          </VStack>
+        ) : (
+          <Text color="neutralSecondary" size="small">
+            No block types match "{searchTerm}".
+          </Text>
+        )}
+      </Box>
+    </VStack>
   );
 }
 

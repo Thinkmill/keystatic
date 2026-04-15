@@ -4,6 +4,10 @@ import { confirm, isCancel, log, select, text } from '@clack/prompts';
 import { Context } from '..';
 import { cancelStep } from '../utils';
 
+function hasFile(filePath: string) {
+  return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
+}
+
 export const projectPath = async (ctx: Context) => {
   const pathArg = process.argv[2];
   const target =
@@ -47,6 +51,34 @@ export const projectPath = async (ctx: Context) => {
 
     if (isCancel(appDir)) cancelStep();
     ctx.appDir = appDir as Context['appDir'];
+  }
+
+  const appRoot = path.join(projectDir, ...ctx.appDir.split('/'));
+  const hasExistingFrontendRoutes =
+    hasFile(path.join(appRoot, 'page.tsx')) ||
+    hasFile(path.join(appRoot, '[slug]', 'page.tsx')) ||
+    hasFile(path.join(appRoot, 'layout.tsx'));
+
+  if (hasExistingFrontendRoutes) {
+    const routeMode = await select({
+      message: 'How should existing frontend routes be handled?',
+      options: [
+        {
+          value: 'preserve',
+          label: 'Preserve existing routes and add responsive conversion helpers (recommended)',
+        },
+        {
+          value: 'replace',
+          label: 'Replace root frontend routes with itgkey page-builder routes',
+        },
+      ],
+      initialValue: 'preserve',
+    });
+
+    if (isCancel(routeMode)) cancelStep();
+    ctx.routeMode = routeMode as Context['routeMode'];
+  } else {
+    ctx.routeMode = 'replace';
   }
 
   const shouldInstall = await confirm({

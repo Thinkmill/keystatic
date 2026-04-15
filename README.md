@@ -44,6 +44,13 @@ npx @itgkey/integrate-itgkey@latest ./my-next-app
 ```
 
 The CLI writes the required files and can install dependencies for you.
+It also scaffolds the page-builder style blocks, singleton pages/settings,
+dynamic routes, and starter content files.
+If existing routes are detected, it can preserve them and scaffold conversion helpers
+plus preview routes under `/itgkey-preview`.
+It also creates `itgkey-blocks.ts` (custom block starter) and
+`.github/prompts/itgkey-migration-agent.prompt.md` (agent migration prompt).
+Use that prompt to migrate existing page text/content into CMS fields instead of hardcoded strings.
 
 Manual setup (if preferred):
 
