@@ -223,12 +223,10 @@ export default config({
               label: 'Page title',
               description: 'Label shown in the navigation menu.',
             }),
-            slug: fields.slug({
-              name: {
-                label: 'Route source text',
-                description:
-                  'Used to generate the route slug. Spaces are automatically converted.',
-              },
+            slug: fields.text({
+              label: 'Page slug',
+              description:
+                'Use the same page route value (without leading slash).',
             }),
             visible: fields.checkbox({
               label: 'Visible in navigation',
@@ -239,7 +237,7 @@ export default config({
             label: 'Navigation',
             itemLabel: props =>
               props.fields.title.value ||
-              props.fields.slug.value.slug ||
+              props.fields.slug.value ||
               'Navigation item',
           }
         ),

@@ -1,6 +1,4 @@
 navigation:
   - title: HI
-    slug:
-      name: HI
-      slug: hi
+    slug: hi
     visible: true
