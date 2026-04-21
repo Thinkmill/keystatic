@@ -10,14 +10,14 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/node": "^9.0.2",
-    "@astrojs/react": "^4.2.0",
+    "@astrojs/node": "^10.0.5",
+    "@astrojs/react": "^5.0.3",
     "@braintree/sanitize-url": "^6.0.2",
     "@keystatic/astro": "workspace:^",
     "@keystatic/core": "workspace:^",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "astro": "^5.2.5",
+    "astro": "^6.1.8",
     "direction": "^2.0.1",
     "is-hotkey": "^0.2.0",
     "lodash": "^4.17.21",

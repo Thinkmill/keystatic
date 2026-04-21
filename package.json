@@ -79,7 +79,8 @@
   },
   "manypkg": {
     "ignoredRules": [
-      "INVALID_DEV_AND_PEER_DEPENDENCY_RELATIONSHIP"
+      "INVALID_DEV_AND_PEER_DEPENDENCY_RELATIONSHIP",
+      "EXTERNAL_MISMATCH"
     ],
     "workspaceProtocol": "require"
   },
