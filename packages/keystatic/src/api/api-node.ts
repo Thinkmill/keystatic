@@ -6,9 +6,9 @@ import * as s from 'superstruct';
 import { blobSha } from '../app/trees';
 import { Config } from '../config';
 import {
-  KeystaticRequest,
-  KeystaticResponse,
-  redirect,
+    KeystaticRequest,
+    KeystaticResponse,
+    redirect,
 } from './internal-utils';
 import { getAllowedDirectories, readToDirEntries } from './read-local';
 
@@ -87,7 +87,7 @@ ${
   await fs.writeFile('.env', newEnv);
   await wait(200);
   return redirect(
-    `${basePath}/created-github-app?slug=` + ghAppDataResult.slug
+    `${basePath}/created-github-app/?slug=` + ghAppDataResult.slug
   );
 }
 

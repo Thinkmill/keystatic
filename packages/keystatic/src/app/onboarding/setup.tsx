@@ -83,16 +83,16 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
             } Keystatic`,
             url: deployedURL
               ? new URL(basePath, deployedURL).toString()
-              : `${window.location.origin}${basePath}`,
+              : `${window.location.origin}${basePath}/`,
             public: true,
-            redirect_url: `${window.location.origin}/api${basePath}/github/created-app`,
+            redirect_url: `${window.location.origin}/api${basePath}/github/created-app/`,
             callback_urls: [
-              `${window.location.origin}/api${basePath}/github/oauth/callback`,
-              `http://127.0.0.1/api${basePath}/github/oauth/callback`,
+              `${window.location.origin}/api${basePath}/github/oauth/callback/`,
+              `http://127.0.0.1/api${basePath}/github/oauth/callback/`,
               ...(deployedURL
                 ? [
                     new URL(
-                      `/api${basePath}/github/oauth/callback`,
+                      `/api${basePath}/github/oauth/callback/`,
                       deployedURL
                     ).toString(),
                   ]

@@ -74,7 +74,7 @@ export function createUrqlClient(config: Config): Client {
                   (typeof window !== 'undefined' && window.__KS_BASE_PATH__
                     ? window.__KS_BASE_PATH__
                     : '/keystatic');
-                window.location.href = `${apiBase}/github/login`;
+                window.location.href = `${apiBase}/github/login/`;
               } else {
                 redirectToCloudAuth('', config);
               }

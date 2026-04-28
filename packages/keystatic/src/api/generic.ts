@@ -6,9 +6,9 @@ import { Config } from '..';
 import { bytesToHex } from '../hex';
 import { decryptValue, encryptValue } from './encryption';
 import {
-  KeystaticRequest,
-  KeystaticResponse,
-  redirect,
+    KeystaticRequest,
+    KeystaticResponse,
+    redirect,
 } from './internal-utils';
 
 export type LfsCredentials = {
@@ -153,7 +153,7 @@ export function makeGenericAPIRouteHandler(
         joined === 'github/repo-not-found' ||
         joined === 'github/logout'
       ) {
-        return redirect(`${basePath}/setup`);
+        return redirect(`${basePath}/setup/`);
       }
       return { status: 404, body: 'Not Found' };
     };
@@ -188,7 +188,7 @@ export function makeGenericAPIRouteHandler(
       const access_token = cookies['keystatic-gh-access-token'];
       if (access_token) {
         await fetch(
-          `https://api.github.com/applications/${config.clientId}/token`,
+          `https://api.github.com/applications/${config.clientId}/token/`,
           {
             method: 'DELETE',
             headers: {
@@ -200,7 +200,7 @@ export function makeGenericAPIRouteHandler(
           }
         );
       }
-      return redirect(basePath, [
+      return redirect(`${basePath}/`, [
         ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')],
         ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')],
       ]);
@@ -254,7 +254,7 @@ async function githubOauthCallback(
     typeof fromCookie === 'string' && keystaticRouteRegex.test(fromCookie)
       ? fromCookie
       : undefined;
-  const url = new URL('https://github.com/login/oauth/access_token');
+  const url = new URL('https://github.com/login/oauth/access_token/');
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set('client_secret', config.clientSecret);
   url.searchParams.set('code', code);
@@ -282,7 +282,7 @@ async function githubOauthCallback(
       status: 200,
     };
   }
-  return redirect(`${config.basePath}${from ? `/${from}` : ''}`, headers);
+  return redirect(`${config.basePath}${from ? `/${from}` : ''}/`, headers);
 }
 
 async function getTokenCookies(
@@ -356,7 +356,7 @@ async function refreshGitHubAuth(
   if (!refreshToken) {
     return;
   }
-  const url = new URL('https://github.com/login/oauth/access_token');
+  const url = new URL('https://github.com/login/oauth/access_token/');
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set('client_secret', config.clientSecret);
   url.searchParams.set('grant_type', 'refresh_token');
@@ -385,7 +385,7 @@ async function githubRepoNotFound(
 ): Promise<KeystaticResponse> {
   const headers = await refreshGitHubAuth(req, config);
   if (headers) {
-    return redirect(`${config.basePath}/repo-not-found`, headers);
+    return redirect(`${config.basePath}/repo-not-found/`, headers);
   }
   return githubLogin(req, config);
 }
@@ -402,11 +402,11 @@ async function githubLogin(
       : '/';
 
   const state = bytesToHex(webcrypto.getRandomValues(new Uint8Array(10)));
-  const url = new URL('https://github.com/login/oauth/authorize');
+  const url = new URL('https://github.com/login/oauth/authorize/');
   url.searchParams.set('client_id', config.clientId);
   const redirectUri = new URL(
     [
-      ...reqUrl.pathname.replace(/\/github\/login$/, '').split('/'),
+      ...reqUrl.pathname.replace(/\/github\/login\/?$/, '').split('/'),
       'github',
       'oauth',
       'callback',
@@ -415,7 +415,7 @@ async function githubLogin(
       // new URL(from).searchParams // Forward params
     ]
       .filter(Boolean)
-      .join('/'),
+      .join('/') + '/', // include trailing slash !
     reqUrl.origin
   );
   url.searchParams.set('redirect_uri', `${redirectUri}`);
@@ -504,7 +504,7 @@ async function lfsBatchProxy(
 
   // Build the LFS server URL: https://server/{r2endpoint}/{bucket}/objects/batch
   const lfsUrl = new URL(
-    `/${lfsCredentials.r2Endpoint}/${bucket}/objects/batch`,
+    `/${lfsCredentials.r2Endpoint}/${bucket}/objects/batch/`,
     lfsCredentials.serverUrl
   );
 

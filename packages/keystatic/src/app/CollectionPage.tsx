@@ -614,7 +614,7 @@ function getItemPath(
 ): string {
   return `${basePath}/collection/${encodeURIComponent(
     collection
-  )}/item/${encodeURIComponent(key)}`;
+  )}/item/${encodeURIComponent(key)}/`;
 }
 export function useDebouncedValue<T>(value: T, delay = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);

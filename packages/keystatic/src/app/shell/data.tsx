@@ -381,7 +381,7 @@ export function GitHubAppShellProvider(props: {
           (typeof window !== 'undefined' && window.__KS_BASE_PATH__
             ? window.__KS_BASE_PATH__
             : '/keystatic')
-        }/github/login?from=${router.params.map(encodeURIComponent).join('/')}`;
+        }/github/login/?from=${router.params.map(encodeURIComponent).join('/')}`;
       } else {
         redirectToCloudAuth(
           router.params.map(encodeURIComponent).join('/'),
@@ -402,7 +402,7 @@ export function GitHubAppShellProvider(props: {
         (typeof window !== 'undefined' && window.__KS_BASE_PATH__
           ? window.__KS_BASE_PATH__
           : '/keystatic')
-      }/github/repo-not-found?from=${router.params
+      }/github/repo-not-found/?from=${router.params
         .map(encodeURIComponent)
         .join('/')}`;
     }

@@ -123,7 +123,7 @@ export function UserMenu(user: {
               (typeof window !== 'undefined' && window.__KS_BASE_PATH__
                 ? window.__KS_BASE_PATH__
                 : '/keystatic') +
-              '/github/logout'
+              '/github/logout/'
             : undefined,
         icon: logOutIcon,
       },

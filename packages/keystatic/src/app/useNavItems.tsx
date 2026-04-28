@@ -75,7 +75,7 @@ function populateItemData(
 
   // collection
   if (config.collections && key in config.collections) {
-    const href = `${basePath}/collection/${encodeURIComponent(key)}`;
+    const href = `${basePath}/collection/${encodeURIComponent(key)}/`;
     const changes = changeMap.collections.get(key);
     const changed = changes
       ? changes.changed.size + changes.added.size + changes.removed.size

@@ -30,8 +30,6 @@ export async function loadCollectionActions(
 
   const actions: CollectionAction[] = [];
 
-  debugger;
-
   for (const [path, module] of Object.entries(actionModulesCache)) {
     if (path.includes(collectionName)) {
       actions.push({
@@ -69,8 +67,6 @@ async function loadActionModules(): Promise<
 
   for (const [path, loadModule] of Object.entries(loader)) {
     try {
-      const test = getActionName(path);
-      debugger;
       modules[getActionName(path)] = await loadModule();
     } catch (error) {
       console.error(`Failed to load action module: ${path}`, error);

@@ -80,7 +80,7 @@ function RedirectToBranch(props: { config: Config }) {
           (typeof window !== 'undefined' && window.__KS_BASE_PATH__
             ? window.__KS_BASE_PATH__
             : '/keystatic')
-        }/github/login`;
+        }/github/login/`;
       } else {
         redirectToCloudAuth('', props.config);
       }
@@ -93,7 +93,7 @@ function RedirectToBranch(props: { config: Config }) {
       push(
         `${__ksBase}/branch/${encodeURIComponent(
           data.repository.defaultBranchRef.name
-        )}`
+        )}/`
       );
     }
     if (
@@ -108,7 +108,7 @@ function RedirectToBranch(props: { config: Config }) {
         (typeof window !== 'undefined' && window.__KS_BASE_PATH__
           ? window.__KS_BASE_PATH__
           : '/keystatic')
-      }/github/repo-not-found`;
+      }/github/repo-not-found/`;
     }
   }, [data, error, push, props.config]);
   return null;
@@ -263,7 +263,7 @@ function AuthWrapper(props: {
               (typeof window !== 'undefined' && window.__KS_BASE_PATH__
                 ? window.__KS_BASE_PATH__
                 : '/keystatic')
-            }/github/login${
+            }/github/login/${
               router.params.length
                 ? `?${new URLSearchParams({
                     from: router.params.map(encodeURIComponent).join('/'),

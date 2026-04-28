@@ -52,7 +52,7 @@ export function RouterProvider(props: { children: ReactNode }) {
       : '/keystatic';
   let replaced = parsedUrl.pathname;
   if (replaced.startsWith(__ksBase)) replaced = replaced.slice(__ksBase.length);
-  replaced = replaced.replace(/^\//, '');
+  replaced = replaced.replace(/^\//, '').replace(/\/$/, '');
   const params =
     replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
   const router = {

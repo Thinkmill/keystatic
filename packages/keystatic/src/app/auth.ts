@@ -62,7 +62,7 @@ export async function getAuth(config: Config) {
               (typeof window !== 'undefined' && window.__KS_BASE_PATH__
                 ? window.__KS_BASE_PATH__
                 : '/keystatic')
-            }/github/refresh-token`,
+            }/github/refresh-token/`,
             {
               method: 'POST',
             }

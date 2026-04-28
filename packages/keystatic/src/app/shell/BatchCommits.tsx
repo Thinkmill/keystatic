@@ -264,7 +264,7 @@ function getCollectionItemHref(
 ): string {
   return `${basePath}/collection/${encodeURIComponent(
     collection
-  )}/item/${encodeURIComponent(key)}`;
+  )}/item/${encodeURIComponent(key)}/`;
 }
 
 function useListSelection(items: Change[]) {
@@ -373,7 +373,7 @@ function getChangedItems(
       }
 
       items.push({
-        href: `${basePath}/singleton/${encodeURIComponent(slug)}`,
+        href: `${basePath}/singleton/${encodeURIComponent(slug)}/`,
         slug,
         type: 'changed' as const,
       });
