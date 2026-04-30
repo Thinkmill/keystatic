@@ -18,6 +18,16 @@ module.exports = {
     name: '@storybook/nextjs',
     options: {},
   },
+  webpackFinal: async config => ({
+    ...config,
+    resolve: {
+      ...config.resolve,
+      alias: {
+        ...(config.resolve?.alias ?? {}),
+        '@storybook/react-dom-shim': '@storybook/react-dom-shim/dist/react-18',
+      },
+    },
+  }),
   typescript: {
     reactDocgen: false,
   },
