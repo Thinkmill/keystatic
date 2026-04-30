@@ -37,13 +37,13 @@
   "devDependencies": {
     "@keystatic/core": "workspace:^",
     "@types/set-cookie-parser": "^2.4.2",
-    "astro": "^5.2.5",
+    "astro": "^6.1.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "peerDependencies": {
     "@keystatic/core": "*",
-    "astro": "2 || 3 || 4 || 5",
+    "astro": "2 || 3 || 4 || 5 || 6",
     "react": "^18.2.0 || ^19.0.0",
     "react-dom": "^18.2.0 || ^19.0.0"
   },
