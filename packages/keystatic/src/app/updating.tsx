@@ -29,6 +29,8 @@ import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
 import { base64Encode } from '#base64';
+import { processLfsAdditions } from './git-lfs';
+import { useLfsPatterns } from './shell/data';
 
 const textEncoder = new TextEncoder();
 
@@ -133,6 +135,7 @@ export function useUpsertItem(args: {
   const repoInfo = useRepoInfo();
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
+  const lfsPatterns = useLfsPatterns();
 
   return [
     state,
@@ -210,6 +213,17 @@ export function useUpsertItem(args: {
             branchName: override?.branch ?? currentBranch,
             repositoryNameWithOwner: `${repoInfo.owner}/${repoInfo.name}`,
           };
+          if (
+            args.config.storage.kind === 'github' &&
+            args.config.storage.lfs &&
+            lfsPatterns.length > 0
+          ) {
+            additions = await processLfsAdditions(
+              additions,
+              lfsPatterns
+            );
+          }
+
           const runMutation = (expectedHeadOid: string) =>
             mutate({
               input: {
