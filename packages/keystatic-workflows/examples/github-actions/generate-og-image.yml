@@ -1,0 +1,87 @@
+# .github/workflows/generate-og-image.yml
+#
+# Triggered from Keystatic via useWorkflow('generate-og-image.yml').
+# Generates an Open Graph image for a post and commits it to the repo.
+
+name: Generate OG Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Post slug
+        required: true
+        type: string
+      title:
+        description: Post title
+        required: true
+        type: string
+      description:
+        description: Post description or excerpt
+        required: false
+        type: string
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install @vercel/og
+
+      - name: Generate OG image
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { ImageResponse } = await import('@vercel/og');
+            const fs = require('fs');
+            const path = require('path');
+
+            const title = `${{ inputs.title }}`;
+            const description = `${{ inputs.description }}` || '';
+
+            // Generate OG image using @vercel/og
+            const html = {
+              type: 'div',
+              props: {
+                style: {
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  padding: '60px',
+                  width: '100%',
+                  height: '100%',
+                  background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+                  color: '#e6e6e6',
+                  fontFamily: 'sans-serif',
+                },
+                children: [
+                  { type: 'h1', props: { style: { fontSize: '48px', margin: 0 }, children: title } },
+                  description && { type: 'p', props: { style: { fontSize: '24px', color: '#999', marginTop: '20px' }, children: description } },
+                ].filter(Boolean),
+              },
+            };
+
+            const response = new ImageResponse(html, { width: 1200, height: 630 });
+            const buffer = Buffer.from(await response.arrayBuffer());
+
+            const dir = path.join('public', 'og');
+            fs.mkdirSync(dir, { recursive: true });
+            fs.writeFileSync(path.join(dir, `${{ inputs.slug }}.png`), buffer);
+
+            console.log(`Generated OG image: public/og/${{ inputs.slug }}.png`);
+
+      - name: Commit OG image
+        run: |
+          git config user.name "keystatic-bot"
+          git config user.email "bot@keystatic.com"
+          git add "public/og/${{ inputs.slug }}.png"
+          git commit -m "chore: Generate OG image for ${{ inputs.slug }}" || echo "No changes"
+          git push

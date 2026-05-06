@@ -1,0 +1,276 @@
+---
+title: Workflows
+summary: >-
+  Trigger GitHub Actions workflows from Keystatic using the @keystatic/workflows
+  adapter package.
+---
+
+The `@keystatic/workflows` package connects Keystatic's hooks and actions to [GitHub Actions](https://docs.github.com/en/actions) — enabling you to trigger automated workflows directly from the Keystatic dashboard when content is created, saved, or deleted.
+
+Since Keystatic already integrates deeply with GitHub for content storage, GitHub Actions is a natural execution engine for content workflows.
+
+## Installation
+
+```bash
+npm install @keystatic/workflows
+```
+
+No additional build tooling or config wrappers needed — workflows are standard GitHub Actions YAML files.
+
+## Core concepts
+
+The adapter provides two functions:
+
+- **`useWorkflow(workflowFile, options)`** — dispatches a GitHub Actions workflow and shows the result as a toast notification. Used for manual actions and fire-and-forget after-hooks.
+- **`awaitWorkflow(workflowFile, options)`** — dispatches a workflow and waits for it to complete. Used for before-hooks that need to cancel or modify the operation based on the workflow result. Supports `.then()` chaining.
+
+Both functions communicate with GitHub Actions through an API endpoint (default: `/api/workflows`) that calls the GitHub `workflow_dispatch` API.
+
+## Writing a workflow
+
+Workflows are standard GitHub Actions YAML files with `workflow_dispatch` triggers. The `inputs` define what data Keystatic passes to the workflow:
+
+```yaml
+# .github/workflows/translate-post.yml
+name: Translate Post
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Source post slug
+        required: true
+        type: string
+      title:
+        description: Source post title
+        required: true
+        type: string
+      language:
+        description: Target language code
+        required: true
+        type: string
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Translate and create post
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const slug = '${{ inputs.language }}-${{ inputs.slug }}';
+            const title = '[${{ inputs.language }}] ${{ inputs.title }}';
+
+            fs.mkdirSync(`posts/${slug}`, { recursive: true });
+            fs.writeFileSync(`posts/${slug}/index.yaml`, `title: ${title}\nslug: ${slug}\n`);
+            fs.copyFileSync(
+              `posts/${{ inputs.slug }}/content.mdoc`,
+              `posts/${slug}/content.mdoc`
+            );
+
+      - name: Commit translated post
+        run: |
+          git config user.name "keystatic-bot"
+          git config user.email "bot@keystatic.com"
+          git add posts/
+          git commit -m "feat: Add ${{ inputs.language }} translation of ${{ inputs.slug }}"
+          git push
+```
+
+Key points:
+- Use `workflow_dispatch` with `inputs` to receive data from Keystatic
+- Input values are always strings (GitHub Actions limitation)
+- Workflows can read/write files, call APIs, run scripts — anything GitHub Actions supports
+- Use `actions/upload-artifact` to pass structured results back to the API route
+
+## Creating the API endpoint
+
+The API route dispatches workflows via the GitHub REST API:
+
+```typescript
+// app/api/workflows/route.ts
+import { NextResponse } from 'next/server';
+
+const GITHUB_API = 'https://api.github.com';
+const REPO_OWNER = process.env.KEYSTATIC_GITHUB_OWNER!;
+const REPO_NAME = process.env.KEYSTATIC_GITHUB_REPO!;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN!;
+
+export async function POST(request: Request) {
+  const { workflow, input, wait, timeout, pollInterval } = await request.json();
+
+  // Dispatch the workflow
+  const res = await fetch(
+    `${GITHUB_API}/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${workflow}/dispatches`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+      body: JSON.stringify({ ref: 'main', inputs: input }),
+    }
+  );
+
+  if (!res.ok) {
+    return NextResponse.json({ error: await res.text() }, { status: res.status });
+  }
+
+  if (!wait) {
+    return NextResponse.json({ status: 'dispatched', workflow });
+  }
+
+  // Poll for completion if wait=true (used by awaitWorkflow)
+  const result = await pollForCompletion(workflow, timeout, pollInterval);
+  return NextResponse.json(result);
+}
+```
+
+See the full example with polling in `examples/api-routes/workflows-route.ts`.
+
+## Environment variables
+
+| Variable | Description |
+|---|---|
+| `KEYSTATIC_GITHUB_OWNER` | Repository owner (e.g. `your-org`) |
+| `KEYSTATIC_GITHUB_REPO` | Repository name (e.g. `your-site`) |
+| `GITHUB_TOKEN` | Personal access token or app token with `actions:write` scope |
+| `GITHUB_DEFAULT_BRANCH` | Branch to dispatch workflows on (default: `main`) |
+
+For Keystatic GitHub storage mode, the owner and repo are already in your config. The `GITHUB_TOKEN` needs `actions:write` permission in addition to the standard repo permissions.
+
+## Connecting workflows to actions
+
+Use `useWorkflow` with the workflow **filename** (e.g. `translate-post.yml`):
+
+```typescript
+// keystatic.config.ts
+import { registerActions } from '@keystatic/core';
+import { useWorkflow } from '@keystatic/workflows';
+
+registerActions({ collection: 'posts' }, [
+  {
+    label: 'Translate to Spanish',
+    description: 'Duplicate and translate this post',
+    handler: useWorkflow('translate-post.yml', {
+      input: (ctx) => ({
+        slug: ctx.slug ?? '',
+        title: ctx.data.title as string,
+        language: 'es',
+      }),
+    }),
+  },
+]);
+```
+
+The `input` mapper must return `Record<string, string>` since GitHub Actions inputs are always strings.
+
+## Connecting workflows to hooks
+
+Use `useWorkflow` for fire-and-forget after-hooks:
+
+```typescript
+import { registerHooks } from '@keystatic/core';
+import { useWorkflow } from '@keystatic/workflows';
+
+registerHooks({ collection: 'posts' }, {
+  afterSave: [
+    useWorkflow('generate-og-image.yml', {
+      input: (ctx) => ({
+        slug: ctx.slug ?? '',
+        title: ctx.data.title as string,
+      }),
+    }),
+  ],
+});
+```
+
+Use `awaitWorkflow` with `.then()` for before-hooks that should cancel based on the result:
+
+```typescript
+import { awaitWorkflow } from '@keystatic/workflows';
+
+registerHooks({ collection: 'posts' }, {
+  beforeSave: [
+    awaitWorkflow('content-audit.yml', { timeout: 120000 }).then((result) => {
+      const r = result as { conclusion: string };
+      if (r.conclusion === 'failure') {
+        return { cancel: true, reason: 'Content audit failed — check GitHub Actions for details' };
+      }
+    }),
+  ],
+});
+```
+
+## Options
+
+### `useWorkflow(workflowFile, options?)`
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `input` | `(ctx) => Record<string, string>` | `{}` | Maps hook/action context to workflow_dispatch inputs |
+| `endpoint` | `string` | `'/api/workflows'` | API route that dispatches the workflow |
+| `formatResult` | `(result) => ActionResult` | auto-detect | Custom formatter for the toast message |
+
+### `awaitWorkflow(workflowFile, options?)`
+
+Same options as `useWorkflow`, plus:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `timeout` | `number` | `120000` | Milliseconds to wait for the workflow run to complete |
+| `pollInterval` | `number` | `3000` | Milliseconds between status polls |
+
+### `.then(onResult)`
+
+Chain `.then()` on `awaitWorkflow` to transform the workflow result into a `BeforeHookResult`:
+
+```typescript
+awaitWorkflow('my-check.yml', { timeout: 60000 }).then((result) => {
+  // result contains: { status, conclusion, html_url, run_id, workflow }
+  if (result.conclusion === 'failure') {
+    return { cancel: true, reason: 'Workflow check failed' };
+  }
+  // Return void to proceed normally
+});
+```
+
+## Example workflows
+
+The `@keystatic/workflows` package includes example GitHub Actions workflows:
+
+| Workflow | Description |
+|---|---|
+| `translate-post.yml` | Duplicate and translate a post to another language |
+| `content-audit.yml` | SEO, quality, and publishing readiness checks |
+| `generate-og-image.yml` | Generate Open Graph images using @vercel/og |
+| `ai-content-assistant.yml` | AI-powered summary, title suggestions, and tag generation |
+
+Copy these from `node_modules/@keystatic/workflows/examples/github-actions/` to your `.github/workflows/` directory.
+
+## Combining with plain hooks
+
+You can mix GitHub Actions workflows with plain async hooks. Use plain hooks for simple client-side validations and GitHub Actions for heavy server-side operations:
+
+```typescript
+registerHooks({ collection: 'posts' }, {
+  // Plain hook — runs instantly in the browser
+  beforeSave: [
+    async (ctx) => {
+      const title = ctx.data.title as string;
+      if (title.length < 3) {
+        return { cancel: true, reason: 'Title too short' };
+      }
+    },
+  ],
+  // GitHub Actions — runs on GitHub's infrastructure
+  afterSave: [
+    useWorkflow('generate-og-image.yml', {
+      input: ctx => ({ slug: ctx.slug ?? '', title: ctx.data.title as string }),
+    }),
+  ],
+});
+```

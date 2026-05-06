@@ -4,6 +4,7 @@ import { ReactElement } from 'react';
 import { ComponentSchema, FormField, SlugFormField } from './form/api';
 import type { Locale } from './app/l10n/locales';
 import { RepoConfig } from './app/repo-config';
+import { HooksConfig, Action } from './hooks/types';
 
 // Common
 // ----------------------------------------------------------------------------
@@ -31,6 +32,8 @@ export type Collection<
   parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
   schema: Schema;
+  hooks?: HooksConfig;
+  actions?: Action[];
 };
 
 export type Singleton<Schema extends Record<string, ComponentSchema>> = {
@@ -40,12 +43,15 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   format?: Format;
   previewUrl?: string;
   schema: Schema;
+  hooks?: HooksConfig;
+  actions?: Action[];
 };
 
 type CommonConfig<Collections, Singletons> = {
   locale?: Locale;
   cloud?: { project: string };
   ui?: UserInterface<Collections, Singletons>;
+  hooks?: HooksConfig;
 };
 
 type CommonRemoteStorageConfig = {
@@ -193,12 +199,12 @@ export function collection<
         : never;
     }[keyof Schema][];
   }
-): Collection<Schema, SlugField & string> {
+) {
   return collection;
 }
 
 export function singleton<Schema extends Record<string, ComponentSchema>>(
   collection: Singleton<Schema>
-): Singleton<Schema> {
+) {
   return collection;
 }

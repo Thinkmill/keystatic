@@ -1,0 +1,127 @@
+# .github/workflows/content-audit.yml
+#
+# Triggered from Keystatic via awaitWorkflow('content-audit.yml').
+# Runs SEO, quality, and publishing readiness checks on a post.
+# Returns results as a workflow artifact that the API route reads.
+
+name: Content Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Post slug to audit
+        required: true
+        type: string
+      title:
+        description: Post title
+        required: true
+        type: string
+      has_content:
+        description: Whether the post has content body
+        required: true
+        type: string
+      publish_date:
+        description: Publish date (ISO string or empty)
+        required: false
+        type: string
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run SEO checks
+        id: seo
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `${{ inputs.title }}`;
+            const slug = `${{ inputs.slug }}`;
+            const issues = [];
+
+            if (title.length < 20) {
+              issues.push({ check: 'SEO', severity: 'warning', message: `Title is short (${title.length} chars). Aim for 50-60.` });
+            }
+            if (title.length > 60) {
+              issues.push({ check: 'SEO', severity: 'warning', message: 'Title may be truncated in search results.' });
+            }
+            if (slug.includes('_')) {
+              issues.push({ check: 'SEO', severity: 'warning', message: 'Slug contains underscores — prefer hyphens.' });
+            }
+
+            core.setOutput('issues', JSON.stringify(issues));
+
+      - name: Run quality checks
+        id: quality
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `${{ inputs.title }}`;
+            const hasContent = `${{ inputs.has_content }}` === 'true';
+            const issues = [];
+
+            if (title && title[0] !== title[0].toUpperCase()) {
+              issues.push({ check: 'Style', severity: 'warning', message: 'Title should start with uppercase.' });
+            }
+            if (!hasContent) {
+              issues.push({ check: 'Content', severity: 'error', message: 'Post has no content body.' });
+            }
+
+            core.setOutput('issues', JSON.stringify(issues));
+
+      - name: Run publish readiness checks
+        id: publish
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `${{ inputs.title }}`;
+            const publishDate = `${{ inputs.publish_date }}`;
+            const issues = [];
+
+            if (!publishDate) {
+              issues.push({ check: 'Publishing', severity: 'warning', message: 'No publish date set.' });
+            }
+            const placeholders = ['untitled', 'test', 'draft', 'new post'];
+            if (placeholders.some(p => title.toLowerCase().includes(p))) {
+              issues.push({ check: 'Publishing', severity: 'warning', message: 'Title looks like a placeholder.' });
+            }
+
+            core.setOutput('issues', JSON.stringify(issues));
+
+      - name: Calculate score and save report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const seo = JSON.parse(`${{ steps.seo.outputs.issues }}`);
+            const quality = JSON.parse(`${{ steps.quality.outputs.issues }}`);
+            const publish = JSON.parse(`${{ steps.publish.outputs.issues }}`);
+            const issues = [...seo, ...quality, ...publish];
+
+            let score = 100;
+            for (const i of issues) {
+              if (i.severity === 'error') score -= 25;
+              if (i.severity === 'warning') score -= 10;
+              if (i.severity === 'info') score -= 2;
+            }
+            score = Math.max(0, score);
+
+            const report = {
+              slug: `${{ inputs.slug }}`,
+              passed: issues.filter(i => i.severity === 'error').length === 0,
+              issues,
+              score,
+            };
+
+            const fs = require('fs');
+            fs.writeFileSync('audit-report.json', JSON.stringify(report, null, 2));
+            console.log(`Audit complete: score ${score}/100, ${issues.length} issues`);
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-report
+          path: audit-report.json
+          retention-days: 1

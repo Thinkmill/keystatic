@@ -29,6 +29,7 @@ import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
 import { base64Encode } from '#base64';
+import { useHookExecutor } from './useHookExecutor';
 
 const textEncoder = new TextEncoder();
 
@@ -133,11 +134,26 @@ export function useUpsertItem(args: {
   const repoInfo = useRepoInfo();
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
+  const hookExecutor = useHookExecutor();
 
   return [
     state,
     async (override?: { sha: string; branch: string }): Promise<boolean> => {
       try {
+        const hookEvent = args.initialFiles === undefined ? 'beforeCreate' : 'beforeSave';
+        const afterEvent = args.initialFiles === undefined ? 'afterCreate' : 'afterSave';
+
+        const beforeResult = await hookExecutor.executeBefore({
+          event: hookEvent,
+          slug: args.slug?.value,
+          data: args.state as Record<string, unknown>,
+        });
+
+        if (!beforeResult.proceed) {
+          setState({ kind: 'error', error: new Error(beforeResult.reason ?? 'Operation cancelled by hook') });
+          return false;
+        }
+
         const unscopedTree =
           unscopedTreeData.kind === 'loaded'
             ? unscopedTreeData.data.tree
@@ -299,6 +315,11 @@ export function useUpsertItem(args: {
           }
           const target = result.data?.createCommitOnBranch?.ref?.target;
           if (target) {
+            hookExecutor.executeAfter({
+              event: afterEvent,
+              slug: args.slug?.value,
+              data: beforeResult.data,
+            });
             setState({ kind: 'updated' });
             return true;
           }
@@ -324,6 +345,11 @@ export function useUpsertItem(args: {
           const newTree: TreeEntry[] = await res.json();
           const { tree } = await hydrateTreeCacheWithEntries(newTree);
           setTreeSha(await treeSha(tree));
+          hookExecutor.executeAfter({
+            event: afterEvent,
+            slug: args.slug?.value,
+            data: beforeResult.data,
+          });
           setState({ kind: 'updated' });
           return true;
         }
@@ -380,11 +406,23 @@ export function useDeleteItem(args: {
   const repoInfo = useRepoInfo();
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
+  const hookExecutor = useHookExecutor();
 
   return [
     state,
     async () => {
       try {
+        const beforeResult = await hookExecutor.executeBefore({
+          event: 'beforeDelete',
+          slug: args.basePath.split('/').pop(),
+          data: {},
+        });
+
+        if (!beforeResult.proceed) {
+          setState({ kind: 'error', error: new Error(beforeResult.reason ?? 'Delete cancelled by hook') });
+          return false;
+        }
+
         const unscopedTree =
           unscopedTreeData.kind === 'loaded'
             ? unscopedTreeData.data.tree
@@ -440,6 +478,11 @@ export function useDeleteItem(args: {
           if (error) {
             throw error;
           }
+          hookExecutor.executeAfter({
+            event: 'afterDelete',
+            slug: args.basePath.split('/').pop(),
+            data: {},
+          });
           setState({ kind: 'updated' });
           return true;
         } else {
@@ -460,6 +503,11 @@ export function useDeleteItem(args: {
           const newTree: TreeEntry[] = await res.json();
           const { tree } = await hydrateTreeCacheWithEntries(newTree);
           setTreeSha(await treeSha(tree));
+          hookExecutor.executeAfter({
+            event: 'afterDelete',
+            slug: args.basePath.split('/').pop(),
+            data: {},
+          });
           setState({ kind: 'updated' });
           return true;
         }

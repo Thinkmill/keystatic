@@ -1,0 +1,142 @@
+---
+title: Actions
+summary: >-
+  Add custom action buttons to the Keystatic editor toolbar that content editors
+  can trigger manually.
+---
+
+Actions are developer-defined operations that appear as a dropdown menu in the item editor toolbar. They let content editors trigger workflows, run validations, or perform tasks without leaving the Keystatic dashboard.
+
+## Registering actions
+
+Use `registerActions` to attach actions to a collection or singleton:
+
+```typescript
+import { registerActions } from '@keystatic/core';
+
+registerActions({ collection: 'posts' }, [
+  {
+    label: 'Run Content Audit',
+    description: 'Check SEO, readability, and publishing readiness',
+    handler: async (ctx) => {
+      // Perform the action
+      const issues = await auditContent(ctx.data);
+      return { message: `Audit complete: ${issues.length} issues found` };
+    },
+  },
+]);
+```
+
+## Action definition
+
+Each action has the following shape:
+
+```typescript
+type Action = {
+  label: string;              // Button/menu label
+  description?: string;       // Shown as secondary text in the dropdown
+  icon?: ReactElement;        // Optional icon (from @keystar/ui/icon)
+  handler: (ctx) => Promise<ActionResult | void>;
+  when?: {                    // Conditional visibility
+    match?: (ctx: { slug?: string; data: Record<string, unknown> }) => boolean;
+  };
+};
+```
+
+## Action context
+
+The handler receives a context object:
+
+```typescript
+type ActionContext = {
+  trigger: 'manual';
+  collection?: string;
+  singleton?: string;
+  slug?: string;
+  data: Record<string, unknown>;  // current field values
+  storage: { kind: 'local' | 'github' | 'cloud' };
+  update(data: Partial<Record<string, unknown>>): Promise<void>;
+};
+```
+
+The `update` function lets your action write back to the current entry:
+
+```typescript
+handler: async (ctx) => {
+  const summary = await generateSummary(ctx.data.content);
+  await ctx.update({ summary });
+  return { message: 'Summary generated and saved' };
+},
+```
+
+## Action results
+
+The handler can return a result that controls the toast notification shown to the editor:
+
+```typescript
+// Success toast
+return { message: 'Action completed successfully' };
+
+// Error toast
+return { error: 'Something went wrong' };
+
+// No toast (silent)
+return;
+```
+
+## Conditional actions
+
+Use the `when.match` function to show actions only when certain conditions are met:
+
+```typescript
+registerActions({ collection: 'posts' }, [
+  {
+    label: 'Translate to Spanish',
+    when: {
+      match: (ctx) => (ctx.data.language as string) === 'en',
+    },
+    handler: async (ctx) => {
+      // Only shown for English posts
+    },
+  },
+]);
+```
+
+## UI placement
+
+Actions appear as a **dropdown menu** triggered by a zap icon button in the editor toolbar, next to the existing action icons (reset, delete, copy, paste) and the Save button.
+
+- The button only appears when at least one action is registered for the current collection or singleton
+- All registered (and visible) actions appear in the dropdown
+- While an action is running, the button is disabled to prevent double-execution
+
+## Multiple actions
+
+Register multiple actions in a single call:
+
+```typescript
+registerActions({ collection: 'posts' }, [
+  {
+    label: 'Preview on Site',
+    handler: async (ctx) => {
+      window.open(`/posts/${ctx.slug}`, '_blank');
+      return { message: 'Preview opened' };
+    },
+  },
+  {
+    label: 'Export as Markdown',
+    handler: async (ctx) => {
+      // Export logic
+      return { message: 'Exported' };
+    },
+  },
+  {
+    label: 'Run SEO Check',
+    description: 'Validate title length, slug format, and meta fields',
+    handler: async (ctx) => {
+      // SEO validation logic
+      return { message: 'SEO check passed' };
+    },
+  },
+]);
+```
