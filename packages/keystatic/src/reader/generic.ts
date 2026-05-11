@@ -196,6 +196,8 @@ export type MinimalFs = {
   fileExists(path: string): Promise<boolean>;
 };
 
+const decoder = new TextDecoder();
+
 async function getAllEntries(
   parent: string,
   fsReader: MinimalFs
@@ -350,7 +352,7 @@ const readItem = cache(async function readItem(
         }
         if (schema.formKind === 'content') {
           contentFieldPathsToEagerlyResolve?.push(path);
-          return async () => {
+          return async (options?: { raw: boolean }) => {
             let content: undefined | Uint8Array;
             const filename =
               pathWithArrayFieldSlugs.join('/') + schema.contentExtension;
@@ -360,6 +362,10 @@ const readItem = cache(async function readItem(
               content =
                 (await fsReader.readFile(`${itemDir}/${filename}`)) ??
                 undefined;
+            }
+
+            if (options?.raw) {
+              return decoder.decode(content);
             }
 
             return schema.reader.parse(value, { content });
