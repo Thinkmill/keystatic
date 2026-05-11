@@ -114,7 +114,7 @@ someContent: fields.mdx.inline({
 })
 ```
 
-this will write content next to other fields like this instead of in a different file:
+This will write content next to other fields like this instead of in a different file:
 
 ```yaml
 someContent: |
@@ -122,6 +122,8 @@ someContent: |
 
   Some content
 ```
+
+Depending on your Integration, you may have to transform those sections manually. Astro, for example, will return them as plain text. You can [use mikromark](https://github.com/micromark/micromark) – which Keystatic uses internally – to generate the HTML.
 
 ---
 
