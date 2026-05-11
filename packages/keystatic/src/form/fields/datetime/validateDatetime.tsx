@@ -3,7 +3,7 @@ export function validateDatetime(
   value: string | null,
   label: string
 ) {
-  if (value !== null && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) {
+  if (value !== null && isNaN(Date.parse(value))) {
     return `${label} is not a valid datetime`;
   }
 
@@ -12,15 +12,16 @@ export function validateDatetime(
   }
   if ((validation?.min || validation?.max) && value !== null) {
     const datetime = new Date(value);
+    const utcDatetime = new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000);
     if (validation?.min !== undefined) {
       const min = new Date(validation.min);
-      if (datetime < min) {
+      if (utcDatetime < min) {
         return `${label} must be after ${min.toISOString()}`;
       }
     }
     if (validation?.max !== undefined) {
       const max = new Date(validation.max);
-      if (datetime > max) {
+      if (utcDatetime > max) {
         return `${label} must be no later than ${max.toISOString()}`;
       }
     }
