@@ -1,5 +1,11 @@
 # @keystatic/astro
 
+## 5.1.0
+
+### Minor Changes
+
+- [#1534](https://github.com/Thinkmill/keystatic/pull/1534) [`f5ddef2`](https://github.com/Thinkmill/keystatic/commit/f5ddef2d693a6bce1de069a924d38334899cdf0a) Thanks [@arbaev](https://github.com/arbaev)! - Add support for Astro 6 in `peerDependencies`
+
 ## 5.0.6
 
 ### Patch Changes
