@@ -15,7 +15,12 @@ import {
   useSetTreeSha,
 } from './shell/data';
 import { hydrateBlobCache } from './useItemData';
-import { FormatInfo, getEntryDataFilepath, getPathPrefix } from './path-utils';
+import {
+  FormatInfo,
+  getEntryDataFilepath,
+  getPathPrefix,
+  normalizePosixPath,
+} from './path-utils';
 import {
   getTreeNodeAtPath,
   TreeEntry,
@@ -311,11 +316,23 @@ export function useUpsertItem(args: {
               'no-cors': '1',
             },
             body: JSON.stringify({
+              // Normalize path strings at the wire boundary so that any
+              // unresolved `..` segments (introduced when relative image
+              // references like `../../assets/blog/x.png` get concatenated
+              // with the entry's base path during serialization) are
+              // collapsed before they hit the API's `getIsPathValid`
+              // refinement, which rejects any `..` segment outright. The
+              // upstream diff math runs on raw paths so additions and
+              // deletions still cancel symmetrically; only the final wire
+              // payload is normalized.
               additions: additions.map(addition => ({
                 ...addition,
+                path: normalizePosixPath(addition.path),
                 contents: base64Encode(addition.contents),
               })),
-              deletions,
+              deletions: deletions.map(d => ({
+                path: normalizePosixPath(d.path),
+              })),
             }),
           });
           if (!res.ok) {
@@ -451,7 +468,11 @@ export function useDeleteItem(args: {
             },
             body: JSON.stringify({
               additions: [],
-              deletions: deletions.map(path => ({ path })),
+              // Normalize wire-boundary paths — see corresponding comment in
+              // the upsert path above.
+              deletions: deletions.map(path => ({
+                path: normalizePosixPath(path),
+              })),
             }),
           });
           if (!res.ok) {
