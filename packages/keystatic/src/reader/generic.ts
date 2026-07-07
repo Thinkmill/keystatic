@@ -259,10 +259,10 @@ const listCollection = cache(async function listCollection(
 export function collectionReader(
   collection: string,
   config: Config,
-  fsReader: MinimalFs
+  fsReader: MinimalFs,
+  locale?: string
 ): CollectionReader<any, any> {
   const formatInfo = getCollectionFormat(config, collection);
-  const collectionPath = getCollectionPath(config, collection);
   const collectionConfig = config.collections![collection];
   const schema = fields.object(collectionConfig.schema);
   const glob = getSlugGlobForCollection(config, collection);
@@ -272,7 +272,7 @@ export function collectionReader(
     readItem(
       schema,
       formatInfo,
-      getCollectionItemPath(config, collection, slug),
+      getCollectionItemPath(config, collection, slug, locale),
       args[0]?.resolveLinkedFiles,
       `"${slug}" in collection "${collection}"`,
       fsReader,
@@ -282,7 +282,13 @@ export function collectionReader(
     );
 
   const list = () =>
-    listCollection(collectionPath, glob, formatInfo, extension, fsReader);
+    listCollection(
+      getCollectionPath(config, collection, locale),
+      glob,
+      formatInfo,
+      extension,
+      fsReader
+    );
 
   return {
     read,
@@ -403,16 +409,16 @@ const readItem = cache(async function readItem(
 export function singletonReader(
   singleton: string,
   config: Config,
-  fsReader: MinimalFs
+  fsReader: MinimalFs,
+  locale?: string
 ): SingletonReader<any> {
   const formatInfo = getSingletonFormat(config, singleton);
-  const singletonPath = getSingletonPath(config, singleton);
   const schema = fields.object(config.singletons![singleton].schema);
   const read: SingletonReader<any>['read'] = (...args) =>
     readItem(
       schema,
       formatInfo,
-      singletonPath,
+      getSingletonPath(config, singleton, locale),
       args[0]?.resolveLinkedFiles,
       `singleton "${singleton}"`,
       fsReader,

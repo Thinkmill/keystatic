@@ -6,6 +6,20 @@ export function fixPath(path: string) {
   return path.replace(/^\.?\/+/, '').replace(/\/*$/, '');
 }
 
+export const LOCALE_TOKEN = '{locale}';
+
+export function substituteLocale(path: string, locale: string | undefined) {
+  if (!path.includes(LOCALE_TOKEN)) {
+    return path;
+  }
+  if (locale === undefined) {
+    throw new Error(
+      `Path "${path}" contains the ${LOCALE_TOKEN} token but no locale was provided. Pass a locale (e.g. \`createReader(dir, config, { locale })\`) or set config.i18n.`
+    );
+  }
+  return path.split(LOCALE_TOKEN).join(locale);
+}
+
 const collectionPath = /\/\*\*?(?:$|\/)/;
 
 function getConfiguredCollectionPath(config: Config, collection: string) {
@@ -19,10 +33,14 @@ function getConfiguredCollectionPath(config: Config, collection: string) {
   return path;
 }
 
-export function getCollectionPath(config: Config, collection: string) {
+export function getCollectionPath(
+  config: Config,
+  collection: string,
+  locale?: string
+) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
   const path = fixPath(configuredPath.replace(/\*\*?.*$/, ''));
-  return path;
+  return substituteLocale(path, locale);
 }
 
 export function getCollectionFormat(config: Config, collection: string) {
@@ -36,11 +54,12 @@ export function getSingletonFormat(config: Config, singleton: string) {
 export function getCollectionItemPath(
   config: Config,
   collection: string,
-  slug: string
+  slug: string,
+  locale?: string
 ) {
-  const basePath = getCollectionPath(config, collection);
+  const basePath = getCollectionPath(config, collection, locale);
   const suffix = getCollectionItemSlugSuffix(config, collection);
-  return `${basePath}/${slug}${suffix}`;
+  return substituteLocale(`${basePath}/${slug}${suffix}`, locale);
 }
 
 export function getEntryDataFilepath(dir: string, formatInfo: FormatInfo) {
@@ -66,7 +85,11 @@ export function getCollectionItemSlugSuffix(
   return path ? `/${path}` : '';
 }
 
-export function getSingletonPath(config: Config, singleton: string) {
+export function getSingletonPath(
+  config: Config,
+  singleton: string,
+  locale?: string
+) {
   if (config.singletons![singleton].path?.includes('*')) {
     throw new Error(
       `Singleton paths cannot include * but ${singleton} has ${
@@ -74,7 +97,10 @@ export function getSingletonPath(config: Config, singleton: string) {
       }`
     );
   }
-  return fixPath(config.singletons![singleton].path ?? singleton);
+  return substituteLocale(
+    fixPath(config.singletons![singleton].path ?? singleton),
+    locale
+  );
 }
 
 export function getDataFileExtension(formatInfo: FormatInfo) {
@@ -211,4 +237,67 @@ export function getPathPrefix(storage: Config['storage']) {
     return undefined;
   }
   return fixPath(storage.pathPrefix) + '/';
+}
+
+export function getContentLocales(config: Config): string[] {
+  return Object.keys(config.i18n?.locales ?? {});
+}
+
+export function isLocalized(
+  entryConfig: { localized?: boolean } | undefined
+): boolean {
+  return entryConfig?.localized === true;
+}
+
+export function assertValidI18nConfig(config: Config): void {
+  const i18n = config.i18n;
+  if (i18n) {
+    const localeCodes = Object.keys(i18n.locales ?? {});
+    if (localeCodes.length === 0) {
+      throw new Error(`config.i18n.locales must contain at least one locale`);
+    }
+    if (!localeCodes.includes(i18n.defaultLocale)) {
+      throw new Error(
+        `config.i18n.defaultLocale "${
+          i18n.defaultLocale
+        }" is not one of config.i18n.locales (${localeCodes.join(', ')})`
+      );
+    }
+  }
+
+  const checkEntry = (
+    type: 'Collection' | 'Singleton',
+    key: string,
+    entry: { path?: string; localized?: boolean }
+  ) => {
+    const hasToken = !!entry.path?.includes(LOCALE_TOKEN);
+    const localized = isLocalized(entry);
+    if (hasToken && !i18n) {
+      throw new Error(
+        `${type} "${key}" uses the ${LOCALE_TOKEN} token in its path but config.i18n is not set`
+      );
+    }
+    if (localized && !i18n) {
+      throw new Error(
+        `${type} "${key}" is marked localized but config.i18n is not set`
+      );
+    }
+    if (localized && !hasToken) {
+      throw new Error(
+        `${type} "${key}" is marked localized but its path does not contain the ${LOCALE_TOKEN} token`
+      );
+    }
+    if (hasToken && !localized) {
+      throw new Error(
+        `${type} "${key}" uses the ${LOCALE_TOKEN} token in its path but is not marked localized`
+      );
+    }
+  };
+
+  for (const [key, collection] of Object.entries(config.collections ?? {})) {
+    checkEntry('Collection', key, collection);
+  }
+  for (const [key, singleton] of Object.entries(config.singletons ?? {})) {
+    checkEntry('Singleton', key, singleton);
+  }
 }

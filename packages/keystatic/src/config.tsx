@@ -17,12 +17,19 @@ export type Format =
     };
 export type EntryLayout = 'content' | 'form';
 export type Glob = '*' | '**';
+
+export type I18nConfig = {
+  locales: Record<string, string>;
+  defaultLocale: string;
+};
+
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends string,
 > = {
   label: string;
   path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
+  localized?: boolean;
   entryLayout?: EntryLayout;
   format?: Format;
   previewUrl?: string;
@@ -36,6 +43,7 @@ export type Collection<
 export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   label: string;
   path?: string;
+  localized?: boolean;
   entryLayout?: EntryLayout;
   format?: Format;
   previewUrl?: string;
@@ -44,6 +52,7 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
 
 type CommonConfig<Collections, Singletons> = {
   locale?: Locale;
+  i18n?: I18nConfig;
   cloud?: { project: string };
   ui?: UserInterface<Collections, Singletons>;
 };

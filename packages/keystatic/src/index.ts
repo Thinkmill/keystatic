@@ -14,6 +14,7 @@ export type {
   Format,
   GitHubConfig,
   Glob,
+  I18nConfig,
   LocalConfig,
   Singleton,
 } from './config';
