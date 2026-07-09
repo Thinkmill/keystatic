@@ -1,5 +1,13 @@
 # @keystatic/templates-astro
 
+## 0.0.65
+
+### Patch Changes
+
+- Updated dependencies [[`480fd87`](https://github.com/Thinkmill/keystatic/commit/480fd8752e3d01400f31b9810619db9d044dd2f6)]:
+  - @keystatic/astro@5.2.0
+  - @keystatic/core@0.5.51
+
 ## 0.0.64
 
 ### Patch Changes
