@@ -1,5 +1,5 @@
-import { useCheckboxGroup } from '@react-aria/checkbox';
-import { useCheckboxGroupState } from '@react-stately/checkbox';
+import { useCheckboxGroup } from 'react-aria/useCheckboxGroup';
+import { useCheckboxGroupState } from 'react-stately/useCheckboxGroupState';
 import React, {
   ForwardedRef,
   ForwardRefExoticComponent,

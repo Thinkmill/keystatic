@@ -1,6 +1,8 @@
-import { useMenu } from '@react-aria/menu';
-import { mergeProps, useObjectRef, useSyncRef } from '@react-aria/utils';
-import { useTreeState } from '@react-stately/tree';
+import { useMenu } from 'react-aria/useMenu';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useSyncRef } from 'react-aria/private/utils/useSyncRef';
+import { useTreeState } from 'react-stately/useTreeState';
 import React, { RefObject, ReactElement, useContext } from 'react';
 
 import { listStyles } from '@keystar/ui/listbox';

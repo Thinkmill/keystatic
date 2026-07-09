@@ -1,7 +1,7 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useTextField } from '@react-aria/textfield';
-import { useId } from '@react-aria/utils';
-import { AriaButtonProps } from '@react-types/button';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { useTextField } from 'react-aria/useTextField';
+import { useId } from 'react-aria/useId';
+import { AriaButtonProps } from 'react-aria/useButton';
 import { RefObject } from 'react';
 
 import localizedMessages from './l10n';

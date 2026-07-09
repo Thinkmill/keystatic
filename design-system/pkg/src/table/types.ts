@@ -6,7 +6,7 @@ import {
 import {
   ColumnSize,
   TableProps as ReactAriaTableProps,
-} from '@react-types/table';
+} from 'react-stately/useTableState';
 import { Key, ReactElement, ReactNode, type JSX } from 'react';
 
 import { DragAndDropHooks } from '@keystar/ui/drag-and-drop';

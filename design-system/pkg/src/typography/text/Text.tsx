@@ -1,4 +1,4 @@
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import { assert, warning } from 'emery';
 import { useMemo } from 'react';
 

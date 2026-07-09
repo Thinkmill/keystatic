@@ -1,5 +1,6 @@
-import { FocusRingProps, useFocusRing } from '@react-aria/focus';
-import { mergeProps } from '@react-aria/utils';
+import { FocusRingProps } from 'react-aria/FocusRing';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { mergeProps } from 'react-aria/mergeProps';
 import { Children, cloneElement } from 'react';
 
 import { toDataAttributes } from './toDataAttributes';

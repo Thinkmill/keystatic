@@ -1,6 +1,6 @@
 'use client';
 
-export { Item } from '@react-stately/collections';
+export { Item } from 'react-stately/Item';
 
 export { TabList, TabPanels, Tabs, tabsClassList } from './Tabs';
 

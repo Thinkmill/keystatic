@@ -1,4 +1,4 @@
-import { useMeter } from '@react-aria/meter';
+import { useMeter } from 'react-aria/useMeter';
 import { css, toDataAttributes, tokenSchema } from '@keystar/ui/style';
 import { ForwardedRef, forwardRef } from 'react';
 

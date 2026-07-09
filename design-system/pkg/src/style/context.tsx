@@ -1,6 +1,10 @@
-import { useLayoutEffect } from '@react-aria/utils';
+import React, {
+  useLayoutEffect,
+  ProviderProps,
+  useContext,
+  useState,
+} from 'react';
 import { typedEntries } from 'emery';
-import React, { ProviderProps, useContext, useState } from 'react';
 
 import {
   breakpoints,

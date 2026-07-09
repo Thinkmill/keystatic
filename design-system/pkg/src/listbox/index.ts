@@ -1,4 +1,5 @@
-export { Item, Section } from '@react-stately/collections';
+export { Item } from 'react-stately/Item';
+export { Section } from 'react-stately/Section';
 
 export { ListItem } from './ListItem';
 export { ListBox } from './ListBox';

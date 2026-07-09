@@ -1,6 +1,7 @@
 'use client';
 
-export { Item, Section } from '@react-stately/collections';
+export { Item } from 'react-stately/Item';
+export { Section } from 'react-stately/Section';
 
 export { Combobox } from './Combobox';
 export { ComboboxMulti } from './ComboboxMulti';

@@ -11,7 +11,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@cloudflare/next-on-pages": "^1.11.0",
-    "@keystar/ui": "workspace:^",
+    "@keystar/ui": "workspace:*",
     "@keystatic/core": "workspace:^",
     "@keystatic/next": "workspace:^",
     "@preconstruct/next": "^4.0.0",

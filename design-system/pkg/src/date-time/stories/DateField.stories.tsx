@@ -9,7 +9,7 @@ import {
   parseZonedDateTime,
   toZoned,
 } from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
+import { useLocale } from 'react-aria/I18nProvider';
 import { KeystarProvider } from '@keystar/ui/core';
 import { Flex } from '@keystar/ui/layout';
 import { Item, Picker, Section } from '@keystar/ui/picker';
@@ -292,7 +292,10 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
     [preferredCalendars]
   );
 
-  let updateLocale = (locale: Key) => {
+  let updateLocale = (locale: Key | null) => {
+    if (locale === null) {
+      return;
+    }
     setLocale(locale);
     let pref = preferences.find(p => p.locale === locale);
     setCalendar(pref!.ordering.split(' ')[0]);
@@ -304,15 +307,19 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
         <Picker
           label="Locale"
           items={preferences}
-          selectedKey={locale}
-          onSelectionChange={updateLocale}
+          value={locale}
+          onChange={updateLocale}
         >
           {item => <Item key={item.locale}>{item.label}</Item>}
         </Picker>
         <Picker
           label="Calendar"
-          selectedKey={calendar}
-          onSelectionChange={setCalendar}
+          value={calendar}
+          onChange={key => {
+            if (key !== null) {
+              setCalendar(key);
+            }
+          }}
         >
           <Section title="Preferred" items={preferredCalendars}>
             {item => <Item>{item?.name || 'ERROR'}</Item>}

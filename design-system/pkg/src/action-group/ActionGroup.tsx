@@ -1,18 +1,12 @@
-import { useActionGroup, useActionGroupItem } from '@react-aria/actiongroup';
-import { FocusScope } from '@react-aria/focus';
-import { PressResponder } from '@react-aria/interactions';
+import { useActionGroup } from 'react-aria/private/actiongroup/useActionGroup';
+import { useActionGroupItem } from 'react-aria/private/actiongroup/useActionGroupItem';
+import { FocusScope } from 'react-aria/FocusScope';
+import { PressResponder } from 'react-aria/private/interactions/PressResponder';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useId } from 'react-aria/useId';
 import {
-  filterDOMProps,
-  mergeProps,
-  useId,
   useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-  useValueEffect,
-} from '@react-aria/utils';
-import { ListState, useListState } from '@react-stately/list';
-import { AriaLabelingProps, DOMProps, Node } from '@react-types/shared';
-import {
   ForwardedRef,
   ReactElement,
   ReactNode,
@@ -23,6 +17,11 @@ import {
   useState,
   RefObject,
 } from 'react';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { useValueEffect } from 'react-aria/private/utils/useValueEffect';
+import { ListState, useListState } from 'react-stately/useListState';
+import { AriaLabelingProps, DOMProps, Node } from '@react-types/shared';
 
 import { ActionButton, actionButtonClassList } from '@keystar/ui/button';
 import { KeystarProvider, useProviderProps } from '@keystar/ui/core';

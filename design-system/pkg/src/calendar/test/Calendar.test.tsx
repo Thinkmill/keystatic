@@ -11,7 +11,7 @@ import {
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 
 import { Calendar } from '../index';
-import { useLocale } from '@react-aria/i18n';
+import { useLocale } from 'react-aria/I18nProvider';
 
 const tmInceptionDate = new CalendarDate(2013, 9, 4);
 const keyCodes = {

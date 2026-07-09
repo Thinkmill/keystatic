@@ -1,35 +1,18 @@
 import {
-  FocusableProps,
-  TextInputDOMProps,
-  ValueBase,
-} from '@react-types/shared';
-import {
   HTMLAttributes,
   InputHTMLAttributes,
   LabelHTMLAttributes,
   ReactElement,
   TextareaHTMLAttributes,
 } from 'react';
+import type { AriaTextFieldProps } from 'react-aria/useTextField';
 
 import { FieldProps } from '@keystar/ui/field';
 import { Conditional } from '@keystar/ui/types';
 
-export type TextFieldPrimitiveProps = TextFieldProps & {
-  /**
-   * When true, text will wrap onto multiple lines using a `textarea` instead of
-   * the traditional `input` element.
-   */
-  isMultiline?: boolean;
-  labelProps?: LabelHTMLAttributes<HTMLLabelElement>;
-  inputProps:
-    | InputHTMLAttributes<HTMLInputElement>
-    | TextareaHTMLAttributes<HTMLTextAreaElement>;
-  descriptionProps?: HTMLAttributes<HTMLElement>;
-  errorMessageProps?: HTMLAttributes<HTMLElement>;
-  inputWrapperProps?: HTMLAttributes<HTMLElement>;
-};
-
-export type TextFieldProps = {
+export type TextFieldProps<
+  T extends HTMLInputElement | HTMLTextAreaElement = HTMLInputElement,
+> = {
   // https://www.w3.org/TR/wai-aria-1.2/#textbox
   /** Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. */
   'aria-activedescendant'?: string;
@@ -57,12 +40,27 @@ export type TextFieldProps = {
   startElement?: Conditional<ReactElement>;
   /** Element to display after the input. */
   endElement?: Conditional<ReactElement>;
-} & ValueBase<string> &
-  FieldProps &
-  TextInputDOMProps &
-  FocusableProps;
+} & FieldProps &
+  Omit<AriaTextFieldProps<T>, keyof FieldProps>;
 
 export type TextAreaProps = Omit<
-  TextFieldProps,
+  TextFieldProps<HTMLTextAreaElement>,
   'pattern' | 'type' | 'startElement' | 'endElement'
 >;
+
+export type TextFieldPrimitiveProps = (TextFieldProps | TextAreaProps) & {
+  /**
+   * When true, text will wrap onto multiple lines using a `textarea` instead of
+   * the traditional `input` element.
+   */
+  isMultiline?: boolean;
+  startElement?: Conditional<ReactElement>;
+  endElement?: Conditional<ReactElement>;
+  labelProps?: LabelHTMLAttributes<HTMLLabelElement>;
+  inputProps:
+    | InputHTMLAttributes<HTMLInputElement>
+    | TextareaHTMLAttributes<HTMLTextAreaElement>;
+  descriptionProps?: HTMLAttributes<HTMLElement>;
+  errorMessageProps?: HTMLAttributes<HTMLElement>;
+  inputWrapperProps?: HTMLAttributes<HTMLElement>;
+};

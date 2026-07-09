@@ -1,5 +1,6 @@
-import { useLink } from '@react-aria/link';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
+import { useLink } from 'react-aria/useLink';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import { forwardRef } from 'react';
 
 import { useTextLink } from './useTextLink';

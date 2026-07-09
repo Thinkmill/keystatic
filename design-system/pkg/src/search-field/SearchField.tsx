@@ -1,6 +1,6 @@
-import { useSearchField } from '@react-aria/searchfield';
-import { useObjectRef } from '@react-aria/utils';
-import { useSearchFieldState } from '@react-stately/searchfield';
+import { useSearchField } from 'react-aria/useSearchField';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useSearchFieldState } from 'react-stately/useSearchFieldState';
 import { forwardRef } from 'react';
 
 import { ClearButton } from '@keystar/ui/button';

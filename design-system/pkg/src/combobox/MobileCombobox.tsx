@@ -1,14 +1,23 @@
-import { useButton } from '@react-aria/button';
-import { useComboBox } from '@react-aria/combobox';
-import { useDialog } from '@react-aria/dialog';
-import { FocusScope, focusSafely } from '@react-aria/focus';
-import { useFilter, useLocalizedStringFormatter } from '@react-aria/i18n';
-import { setInteractionModality, useHover } from '@react-aria/interactions';
-import { useField } from '@react-aria/label';
-import { DismissButton, useOverlayTrigger } from '@react-aria/overlays';
-import { mergeProps, useId, useObjectRef } from '@react-aria/utils';
-import { ComboBoxState, useComboBoxState } from '@react-stately/combobox';
-import { AriaButtonProps } from '@react-types/button';
+import { useButton, AriaButtonProps } from 'react-aria/useButton';
+import { useComboBox } from 'react-aria/useComboBox';
+import { useDialog } from 'react-aria/useDialog';
+import { FocusScope } from 'react-aria/FocusScope';
+import { focusSafely } from 'react-aria/private/interactions/focusSafely';
+import { useFilter } from 'react-aria/useFilter';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { setInteractionModality } from 'react-aria/private/interactions/useFocusVisible';
+import { useHover } from 'react-aria/useHover';
+import { useField } from 'react-aria/useField';
+import { DismissButton } from 'react-aria/Overlay';
+import { useOverlayTrigger } from 'react-aria/useOverlayTrigger';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useId } from 'react-aria/useId';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import {
+  ComboBoxState,
+  useComboBoxState,
+} from 'react-stately/useComboBoxState';
+
 import { ValidationState } from '@react-types/shared';
 import React, {
   CSSProperties,

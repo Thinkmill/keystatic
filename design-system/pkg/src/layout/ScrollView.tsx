@@ -1,11 +1,6 @@
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import {
-  filterDOMProps,
   useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-} from '@react-aria/utils';
-import { DOMProps } from '@react-types/shared';
-import {
   ForwardedRef,
   ForwardRefExoticComponent,
   ReactNode,
@@ -14,6 +9,9 @@ import {
   useCallback,
   useState,
 } from 'react';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { DOMProps } from '@react-types/shared';
 
 import {
   BaseStyleProps,

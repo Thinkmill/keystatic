@@ -1,4 +1,4 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { ButtonGroup, Button } from '@keystar/ui/button';
 import { Dialog } from '@keystar/ui/dialog';
 import { Content } from '@keystar/ui/slots';

@@ -1,4 +1,4 @@
-import { useObjectRef } from '@react-aria/utils';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import {
   ForwardedRef,
   forwardRef,

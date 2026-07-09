@@ -1,15 +1,9 @@
-import { useComboBox } from '@react-aria/combobox';
-import { useFilter, useLocalizedStringFormatter } from '@react-aria/i18n';
-import { PressResponder } from '@react-aria/interactions';
-import {
-  useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-} from '@react-aria/utils';
-import { useComboBoxState } from '@react-stately/combobox';
-import { AriaButtonProps } from '@react-types/button';
-import { LoadingState } from '@react-types/shared';
+import { useComboBox } from 'react-aria/useComboBox';
+import { useFilter } from 'react-aria/useFilter';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { PressResponder } from 'react-aria/private/interactions/PressResponder';
 import React, {
+  useLayoutEffect,
   CSSProperties,
   ForwardedRef,
   InputHTMLAttributes,
@@ -21,6 +15,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { useComboBoxState } from 'react-stately/useComboBoxState';
+import { AriaButtonProps } from 'react-aria/useButton';
+import { LoadingState } from '@react-types/shared';
 
 import { FieldButton } from '@keystar/ui/button';
 import { useProviderProps } from '@keystar/ui/core';
