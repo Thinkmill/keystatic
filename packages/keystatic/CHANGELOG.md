@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.5.51
+
+### Patch Changes
+
+- Updated dependencies [[`c5c297a`](https://github.com/Thinkmill/keystatic/commit/c5c297a390d6c73d2773ddc7a8f88ba05c540d18)]:
+  - @keystar/ui@0.7.22
+
 ## 0.5.50
 
 ### Patch Changes

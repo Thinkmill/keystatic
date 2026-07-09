@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.22
+
+### Patch Changes
+
+- [#1556](https://github.com/Thinkmill/keystatic/pull/1556) [`c5c297a`](https://github.com/Thinkmill/keystatic/commit/c5c297a390d6c73d2773ddc7a8f88ba05c540d18) Thanks [@emmatown](https://github.com/emmatown)! - Remove warning about placeholder without description
+
 ## 0.7.21
 
 ### Patch Changes
