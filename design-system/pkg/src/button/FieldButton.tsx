@@ -1,6 +1,7 @@
-import { useButton } from '@react-aria/button';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
+import { useButton } from 'react-aria/useButton';
+import { useHover } from 'react-aria/useHover';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import {
   ForwardedRef,
   forwardRef,

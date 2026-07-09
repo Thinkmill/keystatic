@@ -1,4 +1,4 @@
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 import {
   forwardRef,

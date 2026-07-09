@@ -1,8 +1,9 @@
-import { PressResponder } from '@react-aria/interactions';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { HiddenSelect, useSelect } from '@react-aria/select';
-import { useLayoutEffect, useResizeObserver } from '@react-aria/utils';
-import { useSelectState } from '@react-stately/select';
+import { PressResponder } from 'react-aria/private/interactions/PressResponder';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { HiddenSelect, useSelect } from 'react-aria/useSelect';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { useSelectState } from 'react-stately/useSelectState';
 import {
   ReactElement,
   RefObject,
@@ -108,7 +109,7 @@ function Picker<T extends object>(
     onResize: onResize,
   });
 
-  useLayoutEffect(onResize, [scale, state.selectedKey, onResize]);
+  useLayoutEffect(onResize, [scale, state.value, onResize]);
 
   let overlay;
   if (isMobile) {
@@ -141,7 +142,8 @@ function Picker<T extends object>(
     );
   }
 
-  let contents = state.selectedItem ? state.selectedItem.rendered : placeholder;
+  let selectedItem = state.selectedItems[0];
+  let contents = selectedItem ? selectedItem.rendered : placeholder;
   if (isReactText(contents)) {
     contents = <Text>{contents}</Text>;
   }
@@ -185,8 +187,8 @@ function Picker<T extends object>(
               text: {
                 ...valueProps,
                 // when no item is selected, we're styling the placeholder
-                color: !state.selectedItem ? 'neutralSecondary' : 'inherit',
-                // weight: state.selectedItem ? 'medium' : undefined,
+                color: !selectedItem ? 'neutralSecondary' : 'inherit',
+                // weight: selectedItem ? 'medium' : undefined,
               },
               // we try to maintain most of the selected item's rendered content
               // within the button, but description text is too long

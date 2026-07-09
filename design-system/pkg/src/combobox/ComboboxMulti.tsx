@@ -1,4 +1,4 @@
-import { useObjectRef } from '@react-aria/utils';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import React, { ForwardedRef, ReactElement, useRef } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';

@@ -5,7 +5,7 @@ import {
   DialogContainer,
   useDialogContainer,
 } from '@keystar/ui/dialog';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { clientSideValidateProp } from '../../../errors';
 import { Content } from '@keystar/ui/slots';
 import { FormValueContentFromPreviewProps } from '../../../form-from-preview';

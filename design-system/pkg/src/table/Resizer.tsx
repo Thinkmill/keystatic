@@ -1,12 +1,17 @@
-import { FocusRing } from '@react-aria/focus';
-import { useLocale, useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useUNSAFE_PortalContext } from '@react-aria/overlays';
-import { useTableColumnResize } from '@react-aria/table';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
-import { TableColumnResizeState } from '@react-stately/table';
-import { GridNode } from '@react-types/grid';
+import { FocusRing } from 'react-aria/FocusRing';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { useUNSAFE_PortalContext } from 'react-aria/PortalProvider';
+import { useTableColumnResize } from 'react-aria/useTable';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import {
+  TableColumnResizeState,
+  ColumnSize,
+} from 'react-stately/useTableState';
+import { GridNode } from 'react-stately/private/grid/GridCollection';
 import { Key, RefObject } from '@react-types/shared';
-import { ColumnSize } from '@react-types/table';
+
 import React, {
   createContext,
   ForwardedRef,

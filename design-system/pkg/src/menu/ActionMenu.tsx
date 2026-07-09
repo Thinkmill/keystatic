@@ -1,5 +1,5 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { filterDOMProps } from '@react-aria/utils';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import { ForwardedRef, forwardRef, ReactElement, Ref } from 'react';
 
 import localizedMessages from './l10n';

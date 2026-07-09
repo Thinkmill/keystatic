@@ -1,8 +1,6 @@
-import {
-  filterDOMProps,
-  useLayoutEffect,
-  useObjectRef,
-} from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 import {
   ForwardedRef,

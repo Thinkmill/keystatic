@@ -8,18 +8,18 @@ import React, {
   useState,
 } from 'react';
 
-import { FocusScope } from '@react-aria/focus';
-import { useLocale, useLocalizedStringFormatter } from '@react-aria/i18n';
-import { ListKeyboardDelegate } from '@react-aria/selection';
-import { AriaTagGroupProps, useTagGroup } from '@react-aria/tag';
-import {
-  useId,
-  useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-  useValueEffect,
-} from '@react-aria/utils';
-import { ListCollection, useListState } from '@react-stately/list';
+import { FocusScope } from 'react-aria/FocusScope';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { ListKeyboardDelegate } from 'react-aria/ListKeyboardDelegate';
+import { AriaTagGroupProps, useTagGroup } from 'react-aria/useTagGroup';
+import { useId } from 'react-aria/useId';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { useValueEffect } from 'react-aria/private/utils/useValueEffect';
+import { ListCollection } from 'react-stately/private/list/ListCollection';
+import { useListState } from 'react-stately/useListState';
 import type { Collection, Node } from '@react-types/shared';
 
 import {

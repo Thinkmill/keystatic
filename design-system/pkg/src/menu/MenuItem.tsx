@@ -1,8 +1,8 @@
-import { useFocusRing } from '@react-aria/focus';
-import { useHover } from '@react-aria/interactions';
-import { useMenuItem } from '@react-aria/menu';
-import { mergeProps } from '@react-aria/utils';
-import { TreeState } from '@react-stately/tree';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { useHover } from 'react-aria/useHover';
+import { useMenuItem } from 'react-aria/useMenu';
+import { mergeProps } from 'react-aria/mergeProps';
+import { TreeState } from 'react-stately/useTreeState';
 import { Node } from '@react-types/shared';
 import { useRef } from 'react';
 

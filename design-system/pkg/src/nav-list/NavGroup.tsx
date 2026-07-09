@@ -1,4 +1,5 @@
-import { filterDOMProps, useId } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useId } from 'react-aria/useId';
 import { DOMProps } from '@react-types/shared';
 import { ReactNode } from 'react';
 

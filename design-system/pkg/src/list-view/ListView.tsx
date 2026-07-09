@@ -1,14 +1,14 @@
-import { useGridList } from '@react-aria/gridlist';
-import type { DroppableCollectionResult } from '@react-aria/dnd';
-import { FocusScope } from '@react-aria/focus';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { Virtualizer } from '@react-aria/virtualizer';
-import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
-import type {
-  DraggableCollectionState,
-  DroppableCollectionState,
-} from '@react-stately/dnd';
-import { ListState, useListState } from '@react-stately/list';
+import { useGridList } from 'react-aria/useGridList';
+import type { DroppableCollectionResult } from 'react-aria/useDroppableCollection';
+import { FocusScope } from 'react-aria/FocusScope';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { Virtualizer } from 'react-aria/private/virtualizer/Virtualizer';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import type { DraggableCollectionState } from 'react-stately/useDraggableCollectionState';
+import type { DroppableCollectionState } from 'react-stately/useDroppableCollectionState';
+import { ListState, useListState } from 'react-stately/useListState';
 import { assert } from 'emery';
 import React, {
   Key,
@@ -40,7 +40,7 @@ import { ListViewItem } from './ListViewItem';
 import { ListViewLayout } from './ListViewLayout';
 import RootDropIndicator from './RootDropIndicator';
 import { ListViewProps } from './types';
-import { ListKeyboardDelegate } from '@react-aria/selection';
+import { ListKeyboardDelegate } from 'react-aria/ListKeyboardDelegate';
 
 const ROW_HEIGHTS = {
   compact: {
@@ -207,6 +207,7 @@ function ListView<T extends object>(
     () => [...collection].some(item => item.hasChildNodes),
     [collection]
   );
+  let { onScroll: _onScroll, ...virtualizerGridProps } = gridProps;
 
   return (
     <ListViewProvider
@@ -234,10 +235,10 @@ function ListView<T extends object>(
             {...mergeProps(
               // @ts-expect-error
               isListDroppable ? droppableCollection?.collectionProps : {},
-              gridProps
+              virtualizerGridProps
             )}
             {...filterDOMProps(otherProps)}
-            {...gridProps}
+            {...virtualizerGridProps}
             {...styleProps}
             {...toDataAttributes({
               childNodes: hasAnyChildren,
@@ -248,6 +249,7 @@ function ListView<T extends object>(
               overflowMode,
             })}
             isLoading={isLoading}
+            onScroll={undefined}
             onLoadMore={onLoadMore}
             ref={domRef}
             persistedKeys={persistedKeys}

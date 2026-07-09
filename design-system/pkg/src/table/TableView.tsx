@@ -16,22 +16,22 @@ import {
   useState,
 } from 'react';
 
-import { useButton } from '@react-aria/button';
+import { useButton } from 'react-aria/useButton';
+import { DraggableItemResult } from 'react-aria/useDraggableCollection';
 import {
-  DraggableItemResult,
   DropIndicatorAria,
   DroppableCollectionResult,
   DroppableItemResult,
-  DropTarget,
-} from '@react-aria/dnd';
-import { FocusScope, useFocusRing } from '@react-aria/focus';
-import { useLocale, useLocalizedStringFormatter } from '@react-aria/i18n';
-import {
-  getInteractionModality,
-  useHover,
-  usePress,
-} from '@react-aria/interactions';
-import { ListKeyboardDelegate } from '@react-aria/selection';
+} from 'react-aria/useDroppableCollection';
+import { DropTarget, Key } from '@react-types/shared';
+import { FocusScope } from 'react-aria/FocusScope';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { getInteractionModality } from 'react-aria/private/interactions/useFocusVisible';
+import { useHover } from 'react-aria/useHover';
+import { usePress } from 'react-aria/usePress';
+import { ListKeyboardDelegate } from 'react-aria/ListKeyboardDelegate';
 import {
   useTable,
   useTableCell,
@@ -41,38 +41,37 @@ import {
   useTableRowGroup,
   useTableSelectAllCheckbox,
   useTableSelectionCheckbox,
-} from '@react-aria/table';
+} from 'react-aria/useTable';
+import { mergeProps } from 'react-aria/mergeProps';
 import {
-  mergeProps,
   scrollIntoView,
   scrollIntoViewport,
-  useLoadMore,
-} from '@react-aria/utils';
+} from 'react-aria/private/utils/scrollIntoView';
+import { useLoadMore } from 'react-aria/private/utils/useLoadMore';
 import {
   layoutInfoToStyle,
-  ScrollView,
-  setScrollLeft,
   VirtualizerItem,
-  VirtualizerItemOptions,
-} from '@react-aria/virtualizer';
-import { useVisuallyHidden, VisuallyHidden } from '@react-aria/visually-hidden';
-import {
-  DraggableCollectionState,
-  DroppableCollectionState,
-} from '@react-stately/dnd';
+} from 'react-aria/private/virtualizer/VirtualizerItem';
+import { ScrollView } from 'react-aria/private/virtualizer/ScrollView';
+import { setScrollLeft } from 'react-aria/private/virtualizer/utils';
+import { VirtualizerItemOptions } from 'react-aria/private/virtualizer/useVirtualizerItem';
+import { useVisuallyHidden, VisuallyHidden } from 'react-aria/VisuallyHidden';
+import { DraggableCollectionState } from 'react-stately/useDraggableCollectionState';
+import { DroppableCollectionState } from 'react-stately/useDroppableCollectionState';
 import {
   TableState,
   useTableColumnResizeState,
   useTableState,
-} from '@react-stately/table';
+  ColumnSize,
+} from 'react-stately/useTableState';
 import {
   LayoutInfo,
   Rect,
   ReusableView,
   useVirtualizerState,
-} from '@react-stately/virtualizer';
-import { GridNode } from '@react-types/grid';
-import { ColumnSize, TableCollection } from '@react-types/table';
+} from 'react-stately/useVirtualizerState';
+import { GridNode } from 'react-stately/private/grid/GridCollection';
+import { ITableCollection as TableCollection } from 'react-stately/private/table/TableCollection';
 
 import { Checkbox } from '@keystar/ui/checkbox';
 import { Icon } from '@keystar/ui/icon';
@@ -120,7 +119,6 @@ import {
 } from './styles';
 import { TableViewLayout } from './TableViewLayout';
 import { ColumnProps, TableCosmeticConfig, TableProps } from './types';
-import { Key } from '@react-types/shared';
 
 // Constants
 

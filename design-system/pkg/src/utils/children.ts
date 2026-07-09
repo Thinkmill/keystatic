@@ -1,4 +1,4 @@
-import { useLayoutEffect } from '@react-aria/utils';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
 import {
   Attributes,
   cloneElement,

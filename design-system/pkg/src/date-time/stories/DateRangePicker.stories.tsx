@@ -7,7 +7,7 @@ import {
   parseDate,
   today,
 } from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
+import { useLocale } from 'react-aria/I18nProvider';
 import { Parameters, StoryObj, action } from '@keystar/ui-storybook';
 import React from 'react';
 

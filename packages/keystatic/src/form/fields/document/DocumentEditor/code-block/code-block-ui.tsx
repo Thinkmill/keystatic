@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
-import { Item } from '@react-stately/collections';
+import { Item } from 'react-stately/Item';
 import { matchSorter } from 'match-sorter';
 
 import { ActionButton } from '@keystar/ui/button';
@@ -154,7 +154,7 @@ export function CodeElement({
                     );
                   }
                 }}
-                onSelectionChange={selection => {
+                onChange={selection => {
                   const path = ReactEditor.findPath(editor, element);
                   if (aliasesToCanonicalName.has(inputValue)) {
                     selection = aliasesToCanonicalName.get(inputValue)!;
@@ -186,7 +186,7 @@ export function CodeElement({
                     }
                   }
                 }}
-                selectedKey={
+                value={
                   element.language
                     ? aliasesToCanonicalName.get(element.language)
                     : 'plain'

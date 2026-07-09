@@ -1,4 +1,4 @@
-import { useRadio } from '@react-aria/radio';
+import { useRadio } from 'react-aria/useRadioGroup';
 import { HTMLAttributes, useMemo, useRef } from 'react';
 
 import { SlotProvider } from '@keystar/ui/slots';

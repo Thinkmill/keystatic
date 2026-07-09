@@ -1,5 +1,5 @@
-import { useProgressBar } from '@react-aria/progress';
-import { clamp } from '@react-aria/utils';
+import { useProgressBar } from 'react-aria/useProgressBar';
+import { clamp } from 'react-stately/private/utils/number';
 import { warning } from 'emery';
 import { ForwardedRef, forwardRef } from 'react';
 

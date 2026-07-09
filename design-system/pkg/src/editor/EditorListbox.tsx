@@ -1,9 +1,7 @@
-import {
-  ListKeyboardDelegate,
-  useSelectableCollection,
-} from '@react-aria/selection';
-import { chain } from '@react-aria/utils';
-import { useListState } from '@react-stately/list';
+import { ListKeyboardDelegate } from 'react-aria/ListKeyboardDelegate';
+import { useSelectableCollection } from 'react-aria/private/selection/useSelectableCollection';
+import { chain } from 'react-aria/chain';
+import { useListState } from 'react-stately/useListState';
 import {
   AriaLabelingProps,
   CollectionBase,

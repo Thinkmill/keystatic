@@ -1,11 +1,9 @@
 import type { DragAndDropHooks } from '@keystar/ui/drag-and-drop';
 
-import type {
-  DraggableCollectionState,
-  DroppableCollectionState,
-} from '@react-stately/dnd';
-import { TableState } from '@react-stately/table';
-import type { ColumnSize } from '@react-types/table';
+import type { DraggableCollectionState } from 'react-stately/useDraggableCollectionState';
+import type { DroppableCollectionState } from 'react-stately/useDroppableCollectionState';
+import { TableState } from 'react-stately/useTableState';
+import type { ColumnSize } from 'react-stately/useTableState';
 import type { Key } from '@react-types/shared';
 import {
   type HTMLAttributes,

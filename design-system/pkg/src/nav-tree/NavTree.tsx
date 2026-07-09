@@ -1,12 +1,14 @@
-import { useCollator, useLocale } from '@react-aria/i18n';
-import { isFocusVisible, useHover, usePress } from '@react-aria/interactions';
-import {
-  useSelectableCollection,
-  useSelectableItem,
-} from '@react-aria/selection';
-import { mergeProps } from '@react-aria/utils';
-import { getChildNodes, getItemCount } from '@react-stately/collections';
-import { TreeState, useTreeState } from '@react-stately/tree';
+import { useCollator } from 'react-aria/useCollator';
+import { useLocale } from 'react-aria/I18nProvider';
+import { isFocusVisible } from 'react-aria/private/interactions/useFocusVisible';
+import { useHover } from 'react-aria/useHover';
+import { usePress } from 'react-aria/usePress';
+import { useSelectableCollection } from 'react-aria/private/selection/useSelectableCollection';
+import { useSelectableItem } from 'react-aria/private/selection/useSelectableItem';
+import { mergeProps } from 'react-aria/mergeProps';
+import { getChildNodes } from 'react-stately/private/collections/getChildNodes';
+import { getItemCount } from 'react-stately/private/collections/getItemCount';
+import { TreeState, useTreeState } from 'react-stately/useTreeState';
 import {
   Collection,
   DOMAttributes,
@@ -15,6 +17,7 @@ import {
   Node,
   PressEvent,
 } from '@react-types/shared';
+
 import React, {
   KeyboardEvent as ReactKeyboardEvent,
   RefObject,

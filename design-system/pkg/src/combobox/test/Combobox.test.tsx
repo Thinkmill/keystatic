@@ -6,7 +6,7 @@ import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 
 import { Combobox, Item } from '..';
 
-let onSelectionChange = jest.fn();
+let onChange = jest.fn();
 let onOpenChange = jest.fn();
 let onInputChange = jest.fn();
 let onFocus = jest.fn();
@@ -14,7 +14,7 @@ let onBlur = jest.fn();
 
 let defaultProps = {
   label: 'Test',
-  onSelectionChange,
+  onChange,
   onOpenChange,
   onInputChange,
   onFocus,

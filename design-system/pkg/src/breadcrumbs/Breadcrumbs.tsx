@@ -1,10 +1,8 @@
-import { useBreadcrumbs } from '@react-aria/breadcrumbs';
-import {
-  useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-  useValueEffect,
-} from '@react-aria/utils';
+import { useBreadcrumbs } from 'react-aria/useBreadcrumbs';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { useValueEffect } from 'react-aria/private/utils/useValueEffect';
 import {
   Children,
   ForwardedRef,

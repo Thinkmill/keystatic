@@ -1,8 +1,9 @@
-import { FocusScope } from '@react-aria/focus';
-import { announce } from '@react-aria/live-announcer';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useKeyboard } from '@react-aria/interactions';
-import { filterDOMProps, useObjectRef } from '@react-aria/utils';
+import { FocusScope } from 'react-aria/FocusScope';
+import { announce } from 'react-aria/private/live-announcer/LiveAnnouncer';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { useKeyboard } from 'react-aria/useKeyboard';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import React, {
   ForwardedRef,
   ReactElement,

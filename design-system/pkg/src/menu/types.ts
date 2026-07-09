@@ -1,7 +1,5 @@
-import type {
-  AriaMenuProps,
-  MenuTriggerProps as AriaMenuTriggerProps,
-} from '@react-types/menu';
+import type { AriaMenuProps } from 'react-aria/useMenu';
+import type { MenuTriggerProps as AriaMenuTriggerProps } from 'react-stately/useMenuTriggerState';
 import type {
   Alignment,
   AriaLabelingProps,
@@ -9,7 +7,8 @@ import type {
   DOMProps,
   DisabledBehavior,
 } from '@react-types/shared';
-import type { Key, ReactElement } from 'react';
+
+import type { ReactElement } from 'react';
 
 import type { BaseStyleProps } from '@keystar/ui/style';
 import type { ActionButtonProps } from '@keystar/ui/button';
@@ -51,7 +50,7 @@ export type ActionMenuProps<T> = {
   /** Whether the button is disabled. */
   isDisabled?: boolean;
   /** Handler that is called when an item is selected. */
-  onAction?: (key: Key) => void;
+  onAction?: AriaMenuProps<T>['onAction'];
 } & CollectionBase<T> &
   Omit<MenuTriggerProps, 'children'> &
   Pick<ActionButtonProps, 'prominence'> &

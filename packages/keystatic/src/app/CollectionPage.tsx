@@ -1,4 +1,4 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { isHotkey } from 'is-hotkey';
 import React, {
   useCallback,

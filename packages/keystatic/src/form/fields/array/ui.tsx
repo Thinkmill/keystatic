@@ -13,8 +13,8 @@ import { Item, ListView } from '@keystar/ui/list-view';
 import { Content } from '@keystar/ui/slots';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useField } from '@react-aria/label';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { useField } from 'react-aria/useField';
 import { useId, Key, useMemo, useState } from 'react';
 
 import l10nMessages from '../../../app/l10n';

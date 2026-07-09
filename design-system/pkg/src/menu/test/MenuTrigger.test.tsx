@@ -756,9 +756,14 @@ describe('menu/MenuTrigger', () => {
   });
 });
 
-function renderComponent<T>(
+type TestMenuSection = {
+  name: string;
+  children: { name: string }[];
+};
+
+function renderComponent(
   triggerProps: Partial<MenuTriggerProps> = {},
-  menuProps: Partial<Omit<MenuProps<T>, 'items'>> = {},
+  menuProps: Partial<Omit<MenuProps<TestMenuSection>, 'items'>> = {},
   buttonProps: Partial<ButtonProps> = {}
 ) {
   return renderWithProvider(

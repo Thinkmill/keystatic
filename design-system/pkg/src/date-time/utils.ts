@@ -1,13 +1,14 @@
-import { useDisplayNames } from '@react-aria/datepicker';
-import { createFocusManager } from '@react-aria/focus';
-import { useDateFormatter } from '@react-aria/i18n';
-import { useLayoutEffect, useObjectRef } from '@react-aria/utils';
-import { SpectrumDatePickerBase } from '@react-types/datepicker';
-import { Ref, useImperativeHandle, useMemo, useState } from 'react';
+import { useDisplayNames } from 'react-aria/private/datepicker/useDisplayNames';
+import { createFocusManager } from 'react-aria/private/focus/FocusScope';
+import { useDateFormatter } from 'react-aria/useDateFormatter';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { ReactNode, Ref, useImperativeHandle, useMemo, useState } from 'react';
 
-export function useFormatHelpText(
-  props: Pick<SpectrumDatePickerBase<any>, 'description' | 'showFormatHelpText'>
-) {
+export function useFormatHelpText(props: {
+  description?: ReactNode;
+  showFormatHelpText?: boolean;
+}) {
   let formatter = useDateFormatter({ dateStyle: 'short' });
   let displayNames = useDisplayNames();
   return useMemo(() => {

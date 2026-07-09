@@ -50,7 +50,7 @@ describe('date-time/DatePicker', () => {
     expect(segments[1].getAttribute('aria-valuenow')).toBe('3');
     expect(segments[1].getAttribute('aria-valuetext')).toBe('3');
     expect(segments[1].getAttribute('aria-valuemin')).toBe('1');
-    expect(segments[1].getAttribute('aria-valuemax')).toBe('28');
+    expect(segments[1].getAttribute('aria-valuemax')).toBe('31');
 
     expect(getTextValue(segments[2])).toBe('2023');
     expect(segments[2].getAttribute('aria-label')).toBe('year, ');
@@ -89,7 +89,7 @@ describe('date-time/DatePicker', () => {
     expect(segments[1].getAttribute('aria-valuenow')).toBe('3');
     expect(segments[1].getAttribute('aria-valuetext')).toBe('3');
     expect(segments[1].getAttribute('aria-valuemin')).toBe('1');
-    expect(segments[1].getAttribute('aria-valuemax')).toBe('28');
+    expect(segments[1].getAttribute('aria-valuemax')).toBe('31');
 
     expect(getTextValue(segments[2])).toBe('2023');
     expect(segments[2].getAttribute('aria-label')).toBe('year, ');
@@ -100,10 +100,10 @@ describe('date-time/DatePicker', () => {
 
     expect(getTextValue(segments[3])).toBe('12');
     expect(segments[3].getAttribute('aria-label')).toBe('hour, ');
-    expect(segments[3].getAttribute('aria-valuenow')).toBe('0');
+    expect(segments[3].getAttribute('aria-valuenow')).toBe('12');
     expect(segments[3].getAttribute('aria-valuetext')).toBe('12 AM');
-    expect(segments[3].getAttribute('aria-valuemin')).toBe('0');
-    expect(segments[3].getAttribute('aria-valuemax')).toBe('11');
+    expect(segments[3].getAttribute('aria-valuemin')).toBe('1');
+    expect(segments[3].getAttribute('aria-valuemax')).toBe('12');
 
     expect(getTextValue(segments[4])).toBe('00');
     expect(segments[4].getAttribute('aria-label')).toBe('minute, ');

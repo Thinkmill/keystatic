@@ -1,4 +1,4 @@
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import React, { SVGProps } from 'react';
 
 import { TOKEN_PREFIX } from '@keystar/ui/primitives';

@@ -1,4 +1,4 @@
-import { useLayoutEffect } from '@react-aria/utils';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
 import { typedEntries } from 'emery';
 import React, { ProviderProps, useContext, useState } from 'react';
 
