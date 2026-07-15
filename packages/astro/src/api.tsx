@@ -5,9 +5,37 @@ import {
 import type { APIContext } from 'astro';
 import { parseString } from 'set-cookie-parser';
 
+// `Astro.locals.runtime.env` was removed in Astro v6+; the platform now
+// recommends reading Cloudflare's runtime env via a dynamic
+// `cloudflare:workers` import instead. Falls back to the old
+// `context.locals.runtime.env` shape (still used by some other adapters/
+// older Astro versions) and finally to `undefined` so this stays adapter-
+// agnostic - this file isn't Cloudflare-specific.
+async function getCloudflareEnvVars(
+  context: APIContext
+): Promise<Record<string, string | undefined> | undefined> {
+  try {
+    // @ts-expect-error - 'cloudflare:workers' is only a valid specifier
+    // under the Cloudflare adapter; no ambient type for it here since this
+    // package isn't Cloudflare-specific.
+    const cf: any = await import(/* @vite-ignore */ 'cloudflare:workers');
+    if (cf?.env) return cf.env;
+  } catch {
+    // not running under a Cloudflare adapter that supports this import
+  }
+  try {
+    // Older Astro versions / other adapters may still expose this shape.
+    // On Astro v6+, `locals.runtime` throws when accessed if it's not
+    // actually present, so this has to be its own try/catch too.
+    return (context.locals as any)?.runtime?.env;
+  } catch {
+    return undefined;
+  }
+}
+
 export function makeHandler(_config: APIRouteConfig) {
   return async function keystaticAPIRoute(context: APIContext) {
-    const envVarsForCf = (context.locals as any)?.runtime?.env;
+    const envVarsForCf = await getCloudflareEnvVars(context);
     const handler = makeGenericAPIRouteHandler(
       {
         ..._config,
