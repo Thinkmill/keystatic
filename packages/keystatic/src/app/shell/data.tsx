@@ -12,10 +12,9 @@ import {
   useState,
 } from 'react';
 import { CombinedError, useQuery, UseQueryState } from 'urql';
-import { getSingletonPath } from '../path-utils';
 import { useActiveLocale } from './content-locale';
+import { getSingletonPathsForTreeKey, getTreeKey } from '../tree-key';
 import {
-  getTreeNodeAtPath,
   treeEntriesToTreeNodes,
   TreeEntry,
   TreeNode,
@@ -781,10 +780,10 @@ function getChangedData(
     ),
     singletons: new Set(
       Object.keys(config.singletons ?? {}).filter(singleton => {
-        const singletonPath = getSingletonPath(config, singleton, locale);
+        const paths = getSingletonPathsForTreeKey(config, singleton, locale);
         return (
-          getTreeNodeAtPath(trees.current.tree, singletonPath)?.entry.sha !==
-          getTreeNodeAtPath(trees.default.tree, singletonPath)?.entry.sha
+          getTreeKey(paths, trees.current.tree) !==
+          getTreeKey(paths, trees.default.tree)
         );
       })
     ),

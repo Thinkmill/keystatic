@@ -94,8 +94,9 @@ i18n: {
 },
 ```
 
-- `locales` — a map of locale code to the label shown in the language switcher.
+- `locales` — a map of locale code to the label shown in the language switcher. Each code becomes a directory name, so it has to be a single path segment.
 - `defaultLocale` — the language selected by default. Must be one of the keys in `locales`.
+- `prefixDefaultLocale` — whether the default language gets a directory of its own. Defaults to `true`.
 
 ### localized
 
@@ -115,6 +116,49 @@ path: 'content/homepage/{locale}'  // content/homepage/en.yaml
 
 {% aside icon="⚡️" %}
 Everything up to the `path` [wildcard](/docs/path-wildcard) is a fixed prefix, so a `{locale}` token there is just an ordinary folder. That means you can adopt this feature on an **existing** multi-language project without moving any files — as long as your folders already sit where the token resolves to.
+{% /aside %}
+
+### prefixDefaultLocale
+
+By default every language resolves the `{locale}` token to a folder of its own, including the default one. With `prefixDefaultLocale: false` the token segment is instead **removed** for the default language, leaving its content at the root while the other languages keep their folders:
+
+```tsx
+i18n: {
+  locales: { en: 'English', pl: 'Polski', de: 'Deutsch' },
+  defaultLocale: 'en',
+  prefixDefaultLocale: false,
+},
+```
+
+This applies to **every localized entry — collections and singletons alike**. Wherever the `{locale}` token sits in a `path`, the default language simply doesn't get that segment:
+
+```sh
+content
+├── posts                    # collection: path: 'content/posts/{locale}/*'
+│   ├── my-post.mdoc         #   English, the default
+│   ├── pl
+│   │   └── my-post.mdoc
+│   └── de
+│       └── my-post.mdoc
+├── homepage.yaml            # singleton: path: 'content/homepage/{locale}'
+└── homepage                 #   English lands beside the other languages' folder
+    ├── pl.yaml
+    └── de.yaml
+```
+
+Note what that means for a singleton: the default language's file sits **next to** the folder holding the other languages, rather than inside it. A file and a folder can share a base name, so `homepage.yaml` and `homepage/` coexist quite happily.
+
+This is the shape Astro produces for [`prefixDefaultLocale: false`](https://docs.astro.build/en/guides/internationalization/#prefixdefaultlocale-false), where Markdown in `src/pages` is routed by file path, and the shape Starlight expects for a **root locale**. Pointing Keystatic at either means the default language has no folder of its own:
+
+```tsx
+path: 'src/content/docs/{locale}/**'  // src/content/docs/index.mdoc, src/content/docs/fr/index.mdoc
+path: 'src/pages/{locale}/*'          // src/pages/about.md, src/pages/fr/about.md
+```
+
+Because the segment is removed rather than replaced, the `{locale}` token has to be a whole path segment — `posts-{locale}` has nothing to remove — and it can't be the only one, since that would leave the default language with an empty path.
+
+{% aside icon="👀" %}
+Locale codes become **reserved** at the root of a localized collection. With `content/posts/{locale}/**`, a `pl` folder always holds Polish content, so an English entry can't take a slug starting with `pl/` — the Admin UI rejects it. Astro and Starlight reserve those names the same way. Collections using the `*` [wildcard](/docs/path-wildcard) are unaffected, because their slugs can't contain `/`.
 {% /aside %}
 
 ---

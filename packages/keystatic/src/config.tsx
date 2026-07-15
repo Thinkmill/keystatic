@@ -21,6 +21,7 @@ export type Glob = '*' | '**';
 export type I18nConfig = {
   locales: Record<string, string>;
   defaultLocale: string;
+  prefixDefaultLocale?: boolean;
 };
 
 export type Collection<

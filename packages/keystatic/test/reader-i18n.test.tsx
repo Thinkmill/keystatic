@@ -2,7 +2,9 @@
 import { expect, test, describe } from '@jest/globals';
 import { config, collection, singleton, fields } from '../src';
 import { createReader } from '../src/reader';
-import { getAllowedDirectories } from '../src/api/read-local';
+import { getAllowedDirectories, readToDirEntries } from '../src/api/read-local';
+import { getEntriesInCollectionWithTreeKey } from '../src/app/utils';
+import { treeEntriesToTreeNodes } from '../src/app/trees';
 import { testdir } from './test-utils';
 
 const i18nConfig = config({
@@ -148,5 +150,174 @@ describe('getAllowedDirectories', () => {
         'content/homepage/fr',
       ])
     );
+  });
+});
+
+const unprefixedConfig = config({
+  storage: { kind: 'local' },
+  i18n: {
+    locales: { en: 'English', fr: 'Français' },
+    defaultLocale: 'en',
+    prefixDefaultLocale: false,
+  },
+  collections: {
+    docs: collection({
+      label: 'Docs',
+      localized: true,
+      path: 'src/content/docs/{locale}/**',
+      slugField: 'title',
+      schema: {
+        title: fields.text({ label: 'Title' }),
+        body: fields.text({ label: 'Body' }),
+      },
+    }),
+    posts: collection({
+      label: 'Posts',
+      localized: true,
+      path: 'content/posts/{locale}/*',
+      slugField: 'title',
+      schema: {
+        title: fields.text({ label: 'Title' }),
+        body: fields.text({ label: 'Body' }),
+      },
+    }),
+  },
+  singletons: {
+    homepage: singleton({
+      label: 'Homepage',
+      localized: true,
+      path: 'content/homepage/{locale}',
+      schema: { headline: fields.text({ label: 'Headline' }) },
+    }),
+  },
+});
+
+function unprefixedFixture() {
+  return testdir({
+    'src/content/docs/index.yaml': 'body: EN index\n',
+    'src/content/docs/guides/intro.yaml': 'body: EN intro\n',
+    'src/content/docs/fr/index.yaml': 'body: FR index\n',
+    'src/content/docs/fr/guides/intro.yaml': 'body: FR intro\n',
+    'content/posts/hello.yaml': 'body: EN body\n',
+    'content/posts/fr/hello.yaml': 'body: FR body\n',
+    'content/homepage.yaml': 'headline: EN home\n',
+    'content/homepage/fr.yaml': 'headline: FR home\n',
+  });
+}
+
+describe('prefixDefaultLocale: false', () => {
+  test('the default locale reads from the collection root', async () => {
+    const dir = await unprefixedFixture();
+    const en = createReader(dir, unprefixedConfig, { locale: 'en' });
+
+    expect((await en.collections.docs.list()).sort()).toEqual([
+      'guides/intro',
+      'index',
+    ]);
+    expect(await en.collections.docs.read('index')).toMatchObject({
+      body: 'EN index',
+    });
+  });
+
+  test('a nested `**` listing does not pick up the other locales', async () => {
+    const dir = await unprefixedFixture();
+    const en = createReader(dir, unprefixedConfig, { locale: 'en' });
+
+    const slugs = await en.collections.docs.list();
+    expect(slugs).not.toContain('fr/index');
+    expect(slugs).not.toContain('fr/guides/intro');
+  });
+
+  test('the other locales read from their own directory', async () => {
+    const dir = await unprefixedFixture();
+    const fr = createReader(dir, unprefixedConfig, { locale: 'fr' });
+
+    expect((await fr.collections.docs.list()).sort()).toEqual([
+      'guides/intro',
+      'index',
+    ]);
+    expect(await fr.collections.docs.read('guides/intro')).toMatchObject({
+      body: 'FR intro',
+    });
+  });
+
+  test('reading across a locale directory returns null rather than the other language', async () => {
+    const dir = await unprefixedFixture();
+    const en = createReader(dir, unprefixedConfig, { locale: 'en' });
+
+    expect(await en.collections.docs.read('fr/index')).toBe(null);
+    expect(await en.collections.docs.read('fr/guides/intro')).toBe(null);
+  });
+
+  test('a `*` collection keeps the default at the root', async () => {
+    const dir = await unprefixedFixture();
+    const en = createReader(dir, unprefixedConfig, { locale: 'en' });
+    const fr = createReader(dir, unprefixedConfig, { locale: 'fr' });
+
+    expect(await en.collections.posts.list()).toEqual(['hello']);
+    expect(await en.collections.posts.read('hello')).toMatchObject({
+      body: 'EN body',
+    });
+    expect(await fr.collections.posts.read('hello')).toMatchObject({
+      body: 'FR body',
+    });
+  });
+
+  test('singletons resolve to an unprefixed file for the default locale', async () => {
+    const dir = await unprefixedFixture();
+    const en = createReader(dir, unprefixedConfig, { locale: 'en' });
+    const fr = createReader(dir, unprefixedConfig, { locale: 'fr' });
+
+    expect(await en.singletons.homepage.read()).toMatchObject({
+      headline: 'EN home',
+    });
+    expect(await fr.singletons.homepage.read()).toMatchObject({
+      headline: 'FR home',
+    });
+  });
+
+  test('getAllowedDirectories covers the unprefixed default and every other locale', () => {
+    const dirs = getAllowedDirectories(unprefixedConfig as any);
+    expect(dirs).toContain('src/content/docs');
+    expect(dirs).toContain('src/content/docs/fr');
+    expect(dirs).not.toContain('');
+  });
+});
+
+describe('the Admin UI listing matches the reader', () => {
+  test('a `**` collection hides the other locales from the default', async () => {
+    const dir = await unprefixedFixture();
+    const tree = treeEntriesToTreeNodes(await readToDirEntries(dir));
+
+    const en = getEntriesInCollectionWithTreeKey(
+      unprefixedConfig as any,
+      'docs',
+      tree,
+      'en'
+    ).map(x => x.slug);
+    const fr = getEntriesInCollectionWithTreeKey(
+      unprefixedConfig as any,
+      'docs',
+      tree,
+      'fr'
+    ).map(x => x.slug);
+
+    expect(en.sort()).toEqual(['guides/intro', 'index']);
+    expect(fr.sort()).toEqual(['guides/intro', 'index']);
+    expect(en.filter(x => x.startsWith('fr/'))).toEqual([]);
+  });
+
+  test('the default locale still sees a `*` collection at the root', async () => {
+    const dir = await unprefixedFixture();
+    const tree = treeEntriesToTreeNodes(await readToDirEntries(dir));
+
+    expect(
+      getEntriesInCollectionWithTreeKey(
+        unprefixedConfig as any,
+        'posts',
+        tree,
+        'en'
+      ).map(x => x.slug)
+    ).toEqual(['hello']);
   });
 });

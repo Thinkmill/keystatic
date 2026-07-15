@@ -7,6 +7,7 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getCollectionItemSlugSuffix,
+  getLocaleDirsToSkip,
   getCollectionPath,
   getDataFileExtension,
   getSlugGlobForCollection,
@@ -104,11 +105,15 @@ export function getEntriesInCollectionWithTreeKey(
   const extension = getDataFileExtension(formatInfo);
   const glob = getSlugGlobForCollection(config, collection);
   const collectionPath = getCollectionPath(config, collection, locale);
-  const directory: Map<string, TreeNode> =
+  const localeDirsToSkip = getLocaleDirsToSkip(config, collection, locale);
+  const allChildren: Map<string, TreeNode> =
     getTreeNodeAtPath(rootTree, collectionPath)?.children ?? new Map();
+  const directory = localeDirsToSkip.size
+    ? new Map([...allChildren].filter(([key]) => !localeDirsToSkip.has(key)))
+    : allChildren;
   const entries: { key: string; slug: string; sha: string }[] = [];
   const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
-  const suffix = getCollectionItemSlugSuffix(config, collection);
+  const suffix = getCollectionItemSlugSuffix(config, collection, locale);
   const possibleEntries = new Map(directory);
   if (glob === '**') {
     const handleDirectory = (dir: Map<string, TreeNode>, prefix: string) => {

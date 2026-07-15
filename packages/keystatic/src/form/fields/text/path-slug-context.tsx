@@ -108,6 +108,7 @@ export type SlugFieldInfo = {
   field: string;
   slugs: Set<string>;
   glob: Glob;
+  reservedLocaleDirs?: Set<string>;
 };
 
 export const SlugFieldContext = createContext<SlugFieldInfo | undefined>(

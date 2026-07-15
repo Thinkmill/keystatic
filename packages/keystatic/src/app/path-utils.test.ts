@@ -7,9 +7,11 @@ import {
   getCollectionItemPath,
   getCollectionPath,
   getContentLocales,
+  getLocaleDirsToSkip,
   getSingletonPath,
   getSlugGlobForCollection,
   isLocalized,
+  singletonDirHoldsOtherLocales,
   substituteLocale,
 } from './path-utils';
 import { resolveInitialLocale } from './shell/content-locale';
@@ -230,5 +232,291 @@ describe('resolveInitialLocale', () => {
   test('falls back to the default when stored is missing or invalid', () => {
     expect(resolveInitialLocale(null, i18n)).toBe('en');
     expect(resolveInitialLocale('de', i18n)).toBe('en');
+  });
+});
+
+const unprefixedConfig = config({
+  storage: { kind: 'local' },
+  i18n: {
+    locales: { en: 'English', fr: 'Français', de: 'Deutsch' },
+    defaultLocale: 'en',
+    prefixDefaultLocale: false,
+  },
+  collections: {
+    docs: collection({
+      label: 'Docs',
+      localized: true,
+      path: 'src/content/docs/{locale}/**',
+      slugField: 'title',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+    posts: collection({
+      label: 'Posts',
+      localized: true,
+      path: 'content/posts/{locale}/*',
+      slugField: 'title',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+    guides: collection({
+      label: 'Guides',
+      localized: true,
+      path: 'content/{locale}/guides/**',
+      slugField: 'title',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+    tags: collection({
+      label: 'Tags',
+      path: 'content/tags/*',
+      slugField: 'name',
+      schema: { name: fields.text({ label: 'Name' }) },
+    }),
+  },
+  singletons: {
+    homepage: singleton({
+      label: 'Homepage',
+      localized: true,
+      path: 'content/homepage/{locale}',
+      schema: { headline: fields.text({ label: 'Headline' }) },
+    }),
+    settings: singleton({
+      label: 'Settings',
+      path: 'content/settings',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+  },
+}) as Config;
+
+describe('prefixDefaultLocale: false', () => {
+  const i18n = unprefixedConfig.i18n;
+  test('the default locale loses the token segment', () => {
+    expect(substituteLocale('content/posts/{locale}', 'en', i18n)).toBe(
+      'content/posts'
+    );
+    expect(substituteLocale('content/{locale}/posts', 'en', i18n)).toBe(
+      'content/posts'
+    );
+  });
+  test('other locales keep their directory', () => {
+    expect(substituteLocale('content/posts/{locale}', 'fr', i18n)).toBe(
+      'content/posts/fr'
+    );
+    expect(substituteLocale('content/{locale}/posts', 'de', i18n)).toBe(
+      'content/de/posts'
+    );
+  });
+  test('the default locale keeps its directory when the flag is unset or true', () => {
+    expect(substituteLocale('content/posts/{locale}', 'en')).toBe(
+      'content/posts/en'
+    );
+    expect(
+      substituteLocale('content/posts/{locale}', 'en', {
+        locales: { en: 'English' },
+        defaultLocale: 'en',
+        prefixDefaultLocale: true,
+      })
+    ).toBe('content/posts/en');
+  });
+  test('collection and singleton paths resolve to the unprefixed default', () => {
+    expect(getCollectionPath(unprefixedConfig, 'docs', 'en')).toBe(
+      'src/content/docs'
+    );
+    expect(getCollectionPath(unprefixedConfig, 'docs', 'fr')).toBe(
+      'src/content/docs/fr'
+    );
+    expect(getSingletonPath(unprefixedConfig, 'homepage', 'en')).toBe(
+      'content/homepage'
+    );
+    expect(getSingletonPath(unprefixedConfig, 'homepage', 'fr')).toBe(
+      'content/homepage/fr'
+    );
+  });
+  test('shared entries are untouched', () => {
+    expect(getCollectionPath(unprefixedConfig, 'tags', 'en')).toBe(
+      'content/tags'
+    );
+    expect(getSingletonPath(unprefixedConfig, 'settings', 'en')).toBe(
+      'content/settings'
+    );
+  });
+});
+
+describe('the locale never resolves against a slug', () => {
+  test('a slug that looks like the token stays inside the collection', () => {
+    expect(
+      getCollectionItemPath(unprefixedConfig, 'posts', '{locale}', 'en')
+    ).toBe('content/posts/{locale}');
+    expect(getCollectionItemPath(i18nConfig, 'posts', '{locale}', 'en')).toBe(
+      'content/posts/en/{locale}'
+    );
+  });
+  test('a slug that looks like the token does not throw without i18n', () => {
+    const noI18n = config({
+      storage: { kind: 'local' },
+      collections: {
+        tags: collection({
+          label: 'Tags',
+          path: 'content/tags/*',
+          slugField: 'name',
+          schema: { name: fields.text({ label: 'Name' }) },
+        }),
+      },
+    }) as Config;
+    expect(getCollectionItemPath(noI18n, 'tags', '{locale}')).toBe(
+      'content/tags/{locale}'
+    );
+  });
+});
+
+describe('getLocaleDirsToSkip', () => {
+  test('skips the other locales when their directories nest inside the default', () => {
+    expect(getLocaleDirsToSkip(unprefixedConfig, 'docs', 'en')).toEqual(
+      new Set(['fr', 'de'])
+    );
+  });
+  test('skips nothing for the locales that have their own directory', () => {
+    expect(getLocaleDirsToSkip(unprefixedConfig, 'docs', 'fr')).toEqual(
+      new Set()
+    );
+  });
+  test('skips nothing when the locale directories are siblings', () => {
+    expect(getLocaleDirsToSkip(unprefixedConfig, 'guides', 'en')).toEqual(
+      new Set()
+    );
+  });
+  test('skips nothing for a `*` collection, where a slug cannot reach into a directory', () => {
+    expect(getLocaleDirsToSkip(unprefixedConfig, 'posts', 'en')).toEqual(
+      new Set()
+    );
+  });
+  test('skips nothing when the default locale is prefixed', () => {
+    expect(getLocaleDirsToSkip(i18nConfig, 'posts', 'en')).toEqual(new Set());
+  });
+  test('skips nothing for a shared collection', () => {
+    expect(getLocaleDirsToSkip(unprefixedConfig, 'tags', 'en')).toEqual(
+      new Set()
+    );
+  });
+});
+
+describe('singletonDirHoldsOtherLocales', () => {
+  test('is true for the unprefixed default', () => {
+    expect(
+      singletonDirHoldsOtherLocales(unprefixedConfig, 'homepage', 'en')
+    ).toBe(true);
+  });
+  test('is false for the other locales and for shared singletons', () => {
+    expect(
+      singletonDirHoldsOtherLocales(unprefixedConfig, 'homepage', 'fr')
+    ).toBe(false);
+    expect(
+      singletonDirHoldsOtherLocales(unprefixedConfig, 'settings', 'en')
+    ).toBe(false);
+  });
+  test('is false when the default locale is prefixed', () => {
+    expect(singletonDirHoldsOtherLocales(i18nConfig, 'homepage', 'en')).toBe(
+      false
+    );
+  });
+});
+
+describe('assertValidI18nConfig with prefixDefaultLocale: false', () => {
+  test('accepts the valid config', () => {
+    expect(() => assertValidI18nConfig(unprefixedConfig)).not.toThrow();
+  });
+  test('rejects a token that is not a whole path segment', () => {
+    const bad = config({
+      storage: { kind: 'local' },
+      i18n: {
+        locales: { en: 'English', fr: 'Français' },
+        defaultLocale: 'en',
+        prefixDefaultLocale: false,
+      },
+      collections: {
+        posts: collection({
+          label: 'Posts',
+          localized: true,
+          path: 'content/posts-{locale}/*',
+          slugField: 'title',
+          schema: { title: fields.text({ label: 'Title' }) },
+        }),
+      },
+    }) as Config;
+    expect(() => assertValidI18nConfig(bad)).toThrow(
+      /must be a whole path segment/
+    );
+  });
+  test('rejects a path that would be empty for the default locale', () => {
+    const bad = config({
+      storage: { kind: 'local' },
+      i18n: {
+        locales: { en: 'English', fr: 'Français' },
+        defaultLocale: 'en',
+        prefixDefaultLocale: false,
+      },
+      collections: {
+        posts: collection({
+          label: 'Posts',
+          localized: true,
+          path: '{locale}/*',
+          slugField: 'title',
+          schema: { title: fields.text({ label: 'Title' }) },
+        }),
+      },
+    }) as Config;
+    expect(() => assertValidI18nConfig(bad)).toThrow(/empty path/);
+  });
+  test('rejects a singleton that would be empty for the default locale', () => {
+    const bad = config({
+      storage: { kind: 'local' },
+      i18n: {
+        locales: { en: 'English', fr: 'Français' },
+        defaultLocale: 'en',
+        prefixDefaultLocale: false,
+      },
+      singletons: {
+        homepage: singleton({
+          label: 'Homepage',
+          localized: true,
+          path: '{locale}',
+          schema: { headline: fields.text({ label: 'Headline' }) },
+        }),
+      },
+    }) as Config;
+    expect(() => assertValidI18nConfig(bad)).toThrow(/empty path/);
+  });
+  test('a partial-segment token is still allowed when the default locale is prefixed', () => {
+    const ok = config({
+      storage: { kind: 'local' },
+      i18n: { locales: { en: 'English' }, defaultLocale: 'en' },
+      collections: {
+        posts: collection({
+          label: 'Posts',
+          localized: true,
+          path: 'content/posts-{locale}/*',
+          slugField: 'title',
+          schema: { title: fields.text({ label: 'Title' }) },
+        }),
+      },
+    }) as Config;
+    expect(() => assertValidI18nConfig(ok)).not.toThrow();
+  });
+});
+
+describe('locale codes must be usable as a directory name', () => {
+  const withCode = (code: string) =>
+    config({
+      storage: { kind: 'local' },
+      i18n: { locales: { en: 'English', [code]: 'Bad' }, defaultLocale: 'en' },
+    }) as Config;
+  test('rejects codes that are not a single path segment', () => {
+    expect(() => assertValidI18nConfig(withCode('a/b'))).toThrow(
+      /single path segment/
+    );
+    expect(() => assertValidI18nConfig(withCode('..'))).toThrow(
+      /single path segment/
+    );
+    expect(() => assertValidI18nConfig(withCode(''))).toThrow(
+      /single path segment/
+    );
   });
 });
