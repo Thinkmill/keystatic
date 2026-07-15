@@ -30,7 +30,7 @@
     "postinstall": "preconstruct dev && manypkg check && tsx design-system/pkg/build-l10n.mts && cd packages/keystatic && pnpm run setup",
     "lint": "eslint --fix",
     "prettier": "prettier **/*.{ts,tsx}",
-    "release": "pnpm build:packages && changeset publish",
+    "release": "pnpm build:packages && node scripts/prepare-publish.mjs && changeset publish",
     "start:docs": "pnpm --filter=keystatic-docs start",
     "start:designsystem": "pnpm --filter=@keystar/docs start",
     "static": "pnpm run validate && pnpm run test",

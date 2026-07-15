@@ -4,6 +4,15 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    react-aria:
+      specifier: 3.50.0
+      version: 3.50.0
+    react-stately:
+      specifier: 3.48.0
+      version: 3.48.0
+
 importers:
 
   .:
@@ -159,7 +168,7 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0
       react-aria:
-        specifier: 3.50.0
+        specifier: 'catalog:'
         version: 3.50.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-dom:
         specifier: ^19.0.0
@@ -273,10 +282,10 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       react-aria:
-        specifier: 3.50.0
+        specifier: 'catalog:'
         version: 3.50.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-stately:
-        specifier: 3.48.0
+        specifier: 'catalog:'
         version: 3.48.0(react@19.0.0)
     devDependencies:
       '@internationalized/string-compiler':
@@ -1019,10 +1028,10 @@ importers:
         specifier: ^1.30.2
         version: 1.31.7
       react-aria:
-        specifier: 3.50.0
+        specifier: 'catalog:'
         version: 3.50.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-stately:
-        specifier: 3.48.0
+        specifier: 'catalog:'
         version: 3.48.0(react@19.0.0)
       scroll-into-view-if-needed:
         specifier: ^3.0.3
