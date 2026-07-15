@@ -114,6 +114,13 @@ path: 'i18n/{locale}/posts/*'      // i18n/en/posts/my-post.mdoc
 path: 'content/homepage/{locale}'  // content/homepage/en.yaml
 ```
 
+A collection's [`template`](/docs/collections) resolves the token too, so new entries can start from a skeleton written in the language you're editing. Leave the token out and every language starts from the same one:
+
+```tsx
+template: 'content/posts/{locale}/_template'  // one skeleton per language
+template: 'content/_templates/post'           // shared
+```
+
 {% aside icon="⚡️" %}
 Everything up to the `path` [wildcard](/docs/path-wildcard) is a fixed prefix, so a `{locale}` token there is just an ordinary folder. That means you can adopt this feature on an **existing** multi-language project without moving any files — as long as your folders already sit where the token resolves to.
 {% /aside %}

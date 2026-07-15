@@ -6,6 +6,7 @@ import {
   assertValidI18nConfig,
   getCollectionItemPath,
   getCollectionPath,
+  getCollectionTemplatePath,
   getContentLocales,
   getLocaleDirsToSkip,
   getSingletonPath,
@@ -517,6 +518,150 @@ describe('locale codes must be usable as a directory name', () => {
     );
     expect(() => assertValidI18nConfig(withCode(''))).toThrow(
       /single path segment/
+    );
+  });
+});
+
+const templateConfig = config({
+  storage: { kind: 'local' },
+  i18n: {
+    locales: { en: 'English', fr: 'Français' },
+    defaultLocale: 'en',
+  },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      localized: true,
+      path: 'content/posts/{locale}/*',
+      template: 'content/posts/{locale}/_template',
+      slugField: 'title',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+    shared: collection({
+      label: 'Shared',
+      localized: true,
+      path: 'content/shared/{locale}/*',
+      template: 'content/_templates/shared',
+      slugField: 'title',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+    plain: collection({
+      label: 'Plain',
+      path: 'content/plain/*',
+      slugField: 'title',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+  },
+}) as Config;
+
+describe('getCollectionTemplatePath', () => {
+  test('resolves the locale in a template path', () => {
+    expect(getCollectionTemplatePath(templateConfig, 'posts', 'en')).toBe(
+      'content/posts/en/_template'
+    );
+    expect(getCollectionTemplatePath(templateConfig, 'posts', 'fr')).toBe(
+      'content/posts/fr/_template'
+    );
+  });
+  test('leaves a template without the token shared across locales', () => {
+    expect(getCollectionTemplatePath(templateConfig, 'shared', 'en')).toBe(
+      'content/_templates/shared'
+    );
+    expect(getCollectionTemplatePath(templateConfig, 'shared', 'fr')).toBe(
+      'content/_templates/shared'
+    );
+  });
+  test('is undefined when the collection has no template', () => {
+    expect(getCollectionTemplatePath(templateConfig, 'plain', 'en')).toBe(
+      undefined
+    );
+  });
+  test('drops the segment for the unprefixed default locale', () => {
+    const unprefixed = config({
+      storage: { kind: 'local' },
+      i18n: {
+        locales: { en: 'English', fr: 'Français' },
+        defaultLocale: 'en',
+        prefixDefaultLocale: false,
+      },
+      collections: {
+        posts: collection({
+          label: 'Posts',
+          localized: true,
+          path: 'content/posts/{locale}/*',
+          template: 'content/posts/{locale}/_template',
+          slugField: 'title',
+          schema: { title: fields.text({ label: 'Title' }) },
+        }),
+      },
+    }) as Config;
+    expect(getCollectionTemplatePath(unprefixed, 'posts', 'en')).toBe(
+      'content/posts/_template'
+    );
+    expect(getCollectionTemplatePath(unprefixed, 'posts', 'fr')).toBe(
+      'content/posts/fr/_template'
+    );
+  });
+});
+
+describe('assertValidI18nConfig checks templates', () => {
+  test('accepts a localized template and a shared one', () => {
+    expect(() => assertValidI18nConfig(templateConfig)).not.toThrow();
+  });
+  test('rejects the token in a template when i18n is not set', () => {
+    const bad = config({
+      storage: { kind: 'local' },
+      collections: {
+        posts: collection({
+          label: 'Posts',
+          path: 'content/posts/*',
+          template: 'content/posts/{locale}/_template',
+          slugField: 'title',
+          schema: { title: fields.text({ label: 'Title' }) },
+        }),
+      },
+    }) as Config;
+    expect(() => assertValidI18nConfig(bad)).toThrow(
+      /template but config.i18n is not set/
+    );
+  });
+  test('rejects the token in a template when the collection is not localized', () => {
+    const bad = config({
+      storage: { kind: 'local' },
+      i18n: { locales: { en: 'English' }, defaultLocale: 'en' },
+      collections: {
+        posts: collection({
+          label: 'Posts',
+          path: 'content/posts/*',
+          template: 'content/posts/{locale}/_template',
+          slugField: 'title',
+          schema: { title: fields.text({ label: 'Title' }) },
+        }),
+      },
+    }) as Config;
+    expect(() => assertValidI18nConfig(bad)).toThrow(/is not marked localized/);
+  });
+  test('rejects a partial-segment token in a template when the default locale is unprefixed', () => {
+    const bad = config({
+      storage: { kind: 'local' },
+      i18n: {
+        locales: { en: 'English', fr: 'Français' },
+        defaultLocale: 'en',
+        prefixDefaultLocale: false,
+      },
+      collections: {
+        posts: collection({
+          label: 'Posts',
+          localized: true,
+          path: 'content/posts/{locale}/*',
+          template: 'content/posts/tpl-{locale}',
+          slugField: 'title',
+          schema: { title: fields.text({ label: 'Title' }) },
+        }),
+      },
+    }) as Config;
+    expect(() => assertValidI18nConfig(bad)).toThrow(
+      /must be a whole path segment/
     );
   });
 });

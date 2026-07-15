@@ -102,6 +102,17 @@ export function getCollectionItemSlugSuffix(
   return path ? `/${path}` : '';
 }
 
+export function getCollectionTemplatePath(
+  config: Config,
+  collection: string,
+  locale?: string
+) {
+  const template = config.collections![collection].template;
+  return template === undefined
+    ? undefined
+    : substituteLocale(template, locale, config.i18n);
+}
+
 export function getSingletonPath(
   config: Config,
   singleton: string,
@@ -377,22 +388,50 @@ export function assertValidI18nConfig(config: Config): void {
         type === 'Collection'
           ? fixPath(entry.path!.replace(/\*\*?.*$/, ''))
           : fixPath(entry.path!);
-      const segments = prefix.split('/');
-      if (segments.some(x => x !== LOCALE_TOKEN && x.includes(LOCALE_TOKEN))) {
-        throw new Error(
-          `${type} "${key}" uses the ${LOCALE_TOKEN} token inside a path segment, which cannot be removed when config.i18n.prefixDefaultLocale is false. The token must be a whole path segment.`
-        );
-      }
-      if (segments.every(x => x === LOCALE_TOKEN)) {
-        throw new Error(
-          `${type} "${key}" would have an empty path for the default locale when config.i18n.prefixDefaultLocale is false. Put the ${LOCALE_TOKEN} token below a directory.`
-        );
-      }
+      checkTokenIsWholeSegment(`${type} "${key}"`, prefix);
+    }
+  };
+
+  const checkTokenIsWholeSegment = (label: string, path: string) => {
+    const segments = path.split('/');
+    if (segments.some(x => x !== LOCALE_TOKEN && x.includes(LOCALE_TOKEN))) {
+      throw new Error(
+        `${label} uses the ${LOCALE_TOKEN} token inside a path segment, which cannot be removed when config.i18n.prefixDefaultLocale is false. The token must be a whole path segment.`
+      );
+    }
+    if (segments.every(x => x === LOCALE_TOKEN)) {
+      throw new Error(
+        `${label} would have an empty path for the default locale when config.i18n.prefixDefaultLocale is false. Put the ${LOCALE_TOKEN} token below a directory.`
+      );
+    }
+  };
+
+  const checkTemplate = (
+    key: string,
+    entry: { template?: string; localized?: boolean }
+  ) => {
+    if (!entry.template?.includes(LOCALE_TOKEN)) return;
+    if (!i18n) {
+      throw new Error(
+        `Collection "${key}" uses the ${LOCALE_TOKEN} token in its template but config.i18n is not set`
+      );
+    }
+    if (!isLocalized(entry)) {
+      throw new Error(
+        `Collection "${key}" uses the ${LOCALE_TOKEN} token in its template but is not marked localized`
+      );
+    }
+    if (i18n.prefixDefaultLocale === false) {
+      checkTokenIsWholeSegment(
+        `Collection "${key}" template`,
+        fixPath(entry.template)
+      );
     }
   };
 
   for (const [key, collection] of Object.entries(config.collections ?? {})) {
     checkEntry('Collection', key, collection);
+    checkTemplate(key, collection);
   }
   for (const [key, singleton] of Object.entries(config.singletons ?? {})) {
     checkEntry('Singleton', key, singleton);

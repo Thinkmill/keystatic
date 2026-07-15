@@ -321,3 +321,41 @@ describe('the Admin UI listing matches the reader', () => {
     ).toEqual(['hello']);
   });
 });
+
+const templateConfig = config({
+  storage: { kind: 'local' },
+  i18n: { locales: { en: 'English', fr: 'Français' }, defaultLocale: 'en' },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      localized: true,
+      path: 'content/posts/{locale}/*',
+      template: 'content/posts/{locale}/_template',
+      slugField: 'title',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+    shared: collection({
+      label: 'Shared',
+      localized: true,
+      path: 'content/shared/{locale}/*',
+      template: 'content/_templates/shared',
+      slugField: 'title',
+      schema: { title: fields.text({ label: 'Title' }) },
+    }),
+  },
+});
+
+describe('templates resolve the locale', () => {
+  test('a localized template is allowed for every locale, never as a raw token', () => {
+    const dirs = getAllowedDirectories(templateConfig as any);
+    expect(dirs).toContain('content/posts/en/_template');
+    expect(dirs).toContain('content/posts/fr/_template');
+    expect(dirs).not.toContain('content/posts/{locale}/_template');
+  });
+  test('a template without the token is shared across locales', () => {
+    const dirs = getAllowedDirectories(templateConfig as any);
+    expect(dirs.filter(x => x === 'content/_templates/shared')).toEqual([
+      'content/_templates/shared',
+    ]);
+  });
+});

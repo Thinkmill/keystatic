@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import {
   getCollectionPath,
+  getCollectionTemplatePath,
   getContentLocales,
   getSingletonFormat,
   getSingletonPath,
@@ -129,9 +130,10 @@ export function getAllowedDirectories(config: Config) {
           { data: 'yaml', contentField: undefined, dataLocation: 'index' }
         )
       );
-    }
-    if (collectionConfig.template) {
-      allowedDirectories.push(collectionConfig.template);
+      const template = getCollectionTemplatePath(config, collection, locale);
+      if (template !== undefined) {
+        allowedDirectories.push(template);
+      }
     }
   }
   for (const [singleton, singletonConfig] of Object.entries(

@@ -41,6 +41,7 @@ import { useYJsValue } from './useYJsValue';
 import {
   getCollectionFormat,
   getCollectionItemPath,
+  getCollectionTemplatePath,
   getSlugFromState,
   isGitHubConfig,
   useShowRestoredDraftMessage,
@@ -124,11 +125,17 @@ function CreateItemWrapper(props: {
 
   const isFromTemplate = !!duplicateSlug || !!collectionConfig.template;
 
+  const templatePath = getCollectionTemplatePath(
+    props.config,
+    props.collection,
+    locale
+  );
+
   const itemData = useItemData({
     config: props.config,
     dirpath:
-      collectionConfig.template && !duplicateSlug
-        ? collectionConfig.template
+      templatePath && !duplicateSlug
+        ? templatePath
         : getCollectionItemPath(
             props.config,
             props.collection,
