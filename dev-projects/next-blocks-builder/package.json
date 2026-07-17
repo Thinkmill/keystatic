@@ -1,6 +1,6 @@
 {
   "name": "@example/next-block-builder",
-  "version": "0.1.51",
+  "version": "0.0.0-test-20260717050758",
   "private": true,
   "scripts": {
     "dev": "next dev",

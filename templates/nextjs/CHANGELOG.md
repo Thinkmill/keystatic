@@ -1,5 +1,13 @@
 # @keystatic/templates-nextjs
 
+## 0.0.0-test-20260717050758
+
+### Patch Changes
+
+- Updated dependencies [[`0697736`](https://github.com/Thinkmill/keystatic/commit/06977363e0794727cfc5008770d6948bbc370f69)]:
+  - @keystatic/core@0.0.0-test-20260717050758
+  - @keystatic/next@5.0.4
+
 ## 0.0.65
 
 ### Patch Changes
