@@ -1,4 +1,4 @@
-import { useOverlayTriggerState } from '@react-stately/overlays';
+import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 import { ClipboardEvent, useEffect, useState } from 'react';
 import { useSelected, useSlateStatic } from 'slate-react';
 import * as s from 'superstruct';

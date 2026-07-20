@@ -1,10 +1,8 @@
-import { useTooltip } from '@react-aria/tooltip';
-import {
-  filterDOMProps,
-  mergeProps,
-  mergeRefs,
-  useObjectRef,
-} from '@react-aria/utils';
+import { useTooltip } from 'react-aria/useTooltipTrigger';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { mergeProps } from 'react-aria/mergeProps';
+import { mergeRefs } from 'react-aria/mergeRefs';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import {
   ForwardedRef,
   forwardRef,
@@ -30,7 +28,7 @@ import { isReactText } from '@keystar/ui/utils';
 
 import { TooltipContext } from './context';
 import { TooltipProps } from './types';
-import { useOverlayPosition } from '@react-aria/overlays';
+import { useOverlayPosition } from 'react-aria/useOverlayPosition';
 
 /**
  * A floating text label that succinctly describes the function of an

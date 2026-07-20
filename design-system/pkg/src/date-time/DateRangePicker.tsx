@@ -1,9 +1,9 @@
-import { useDateRangePicker } from '@react-aria/datepicker';
-import { useFocusRing } from '@react-aria/focus';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps } from '@react-aria/utils';
-import { useDateRangePickerState } from '@react-stately/datepicker';
-import { DateValue } from '@react-types/datepicker';
+import { useDateRangePicker } from 'react-aria/useDateRangePicker';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { useHover } from 'react-aria/useHover';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useDateRangePickerState } from 'react-stately/useDateRangePickerState';
+import { DateValue } from 'react-stately/useCalendarState';
 import React, { ReactElement, Ref, useRef } from 'react';
 
 import { FieldButton } from '@keystar/ui/button';

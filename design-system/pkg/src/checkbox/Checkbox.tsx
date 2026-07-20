@@ -1,5 +1,6 @@
-import { useCheckbox, useCheckboxGroupItem } from '@react-aria/checkbox';
-import { useToggleState } from '@react-stately/toggle';
+import { useCheckbox } from 'react-aria/useCheckbox';
+import { useCheckboxGroupItem } from 'react-aria/useCheckboxGroup';
+import { useToggleState } from 'react-stately/useToggleState';
 import {
   HTMLAttributes,
   InputHTMLAttributes,

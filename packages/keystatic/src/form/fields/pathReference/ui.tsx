@@ -31,7 +31,7 @@ export function PathReferenceInput(
       ? `${props.label} is required`
       : undefined;
   // this state & effect shouldn't really exist
-  // it's here because react-aria/stately calls onSelectionChange with null
+  // it's here because react-aria/stately calls onChange with null
   // after selecting an item if we immediately remove the error message
   // so we delay it with an effect
   const [errorMessage, setErrorMessage] = useState(_errorMessage);
@@ -44,8 +44,8 @@ export function PathReferenceInput(
     <Combobox
       label={props.label}
       description={props.description}
-      selectedKey={props.value}
-      onSelectionChange={key => {
+      value={props.value}
+      onChange={key => {
         if (typeof key === 'string' || key === null) {
           props.onChange(key);
         }

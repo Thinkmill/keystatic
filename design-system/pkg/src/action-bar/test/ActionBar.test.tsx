@@ -12,7 +12,7 @@ import { act, renderWithProvider, within } from '#test-utils';
 
 import { ListExample } from '../stories/ListExample';
 
-// jest.mock('@react-aria/live-announcer');
+// jest.mock('react-aria/private/live-announcer/LiveAnnouncer');
 
 describe('action-bar/ActionBar', () => {
   let user: ReturnType<typeof userEvent.setup>;

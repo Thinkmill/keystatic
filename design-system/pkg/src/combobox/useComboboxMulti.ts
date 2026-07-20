@@ -1,20 +1,21 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useMenuTrigger } from '@react-aria/menu';
-import { getItemId, listData } from '@react-aria/listbox';
-import { ariaHideOutside } from '@react-aria/overlays';
-import {
-  ListKeyboardDelegate,
-  useSelectableCollection,
-} from '@react-aria/selection';
-import { useTextField } from '@react-aria/textfield';
-import { chain, mergeProps, useLabels } from '@react-aria/utils';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { useMenuTrigger } from 'react-aria/useMenu';
+import { getItemId, listData } from 'react-aria/private/listbox/utils';
+import { ariaHideOutside } from 'react-aria/private/overlays/ariaHideOutside';
+import { ListKeyboardDelegate } from 'react-aria/ListKeyboardDelegate';
+import { useSelectableCollection } from 'react-aria/private/selection/useSelectableCollection';
+import { useTextField } from 'react-aria/useTextField';
+import { chain } from 'react-aria/chain';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useLabels } from 'react-aria/private/utils/useLabels';
 import {
   KeyboardDelegate,
   KeyboardEvent,
   LayoutDelegate,
-  PressEvent,
   RefObject,
+  PressEvent,
 } from '@react-types/shared';
+
 import { FocusEvent, useEffect, useMemo, useRef } from 'react';
 
 import localizedMessages from './l10n';
@@ -269,6 +270,7 @@ export function useComboboxMulti<T extends object>(
       spellCheck: 'false',
     }),
     listBoxProps: mergeProps(menuProps, listBoxProps, {
+      onAction: undefined,
       // autoFocus: state.focusStrategy,
       shouldUseVirtualFocus: true,
       shouldSelectOnPressUp: true,

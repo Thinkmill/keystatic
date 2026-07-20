@@ -3,9 +3,9 @@ import { Transforms, Text, Editor, Path, Point, Node } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { matchSorter } from 'match-sorter';
 import scrollIntoView from 'scroll-into-view-if-needed';
-import { useOverlayTrigger } from '@react-aria/overlays';
-import { useListState } from '@react-stately/list';
-import { useOverlayTriggerState } from '@react-stately/overlays';
+import { useOverlayTrigger } from 'react-aria/useOverlayTrigger';
+import { useListState } from 'react-stately/useListState';
+import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 
 import { Item, ListBoxBase, useListBoxLayout } from '@keystar/ui/listbox';
 import { Popover } from '@keystar/ui/overlays';

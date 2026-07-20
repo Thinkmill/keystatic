@@ -6,7 +6,7 @@ import { tokenSchema } from '@keystar/ui/style';
 import { ActionButton } from '@keystar/ui/button';
 import { Switch } from '@keystar/ui/switch';
 import { Heading, Text } from '@keystar/ui/typography';
-import { useAsyncList } from '@react-stately/data';
+import { useAsyncList } from 'react-stately/useAsyncList';
 import { Key, useMemo, useState } from 'react';
 
 import {

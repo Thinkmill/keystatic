@@ -3,10 +3,14 @@ import {
   endOfMonth,
   getWeeksInMonth,
 } from '@internationalized/date';
-import { useCalendarGrid } from '@react-aria/calendar';
-import { useLocale } from '@react-aria/i18n';
-import { CalendarState, RangeCalendarState } from '@react-stately/calendar';
-import { CalendarPropsBase } from '@react-types/calendar';
+import { useCalendarGrid } from 'react-aria/useCalendar';
+import { useLocale } from 'react-aria/I18nProvider';
+import {
+  CalendarState,
+  CalendarPropsBase,
+} from 'react-stately/useCalendarState';
+import { RangeCalendarState } from 'react-stately/useRangeCalendarState';
+
 import { DOMProps } from '@react-types/shared';
 import React from 'react';
 

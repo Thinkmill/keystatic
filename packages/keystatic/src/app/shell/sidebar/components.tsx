@@ -1,6 +1,7 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { PressProps } from '@react-aria/interactions';
-import { Section, Item } from '@react-stately/collections';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { PressProps } from 'react-aria/usePress';
+import { Section } from 'react-stately/Section';
+import { Item } from 'react-stately/Item';
 import { gql } from '@ts-gql/tag/no-transform';
 import {
   ForwardedRef,

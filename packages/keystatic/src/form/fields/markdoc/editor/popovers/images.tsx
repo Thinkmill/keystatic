@@ -8,7 +8,7 @@ import { Divider, Flex } from '@keystar/ui/layout';
 import { Content } from '@keystar/ui/slots';
 import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { useMemo, useState } from 'react';
 import { clientSideValidateProp } from '../../../../errors';
 import { FormValueContentFromPreviewProps } from '../../../../form-from-preview';

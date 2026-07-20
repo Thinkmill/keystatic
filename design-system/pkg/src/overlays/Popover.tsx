@@ -1,6 +1,7 @@
-import { DismissButton, usePopover } from '@react-aria/overlays';
-import { useObjectRef } from '@react-aria/utils';
-import { Axis } from '@react-types/overlays';
+import { DismissButton } from 'react-aria/Overlay';
+import { usePopover } from 'react-aria/usePopover';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { Axis } from 'react-aria/useOverlayPosition';
 import {
   forwardRef,
   ForwardedRef,

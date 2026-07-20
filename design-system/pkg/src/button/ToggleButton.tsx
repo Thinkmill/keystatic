@@ -1,7 +1,9 @@
-import { useToggleButton } from '@react-aria/button';
-import { useHover } from '@react-aria/interactions';
-import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
-import { useToggleState } from '@react-stately/toggle';
+import { useToggleButton } from 'react-aria/useToggleButton';
+import { useHover } from 'react-aria/useHover';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useToggleState } from 'react-stately/useToggleState';
 import {
   ForwardedRef,
   forwardRef,

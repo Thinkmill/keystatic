@@ -9,8 +9,8 @@ import { VStack } from '@keystar/ui/layout';
 import { MenuTrigger, Menu, Item } from '@keystar/ui/menu';
 import { Content } from '@keystar/ui/slots';
 import { Heading } from '@keystar/ui/typography';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useField } from '@react-aria/label';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { useField } from 'react-aria/useField';
 import { useId, useState, useMemo } from 'react';
 
 import {

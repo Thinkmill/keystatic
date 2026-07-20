@@ -1,7 +1,8 @@
-import { useButton } from '@react-aria/button';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
-import { AriaButtonProps } from '@react-types/button';
+import { useButton, AriaButtonProps } from 'react-aria/useButton';
+import { useHover } from 'react-aria/useHover';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+
 import { ForwardedRef, forwardRef } from 'react';
 
 import { useProvider, useProviderProps } from '@keystar/ui/core';

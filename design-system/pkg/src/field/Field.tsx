@@ -1,4 +1,4 @@
-import { useField } from '@react-aria/label';
+import { useField } from 'react-aria/useField';
 
 import { FieldPrimitive } from './FieldPrimitive';
 import { FieldProps, FieldRenderProp } from './types';

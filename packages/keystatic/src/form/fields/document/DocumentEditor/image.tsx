@@ -1,4 +1,4 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { useMemo, useState } from 'react';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 import { Editor, Transforms } from 'slate';

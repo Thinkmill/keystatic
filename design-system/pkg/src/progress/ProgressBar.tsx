@@ -1,4 +1,4 @@
-import { useProgressBar } from '@react-aria/progress';
+import { useProgressBar } from 'react-aria/useProgressBar';
 import { ForwardedRef, forwardRef } from 'react';
 
 import { BarBase } from './BarBase';

@@ -1,4 +1,4 @@
-import { AriaRadioGroupProps, AriaRadioProps } from '@react-aria/radio';
+import { AriaRadioGroupProps, AriaRadioProps } from 'react-aria/useRadioGroup';
 import { ReactNode } from 'react';
 
 import { FieldProps } from '@keystar/ui/field';

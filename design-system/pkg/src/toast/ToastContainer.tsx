@@ -1,5 +1,5 @@
-import { useLocale } from '@react-aria/i18n';
-import { useToastRegion } from '@react-aria/toast';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useToastRegion } from 'react-aria/useToast';
 import React, { ReactElement, useRef } from 'react';
 import ReactDOM from 'react-dom';
 

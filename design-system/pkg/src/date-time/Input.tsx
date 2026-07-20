@@ -1,5 +1,6 @@
-import { mergeProps, useObjectRef } from '@react-aria/utils';
-import { useFocusRing } from '@react-aria/focus';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useFocusRing } from 'react-aria/useFocusRing';
 import { CSSProperties, DOMAttributes, ReactNode, forwardRef } from 'react';
 
 import {

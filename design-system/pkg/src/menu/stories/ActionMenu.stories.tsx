@@ -92,16 +92,16 @@ function DirectionAlignment() {
       <Picker
         label="Align"
         items={alignItems}
-        selectedKey={align}
-        onSelectionChange={key => handleAlignChange(String(key))}
+        value={align}
+        onChange={key => handleAlignChange(String(key))}
       >
         {item => <Item key={item.key}>{item.label}</Item>}
       </Picker>
       <Picker
         label="Direction"
         items={directionItems}
-        selectedKey={direction}
-        onSelectionChange={key => handleDirectionChange(String(key))}
+        value={direction}
+        onChange={key => handleDirectionChange(String(key))}
       >
         {item => <Item key={item.key}>{item.label}</Item>}
       </Picker>

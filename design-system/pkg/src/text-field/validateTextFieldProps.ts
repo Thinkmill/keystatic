@@ -1,7 +1,5 @@
-import { validateFieldProps } from '@keystar/ui/field';
+import { FieldProps, validateFieldProps } from '@keystar/ui/field';
 
-import { TextFieldProps } from './types';
-
-export function validateTextFieldProps<T extends TextFieldProps>(props: T): T {
+export function validateTextFieldProps<T extends FieldProps>(props: T): T {
   return validateFieldProps(props);
 }

@@ -203,4 +203,14 @@ describe('breadcrumbs/Breadcrumbs', () => {
     expect(items[0].tagName).toBe('A');
     expect(items[0]).toHaveAttribute('href', 'https://example.com');
   });
+
+  it('does not pass an empty href to the rendered element', function () {
+    let { getByText } = renderWithProvider(
+      <Breadcrumbs>
+        <Item href="">Folder 1</Item>
+      </Breadcrumbs>
+    );
+
+    expect(getByText('Folder 1')).not.toHaveAttribute('href');
+  });
 });
