@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.6.0
+
+### Minor Changes
+
+- [#1557](https://github.com/Thinkmill/keystatic/pull/1557) [`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a) Thanks [@emmatown](https://github.com/emmatown)! - Updated to `@keystar/ui@0.8.0`, `react-aria@3.50.0` and `react-stately@3.48.0`. The versions of these are now pinned to exact versions and are declared as standard dependencies as well as optional peer dependencies. If you have explicit dependencies on `@keystar/ui`, `react-aria` or `react-stately`, you should ensure you have the same versions installed otherwise you will get a peer dependency error/warning. In future, `@keystatic/core` may bump these packages in patch versions so you should likely pin `@keystatic/core` to an exact version if you depend on these packages yourself.
+
+### Patch Changes
+
+- Updated dependencies [[`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a)]:
+  - @keystar/ui@0.8.0
+
 ## 0.5.51
 
 ### Patch Changes
