@@ -1516,12 +1516,6 @@
   "peerDependenciesMeta": {
     "next": {
       "optional": true
-    },
-    "react-aria": {
-      "optional": true
-    },
-    "react-stately": {
-      "optional": true
     }
   },
   "imports": {
