@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.9.0
+
+### Minor Changes
+
+- [#1566](https://github.com/Thinkmill/keystatic/pull/1566) [`3cd13ab`](https://github.com/Thinkmill/keystatic/commit/3cd13ab337cf86a61481dc09cccd4a0881468ed2) Thanks [@emmatown](https://github.com/emmatown)! - `@keystar/ui` class names are now prefixed with `kui-` and use an internal implementation of `@emotion/css` to avoid dependencies on a large number of Babel-related dependencies
+
 ## 0.8.1
 
 ### Patch Changes
