@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.6.1
+
+### Patch Changes
+
+- [#1564](https://github.com/Thinkmill/keystatic/pull/1564) [`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9) Thanks [@emmatown](https://github.com/emmatown)! - Make `react-aria`, `react-stately` and `@keystar/ui` non-optional peer dependencies + normal dependencies instead of optional peer dependencies + normal dependencies to fix installing with pnpm
+
+- Updated dependencies [[`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9)]:
+  - @keystar/ui@0.8.1
+
 ## 0.6.0
 
 ### Minor Changes
