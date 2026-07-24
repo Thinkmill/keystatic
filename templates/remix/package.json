@@ -1,7 +1,7 @@
 {
   "name": "@keystatic/templates-remix",
   "type": "module",
-  "version": "0.0.53",
+  "version": "0.0.0-test-20260724041727",
   "license": "MIT",
   "repository": {
     "type": "git",
