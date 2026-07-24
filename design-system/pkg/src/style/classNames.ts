@@ -1,4 +1,4 @@
-import { cx } from '@emotion/css';
+import { cx } from './emotion';
 import { TOKEN_PREFIX } from '@keystar/ui/primitives';
 import { assert } from 'emery';
 

@@ -2,7 +2,7 @@ import { MaybeArray } from '@keystar/ui/types';
 import { CSSProperties } from 'react';
 
 import { tokenSchema } from './tokens';
-import { cx } from '@emotion/css';
+import type { cx } from './emotion';
 
 export type CSSProp = keyof CSSProperties;
 export type Primitive = number | string | boolean | null | undefined;
