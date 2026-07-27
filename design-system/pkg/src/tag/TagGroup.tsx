@@ -1,7 +1,6 @@
 import React, {
   type ForwardedRef,
   type ReactElement,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -14,8 +13,9 @@ import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormat
 import { ListKeyboardDelegate } from 'react-aria/ListKeyboardDelegate';
 import { AriaTagGroupProps, useTagGroup } from 'react-aria/useTagGroup';
 import { useId } from 'react-aria/useId';
-import { useLayoutEffect } from 'react';
 import { useObjectRef } from 'react-aria/useObjectRef';
+import { useEffectEvent } from 'react-aria/private/utils/useEffectEvent';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
 import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
 import { useValueEffect } from 'react-aria/private/utils/useValueEffect';
 import { ListCollection } from 'react-stately/private/list/ListCollection';
@@ -69,7 +69,6 @@ function TagGroup<T extends object>(
   // props = useFormProps(props);
   let {
     maxRows,
-    children,
     actionLabel,
     onAction,
     renderEmptyState: renderEmptyStateProp,
@@ -124,7 +123,7 @@ function TagGroup<T extends object>(
   const actionsId = useId();
   const actionsRef = useRef<HTMLDivElement>(null);
 
-  let updateVisibleTagCount = useCallback(() => {
+  let updateVisibleTagCount = () => {
     if (maxRows && maxRows > 0) {
       let computeVisibleTagCount = () => {
         const containerEl = containerRef.current;
@@ -205,18 +204,21 @@ function TagGroup<T extends object>(
         yield computeVisibleTagCount();
       });
     }
-  }, [maxRows, setTagState, direction, state.collection.size]);
+  };
+
+  let updateVisibleTagCountEffect = useEffectEvent(updateVisibleTagCount);
 
   useResizeObserver({ ref: containerRef, onResize: updateVisibleTagCount });
 
-  // we only want this effect to run when children change
-  // eslint-disable-next-line react-compiler/react-compiler
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(updateVisibleTagCount, [children]);
+  useLayoutEffect(() => {
+    if (state.collection.size > 0 && maxRows != null && maxRows > 0) {
+      queueMicrotask(updateVisibleTagCountEffect);
+    }
+  }, [state.collection.size, maxRows, updateVisibleTagCountEffect]);
 
   useEffect(() => {
     // Recalculate visible tags when fonts are loaded.
-    document.fonts?.ready.then(() => updateVisibleTagCount());
+    document.fonts?.ready.then(() => updateVisibleTagCountEffect());
 
     // we strictly want this effect to only run once
     // eslint-disable-next-line react-compiler/react-compiler
