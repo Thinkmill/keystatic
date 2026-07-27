@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.9.1
+
+### Patch Changes
+
+- [#1569](https://github.com/Thinkmill/keystatic/pull/1569) [`43c049b`](https://github.com/Thinkmill/keystatic/commit/43c049b3b7738276f1262e975e32252cf2c19b90) Thanks [@emmatown](https://github.com/emmatown)! - Fix `TagGroup` not showing items added after the initial render when `maxRows` is set
+
 ## 0.9.0
 
 ### Minor Changes
