@@ -11,7 +11,6 @@ import React, {
   RefObject,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -83,7 +82,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
   let buttonRef = useRef<HTMLButtonElement>(null);
   let inputRef = useRef<HTMLInputElement>(null);
   let listBoxRef = useRef<HTMLDivElement>(null);
-  let [popoverRefLikeValue, popoverRef] = useStatefulRef<HTMLDivElement>();
+  let popoverRef = useRef<HTMLDivElement>(null);
   let fieldRef = useObjectRef(forwardedRef);
 
   let { contains } = useFilter({ sensitivity: 'base' });
@@ -106,7 +105,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
       ...props,
       layoutDelegate: layout,
       buttonRef,
-      popoverRef: popoverRefLikeValue,
+      popoverRef,
       listBoxRef,
       inputRef,
       menuTrigger,
@@ -218,16 +217,6 @@ export function usePopoverStyles(props: {
     width: menuWidth,
     minWidth: menuWidthProp ?? menuWidth,
   };
-}
-
-// FIXME: this is a hack to work around a requirement of react-aria. object refs
-// never have the value early enough, so we need to use a stateful ref to force
-// a re-render.
-export function useStatefulRef<T extends HTMLElement>() {
-  let [current, statefulRef] = useState<T | null>(null);
-  return useMemo(() => {
-    return [{ current }, statefulRef] as const;
-  }, [current, statefulRef]);
 }
 
 interface ComboboxInputProps<T> extends ComboboxProps<T> {
