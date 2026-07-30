@@ -155,6 +155,10 @@ export function makeGenericAPIRouteHandler(
       ) {
         return redirect(`${basePath}/setup/`);
       }
+      // LFS proxy is independent of GitHub OAuth — keep available in dev when
+      // OAuth credentials are absent, otherwise pre-existing LFS-tracked images
+      // cannot be resolved or replaced from the editor.
+      if (joined === 'lfs/batch') return lfsBatchProxy(req, _config.lfs);
       return { status: 404, body: 'Not Found' };
     };
   }
@@ -503,8 +507,11 @@ async function lfsBatchProxy(
   }
 
   // Build the LFS server URL: https://server/{r2endpoint}/{bucket}/objects/batch
+  // No trailing slash — the canonical Git LFS Batch API path is /objects/batch
+  // (per https://github.com/git-lfs/git-lfs/blob/main/docs/api/batch.md). Some
+  // LFS server implementations match the path strictly and 404 on the slashed form.
   const lfsUrl = new URL(
-    `/${lfsCredentials.r2Endpoint}/${bucket}/objects/batch/`,
+    `/${lfsCredentials.r2Endpoint}/${bucket}/objects/batch`,
     lfsCredentials.serverUrl
   );
 

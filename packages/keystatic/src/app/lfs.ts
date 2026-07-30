@@ -163,7 +163,9 @@ function sleep(ms: number): Promise<void> {
  * Build the proxy batch URL with bucket parameter
  */
 function buildProxyBatchUrl(config: LfsConfig): string {
-  return `${config.proxyEndpoint || '/api/keystatic/lfs/batch'}?bucket=${encodeURIComponent(config.bucket)}`;
+  // Trailing slash is required when host enforces `trailingSlash: 'always'`
+  // (e.g. Astro). Hosts without that constraint accept either form.
+  return `${config.proxyEndpoint || '/api/keystatic/lfs/batch/'}?bucket=${encodeURIComponent(config.bucket)}`;
 }
 
 /**
