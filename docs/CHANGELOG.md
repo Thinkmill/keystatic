@@ -1,5 +1,14 @@
 # keystatic-docs
 
+## 1.0.74
+
+### Patch Changes
+
+- Updated dependencies [[`4a17a65`](https://github.com/Thinkmill/keystatic/commit/4a17a65c7720a8cc08dad82a18d0de53d80374c4)]:
+  - @keystar/ui@0.9.2
+  - @keystatic/core@0.6.4
+  - @keystatic/next@5.0.4
+
 ## 1.0.73
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.9.2
+
+### Patch Changes
+
+- [#1572](https://github.com/Thinkmill/keystatic/pull/1572) [`4a17a65`](https://github.com/Thinkmill/keystatic/commit/4a17a65c7720a8cc08dad82a18d0de53d80374c4) Thanks [@emmatown](https://github.com/emmatown)! - Fix comboboxes sometimes only opening on second click
+
 ## 0.9.1
 
 ### Patch Changes
