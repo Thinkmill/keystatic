@@ -16,6 +16,18 @@ import React, {
 import { useEventCallback } from './utils';
 import { EditorView } from 'prosemirror-view';
 import { useConfig } from '../../../../app/shell/context';
+import { registerEditor } from '../../../../editor-registry';
+
+/**
+ * Identifies a mounted editor to the module-level editor registry, so that the
+ * embedding application can drive it without reaching into React.
+ */
+export type EditorRegistration = {
+  key: string;
+  label: string | undefined;
+  rootElementId: string;
+  contentElementId: string;
+};
 
 const EditorStateContext = React.createContext<EditorState | null>(null);
 
@@ -68,12 +80,17 @@ export function useLayoutEffectWithEditorUpdated(effect: () => void) {
 
 export function useEditorView(
   state: EditorState,
-  _onEditorStateChange: (state: EditorState) => void
+  _onEditorStateChange: (state: EditorState) => void,
+  registration?: EditorRegistration
 ) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
   const config = useConfig();
   const onEditorStateChange = useEventCallback(_onEditorStateChange);
+  // read at mount time so that registration doesn't participate in the deps of
+  // the effect below — changing it must never re-create the editor view
+  const registrationRef = useRef(registration);
+  registrationRef.current = registration;
   useLayoutEffect(() => {
     if (mountRef.current === null) {
       return;
@@ -91,7 +108,12 @@ export function useEditorView(
       }
     );
     viewRef.current = view;
+    const current = registrationRef.current;
+    const unregister = current
+      ? registerEditor(current.key, view, current)
+      : undefined;
     return () => {
+      unregister?.();
       view.destroy();
       viewRef.current = null;
     };
@@ -138,11 +160,16 @@ export const ProseMirrorEditor = forwardRef(function ProseMirrorEditorView(
   props: {
     value: EditorState;
     onChange: (state: EditorState) => void;
+    registration?: EditorRegistration;
     children: ReactNode;
   },
   ref: Ref<{ view: EditorView | null }>
 ) {
-  const { view, mount } = useEditorView(props.value, props.onChange);
+  const { view, mount } = useEditorView(
+    props.value,
+    props.onChange,
+    props.registration
+  );
 
   useImperativeHandle(
     ref,

@@ -63,10 +63,12 @@ export const Editor = forwardRef(function Editor(
   {
     value: _value,
     onChange: _onChange,
+    label,
     ...props
   }: {
     value: EditorState;
     onChange: (state: EditorState) => void;
+    label?: string;
   },
   ref: Ref<{ view: EditorView | null }>
 ) {
@@ -97,9 +99,23 @@ export const Editor = forwardRef(function Editor(
 
   const id = useId();
   const editorContext = useMemo(() => ({ id }), [id]);
+  const registration = useMemo(
+    () => ({
+      key: id,
+      label,
+      rootElementId: getRootId(id),
+      contentElementId: getContentId(id),
+    }),
+    [id, label]
+  );
   return (
     <EditorContextProvider value={editorContext}>
-      <ProseMirrorEditor value={value} onChange={onChange} ref={ref}>
+      <ProseMirrorEditor
+        value={value}
+        onChange={onChange}
+        registration={registration}
+        ref={ref}
+      >
         <Box
           id={getRootId(id)}
           data-keystatic-editor="root"

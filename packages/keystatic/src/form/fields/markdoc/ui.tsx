@@ -147,7 +147,12 @@ export function DocumentFieldInput(
       {...fieldProps}
     >
       {inputProps => (
-        <Editor {...inputProps} value={props.value} onChange={props.onChange} />
+        <Editor
+          {...inputProps}
+          label={props.label}
+          value={props.value}
+          onChange={props.onChange}
+        />
       )}
     </Field>
   );
