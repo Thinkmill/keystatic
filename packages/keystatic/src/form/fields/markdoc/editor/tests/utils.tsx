@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event';
 import { Editor } from '../index';
 import { GapCursor } from '../gapcursor/gapcursor';
 import { KeystarProvider } from '@keystar/ui/core';
-import { createRef } from 'react';
+import { createRef, StrictMode } from 'react';
 import { plugins, format, NewPlugin } from '@vitest/pretty-format';
 import { EditorView } from 'prosemirror-view';
 import { editorStateToReactNode } from './editor-state-to-react-element';
@@ -514,7 +514,18 @@ export async function redo(user: ReturnType<(typeof userEvent)['setup']>) {
 
 const _config = config({ storage: { kind: 'cloud' } });
 
-export function renderEditor(editorState: EditorStateDescription): {
+export function renderEditor(
+  editorState: EditorStateDescription,
+  options: {
+    /** Opts the editor in to the module-level editor registry. */
+    editorKey?: string;
+    /**
+     * Renders inside `<StrictMode>` regardless of the `STRICT_MODE` env var, so
+     * that a test can assert double-mount behaviour on every run.
+     */
+    strictMode?: boolean;
+  } = {}
+): {
   rendered: ReturnType<typeof render>;
   user: ReturnType<(typeof userEvent)['setup']>;
   state: () => EditorStateDescription;
@@ -522,20 +533,25 @@ export function renderEditor(editorState: EditorStateDescription): {
 } {
   const viewRef = createRef<{ view: EditorView | null }>();
   const user = userEvent.setup();
-  const getElement = () => (
-    <ConfigContext.Provider value={_config}>
-      <KeystarProvider>
-        <Editor
-          value={editorState.get()}
-          ref={viewRef}
-          onChange={state => {
-            editorState = new RealEditorStateDescription(state);
-            rendered.rerender(getElement());
-          }}
-        />
-      </KeystarProvider>
-    </ConfigContext.Provider>
-  );
+  const strict = options.strictMode || !!process.env.STRICT_MODE;
+  const getElement = () => {
+    const tree = (
+      <ConfigContext.Provider value={_config}>
+        <KeystarProvider>
+          <Editor
+            value={editorState.get()}
+            ref={viewRef}
+            editorKey={options.editorKey}
+            onChange={state => {
+              editorState = new RealEditorStateDescription(state);
+              rendered.rerender(getElement());
+            }}
+          />
+        </KeystarProvider>
+      </ConfigContext.Provider>
+    );
+    return strict ? <StrictMode>{tree}</StrictMode> : tree;
+  };
   const rendered = render(getElement());
 
   viewRef.current!.view!.focus();

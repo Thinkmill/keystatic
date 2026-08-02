@@ -55,12 +55,19 @@ function getDirectoriesForEditorField(
 export function markdoc({
   label,
   description,
+  editorKey,
   options = {},
   components = {},
   extension = 'mdoc',
 }: {
   label: string;
   description?: string;
+  /**
+   * Opts the mounted editor in to the editor registry under this key, so that
+   * the embedding application can drive it with `getEditor(editorKey)`. Must be
+   * unique across the editors mounted at any one time.
+   */
+  editorKey?: string;
   options?: MarkdocEditorOptions;
   extension?: 'mdoc' | 'md';
   components?: Record<string, ContentComponent>;
@@ -84,6 +91,7 @@ export function markdoc({
         <DocumentFieldInput
           description={description}
           label={label}
+          editorKey={editorKey}
           {...props}
         />
       );
@@ -141,11 +149,18 @@ markdoc.createMarkdocConfig = createMarkdocConfig;
 markdoc.inline = function inlineMarkdoc({
   label,
   description,
+  editorKey,
   options = {},
   components = {},
 }: {
   label: string;
   description?: string;
+  /**
+   * Opts the mounted editor in to the editor registry under this key, so that
+   * the embedding application can drive it with `getEditor(editorKey)`. Must be
+   * unique across the editors mounted at any one time.
+   */
+  editorKey?: string;
   options?: MarkdocEditorOptions;
   components?: Record<string, ContentComponent>;
 }): markdoc.inline.Field {
@@ -168,6 +183,7 @@ markdoc.inline = function inlineMarkdoc({
         <DocumentFieldInput
           description={description}
           label={label}
+          editorKey={editorKey}
           {...props}
         />
       );
@@ -231,12 +247,19 @@ export declare namespace markdoc.inline {
 export function mdx({
   label,
   description,
+  editorKey,
   options = {},
   components = {},
   extension = 'mdx',
 }: {
   label: string;
   description?: string;
+  /**
+   * Opts the mounted editor in to the editor registry under this key, so that
+   * the embedding application can drive it with `getEditor(editorKey)`. Must be
+   * unique across the editors mounted at any one time.
+   */
+  editorKey?: string;
   options?: MDXEditorOptions;
   extension?: 'mdx' | 'md';
   components?: Record<string, ContentComponent>;
@@ -260,6 +283,7 @@ export function mdx({
         <DocumentFieldInput
           description={description}
           label={label}
+          editorKey={editorKey}
           {...props}
         />
       );
@@ -311,11 +335,18 @@ export declare namespace mdx {
 mdx.inline = function mdx({
   label,
   description,
+  editorKey,
   options = {},
   components = {},
 }: {
   label: string;
   description?: string;
+  /**
+   * Opts the mounted editor in to the editor registry under this key, so that
+   * the embedding application can drive it with `getEditor(editorKey)`. Must be
+   * unique across the editors mounted at any one time.
+   */
+  editorKey?: string;
   options?: MDXEditorOptions;
   components?: Record<string, ContentComponent>;
 }): mdx.inline.Field {
@@ -338,6 +369,7 @@ mdx.inline = function mdx({
         <DocumentFieldInput
           description={description}
           label={label}
+          editorKey={editorKey}
           {...props}
         />
       );

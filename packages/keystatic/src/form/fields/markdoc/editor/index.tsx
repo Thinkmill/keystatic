@@ -63,12 +63,16 @@ export const Editor = forwardRef(function Editor(
   {
     value: _value,
     onChange: _onChange,
-    label,
+    editorKey,
     ...props
   }: {
     value: EditorState;
     onChange: (state: EditorState) => void;
-    label?: string;
+    /**
+     * Opts this editor in to the module-level editor registry, under this key.
+     * Comes from the `editorKey` on the field's config.
+     */
+    editorKey?: string;
   },
   ref: Ref<{ view: EditorView | null }>
 ) {
@@ -99,21 +103,12 @@ export const Editor = forwardRef(function Editor(
 
   const id = useId();
   const editorContext = useMemo(() => ({ id }), [id]);
-  const registration = useMemo(
-    () => ({
-      key: id,
-      label,
-      rootElementId: getRootId(id),
-      contentElementId: getContentId(id),
-    }),
-    [id, label]
-  );
   return (
     <EditorContextProvider value={editorContext}>
       <ProseMirrorEditor
         value={value}
         onChange={onChange}
-        registration={registration}
+        editorKey={editorKey}
         ref={ref}
       >
         <Box

@@ -8,18 +8,27 @@ import type { EditorView } from 'prosemirror-view';
  * always re-read them from {@link getEditor} rather than holding onto one.
  */
 export type KeystaticEditorHandle = {
-  /** Stable for the lifetime of the mounted editor. */
+  /**
+   * The `editorKey` the field was configured with. Stable for the lifetime of
+   * the mounted editor.
+   */
   readonly key: string;
-  /** The field label the editor was rendered for, when one is available. */
-  readonly label: string | undefined;
-  /** The id of the editor's root element in the document. */
-  readonly rootElementId: string;
-  /** The id of the editor's contenteditable element in the document. */
-  readonly contentElementId: string;
   /** Escape hatch for callers that need the full ProseMirror API. */
   readonly view: EditorView;
   /** The editor's current state. Re-read on every access. */
   readonly state: EditorState;
+  /**
+   * The editor's `contenteditable` element — the same node as `view.dom`.
+   * Re-read on every access.
+   */
+  readonly contentElement: HTMLElement;
+  /**
+   * The editor's root element (the one carrying
+   * `data-keystatic-editor="root"`), which contains the toolbar as well as the
+   * content. `null` if the editor has been detached from the document.
+   * Re-read on every access.
+   */
+  readonly rootElement: HTMLElement | null;
   dispatch(tr: Transaction): void;
   /** Runs a ProseMirror command, returning whether it applied. */
   runCommand(command: Command): boolean;
@@ -31,28 +40,20 @@ export type KeystaticEditorHandle = {
   insertNode(node: Node, options?: { at?: number }): void;
 };
 
-export type KeystaticEditorEventDetail = { key: string };
-
-/**
- * Dispatched on `document` when an editor registers itself. The `key` in
- * `detail` can be passed to {@link getEditor}.
- */
-export const KEYSTATIC_EDITOR_MOUNTED_EVENT = 'keystatic:editor-mounted';
-
-/** Dispatched on `document` when an editor tears down. */
-export const KEYSTATIC_EDITOR_UNMOUNTED_EVENT = 'keystatic:editor-unmounted';
-
 const editors = new Map<string, KeystaticEditorHandle>();
 const listeners = new Set<(editors: KeystaticEditorHandle[]) => void>();
 
-function emit(type: string, key: string) {
+function emit() {
+  const snapshot = [...editors.values()];
   for (const listener of [...listeners]) {
-    listener([...editors.values()]);
+    try {
+      listener(snapshot);
+    } catch (error) {
+      // a throwing subscriber must not skip the remaining subscribers, nor
+      // propagate into the editor's mount/unmount effect
+      console.error(error);
+    }
   }
-  if (typeof document === 'undefined') return;
-  document.dispatchEvent(
-    new CustomEvent<KeystaticEditorEventDetail>(type, { detail: { key } })
-  );
 }
 
 /** Returns the handle for `key`, or undefined when no such editor is mounted. */
@@ -68,38 +69,55 @@ export function getEditors(): KeystaticEditorHandle[] {
 /**
  * Subscribes to mount/unmount changes. The listener is called immediately with
  * the current set of editors. Returns an unsubscribe function.
+ *
+ * Exceptions thrown by a listener are caught and logged; they never reach the
+ * editor that triggered the change.
  */
 export function onEditorsChange(
   listener: (editors: KeystaticEditorHandle[]) => void
 ): () => void {
   listeners.add(listener);
-  listener([...editors.values()]);
+  try {
+    listener([...editors.values()]);
+  } catch (error) {
+    console.error(error);
+  }
   return () => {
     listeners.delete(listener);
   };
 }
 
 /**
- * Registers a mounted editor. Called by the editor view on mount; the returned
- * function unregisters it and must be called on unmount.
+ * Registers a mounted editor under `key`. Called by the editor view on mount
+ * when — and only when — the field was configured with an `editorKey`; the
+ * returned function unregisters it and must be called on unmount.
+ *
+ * Registering a `key` that is already taken replaces the existing handle (last
+ * write wins) and logs an error: keys are expected to be unique across the
+ * mounted form. The displaced editor's unregister function becomes a no-op, so
+ * unmounting it will not remove the editor that replaced it.
  */
-export function registerEditor(
-  key: string,
-  view: EditorView,
-  meta: {
-    label: string | undefined;
-    rootElementId: string;
-    contentElementId: string;
+export function registerEditor(key: string, view: EditorView): () => void {
+  if (editors.has(key)) {
+    console.error(
+      `Duplicate Keystatic editorKey ${JSON.stringify(
+        key
+      )}: the editor registered later replaces the earlier one. editorKey must be unique across mounted editors.`
+    );
   }
-): () => void {
   const handle: KeystaticEditorHandle = {
     key,
-    label: meta.label,
-    rootElementId: meta.rootElementId,
-    contentElementId: meta.contentElementId,
     view,
     get state() {
       return view.state;
+    },
+    get contentElement() {
+      return view.dom as HTMLElement;
+    },
+    get rootElement() {
+      return (view.dom as HTMLElement).closest<HTMLElement>(
+        '[data-keystatic-editor="root"]'
+      );
     },
     dispatch(tr) {
       view.dispatch(tr);
@@ -120,10 +138,10 @@ export function registerEditor(
     },
   };
   editors.set(key, handle);
-  emit(KEYSTATIC_EDITOR_MOUNTED_EVENT, key);
+  emit();
   return () => {
     if (editors.get(key) !== handle) return;
     editors.delete(key);
-    emit(KEYSTATIC_EDITOR_UNMOUNTED_EVENT, key);
+    emit();
   };
 }

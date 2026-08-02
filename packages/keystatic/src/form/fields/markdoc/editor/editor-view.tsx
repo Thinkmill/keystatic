@@ -18,17 +18,6 @@ import { EditorView } from 'prosemirror-view';
 import { useConfig } from '../../../../app/shell/context';
 import { registerEditor } from '../../../../editor-registry';
 
-/**
- * Identifies a mounted editor to the module-level editor registry, so that the
- * embedding application can drive it without reaching into React.
- */
-export type EditorRegistration = {
-  key: string;
-  label: string | undefined;
-  rootElementId: string;
-  contentElementId: string;
-};
-
 const EditorStateContext = React.createContext<EditorState | null>(null);
 
 export function useEditorState() {
@@ -81,16 +70,16 @@ export function useLayoutEffectWithEditorUpdated(effect: () => void) {
 export function useEditorView(
   state: EditorState,
   _onEditorStateChange: (state: EditorState) => void,
-  registration?: EditorRegistration
+  editorKey?: string
 ) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
   const config = useConfig();
   const onEditorStateChange = useEventCallback(_onEditorStateChange);
-  // read at mount time so that registration doesn't participate in the deps of
-  // the effect below — changing it must never re-create the editor view
-  const registrationRef = useRef(registration);
-  registrationRef.current = registration;
+  // read at mount time so that the key doesn't participate in the deps of the
+  // effect below — changing it must never re-create the editor view
+  const editorKeyRef = useRef(editorKey);
+  editorKeyRef.current = editorKey;
   useLayoutEffect(() => {
     if (mountRef.current === null) {
       return;
@@ -108,10 +97,9 @@ export function useEditorView(
       }
     );
     viewRef.current = view;
-    const current = registrationRef.current;
-    const unregister = current
-      ? registerEditor(current.key, view, current)
-      : undefined;
+    // registration is opt-in: without an `editorKey` no global state is touched
+    const key = editorKeyRef.current;
+    const unregister = key === undefined ? undefined : registerEditor(key, view);
     return () => {
       unregister?.();
       view.destroy();
@@ -160,7 +148,11 @@ export const ProseMirrorEditor = forwardRef(function ProseMirrorEditorView(
   props: {
     value: EditorState;
     onChange: (state: EditorState) => void;
-    registration?: EditorRegistration;
+    /**
+     * When supplied, the mounted view registers itself with the module-level
+     * editor registry under this key. Omit it and no registration happens.
+     */
+    editorKey?: string;
     children: ReactNode;
   },
   ref: Ref<{ view: EditorView | null }>
@@ -168,7 +160,7 @@ export const ProseMirrorEditor = forwardRef(function ProseMirrorEditorView(
   const { view, mount } = useEditorView(
     props.value,
     props.onChange,
-    props.registration
+    props.editorKey
   );
 
   useImperativeHandle(

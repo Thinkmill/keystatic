@@ -125,6 +125,7 @@ export function DocumentFieldInput(
   props: FormFieldInputProps<EditorState> & {
     label: string;
     description: string | undefined;
+    editorKey: string | undefined;
   }
 ) {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
@@ -149,7 +150,7 @@ export function DocumentFieldInput(
       {inputProps => (
         <Editor
           {...inputProps}
-          label={props.label}
+          editorKey={props.editorKey}
           value={props.value}
           onChange={props.onChange}
         />
