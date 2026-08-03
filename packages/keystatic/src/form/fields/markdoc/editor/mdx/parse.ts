@@ -9,7 +9,13 @@ import { fixPath } from '../../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../images';
 import { Nodes, PhrasingContent, Definition } from 'mdast';
 import { visit } from 'unist-util-visit';
-import { MdxJsxAttributeValueExpression, mdxToMarkdown } from 'mdast-util-mdx';
+import {
+  MdxJsxAttributeValueExpression,
+  MdxJsxFlowElement,
+  MdxJsxTextElement,
+  mdxToMarkdown,
+} from 'mdast-util-mdx';
+import { getInlineHTMLTagConfig, inlineHTMLSchemaName } from './html-inline';
 import { assert } from 'emery';
 import { deserializeProps, toSerialized } from '../props-serialization';
 import { toMarkdown } from 'mdast-util-to-markdown';
@@ -228,6 +234,26 @@ function expressionToValue(expression: Expression): unknown {
   throw new Error(`Unexpected expression type ${expression.type}`);
 }
 
+/** Disallowed attributes are reported and dropped rather than thrown on. */
+function inlineHTMLAttributes(
+  node: MdxJsxFlowElement | MdxJsxTextElement,
+  allowed: readonly string[]
+) {
+  const attrs: Record<string, string> = {};
+  for (const attribute of node.attributes) {
+    if (
+      attribute.type !== 'mdxJsxAttribute' ||
+      !allowed.includes(attribute.name) ||
+      typeof attribute.value !== 'string'
+    ) {
+      error(`${node.type} has unexpected attributes`);
+      continue;
+    }
+    attrs[attribute.name] = attribute.value;
+  }
+  return attrs;
+}
+
 function markdocNodeToProseMirrorNode(
   node: Nodes,
   parentType: NodeType | undefined
@@ -400,6 +426,27 @@ function markdocNodeToProseMirrorNode(
         return schema.nodes.paragraph.createAndFill({}, pmNode)!;
       }
       return pmNode;
+    }
+    const inlineHTML = getInlineHTMLTagConfig(node.name);
+    if (inlineHTML) {
+      const name = inlineHTMLSchemaName(node.name);
+      const attrs = inlineHTMLAttributes(
+        node,
+        inlineHTML.kind === 'mark' ? inlineHTML.attributes : []
+      );
+      if (inlineHTML.kind === 'mark') {
+        const markType = schema.schema.marks[name];
+        if (!markType || node.type === 'mdxJsxFlowElement') {
+          return notAllowed(node, parentType);
+        }
+        return addMark(node, markType.create(attrs), parentType);
+      }
+      const nodeType = schema.schema.nodes[name];
+      if (!nodeType) return notAllowed(node, parentType);
+      const pmNode = nodeType.create();
+      return parentType?.isTextblock
+        ? pmNode
+        : schema.nodes.paragraph.createAndFill({}, pmNode)!;
     }
     error(`Missing component definition for ${node.name}`);
     return childrenToProseMirrorNodes(

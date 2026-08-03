@@ -1055,6 +1055,142 @@ test('loose list', () => {
   `);
 });
 
+test('inline html br', () => {
+  const mdx = `a<br />b`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          a
+        </text>
+        <html_br />
+        <text>
+          b
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "a<br />b
+    "
+  `);
+});
+
+test('inline html br alone', () => {
+  expect(toMDX(fromMDX(`<br />`))).toMatchInlineSnapshot(`
+    "<br />
+    "
+  `);
+});
+
+test('inline html small', () => {
+  const mdx = `<small>text</small>`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          html_small={
+            {
+              "class": "",
+              "id": "",
+            }
+          }
+        >
+          <cursor />
+          text
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "<small>text</small>
+    "
+  `);
+});
+
+test('inline html small with attributes', () => {
+  const mdx = `a <small id="x" class="y">text</small> b`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          a 
+        </text>
+        <text
+          html_small={
+            {
+              "class": "y",
+              "id": "x",
+            }
+          }
+        >
+          text
+        </text>
+        <text>
+           b
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "a <small id="x" class="y">text</small> b
+    "
+  `);
+});
+
+test('inline html small nested in bold', () => {
+  const mdx = `**bold <small>s</small>**`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          bold={true}
+        >
+          <cursor />
+          bold 
+        </text>
+        <text
+          bold={true}
+          html_small={
+            {
+              "class": "",
+              "id": "",
+            }
+          }
+        >
+          s
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "**bold <small>s</small>**
+    "
+  `);
+});
+
+test('inline html tag that is not allowlisted', () => {
+  expect(() => {
+    fromMDX('<blink>a</blink>');
+  }).toThrowErrorMatchingInlineSnapshot(
+    `"Missing component definition for blink"`
+  );
+});
+
+test('inline html small with disallowed attribute', () => {
+  expect(() => {
+    fromMDX('<small style="color: red" id="x">a</small>');
+  }).toThrowErrorMatchingInlineSnapshot(
+    `"mdxJsxTextElement has unexpected attributes"`
+  );
+});
+
 test('ordered list with start', () => {
   const mdx = `5. a
 1. b

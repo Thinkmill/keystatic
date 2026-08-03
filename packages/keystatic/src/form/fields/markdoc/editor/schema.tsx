@@ -33,6 +33,10 @@ import { independentForGapCursor } from './gapcursor/gapcursor';
 import { WithReactNodeViewSpec } from './react-node-views';
 import { ContentComponent } from '../../../../content-components';
 import { getCustomMarkSpecs, getCustomNodeSpecs } from './custom-components';
+import {
+  getInlineHTMLMarkSpecs,
+  getInlineHTMLNodeSpecs,
+} from './mdx/html-inline';
 import { EditorConfig } from '../config';
 import { toSerialized } from './props-serialization';
 import { getInitialPropsValue } from '../../../initial-values';
@@ -551,6 +555,8 @@ export function createEditorSchema(
     text: nodeSpecs.text,
     hard_break: nodeSpecs.hard_break,
     ...getCustomNodeSpecs(components),
+    // only mdx can serialize these back out
+    ...(isMDX ? getInlineHTMLNodeSpecs() : undefined),
   };
   if (config.blockquote) {
     nodeSpecsWithCustomNodes.blockquote = nodeSpecs.blockquote;
@@ -649,6 +655,9 @@ export function createEditorSchema(
   }
   if (config.code) {
     markSpecsWithCustomMarks.code = markSpecs.code;
+  }
+  if (isMDX) {
+    Object.assign(markSpecsWithCustomMarks, getInlineHTMLMarkSpecs());
   }
 
   const schema = new Schema({

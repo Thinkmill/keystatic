@@ -6,6 +6,7 @@ import { PhrasingContent, ListItem, BlockContent, Root } from 'mdast';
 import { MdxJsxAttribute } from 'mdast-util-mdx';
 import { internalToSerialized } from '../props-serialization';
 import { textblockChildren } from '../serialize-inline';
+import { inlineHTMLTagForSchemaName } from './html-inline';
 
 type DocumentSerializationState = {
   schema: EditorSchema;
@@ -88,6 +89,15 @@ function getLeafContent(
       title: node.attrs.title,
     };
   }
+  const htmlTag = inlineHTMLTagForSchemaName(node.type.name);
+  if (htmlTag) {
+    return {
+      type: 'mdxJsxTextElement',
+      name: htmlTag,
+      attributes: [],
+      children: [],
+    };
+  }
   const componentConfig = state.schema.components[node.type.name];
   if (componentConfig?.kind === 'inline') {
     return {
@@ -117,6 +127,19 @@ function getWrapperForMark(
 
   if (mark.type === schema.marks.code) {
     return;
+  }
+  const htmlTag = inlineHTMLTagForSchemaName(mark.type.name);
+  if (htmlTag) {
+    return {
+      type: 'mdxJsxTextElement',
+      name: htmlTag,
+      attributes: Object.entries(mark.attrs).flatMap(([name, value]) =>
+        typeof value === 'string' && value !== ''
+          ? [{ type: 'mdxJsxAttribute' as const, name, value }]
+          : []
+      ),
+      children: [],
+    };
   }
   const componentConfig = schema.components[mark.type.name];
   if (componentConfig) {
