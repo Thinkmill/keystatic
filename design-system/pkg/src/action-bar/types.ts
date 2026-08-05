@@ -1,18 +1,19 @@
 import { BaseStyleProps } from '@keystar/ui/style';
-import { DOMProps, ItemProps, Key } from '@react-types/shared';
+import { DOMProps, Key } from '@react-types/shared';
 import { ReactElement, ReactNode } from 'react';
+import type { ActionGroupItemProps } from '@keystar/ui/action-group';
 
-type ItemElement<T> = ReactElement<ItemProps<T>> | null;
+type ItemElement = ReactElement<ActionGroupItemProps> | null;
 
-export type ActionBarProps<T> = {
-  children: ItemElement<T> | ItemElement<T>[] | ((item: T) => ItemElement<T>);
+export type ActionBarProps<T extends object> = {
+  children: ItemElement | ItemElement[] | ((item: T) => ItemElement);
   items?: Iterable<T>;
   disabledKeys?: Iterable<Key>;
   selectedItemCount: number | 'all';
   onClearSelection: () => void;
   isEmphasized?: boolean;
   onAction?: (key: Key) => void;
-  buttonLabelBehavior?: 'show' | 'collapse' | 'hide';
+  buttonLabelBehavior?: 'show' | 'hide';
 } & DOMProps &
   BaseStyleProps;
 

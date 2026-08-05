@@ -4,7 +4,12 @@ import { useMemo, useState } from 'react';
 import { CombinedError, useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@keystar/ui/button';
-import { Combobox, Item } from '@keystar/ui/combobox';
+import {
+  Combobox,
+  ComboboxCollection,
+  ComboboxItem,
+  ComboboxLoadMoreItem,
+} from '@keystar/ui/combobox';
 import { Dialog } from '@keystar/ui/dialog';
 import { gitBranchIcon } from '@keystar/ui/icon/icons/gitBranchIcon';
 import { Icon } from '@keystar/ui/icon';
@@ -67,8 +72,6 @@ export function BranchPicker() {
   return (
     <Combobox
       aria-label={stringFormatter.format('currentBranch')}
-      defaultItems={filteredBranches} // use `defaultItems` so the component handles filtering
-      loadingState={filteredBranches.length === 0 ? 'loading' : undefined}
       value={currentBranch}
       onChange={key => {
         if (typeof key === 'string') {
@@ -83,15 +86,18 @@ export function BranchPicker() {
       menuTrigger="focus"
       flex
     >
-      {item => (
-        <Item key={item.name} textValue={item.name}>
-          <Icon src={gitBranchIcon} />
-          <Text truncate>{item.name}</Text>
-          {'description' in item && (
-            <Text slot="description">{item.description}</Text>
-          )}
-        </Item>
-      )}
+      <ComboboxCollection items={filteredBranches}>
+        {item => (
+          <ComboboxItem id={item.name} textValue={item.name}>
+            <Icon src={gitBranchIcon} />
+            <Text truncate>{item.name}</Text>
+            {'description' in item && (
+              <Text slot="description">{item.description}</Text>
+            )}
+          </ComboboxItem>
+        )}
+      </ComboboxCollection>
+      {filteredBranches.length === 0 && <ComboboxLoadMoreItem isLoading />}
     </Combobox>
   );
 }

@@ -505,13 +505,6 @@ function CollectionTable(
           )
         );
       }}
-      renderEmptyState={() => (
-        <EmptyState
-          icon={searchXIcon}
-          title="No results"
-          message={`No items matching "${searchTerm}" were found.`}
-        />
-      )}
       flex
       marginTop={{ tablet: 'large' }}
       marginBottom={{ mobile: 'regular', tablet: 'xlarge' }}
@@ -542,7 +535,16 @@ function CollectionTable(
           )
         }
       </TableHeader>
-      <TableBody items={sortedItems}>
+      <TableBody
+        items={sortedItems}
+        renderEmptyState={() => (
+          <EmptyState
+            icon={searchXIcon}
+            title="No results"
+            message={`No items matching "${searchTerm}" were found.`}
+          />
+        )}
+      >
         {item => {
           const statusCell = (
             <Cell key={STATUS + item.name} textValue={item.status}>

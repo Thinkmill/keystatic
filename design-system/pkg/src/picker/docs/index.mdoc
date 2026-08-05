@@ -13,9 +13,9 @@ popover to improve usability.
 
 ```jsx {% live=true %}
 <Picker label="Density">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <PickerItem id="compact">Compact</PickerItem>
+  <PickerItem id="regular">Regular</PickerItem>
+  <PickerItem id="spacious">Spacious</PickerItem>
 </Picker>
 ```
 
@@ -23,9 +23,9 @@ popover to improve usability.
 
 ### Collections
 
-Picker implements `react-stately`
-[collection components](https://react-spectrum.adobe.com/react-stately/collections.html),
-`<Item>` and `<Section>`.
+Picker implements `react-aria-components`
+[collection components](https://react-spectrum.adobe.com/react-aria-components/collections.html),
+`<PickerItem>` and `<PickerSection>`.
 
 Static collections, seen in the example above, can be used when the full list of
 options is known ahead of time.
@@ -49,7 +49,7 @@ let [animalId, setAnimalId] = React.useState();
 return (
   <Flex direction="column" gap="large">
     <Picker label="Animal" items={options} onChange={setAnimalId}>
-      {item => <Item>{item.name}</Item>}
+      {item => <PickerItem>{item.name}</PickerItem>}
     </Picker>
     <Text>Selected ID: {animalId}</Text>
   </Flex>
@@ -67,27 +67,28 @@ then this is _used automatically and a **key prop is not required**_.
 
 #### Sections
 
-Use the `<Section>` component to group related items. Each `Section` takes a
-`title` and `key` prop.
+Use `<PickerSection>` with an explicit `<PickerHeader>` to group related
+items.
 
 ```jsx {% live=true %}
 <Picker label="Animal">
-  <Section title="Marsupials">
-    <Item key="Bilby">Bilby</Item>
-    <Item key="Kangaroo">Kangaroo</Item>
-    <Item key="Quokka">Quokka</Item>
-  </Section>
-  <Section title="Other">
-    <Item key="Echidna">Echidna</Item>
-    <Item key="Dingo">Dingo</Item>
-    <Item key="Cassowary">Cassowary</Item>
-  </Section>
+  <PickerSection>
+    <PickerHeader>Marsupials</PickerHeader>
+    <PickerItem id="Bilby">Bilby</PickerItem>
+    <PickerItem id="Kangaroo">Kangaroo</PickerItem>
+    <PickerItem id="Quokka">Quokka</PickerItem>
+  </PickerSection>
+  <PickerSection>
+    <PickerHeader>Other</PickerHeader>
+    <PickerItem id="Echidna">Echidna</PickerItem>
+    <PickerItem id="Dingo">Dingo</PickerItem>
+    <PickerItem id="Cassowary">Cassowary</PickerItem>
+  </PickerSection>
 </Picker>
 ```
 
-Sections used with dynamic items are populated from a hierarchical data
-structure. Similar to the picker itself, `Section` takes an array of data using
-the `items` prop.
+Sections used with dynamic items are populated with an explicit
+`<PickerCollection>`.
 
 ```jsx {% live=true %}
 let items = [
@@ -116,9 +117,12 @@ return (
     onChange={selected => alert(selected)}
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item>{item.name}</Item>}
-      </Section>
+      <PickerSection id={item.name}>
+        <PickerHeader>{item.name}</PickerHeader>
+        <PickerCollection items={item.children}>
+          {item => <PickerItem>{item.name}</PickerItem>}
+        </PickerCollection>
+      </PickerSection>
     )}
   </Picker>
 );
@@ -130,8 +134,8 @@ Setting a selected item can be done by using the `defaultValue` or
 `value` prop. The selected key corresponds to the key of an item, where
 `"id"` is used by default.
 
-See the `react-stately`
-[selection docs](https://react-spectrum.adobe.com/react-stately/selection.html#selected-key-data-type)
+See the `react-aria-components`
+[selection docs](https://react-spectrum.adobe.com/react-aria-components/selection.html#selected-key-data-type)
 for more information.
 
 #### Controlled
@@ -158,7 +162,7 @@ return (
     value={animal}
     onChange={setAnimal}
   >
-    {item => <Item key={item.name}>{item.name}</Item>}
+    {item => <PickerItem id={item.name}>{item.name}</PickerItem>}
   </Picker>
 );
 ```
@@ -179,7 +183,7 @@ let items = [
 
 return (
   <Picker label="Animal" items={items} defaultValue="Quokka">
-    {item => <Item key={item.name}>{item.name}</Item>}
+    {item => <PickerItem id={item.name}>{item.name}</PickerItem>}
   </Picker>
 );
 ```
@@ -193,21 +197,21 @@ the prop `slot="description"` must be used to distinguish it from the primary
 
 ```jsx {% live=true %}
 <Picker label="Permissions">
-  <Item textValue="Read">
+  <PickerItem textValue="Read">
     <Icon src={eyeIcon} />
     <Text>Read</Text>
     <Text slot="description">Read only</Text>
-  </Item>
-  <Item textValue="Write">
+  </PickerItem>
+  <PickerItem textValue="Write">
     <Icon src={editIcon} />
     <Text>Write</Text>
     <Text slot="description">Read and write</Text>
-  </Item>
-  <Item textValue="Admin">
+  </PickerItem>
+  <PickerItem textValue="Admin">
     <Icon src={userCheckIcon} />
     <Text>Admin</Text>
     <Text slot="description">Unrestricted access</Text>
-  </Item>
+  </PickerItem>
 </Picker>
 ```
 
@@ -225,9 +229,9 @@ accessibility.
 
 ```jsx {% live=true %}
 <Picker aria-label="Density">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <PickerItem id="compact">Compact</PickerItem>
+  <PickerItem id="regular">Regular</PickerItem>
+  <PickerItem id="spacious">Spacious</PickerItem>
 </Picker>
 ```
 
@@ -238,9 +242,9 @@ available.
 
 ```jsx {% live=true %}
 <Picker aria-label="Density" isDisabled>
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <PickerItem id="compact">Compact</PickerItem>
+  <PickerItem id="regular">Regular</PickerItem>
+  <PickerItem id="spacious">Spacious</PickerItem>
 </Picker>
 ```
 
@@ -248,9 +252,9 @@ You can also provide `disabledKeys` to limit [selection](#selection).
 
 ```jsx {% live=true %}
 <Picker aria-label="Density" disabledKeys={['spacious']}>
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <PickerItem id="compact">Compact</PickerItem>
+  <PickerItem id="regular">Regular</PickerItem>
+  <PickerItem id="spacious">Spacious</PickerItem>
 </Picker>
 ```
 
@@ -260,9 +264,9 @@ A picker can be marked as required by setting the `isRequired` prop.
 
 ```jsx {% live=true %}
 <Picker label="Default currency" isRequired>
-  <Item key="AUD">Australian dollar</Item>
-  <Item key="GBP">British pound</Item>
-  <Item key="JPY">Japanese yen</Item>
+  <PickerItem id="AUD">Australian dollar</PickerItem>
+  <PickerItem id="GBP">British pound</PickerItem>
+  <PickerItem id="JPY">Japanese yen</PickerItem>
 </Picker>
 ```
 
@@ -276,9 +280,9 @@ requirements for what to choose.
   label="Default currency"
   description="Products without an ISO currency code will default to this currency."
 >
-  <Item key="AUD">Australian dollar</Item>
-  <Item key="GBP">British pound</Item>
-  <Item key="JPY">Japanese yen</Item>
+  <PickerItem id="AUD">Australian dollar</PickerItem>
+  <PickerItem id="GBP">British pound</PickerItem>
+  <PickerItem id="JPY">Japanese yen</PickerItem>
 </Picker>
 ```
 
@@ -294,9 +298,9 @@ met, prompting the user to adjust what they had originally selected.
   isRequired
   value={null}
 >
-  <Item key="AUD">Australian dollar</Item>
-  <Item key="GBP">British pound</Item>
-  <Item key="JPY">Japanese yen</Item>
+  <PickerItem id="AUD">Australian dollar</PickerItem>
+  <PickerItem id="GBP">British pound</PickerItem>
+  <PickerItem id="JPY">Japanese yen</PickerItem>
 </Picker>
 ```
 
@@ -306,9 +310,9 @@ The menu will assume the `width` of the invoking trigger, by default.
 
 ```jsx {% live=true %}
 <Picker label="Density" width="scale.3600">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <PickerItem id="compact">Compact</PickerItem>
+  <PickerItem id="regular">Regular</PickerItem>
+  <PickerItem id="spacious">Spacious</PickerItem>
 </Picker>
 ```
 
@@ -317,9 +321,9 @@ the menu to be more narrow than the trigger.
 
 ```jsx {% live=true %}
 <Picker label="Density" menuWidth={320}>
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <PickerItem id="compact">Compact</PickerItem>
+  <PickerItem id="regular">Regular</PickerItem>
+  <PickerItem id="spacious">Spacious</PickerItem>
 </Picker>
 ```
 
@@ -327,9 +331,9 @@ When wider than the trigger you can `align` the menu, relative to the trigger.
 
 ```jsx {% live=true %}
 <Picker label="Density" menuWidth={320} align="end">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <PickerItem id="compact">Compact</PickerItem>
+  <PickerItem id="regular">Regular</PickerItem>
+  <PickerItem id="spacious">Spacious</PickerItem>
 </Picker>
 ```
 
@@ -341,8 +345,9 @@ should always render above.
 
 ```jsx {% live=true %}
 <Picker label="Density" direction="top">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <PickerItem id="compact">Compact</PickerItem>
+  <PickerItem id="regular">Regular</PickerItem>
+  <PickerItem id="spacious">Spacious</PickerItem>
 </Picker>
 ```
+

@@ -1,41 +1,19 @@
-import {
-  AriaLabelingProps,
-  CollectionBase,
-  DOMProps,
-  Expandable,
-  Key,
-} from '@react-types/shared';
-import { RefObject } from 'react';
+import type {
+  TreeItemProps as AriaTreeItemProps,
+  TreeProps as AriaTreeProps,
+  TreeSectionProps as AriaTreeSectionProps,
+} from 'react-aria-components/Tree';
 
-import { BaseStyleProps } from '@keystar/ui/style';
+import type { BaseStyleProps } from '@keystar/ui/style';
 
-// deviate from react-stately's types
-type ControlledSelection = {
-  /** The currently selected key in the collection. */
-  selectedKey?: Key | null;
-  /** Handler that is called when the selection changes. */
-  onSelectionChange?: (key: Key) => any;
-};
+export interface NavTreeProps<T>
+  extends Omit<AriaTreeProps<T>, 'className' | 'style'>,
+    BaseStyleProps {}
 
-export type NavTreeProps<T> = CollectionBase<T> & {
-  /**
-   * Handler that is called when a user performs _any_ action on an item.
-   * Generally prefer the more specific `onSelectionChange` and
-   * `onExpandedChange` handlers.
-   */
-  onAction?: (key: Key) => any;
-  /**
-   * Whether focus should wrap around when the end/start is reached.
-   * @default false
-   */
-  shouldFocusWrap?: boolean;
-  /**
-   * The ref attached to the scrollable body. Used to provided automatic
-   * scrolling on item focus for non-virtualized trees.
-   */
-  scrollRef?: RefObject<HTMLElement | null>;
-} & Expandable &
-  ControlledSelection &
-  DOMProps &
-  AriaLabelingProps &
-  BaseStyleProps;
+export interface NavTreeItemProps<T = object>
+  extends Omit<AriaTreeItemProps<T>, 'className' | 'style'>,
+    BaseStyleProps {}
+
+export interface NavTreeSectionProps<T = object>
+  extends Omit<AriaTreeSectionProps<T>, 'className' | 'style'>,
+    BaseStyleProps {}

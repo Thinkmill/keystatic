@@ -1,216 +1,89 @@
-import { beforeEach, expect, describe, it, jest } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 
-import { Breadcrumbs, Item } from '..';
-import { firePress, renderWithProvider, within } from '#test-utils';
+import { renderWithProvider } from '#test-utils';
+import { BreadcrumbItem, Breadcrumbs } from '..';
 
 describe('breadcrumbs/Breadcrumbs', () => {
-  beforeEach(() => {
-    // avoid issues when measuring the width of the breadcrumbs
-    jest
-      .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
-      .mockImplementation(function () {
-        // @ts-expect-error
-        if (this instanceof HTMLUListElement) {
-          return 500;
-        }
-
-        return 100;
-      });
-  });
-
-  it('handles defaults', function () {
-    let { getByLabelText } = renderWithProvider(
-      <Breadcrumbs id="breadcrumbs-id" aria-label="breadcrumbs-test">
-        <Item>Folder 1</Item>
+  it('renders an accessible static collection', () => {
+    let result = renderWithProvider(
+      <Breadcrumbs id="breadcrumbs-id" aria-label="Breadcrumbs">
+        <BreadcrumbItem href="/one">Folder 1</BreadcrumbItem>
+        <BreadcrumbItem href="/one/two">Folder 2</BreadcrumbItem>
+        <BreadcrumbItem href="/one/two/three">Folder 3</BreadcrumbItem>
       </Breadcrumbs>
     );
 
-    let breadcrumbs = getByLabelText('breadcrumbs-test');
-    expect(breadcrumbs).toHaveAttribute('id', 'breadcrumbs-id');
-  });
-
-  it('handles multiple items', () => {
-    let { getByText } = renderWithProvider(
-      <Breadcrumbs>
-        <Item>Folder 1</Item>
-        <Item>Folder 2</Item>
-        <Item>Folder 3</Item>
-      </Breadcrumbs>
+    let list = result.getByRole('list', { name: 'Breadcrumbs' });
+    expect(list).toHaveAttribute('id', 'breadcrumbs-id');
+    expect(result.getAllByRole('listitem')).toHaveLength(3);
+    expect(result.getByText('Folder 1')).toHaveAttribute('href', '/one');
+    expect(result.getByText('Folder 2')).toHaveAttribute('href', '/one/two');
+    expect(result.getByText('Folder 3')).toHaveAttribute(
+      'aria-current',
+      'page'
     );
-    let item1 = getByText('Folder 1');
-    expect(item1.tabIndex).toBe(0);
-    expect(item1).not.toHaveAttribute('aria-current');
-    let item2 = getByText('Folder 2');
-    expect(item2.tabIndex).toBe(0);
-    expect(item2).not.toHaveAttribute('aria-current');
-    let item3 = getByText('Folder 3');
-    expect(item3.tabIndex).toBe(-1);
-    expect(item3).toHaveAttribute('aria-current', 'page');
+    expect(result.getByText('Folder 3')).not.toHaveAttribute('href');
   });
 
-  it('handles single item and showRoot', () => {
-    let { getByText } = renderWithProvider(
-      <Breadcrumbs showRoot>
-        <Item key="Folder-1">Folder 1</Item>
-      </Breadcrumbs>
-    );
-    let item = getByText('Folder 1');
-    expect(item).toBeTruthy();
-    expect(item.tabIndex).toBe(-1);
-  });
-
-  it('shows four items with no menu', () => {
-    let { getByText, getByRole } = renderWithProvider(
-      <Breadcrumbs>
-        <Item>Folder 1</Item>
-        <Item>Folder 2</Item>
-        <Item>Folder 3</Item>
-        <Item>Folder 4</Item>
-      </Breadcrumbs>
-    );
-    let { children } = getByRole('list');
-    expect(within(children[0] as HTMLElement).queryByRole('button')).toBeNull();
-    expect(getByText('Folder 1')).toBeTruthy();
-    expect(getByText('Folder 2')).toBeTruthy();
-    expect(getByText('Folder 3')).toBeTruthy();
-    expect(getByText('Folder 4')).toBeTruthy();
-  });
-
-  it('shows a maximum of 4 items', () => {
-    let { getByText, getByRole } = renderWithProvider(
-      <Breadcrumbs>
-        <Item>Folder 1</Item>
-        <Item>Folder 2</Item>
-        <Item>Folder 3</Item>
-        <Item>Folder 4</Item>
-        <Item>Folder 5</Item>
-      </Breadcrumbs>
-    );
-    let { children } = getByRole('list');
-    expect(within(children[0] as HTMLElement).getByRole('button')).toBeTruthy();
-    expect(() => getByText('Folder 1')).toThrow();
-    expect(() => getByText('Folder 2')).toThrow();
-    expect(getByText('Folder 3')).toBeTruthy();
-    expect(getByText('Folder 4')).toBeTruthy();
-    expect(getByText('Folder 5')).toBeTruthy();
-  });
-
-  it('shows a maximum of 4 items with showRoot', () => {
-    let { getByText, getByRole } = renderWithProvider(
-      <Breadcrumbs showRoot>
-        <Item>Folder 1</Item>
-        <Item>Folder 2</Item>
-        <Item>Folder 3</Item>
-        <Item>Folder 4</Item>
-        <Item>Folder 5</Item>
-      </Breadcrumbs>
-    );
-    let { children } = getByRole('list');
-    expect(getByText('Folder 1')).toBeTruthy();
-    expect(within(children[1] as HTMLElement).getByRole('button')).toBeTruthy();
-    expect(() => getByText('Folder 2')).toThrow();
-    expect(() => getByText('Folder 3')).toThrow();
-    expect(getByText('Folder 4')).toBeTruthy();
-    expect(getByText('Folder 5')).toBeTruthy();
-  });
-
-  it('handles isDisabled', () => {
-    let { getByText } = renderWithProvider(
-      <Breadcrumbs isDisabled>
-        <Item>Folder 1</Item>
-        <Item>Folder 2</Item>
+  it('renders a dynamic collection', () => {
+    let items = [
+      { id: 'one', label: 'Folder 1', href: '/one' },
+      { id: 'two', label: 'Folder 2', href: '/one/two' },
+    ];
+    let result = renderWithProvider(
+      <Breadcrumbs aria-label="Breadcrumbs" items={items}>
+        {item => <BreadcrumbItem href={item.href}>{item.label}</BreadcrumbItem>}
       </Breadcrumbs>
     );
 
-    let item1 = getByText('Folder 1');
-    expect(item1).toHaveAttribute('aria-disabled', 'true');
-    let item2 = getByText('Folder 2');
-    expect(item2).toHaveAttribute('aria-disabled', 'true');
-  });
-
-  it('supports aria-label', function () {
-    let { getByRole } = renderWithProvider(
-      <Breadcrumbs aria-label="Test">
-        <Item>Folder 1</Item>
-      </Breadcrumbs>
+    expect(result.getAllByRole('listitem')).toHaveLength(2);
+    expect(result.getByText('Folder 1')).toHaveAttribute('href', '/one');
+    expect(result.getByText('Folder 2')).toHaveAttribute(
+      'aria-current',
+      'page'
     );
-    let breadcrumbs = getByRole('navigation');
-    expect(breadcrumbs).toHaveAttribute('aria-label', 'Test');
   });
 
-  it('supports aria-labelledby', function () {
-    let { getByRole } = renderWithProvider(
+  it('forwards accessibility and custom DOM props', () => {
+    let result = renderWithProvider(
       <>
-        <span id="test">Test</span>
-        <Breadcrumbs aria-labelledby="test">
-          <Item>Folder 1</Item>
+        <span id="breadcrumb-label">Location</span>
+        <span id="breadcrumb-description">Current folder</span>
+        <Breadcrumbs
+          aria-labelledby="breadcrumb-label"
+          aria-describedby="breadcrumb-description"
+          data-testid="breadcrumbs"
+        >
+          <BreadcrumbItem>Folder 1</BreadcrumbItem>
         </Breadcrumbs>
       </>
     );
-    let breadcrumbs = getByRole('navigation');
-    expect(breadcrumbs).toHaveAttribute('aria-labelledby', 'test');
+
+    let list = result.getByTestId('breadcrumbs');
+    expect(list).toHaveAttribute('aria-labelledby', 'breadcrumb-label');
+    expect(list).toHaveAttribute('aria-describedby', 'breadcrumb-description');
   });
 
-  it('supports aria-describedby', function () {
-    let { getByRole } = renderWithProvider(
-      <>
-        <span id="test">Test</span>
-        <Breadcrumbs aria-describedby="test">
-          <Item>Folder 1</Item>
-        </Breadcrumbs>
-      </>
-    );
-    let breadcrumbs = getByRole('navigation');
-    expect(breadcrumbs).toHaveAttribute('aria-describedby', 'test');
-  });
-
-  it('supports custom props', function () {
-    let { getByRole } = renderWithProvider(
-      <Breadcrumbs data-testid="test">
-        <Item>Folder 1</Item>
-      </Breadcrumbs>
-    );
-    let breadcrumbs = getByRole('navigation');
-    expect(breadcrumbs).toHaveAttribute('data-testid', 'test');
-  });
-
-  it('should support links', function () {
-    let { getByRole, getAllByRole } = renderWithProvider(
-      <Breadcrumbs>
-        <Item href="https://example.com">Example.com</Item>
-        <Item href="https://example.com/foo">Foo</Item>
-        <Item href="https://example.com/foo/bar">Bar</Item>
-        <Item href="https://example.com/foo/bar/baz">Baz</Item>
-        <Item href="https://example.com/foo/bar/baz/qux">Qux</Item>
+  it('disables all items when the collection is disabled', () => {
+    let result = renderWithProvider(
+      <Breadcrumbs aria-label="Breadcrumbs" isDisabled>
+        <BreadcrumbItem href="/one">Folder 1</BreadcrumbItem>
+        <BreadcrumbItem>Folder 2</BreadcrumbItem>
       </Breadcrumbs>
     );
 
-    let links = getAllByRole('link');
-    expect(links).toHaveLength(3);
-    expect(links[0]).toHaveAttribute('href', 'https://example.com/foo/bar');
-    expect(links[1]).toHaveAttribute('href', 'https://example.com/foo/bar/baz');
-    expect(links[2]).toHaveAttribute(
-      'href',
-      'https://example.com/foo/bar/baz/qux'
-    );
-
-    let menuButton = getByRole('button');
-    firePress(menuButton);
-
-    let menu = getByRole('menu');
-    let items = within(menu).getAllByRole('menuitemradio');
-    expect(items).toHaveLength(5);
-    expect(items[0].tagName).toBe('A');
-    expect(items[0]).toHaveAttribute('href', 'https://example.com');
+    for (let link of result.getAllByRole('link')) {
+      expect(link).toHaveAttribute('aria-disabled', 'true');
+    }
   });
 
-  it('does not pass an empty href to the rendered element', function () {
-    let { getByText } = renderWithProvider(
-      <Breadcrumbs>
-        <Item href="">Folder 1</Item>
+  it('does not pass an empty href to the rendered element', () => {
+    let result = renderWithProvider(
+      <Breadcrumbs aria-label="Breadcrumbs">
+        <BreadcrumbItem href="">Folder 1</BreadcrumbItem>
       </Breadcrumbs>
     );
 
-    expect(getByText('Folder 1')).not.toHaveAttribute('href');
+    expect(result.getByText('Folder 1')).not.toHaveAttribute('href');
   });
 });

@@ -194,7 +194,7 @@ export function ReorderExample(props: any) {
         {column => (
           <Column
             minWidth={column.minWidth}
-            width={column.width}
+            width={typeof column.width === 'number' ? column.width : undefined}
             isRowHeader={column.isRowHeader}
           >
             {column.name}

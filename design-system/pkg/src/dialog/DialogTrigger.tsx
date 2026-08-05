@@ -7,14 +7,7 @@ import {
   useOverlayTriggerState,
 } from 'react-stately/useOverlayTriggerState';
 import { assertNever } from 'emery';
-import {
-  Children,
-  Fragment,
-  ReactElement,
-  useEffect,
-  useRef,
-  type JSX,
-} from 'react';
+import { Fragment, ReactElement, useEffect, useRef, type JSX } from 'react';
 
 import { Modal, Popover, PopoverProps, Tray } from '@keystar/ui/overlays';
 import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
@@ -129,33 +122,13 @@ function DialogTrigger(props: DialogTriggerProps) {
   );
 }
 
-// Support DialogTrigger inside components using CollectionBuilder.
-DialogTrigger.getCollectionNode = function* (props: DialogTriggerProps) {
-  // @ts-ignore
-  let [trigger] = Children.toArray(props.children);
-  let [, content] = props.children as [ReactElement, DialogRenderFn];
-  yield {
-    element: trigger,
-    wrapper: (element: ReactElement) => (
-      <DialogTrigger key={element.key} {...props}>
-        {element}
-        {content}
-      </DialogTrigger>
-    ),
-  };
-};
-
 /**
  * DialogTrigger serves as a wrapper around a Dialog and its associated trigger, linking the Dialog's
  * open state with the trigger's press state. Additionally, it allows you to customize the type and
  * positioning of the Dialog.
  */
 
-// We don't want getCollectionNode to show up in the type definition
-let _DialogTrigger = DialogTrigger as (
-  props: DialogTriggerProps
-) => JSX.Element;
-export { _DialogTrigger as DialogTrigger };
+export { DialogTrigger };
 
 function PopoverTrigger({
   state,

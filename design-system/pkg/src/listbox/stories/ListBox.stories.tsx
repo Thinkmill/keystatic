@@ -11,7 +11,14 @@ import { Icon } from '@keystar/ui/icon';
 import { Flex } from '@keystar/ui/layout';
 import { Kbd, Text } from '@keystar/ui/typography';
 
-import { Item, ListBox, Section } from '..';
+import {
+  ListBox,
+  ListBoxCollection,
+  ListBoxHeader,
+  ListBoxItem,
+  ListBoxLoadMoreItem,
+  ListBoxSection,
+} from '..';
 
 let iconMap = {
   AlignHorizontalCenterIcon: alignCenterVerticalIcon,
@@ -24,7 +31,7 @@ let iconMap = {
 
 let hardModeProgrammatic = [
   {
-    name: 'Section 1',
+    name: 'ListBoxSection 1',
     children: [
       { name: 'Copy', icon: 'CopyIcon' },
       { name: 'Cut', icon: 'CutIcon' },
@@ -32,7 +39,7 @@ let hardModeProgrammatic = [
     ],
   },
   {
-    name: 'Section 2',
+    name: 'ListBoxSection 2',
     children: [
       { name: 'Left', icon: 'AlignHorizontalLeftIcon' },
       { name: 'Center', icon: 'AlignHorizontalCenterIcon' },
@@ -67,10 +74,10 @@ let lotsOfSections: any[] = [];
 for (let i = 0; i < 50; i++) {
   let children = [];
   for (let j = 0; j < 50; j++) {
-    children.push({ name: `Section ${i}, Item ${j}` });
+    children.push({ name: `ListBoxSection ${i}, ListBoxItem ${j}` });
   }
 
-  lotsOfSections.push({ name: 'Section ' + i, children });
+  lotsOfSections.push({ name: 'ListBoxSection ' + i, children });
 }
 
 const meta: Meta = {
@@ -97,7 +104,7 @@ export default meta;
 
 export const Default = () => (
   <ListBox flexGrow={1} aria-labelledby="label" items={flatOptions}>
-    {item => <Item key={item.name}>{item.name}</Item>}
+    {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
   </ListBox>
 );
 
@@ -108,9 +115,12 @@ Default.story = {
 export const Sections = () => (
   <ListBox flexGrow={1} aria-labelledby="label" items={withSection}>
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -128,9 +138,12 @@ export const ManySections = () => (
     onSelectionChange={action('onSelectionChange')}
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {(item: any) => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {(item: any) => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -142,9 +155,11 @@ ManySections.story = {
 export const SectionsNoTitle = () => (
   <ListBox flexGrow={1} aria-labelledby="label" items={withSection}>
     {item => (
-      <Section key={item.name} items={item.children} aria-label={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name} aria-label={item.name}>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -155,9 +170,9 @@ SectionsNoTitle.story = {
 
 export const Static = () => (
   <ListBox flexGrow={1} aria-labelledby="label">
-    <Item>One</Item>
-    <Item>Two</Item>
-    <Item>Three</Item>
+    <ListBoxItem>One</ListBoxItem>
+    <ListBoxItem>Two</ListBoxItem>
+    <ListBoxItem>Three</ListBoxItem>
   </ListBox>
 );
 
@@ -167,16 +182,18 @@ Static.story = {
 
 export const StaticSections = () => (
   <ListBox flexGrow={1} aria-labelledby="label" selectionMode="multiple">
-    <Section title="Section 1">
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
-    </Section>
-    <Section title="Section 2">
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
-    </Section>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 1</ListBoxHeader>
+      <ListBoxItem>One</ListBoxItem>
+      <ListBoxItem>Two</ListBoxItem>
+      <ListBoxItem>Three</ListBoxItem>
+    </ListBoxSection>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 2</ListBoxHeader>
+      <ListBoxItem>One</ListBoxItem>
+      <ListBoxItem>Two</ListBoxItem>
+      <ListBoxItem>Three</ListBoxItem>
+    </ListBoxSection>
   </ListBox>
 );
 
@@ -186,16 +203,16 @@ StaticSections.story = {
 
 export const StaticSectionsNoTitle = () => (
   <ListBox flexGrow={1} aria-labelledby="label">
-    <Section aria-label="Section 1">
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
-    </Section>
-    <Section aria-label="Section 2">
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
-    </Section>
+    <ListBoxSection aria-label="ListBoxSection 1">
+      <ListBoxItem>One</ListBoxItem>
+      <ListBoxItem>Two</ListBoxItem>
+      <ListBoxItem>Three</ListBoxItem>
+    </ListBoxSection>
+    <ListBoxSection aria-label="ListBoxSection 2">
+      <ListBoxItem>One</ListBoxItem>
+      <ListBoxItem>Two</ListBoxItem>
+      <ListBoxItem>Three</ListBoxItem>
+    </ListBoxSection>
   </ListBox>
 );
 
@@ -213,9 +230,12 @@ export const DefaultSelected = () => (
     defaultSelectedKeys={['Kangaroo']}
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -233,7 +253,7 @@ export const DefaultSelectedSingle = () => (
     items={flatOptions}
     defaultSelectedKeys={['Kangaroo']}
   >
-    {item => <Item key={item.name}>{item.name}</Item>}
+    {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
   </ListBox>
 );
 
@@ -249,17 +269,19 @@ export const StaticDefaultSelection = () => (
     onSelectionChange={action('onSelectionChange')}
     defaultSelectedKeys={['2', '3']}
   >
-    <Section title="Section 1">
-      <Item key="1">One</Item>
-      <Item key="2">Two</Item>
-      <Item key="3">Three</Item>
-    </Section>
-    <Section title="Section 2">
-      <Item key="4">Four</Item>
-      <Item key="5">Five</Item>
-      <Item key="6">Six</Item>
-      <Item key="7">Seven</Item>
-    </Section>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 1</ListBoxHeader>
+      <ListBoxItem id="1">One</ListBoxItem>
+      <ListBoxItem id="2">Two</ListBoxItem>
+      <ListBoxItem id="3">Three</ListBoxItem>
+    </ListBoxSection>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 2</ListBoxHeader>
+      <ListBoxItem id="4">Four</ListBoxItem>
+      <ListBoxItem id="5">Five</ListBoxItem>
+      <ListBoxItem id="6">Six</ListBoxItem>
+      <ListBoxItem id="7">Seven</ListBoxItem>
+    </ListBoxSection>
   </ListBox>
 );
 
@@ -277,9 +299,12 @@ export const WithSelectedOptionsControlled = () => (
     selectedKeys={['Kangaroo']}
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -296,17 +321,19 @@ export const StaticWithSelectedOptionsControlled = () => (
     onSelectionChange={action('onSelectionChange')}
     selectedKeys={['2']}
   >
-    <Section title="Section 1">
-      <Item key="1">One</Item>
-      <Item key="2">Two</Item>
-      <Item key="3">Three</Item>
-    </Section>
-    <Section title="Section 2">
-      <Item key="4">Four</Item>
-      <Item key="5">Five</Item>
-      <Item key="6">Six</Item>
-      <Item key="7">Seven</Item>
-    </Section>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 1</ListBoxHeader>
+      <ListBoxItem id="1">One</ListBoxItem>
+      <ListBoxItem id="2">Two</ListBoxItem>
+      <ListBoxItem id="3">Three</ListBoxItem>
+    </ListBoxSection>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 2</ListBoxHeader>
+      <ListBoxItem id="4">Four</ListBoxItem>
+      <ListBoxItem id="5">Five</ListBoxItem>
+      <ListBoxItem id="6">Six</ListBoxItem>
+      <ListBoxItem id="7">Seven</ListBoxItem>
+    </ListBoxSection>
   </ListBox>
 );
 
@@ -322,9 +349,12 @@ export const DisabledOptions = () => (
     disabledKeys={['Kangaroo', 'Echidna']}
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -335,17 +365,19 @@ DisabledOptions.story = {
 
 export const StaticDisabledOptions = () => (
   <ListBox flexGrow={1} aria-labelledby="label" disabledKeys={['3', '5']}>
-    <Section title="Section 1">
-      <Item key="1">One</Item>
-      <Item key="2">Two</Item>
-      <Item key="3">Three</Item>
-    </Section>
-    <Section title="Section 2">
-      <Item key="4">Four</Item>
-      <Item key="5">Five</Item>
-      <Item key="6">Six</Item>
-      <Item key="7">Seven</Item>
-    </Section>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 1</ListBoxHeader>
+      <ListBoxItem id="1">One</ListBoxItem>
+      <ListBoxItem id="2">Two</ListBoxItem>
+      <ListBoxItem id="3">Three</ListBoxItem>
+    </ListBoxSection>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 2</ListBoxHeader>
+      <ListBoxItem id="4">Four</ListBoxItem>
+      <ListBoxItem id="5">Five</ListBoxItem>
+      <ListBoxItem id="6">Six</ListBoxItem>
+      <ListBoxItem id="7">Seven</ListBoxItem>
+    </ListBoxSection>
   </ListBox>
 );
 
@@ -364,9 +396,12 @@ export const MultipleSelection = () => (
     disabledKeys={['Dingo', 'Cassowary']}
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -384,16 +419,18 @@ export const MultipleSelectionStatic = () => (
     defaultSelectedKeys={['2', '5']}
     disabledKeys={['1', '3']}
   >
-    <Section title="Section 1">
-      <Item key="1">One</Item>
-      <Item key="2">Two</Item>
-      <Item key="3">Three</Item>
-    </Section>
-    <Section title="Section 2">
-      <Item key="4">Four</Item>
-      <Item key="5">Five</Item>
-      <Item key="6">Six</Item>
-    </Section>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 1</ListBoxHeader>
+      <ListBoxItem id="1">One</ListBoxItem>
+      <ListBoxItem id="2">Two</ListBoxItem>
+      <ListBoxItem id="3">Three</ListBoxItem>
+    </ListBoxSection>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 2</ListBoxHeader>
+      <ListBoxItem id="4">Four</ListBoxItem>
+      <ListBoxItem id="5">Five</ListBoxItem>
+      <ListBoxItem id="6">Six</ListBoxItem>
+    </ListBoxSection>
   </ListBox>
 );
 
@@ -404,9 +441,12 @@ MultipleSelectionStatic.story = {
 export const NoSelection = () => (
   <ListBox flexGrow={1} aria-labelledby="label" items={withSection}>
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -417,16 +457,18 @@ NoSelection.story = {
 
 export const NoSelectionStatic = () => (
   <ListBox flexGrow={1} aria-labelledby="label">
-    <Section title="Section 1">
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
-    </Section>
-    <Section title="Section 2">
-      <Item>Four</Item>
-      <Item>Five</Item>
-      <Item>Six</Item>
-    </Section>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 1</ListBoxHeader>
+      <ListBoxItem>One</ListBoxItem>
+      <ListBoxItem>Two</ListBoxItem>
+      <ListBoxItem>Three</ListBoxItem>
+    </ListBoxSection>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 2</ListBoxHeader>
+      <ListBoxItem>Four</ListBoxItem>
+      <ListBoxItem>Five</ListBoxItem>
+      <ListBoxItem>Six</ListBoxItem>
+    </ListBoxSection>
   </ListBox>
 );
 
@@ -437,9 +479,12 @@ NoSelectionStatic.story = {
 export const AutoFocusTrue = () => (
   <ListBox flexGrow={1} aria-labelledby="label" items={withSection} autoFocus>
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -458,9 +503,12 @@ export const AutoFocusDefaultSelection = () => (
     selectionMode="single"
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -479,9 +527,12 @@ export const AutoFocusFirst = () => (
     autoFocus="first"
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -500,9 +551,12 @@ export const AutoFocusLast = () => (
     autoFocus="last"
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -521,9 +575,12 @@ export const KeyboardSelectionWrapping = () => (
     shouldFocusWrap
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -540,36 +597,38 @@ export const WithElementsStatic = () => (
     onSelectionChange={action('onSelectionChange')}
     disabledKeys={['3', '5']}
   >
-    <Section title="Section 1">
-      <Item textValue="One" key="1">
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 1</ListBoxHeader>
+      <ListBoxItem textValue="One" key="1">
         <Icon src={copyIcon} />
         <Text>One</Text>
         <Kbd meta>C</Kbd>
-      </Item>
-      <Item textValue="Two" key="2">
+      </ListBoxItem>
+      <ListBoxItem textValue="Two" key="2">
         <Icon src={scissorsIcon} />
         <Text>Two</Text>
-      </Item>
-      <Item textValue="Three" key="3">
+      </ListBoxItem>
+      <ListBoxItem textValue="Three" key="3">
         <Icon src={clipboardCopyIcon} />
         <Text>Three</Text>
-      </Item>
-    </Section>
-    <Section title="Section 2">
-      <Item textValue="Four" key="4">
+      </ListBoxItem>
+    </ListBoxSection>
+    <ListBoxSection>
+      <ListBoxHeader>ListBoxSection 2</ListBoxHeader>
+      <ListBoxItem textValue="Four" key="4">
         <Icon src={alignStartVerticalIcon} />
         <Text>Four</Text>
         <Text slot="description">Four description that's really long</Text>
-      </Item>
-      <Item textValue="Five has really long text that wraps" key="5">
+      </ListBoxItem>
+      <ListBoxItem textValue="Five has really long text that wraps" key="5">
         <Icon src={alignCenterVerticalIcon} />
         <Text>Five has really long text that wraps</Text>
-      </Item>
-      <Item textValue="Six" key="6">
+      </ListBoxItem>
+      <ListBoxItem textValue="Six" key="6">
         <Icon src={alignEndVerticalIcon} />
         <Text>Six</Text>
-      </Item>
-    </Section>
+      </ListBoxItem>
+    </ListBoxSection>
   </ListBox>
 );
 
@@ -586,9 +645,12 @@ export const WithElementsDynamic = () => (
     selectionMode="multiple"
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => customOption(item)}
-      </Section>
+      <ListBoxSection id={item.name}>
+        <ListBoxHeader>{item.name}</ListBoxHeader>
+        <ListBoxCollection items={item.children}>
+          {item => customOption(item)}
+        </ListBoxCollection>
+      </ListBoxSection>
     )}
   </ListBox>
 );
@@ -598,9 +660,8 @@ WithElementsDynamic.story = {
 };
 
 export const IsLoading = () => (
-  <ListBox flexGrow={1} aria-labelledby="label" items={[]} isLoading>
-    {/* @ts-ignore */}
-    {item => <Item>{item.name}</Item>}
+  <ListBox flexGrow={1} aria-labelledby="label">
+    <ListBoxLoadMoreItem isLoading />
   </ListBox>
 );
 
@@ -609,8 +670,11 @@ IsLoading.story = {
 };
 
 export const IsLoadingMore = () => (
-  <ListBox flexGrow={1} aria-labelledby="label" items={flatOptions} isLoading>
-    {item => <Item key={item.name}>{item.name}</Item>}
+  <ListBox flexGrow={1} aria-labelledby="label">
+    <ListBoxCollection items={flatOptions}>
+      {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+    </ListBoxCollection>
+    <ListBoxLoadMoreItem isLoading />
   </ListBox>
 );
 
@@ -627,10 +691,10 @@ AsyncLoading.story = {
 let customOption = (item: { name: string; icon: string }) => {
   let icon = iconMap[item.icon as keyof typeof iconMap];
   return (
-    <Item textValue={item.name} key={item.name}>
+    <ListBoxItem textValue={item.name} key={item.name}>
       {item.icon && <Icon src={icon} />}
       <Text>{item.name}</Text>
-    </Item>
+    </ListBoxItem>
   );
 };
 
@@ -654,14 +718,14 @@ function AsyncLoadingExample() {
   });
 
   return (
-    <ListBox
-      flexGrow={1}
-      aria-labelledby="label"
-      items={list.items}
-      isLoading={list.isLoading}
-      onLoadMore={list.loadMore}
-    >
-      {item => <Item key={item.name}>{item.name}</Item>}
+    <ListBox flexGrow={1} aria-labelledby="label">
+      <ListBoxCollection items={list.items}>
+        {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+      </ListBoxCollection>
+      <ListBoxLoadMoreItem
+        isLoading={list.isLoading}
+        onLoadMore={list.loadMore}
+      />
     </ListBox>
   );
 }

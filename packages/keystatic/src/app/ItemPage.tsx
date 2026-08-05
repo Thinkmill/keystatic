@@ -15,7 +15,7 @@ import {
 import * as Y from 'yjs';
 import * as s from 'superstruct';
 
-import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionGroup, ActionGroupItem } from '@keystar/ui/action-group';
 import { Badge } from '@keystar/ui/badge';
 import { Button, ButtonGroup } from '@keystar/ui/button';
 import { AlertDialog, Dialog, DialogContainer } from '@keystar/ui/dialog';
@@ -697,8 +697,8 @@ function HeaderActions(props: {
         }}
       >
         {item => (
-          <Item
-            key={item.key}
+          <ActionGroupItem
+            id={String(item.key)}
             textValue={item.label}
             href={item.href}
             target={item.target}
@@ -706,7 +706,7 @@ function HeaderActions(props: {
           >
             <Icon src={item.icon} />
             <Text>{item.label}</Text>
-          </Item>
+          </ActionGroupItem>
         )}
       </ActionGroup>
       <Button

@@ -9,6 +9,7 @@ import {
 } from '@jest/globals';
 
 import { Button } from '@keystar/ui/button';
+import { useDragAndDrop } from '@keystar/ui/drag-and-drop';
 import {
   act,
   fireEvent,
@@ -17,10 +18,14 @@ import {
   within,
 } from '#test-utils';
 
-import { ListView, Item } from '..';
+import {
+  ListView,
+  ListViewCollection,
+  ListViewItem,
+  ListViewLoadMoreItem,
+} from '..';
 
-// eslint-disable-next-line jest/no-disabled-tests
-describe.skip('list-view/ListView', () => {
+describe('list-view/ListView', () => {
   let offsetWidth: jest.SpiedGetter<number>,
     offsetHeight: jest.SpiedGetter<number>,
     scrollHeight: jest.SpiedGetter<number>;
@@ -36,6 +41,12 @@ describe.skip('list-view/ListView', () => {
   }
 
   beforeAll(function () {
+    global.IntersectionObserver = jest.fn(() => ({
+      disconnect: jest.fn(),
+      observe: jest.fn(),
+      takeRecords: jest.fn(),
+      unobserve: jest.fn(),
+    })) as unknown as typeof IntersectionObserver;
     offsetWidth = jest
       .spyOn(window.HTMLElement.prototype, 'clientWidth', 'get')
       .mockImplementation(() => 1000);
@@ -72,7 +83,9 @@ describe.skip('list-view/ListView', () => {
   let renderList = (props = {}) => {
     return render(
       <ListView items={items} aria-label="List" {...props}>
-        {item => <Item textValue={item.label}>{item.label}</Item>}
+        {item => (
+          <ListViewItem textValue={item.label}>{item.label}</ListViewItem>
+        )}
       </ListView>
     );
   };
@@ -81,11 +94,11 @@ describe.skip('list-view/ListView', () => {
     return render(
       <ListView items={items} aria-label="List" {...props}>
         {item => (
-          <Item textValue={item.label}>
+          <ListViewItem textValue={item.label}>
             {item.label}
             <Button>button1 {item.label}</Button>
             <Button>button2 {item.label}</Button>
-          </Item>
+          </ListViewItem>
         )}
       </ListView>
     );
@@ -104,9 +117,9 @@ describe.skip('list-view/ListView', () => {
   it('renders a static listview', function () {
     let { getByRole, getAllByRole } = render(
       <ListView aria-label="List" data-testid="test">
-        <Item>Foo</Item>
-        <Item>Bar</Item>
-        <Item>Baz</Item>
+        <ListViewItem>Foo</ListViewItem>
+        <ListViewItem>Bar</ListViewItem>
+        <ListViewItem>Baz</ListViewItem>
       </ListView>
     );
 
@@ -137,7 +150,7 @@ describe.skip('list-view/ListView', () => {
     ];
     let { getByRole, getAllByRole } = render(
       <ListView items={items} aria-label="List">
-        {item => <Item textValue={item.key}>{item.label}</Item>}
+        {item => <ListViewItem textValue={item.key}>{item.label}</ListViewItem>}
       </ListView>
     );
 
@@ -159,6 +172,49 @@ describe.skip('list-view/ListView', () => {
     expect(gridCells[0]).toHaveAttribute('aria-colindex', '1');
   });
 
+  it('renders a loading row without requiring a load-more callback', function () {
+    let tree = render(
+      <ListView aria-label="List">
+        <ListViewCollection items={items}>
+          {item => (
+            <ListViewItem id={item.key} textValue={item.label}>
+              {item.label}
+            </ListViewItem>
+          )}
+        </ListViewCollection>
+        <ListViewLoadMoreItem isLoading />
+      </ListView>
+    );
+    expect(tree.getAllByRole('row')).toHaveLength(4);
+    expect(tree.getByRole('progressbar')).toHaveAttribute(
+      'aria-label',
+      'Loading more…'
+    );
+  });
+
+  it('uses the public RAC drag-and-drop hook bundle', function () {
+    function DraggableList() {
+      let result = useDragAndDrop({
+        getItems: keys => [...keys].map(key => ({ 'text/plain': String(key) })),
+        onReorder: jest.fn(),
+      });
+      return (
+        <ListView
+          items={items}
+          aria-label="Draggable list"
+          dragAndDropHooks={result.dragAndDropHooks}
+        >
+          {item => (
+            <ListViewItem textValue={item.label}>{item.label}</ListViewItem>
+          )}
+        </ListView>
+      );
+    }
+
+    let tree = render(<DraggableList />);
+    expect(tree.getAllByRole('button')).toHaveLength(3);
+  });
+
   it('renders a falsy ids', function () {
     let items = [
       { id: 0, label: 'Foo' },
@@ -166,7 +222,9 @@ describe.skip('list-view/ListView', () => {
     ];
     let { getByRole, getAllByRole } = render(
       <ListView items={items} aria-label="List">
-        {item => <Item textValue={item.label}>{item.label}</Item>}
+        {item => (
+          <ListViewItem textValue={item.label}>{item.label}</ListViewItem>
+        )}
       </ListView>
     );
 
@@ -181,9 +239,24 @@ describe.skip('list-view/ListView', () => {
     expect(gridCells[0]).toHaveTextContent('Foo');
   });
 
+  it('maps highlight selection style to replace behavior', function () {
+    let tree = renderList({
+      selectionMode: 'single',
+      selectionStyle: 'highlight',
+    });
+    let rows = tree.getAllByRole('row');
+
+    expect(tree.queryByRole('checkbox')).toBeNull();
+    firePress(rows[0]);
+    expect(rows[0]).toHaveAttribute('aria-selected', 'true');
+  });
+
   it('should retain focus on the pressed child', function () {
     let tree = renderListWithFocusables();
     let button = within(getRow(tree, 'Foo')).getAllByRole('button')[1];
+    // Browsers focus buttons natively on pointer down. React Aria's modern
+    // usePress no longer emulates this behavior for synthetic test events.
+    act(() => button.focus());
     firePress(button);
     expect(document.activeElement).toBe(button);
   });
@@ -191,6 +264,8 @@ describe.skip('list-view/ListView', () => {
   it('should focus the row if the cell is pressed', function () {
     let tree = renderList({ selectionMode: 'single' });
     let cell = within(getRow(tree, 'Bar')).getByRole('gridcell');
+    // Simulate the browser's native focus step before the synthetic press.
+    act(() => getRow(tree, 'Bar').focus());
     firePress(cell);
     act(() => {
       jest.runAllTimers();
@@ -203,6 +278,39 @@ describe.skip('list-view/ListView', () => {
     expect(getRow(tree, 'Foo')).toHaveAttribute('aria-label', 'Foo');
     expect(getRow(tree, 'Bar')).toHaveAttribute('aria-label', 'Bar');
     expect(getRow(tree, 'Baz')).toHaveAttribute('aria-label', 'Baz');
+  });
+
+  it('prefers an explicit aria-label over textValue', function () {
+    let tree = render(
+      <ListView aria-label="List">
+        <ListViewItem textValue="Delete">Delete</ListViewItem>
+        <ListViewItem aria-label="Delete file permanently" textValue="Delete">
+          Delete
+        </ListViewItem>
+      </ListView>
+    );
+    expect(tree.getAllByRole('row')[1]).toHaveAttribute(
+      'aria-label',
+      'Delete file permanently'
+    );
+  });
+
+  it('centers the empty state', function () {
+    let tree = render(
+      <ListView
+        items={[] as { id: string }[]}
+        aria-label="List"
+        renderEmptyState={() => <div>Empty</div>}
+      >
+        {item => <ListViewItem>{item.id}</ListViewItem>}
+      </ListView>
+    );
+    let wrapper = tree.getByText('Empty').parentElement;
+    expect(wrapper).toHaveStyle({
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+    });
   });
 
   it('should label the checkboxes with the row label', function () {

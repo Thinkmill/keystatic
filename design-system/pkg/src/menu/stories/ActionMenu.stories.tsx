@@ -7,7 +7,7 @@ import { Flex } from '@keystar/ui/layout';
 import { Picker } from '@keystar/ui/picker';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 
-import { ActionMenuProps, ActionMenu, Item } from '..';
+import { ActionMenuProps, ActionMenu, MenuItem } from '..';
 
 const meta: Meta<ActionMenuProps<object>> = {
   title: 'Components/ActionMenu',
@@ -18,9 +18,9 @@ export default meta;
 
 const Template = <T extends object>(args: ActionMenuProps<T>) => (
   <ActionMenu onAction={action('action')} {...args}>
-    <Item key="one">One</Item>
-    <Item key="two">Two</Item>
-    <Item key="three">Three</Item>
+    <MenuItem id="one">One</MenuItem>
+    <MenuItem id="two">Two</MenuItem>
+    <MenuItem id="three">Three</MenuItem>
   </ActionMenu>
 );
 
@@ -95,7 +95,7 @@ function DirectionAlignment() {
         value={align}
         onChange={key => handleAlignChange(String(key))}
       >
-        {item => <Item key={item.key}>{item.label}</Item>}
+        {item => <MenuItem id={item.key}>{item.label}</MenuItem>}
       </Picker>
       <Picker
         label="Direction"
@@ -103,7 +103,7 @@ function DirectionAlignment() {
         value={direction}
         onChange={key => handleDirectionChange(String(key))}
       >
-        {item => <Item key={item.key}>{item.label}</Item>}
+        {item => <MenuItem id={item.key}>{item.label}</MenuItem>}
       </Picker>
       <Checkbox isSelected={shouldFlip} onChange={setShouldFlip}>
         Should Flip
@@ -114,9 +114,9 @@ function DirectionAlignment() {
         direction={direction}
         shouldFlip={shouldFlip}
       >
-        <Item key="one">One</Item>
-        <Item key="two">Two</Item>
-        <Item key="three">Three</Item>
+        <MenuItem id="one">One</MenuItem>
+        <MenuItem id="two">Two</MenuItem>
+        <MenuItem id="three">Three</MenuItem>
       </ActionMenu>
     </Flex>
   );
@@ -171,9 +171,9 @@ export const ControlledOpen = () => {
       onOpenChange={setOpen}
       onAction={action('action')}
     >
-      <Item key="cut">Cut</Item>
-      <Item key="copy">Copy</Item>
-      <Item key="paste">Paste</Item>
+      <MenuItem id="cut">Cut</MenuItem>
+      <MenuItem id="copy">Copy</MenuItem>
+      <MenuItem id="paste">Paste</MenuItem>
     </ActionMenu>
   );
 };
@@ -183,9 +183,9 @@ export const DirectionAlignFlip = () => <DirectionAlignment />;
 export const WithTooltip = () => (
   <TooltipTrigger delay={0}>
     <ActionMenu>
-      <Item key="cut">Cut</Item>
-      <Item key="copy">Copy</Item>
-      <Item key="paste">Paste</Item>
+      <MenuItem id="cut">Cut</MenuItem>
+      <MenuItem id="copy">Copy</MenuItem>
+      <MenuItem id="paste">Paste</MenuItem>
     </ActionMenu>
     <Tooltip>Actions</Tooltip>
   </TooltipTrigger>
@@ -200,7 +200,7 @@ export const Dynamic = () => {
 
   return (
     <ActionMenu items={items}>
-      {item => <Item key={item.key}>{item.label}</Item>}
+      {item => <MenuItem id={item.key}>{item.label}</MenuItem>}
     </ActionMenu>
   );
 };

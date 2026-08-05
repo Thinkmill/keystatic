@@ -10,9 +10,9 @@ category: Layout
 
 ```jsx {% live=true %}
 <ListView aria-label="static list view example" selectionMode="multiple">
-  <Item>Bilby</Item>
-  <Item>Kangaroo</Item>
-  <Item>Echidna</Item>
+  <ListViewItem>Bilby</ListViewItem>
+  <ListViewItem>Kangaroo</ListViewItem>
+  <ListViewItem>Echidna</ListViewItem>
 </ListView>
 ```
 
@@ -20,15 +20,15 @@ category: Layout
 
 ### Collections
 
-`ActionGroup` implements the `react-stately`
-[collection component](https://react-spectrum.adobe.com/react-stately/collections.html),
-`<Item>`.
+`ListView` implements the `react-aria-components`
+[collection component](https://react-spectrum.adobe.com/react-aria-components/collections.html),
+`<ListViewItem>`.
 
 Static collections, seen in the example above, can be used when the full list of
 options is known ahead of time.
 
 Dynamic collections, as shown below, provide an iterable list of `items` to the
-component and a render function that returns `Item` elements.
+component and a render function that returns `ListViewItem` elements.
 
 ```jsx {% live=true %}
 let items = [
@@ -47,7 +47,7 @@ return (
     selectionMode="multiple"
     height="scale.3000"
   >
-    {item => <Item>{item.name}</Item>}
+    {item => <ListViewItem>{item.name}</ListViewItem>}
   </ListView>
 );
 ```
@@ -58,8 +58,8 @@ Setting a selected item can be done by using the `defaultSelectedKeys` or
 `selectedKeys` prop. The selected key corresponds to the key of an item, where
 `"id"` is used by default.
 
-See the `react-stately`
-[selection docs](https://react-spectrum.adobe.com/react-stately/selection.html#selected-key-data-type)
+See the `react-aria-components`
+[selection docs](https://react-spectrum.adobe.com/react-aria-components/selection.html#selected-key-data-type)
 for more information.
 
 #### Multiple selection
@@ -90,7 +90,7 @@ return (
       selectedKeys={animal}
       onSelectionChange={setAnimal}
     >
-      {item => <Item key={item.name}>{item.name}</Item>}
+      {item => <ListViewItem id={item.name}>{item.name}</ListViewItem>}
     </ListView>
 
     <ListView
@@ -99,7 +99,7 @@ return (
       items={items}
       defaultSelectedKeys={['Echidna']}
     >
-      {item => <Item key={item.name}>{item.name}</Item>}
+      {item => <ListViewItem id={item.name}>{item.name}</ListViewItem>}
     </ListView>
   </Grid>
 );
@@ -130,7 +130,7 @@ return (
     selectionStyle="highlight"
     items={items}
   >
-    {item => <Item key={item.name}>{item.name}</Item>}
+    {item => <ListViewItem id={item.name}>{item.name}</ListViewItem>}
   </ListView>
 );
 ```
@@ -147,7 +147,7 @@ primary `<Text>` label.
   aria-label="complex list view items"
   onAction={key => alert(`Action on item ${key}`)}
 >
-  <Item key="1" textValue="Random Access Memories">
+  <ListViewItem id="1" textValue="Random Access Memories">
     <Image
       src="https://cdn.lorem.space/images/album/.cache/150x150/random-access-memories_daft-punk.jpg"
       alt="Daft Punk album cover — Random Access Memories"
@@ -156,17 +156,17 @@ primary `<Text>` label.
     <Text>Random Access Memories</Text>
     <Text slot="description">Daft Punk</Text>
     <ActionMenu>
-      <Item key="edit" textValue="Edit">
+      <ListViewItem id="edit" textValue="Edit">
         <Icon src={pencilIcon} />
         <Text>Edit</Text>
-      </Item>
-      <Item key="delete" textValue="Delete">
+      </ListViewItem>
+      <ListViewItem id="delete" textValue="Delete">
         <Icon src={trash2Icon} />
         <Text>Delete</Text>
-      </Item>
+      </ListViewItem>
     </ActionMenu>
-  </Item>
-  <Item key="2" textValue="Nevermind">
+  </ListViewItem>
+  <ListViewItem id="2" textValue="Nevermind">
     <Image
       src="https://cdn.lorem.space/images/album/.cache/150x150/nevermind_nirvana.jpg"
       alt="Nirvana album cover — Nevermind"
@@ -175,17 +175,17 @@ primary `<Text>` label.
     <Text>Nevermind</Text>
     <Text slot="description">Nirvana</Text>
     <ActionMenu>
-      <Item key="edit" textValue="Edit">
+      <ListViewItem id="edit" textValue="Edit">
         <Icon src={pencilIcon} />
         <Text>Edit</Text>
-      </Item>
-      <Item key="delete" textValue="Delete">
+      </ListViewItem>
+      <ListViewItem id="delete" textValue="Delete">
         <Icon src={trash2Icon} />
         <Text>Delete</Text>
-      </Item>
+      </ListViewItem>
     </ActionMenu>
-  </Item>
-  <Item key="3" textValue="Abbey Road">
+  </ListViewItem>
+  <ListViewItem id="3" textValue="Abbey Road">
     <Image
       src="https://cdn.lorem.space/images/album/.cache/150x150/abbey-road_beatles.jpg"
       alt="Beatles album cover — Abbey Road"
@@ -194,16 +194,16 @@ primary `<Text>` label.
     <Text>Abbey Road</Text>
     <Text slot="description">Beatles</Text>
     <ActionMenu>
-      <Item key="edit" textValue="Edit">
+      <ListViewItem id="edit" textValue="Edit">
         <Icon src={pencilIcon} />
         <Text>Edit</Text>
-      </Item>
-      <Item key="delete" textValue="Delete">
+      </ListViewItem>
+      <ListViewItem id="delete" textValue="Delete">
         <Icon src={trash2Icon} />
         <Text>Delete</Text>
-      </Item>
+      </ListViewItem>
     </ActionMenu>
-  </Item>
+  </ListViewItem>
 </ListView>
 ```
 
@@ -217,14 +217,14 @@ providing the `density` prop.
 ```jsx {% live=true %}
 <Grid autoFlow="column" gap="large">
   <ListView density="compact" aria-label="compact list view example">
-    <Item>Bilby</Item>
-    <Item>Kangaroo</Item>
-    <Item>Echidna</Item>
+    <ListViewItem>Bilby</ListViewItem>
+    <ListViewItem>Kangaroo</ListViewItem>
+    <ListViewItem>Echidna</ListViewItem>
   </ListView>
   <ListView density="spacious" aria-label="spacious list view example">
-    <Item>Bilby</Item>
-    <Item>Kangaroo</Item>
-    <Item>Echidna</Item>
+    <ListViewItem>Bilby</ListViewItem>
+    <ListViewItem>Kangaroo</ListViewItem>
+    <ListViewItem>Echidna</ListViewItem>
   </ListView>
 </Grid>
 ```
@@ -262,10 +262,10 @@ return (
       items={items}
     >
       {item => (
-        <Item textValue={`${item.title}. ${item.description}`}>
+        <ListViewItem textValue={`${item.title}. ${item.description}`}>
           <Text>{item.title}</Text>
           <Text slot="description">{item.description}</Text>
-        </Item>
+        </ListViewItem>
       )}
     </ListView>
     <ListView
@@ -274,12 +274,14 @@ return (
       items={items}
     >
       {item => (
-        <Item textValue={`${item.title}. ${item.description}`}>
+        <ListViewItem textValue={`${item.title}. ${item.description}`}>
           <Text>{item.title}</Text>
           <Text slot="description">{item.description}</Text>
-        </Item>
+        </ListViewItem>
       )}
     </ListView>
   </Grid>
 );
 ```
+
+

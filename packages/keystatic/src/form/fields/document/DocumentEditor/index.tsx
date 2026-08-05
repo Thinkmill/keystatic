@@ -30,6 +30,10 @@ import {
   toDataAttributes,
   tokenSchema,
 } from '@keystar/ui/style';
+import {
+  EditorAutocomplete,
+  useEditorAutocompleteInputProps,
+} from '@keystar/ui/editor';
 import { Prose } from '@keystar/ui/typography';
 
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
@@ -449,6 +453,15 @@ function getPrismTokenLength(token: Prism.Token | string): number {
 }
 
 export function DocumentEditorEditable(props: EditableProps) {
+  return (
+    <EditorAutocomplete>
+      <DocumentEditorEditableInner {...props} />
+    </EditorAutocomplete>
+  );
+}
+
+function DocumentEditorEditableInner(props: EditableProps) {
+  const { className, onKeyDown: onKeyDownProp, ...otherProps } = props;
   const containerSize = useContentPanelSize();
   const entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useSlate();
@@ -458,11 +471,14 @@ export function DocumentEditorEditable(props: EditableProps) {
     () => getKeyDownHandler(editor, documentFeatures),
     [editor, documentFeatures]
   );
+  const { onKeyDown: onAutocompleteKeyDown, ...autocompleteAriaProps } =
+    useEditorAutocompleteInputProps();
 
   return (
     <ActiveBlockPopoverProvider editor={editor}>
       <Prose size={entryLayoutPane === 'main' ? 'medium' : 'regular'}>
         <Editable
+          {...autocompleteAriaProps}
           placeholder='Start writing or press "/" for commands...'
           decorate={useCallback(
             ([node, path]: NodeEntry<Node>) => {
@@ -543,15 +559,28 @@ export function DocumentEditorEditable(props: EditableProps) {
             },
             [editor, componentBlocks]
           )}
-          onKeyDown={onKeyDown}
+          onKeyDown={event => {
+            onAutocompleteKeyDown(event);
+            if (event.key === 'Escape' && editor.selection) {
+              let path = editor.selection.anchor.path;
+              let node = Node.get(editor, path);
+              if (Text.isText(node) && node.insertMenu) {
+                event.preventDefault();
+                Transforms.unsetNodes(editor, 'insertMenu', { at: path });
+              }
+            }
+            if (!event.defaultPrevented) {
+              (onKeyDownProp ?? onKeyDown)(event);
+            }
+          }}
           renderElement={renderElement}
           renderLeaf={renderLeaf}
-          {...props}
+          {...otherProps}
           {...toDataAttributes({
             container: containerSize,
             layout: entryLayoutPane,
           })}
-          className={classNames(editableStyles, props.className)}
+          className={classNames(editableStyles, className)}
         />
       </Prose>
     </ActiveBlockPopoverProvider>

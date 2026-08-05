@@ -17,7 +17,7 @@ import {
   useEditorState,
   useEditorDispatchCommand,
 } from '../editor-view';
-import { Item } from './EditorListbox';
+import { EditorListboxItem } from './EditorListbox';
 import { InputRule } from '../inputrules/inputrules';
 import { useEditorKeydownListener } from '../keydown';
 import { EditorAutocomplete } from './autocomplete';
@@ -80,11 +80,11 @@ function wrapInsertMenuCommand(command: Command): Command {
 
 export function itemRenderer(item: InsertMenuItem) {
   return (
-    <Item key={item.id} textValue={item.label}>
+    <EditorListboxItem id={item.id} textValue={item.label}>
       <Text>{item.label}</Text>
       {item.description && <Text slot="description">{item.description}</Text>}
       {item.icon && <Icon src={item.icon} />}
-    </Item>
+    </EditorListboxItem>
   );
 }
 
@@ -120,11 +120,6 @@ function InsertMenu(props: { query: string; from: number; to: number }) {
       aria-label="Insert menu"
       items={options}
       children={itemRenderer}
-      onEscape={() => {
-        const tr = removeAutocompleteDecorationAndContent(editorState);
-        if (!tr) return;
-        viewRef.current?.dispatch(tr);
-      }}
       onAction={key => {
         const option = options.find(option => option.id === key);
         if (!option) return;

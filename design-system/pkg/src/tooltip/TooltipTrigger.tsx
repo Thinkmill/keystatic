@@ -50,34 +50,9 @@ function TooltipTrigger(props: TooltipTriggerProps) {
   );
 }
 
-// Support TooltipTrigger inside components using CollectionBuilder.
-TooltipTrigger.getCollectionNode = function* (props: TooltipTriggerProps) {
-  // Children.toArray mutates the key prop, use Children.forEach instead.
-  let childArray: ReactElement[] = [];
-  React.Children.forEach(props.children, child => {
-    if (React.isValidElement(child)) {
-      childArray.push(child);
-    }
-  });
-  let [trigger, tooltip] = childArray;
-  yield {
-    element: trigger,
-    wrapper: (element: ReactElement) => (
-      <TooltipTrigger key={element.key} {...props}>
-        {element}
-        {tooltip}
-      </TooltipTrigger>
-    ),
-  };
-};
-
 /**
  * TooltipTrigger wraps around a trigger element and a Tooltip. It handles opening and closing
  * the Tooltip when the user hovers over or focuses the trigger, and positioning the Tooltip
  * relative to the trigger.
  */
-// We don't want getCollectionNode to show up in the type definition
-let _TooltipTrigger = TooltipTrigger as (
-  props: TooltipTriggerProps
-) => JSX.Element;
-export { _TooltipTrigger as TooltipTrigger };
+export { TooltipTrigger };

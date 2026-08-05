@@ -9,131 +9,51 @@ category: Navigation
 ## Example
 
 ```jsx {% live=true %}
-<Breadcrumbs>
-  <Item key="dashboard">Dashboard</Item>
-  <Item key="posts">Posts</Item>
-  <Item key="some-post-title">Some post title</Item>
+<Breadcrumbs aria-label="Breadcrumbs">
+  <BreadcrumbItem id="dashboard" href="/">Dashboard</BreadcrumbItem>
+  <BreadcrumbItem id="posts" href="/posts">Posts</BreadcrumbItem>
+  <BreadcrumbItem id="current">Some post title</BreadcrumbItem>
 </Breadcrumbs>
 ```
 
-## Patterns
+## Collections
 
-### Collections
-
-Breadcrumbs implements `react-stately`
-[collection components](https://react-spectrum.adobe.com/react-stately/collections.html),
-accepting only static children.
-
-`Breadcrumbs` accepts `<Item>` elements as children, each with a `key` prop,
-which is passed to the `onAction` handler to identify the selected item.
+`Breadcrumbs` accepts explicit `BreadcrumbItem` children. It supports both
+static composition and the React Aria Components dynamic collection API.
 
 ```jsx {% live=true %}
 let items = [
-  { key: 'dashboard', label: 'Dashboard' },
-  { key: 'posts', label: 'Posts' },
-  { key: 'some-post-title', label: 'Some post title' },
+  { id: 'dashboard', label: 'Dashboard', href: '/' },
+  { id: 'posts', label: 'Posts', href: '/posts' },
+  { id: 'current', label: 'Some post title' },
 ];
-let [itemKey, setItemKey] = React.useState();
 
 return (
-  <Grid gap="large">
-    <Breadcrumbs onAction={setItemKey}>
-      {items.map(item => (
-        <Item key={item.key}>{item.label}</Item>
-      ))}
-    </Breadcrumbs>
-    <Text>Last key: {itemKey}</Text>
-  </Grid>
+  <Breadcrumbs aria-label="Breadcrumbs" items={items}>
+    {item => (
+      <BreadcrumbItem href={item.href}>{item.label}</BreadcrumbItem>
+    )}
+  </Breadcrumbs>
 );
 ```
 
-### Links
+The final item is the current page. Its `href` is omitted from the rendered
+link and `aria-current="page"` is applied automatically.
 
-By default, interacting with an item in Breadcrumbs triggers `onAction`. Items
-may also be links to another page or website. This can be achieved by passing
-an `href` prop to the `<Item>` component.
+## Client-side routing
+
+`BreadcrumbItem` works with frameworks and client-side routers through the
+[Provider](/package/core#provider) at the root of your application. See
+[client-side routing](/package/core#client-side-routing) for configuration.
+
+## Sizes
+
+Use the `size` prop on `Breadcrumbs` to set the text size for all items. An
+individual `BreadcrumbItem` can override it.
 
 ```jsx {% live=true %}
-<Breadcrumbs>
-  <Item href="/">Home</Item>
-  <Item href="/package/breadcrumbs">Breadcrumbs</Item>
+<Breadcrumbs aria-label="Breadcrumbs" size="large">
+  <BreadcrumbItem id="home" href="/">Home</BreadcrumbItem>
+  <BreadcrumbItem id="current">Breadcrumbs</BreadcrumbItem>
 </Breadcrumbs>
-```
-
-#### Client-side routing
-
-The `<Item>` component works with frameworks and client-side routers like
-[Next.js](https://nextjs.org/) and [React Router](https://reactrouter.com/en/main).
-As with other components that support links, this works via the
-[Provider](/package/core#provider) component at the root of your app. See the
-[client-side routing](/package/core#client-side-routing) section to learn how
-to set this up.
-
-### Overflow
-
-Breadcrumbs collapses items into a menu when space is limited. It will only show
-a maximum of 4 visible items including the root and menu button, if either are
-visible. Note that the last breadcrumb item will automatically truncate with an
-ellipsis instead of collapsing into the menu.
-
-Resize your browser window to see the above behavior in the examples below.
-
-```jsx {% live=true %}
-<Breadcrumbs>
-  <Item key="Home">Home</Item>
-  <Item key="Products">Products</Item>
-  <Item key="Tools">Tools</Item>
-  <Item key="Power Tools">Power Tools</Item>
-  <Item key="Drills">Drills</Item>
-  <Item key="Impact Drill Drivers">Impact Drill Drivers</Item>
-</Breadcrumbs>
-```
-
-If the root item cannot be rendered in the available horizontal space, it will
-be collapsed into the menu regardless of `showRoot`.
-
-```jsx {% live=true %}
-<Breadcrumbs showRoot>
-  <Item key="Home">Home</Item>
-  <Item key="Products">Products</Item>
-  <Item key="Tools">Tools</Item>
-  <Item key="Power Tools">Power Tools</Item>
-  <Item key="Drills">Drills</Item>
-  <Item key="Impact Drill Drivers">Impact Drill Drivers</Item>
-</Breadcrumbs>
-```
-
-## Props
-
-### Disabled
-
-Breadcrumbs in a disabled state shows items, but indicates that navigation is
-not available. This can be used to maintain layout continuity.
-
-```jsx {% live=true %}
-<Breadcrumbs isDisabled>
-  <Item key="dashboard">Dashboard</Item>
-  <Item key="posts">Posts</Item>
-  <Item key="some-post-title">Some post title</Item>
-</Breadcrumbs>
-```
-
-### Size
-
-Breadcrumbs accept a `size` prop, which aligns with the
-[Text](/package/typography/text) component.
-
-```jsx {% live=true %}
-<Grid gap="large">
-  <Breadcrumbs size="small">
-    <Item key="dashboard">Dashboard</Item>
-    <Item key="posts">Posts</Item>
-    <Item key="some-post-title">Some post title</Item>
-  </Breadcrumbs>
-  <Breadcrumbs size="large">
-    <Item key="dashboard">Dashboard</Item>
-    <Item key="posts">Posts</Item>
-    <Item key="some-post-title">Some post title</Item>
-  </Breadcrumbs>
-</Grid>
 ```

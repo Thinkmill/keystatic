@@ -21,7 +21,7 @@ import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Kbd, Text } from '@keystar/ui/typography';
 import { PropsWithChildren } from 'react';
 
-import { ActionGroup, ActionGroupProps, Item } from '..';
+import { ActionGroup, ActionGroupProps, ActionGroupItem } from '..';
 import { css } from '@keystar/ui/style';
 
 let onSelectionChange = action('onSelectionChange');
@@ -65,9 +65,9 @@ export default {
 
 export const Default = () => (
   <ActionGroup onAction={action('onAction')}>
-    <Item key="add">Add</Item>
-    <Item key="delete">Delete</Item>
-    <Item key="edit">Edit</Item>
+    <ActionGroupItem id="add">Add</ActionGroupItem>
+    <ActionGroupItem id="delete">Delete</ActionGroupItem>
+    <ActionGroupItem id="edit">Edit</ActionGroupItem>
   </ActionGroup>
 );
 
@@ -77,9 +77,9 @@ Default.story = {
 
 export const ProminenceLow = () => (
   <ActionGroup prominence="low" onAction={action('onAction')}>
-    <Item key="add">Add</Item>
-    <Item key="delete">Delete</Item>
-    <Item key="edit">Edit</Item>
+    <ActionGroupItem id="add">Add</ActionGroupItem>
+    <ActionGroupItem id="delete">Delete</ActionGroupItem>
+    <ActionGroupItem id="edit">Edit</ActionGroupItem>
   </ActionGroup>
 );
 
@@ -89,15 +89,19 @@ ProminenceLow.story = {
 
 export const Links = () => (
   <ActionGroup>
-    <Item href="https://apple.com/" target="_blank">
+    <ActionGroupItem id="apple" href="https://apple.com/" target="_blank">
       Apple
-    </Item>
-    <Item href="https://google.com/" target="_blank">
+    </ActionGroupItem>
+    <ActionGroupItem id="google" href="https://google.com/" target="_blank">
       Google
-    </Item>
-    <Item href="https://microsoft.com/" target="_blank">
+    </ActionGroupItem>
+    <ActionGroupItem
+      id="microsoft"
+      href="https://microsoft.com/"
+      target="_blank"
+    >
       Microsoft
-    </Item>
+    </ActionGroupItem>
   </ActionGroup>
 );
 
@@ -194,9 +198,9 @@ SelectionModeMultipleCompact.story = {
 export const DynamicDefault = () => (
   <ActionGroup onAction={action('onAction')} items={editItems}>
     {item => (
-      <Item key={item.name} textValue={item.name}>
+      <ActionGroupItem id={item.name} textValue={item.name}>
         {item.children}
-      </Item>
+      </ActionGroupItem>
     )}
   </ActionGroup>
 );
@@ -213,9 +217,9 @@ export const DynamicSingleSelection = () => (
     items={editItems}
   >
     {item => (
-      <Item key={item.name} textValue={item.name}>
+      <ActionGroupItem id={item.name} textValue={item.name}>
         {item.children}
-      </Item>
+      </ActionGroupItem>
     )}
   </ActionGroup>
 );
@@ -233,22 +237,22 @@ ManualTooltips.story = {
 export const OverflowModeWrap = () => (
   <Resize>
     <ActionGroup overflowMode="wrap" onAction={action('onAction')}>
-      <Item key="bold">
+      <ActionGroupItem id="bold">
         <Icon src={boldIcon} />
         <Text>Bold</Text>
-      </Item>
-      <Item key="italic">
+      </ActionGroupItem>
+      <ActionGroupItem id="italic">
         <Icon src={italicIcon} />
         <Text>Italic</Text>
-      </Item>
-      <Item key="underline">
+      </ActionGroupItem>
+      <ActionGroupItem id="underline">
         <Icon src={underlineIcon} />
         <Text>Underline</Text>
-      </Item>
-      <Item key="strike">
+      </ActionGroupItem>
+      <ActionGroupItem id="strike">
         <Icon src={strikethroughIcon} />
         <Text>Strikethrough</Text>
-      </Item>
+      </ActionGroupItem>
     </ActionGroup>
   </Resize>
 );
@@ -259,25 +263,17 @@ OverflowModeWrap.story = {
 
 export const OverflowModeCollapse = () => (
   <Resize>
-    <ActionGroup overflowMode="collapse" onAction={action('onAction')}>
-      <Item key="bold">
-        <Icon src={boldIcon} />
-        <Text>Bold</Text>
-        <Kbd meta>B</Kbd>
-      </Item>
-      <Item key="italic">
-        <Icon src={italicIcon} />
-        <Text>Italic</Text>
-        <Kbd meta>I</Kbd>
-      </Item>
-      <Item key="underline">
-        <Icon src={underlineIcon} />
-        <Text>Underline</Text>
-      </Item>
-      <Item key="strike">
-        <Icon src={strikethroughIcon} />
-        <Text>Strikethrough</Text>
-      </Item>
+    <ActionGroup
+      overflowMode="collapse"
+      items={formattingItems}
+      onAction={action('onAction')}
+    >
+      {item => (
+        <ActionGroupItem id={item.name} textValue={item.children}>
+          <Icon src={iconMap[item.children as keyof typeof iconMap]} />
+          <Text>{item.children}</Text>
+        </ActionGroupItem>
+      )}
     </ActionGroup>
   </Resize>
 );
@@ -288,88 +284,34 @@ OverflowModeCollapse.story = {
 
 export const CollapseWithLinks = () => (
   <Resize>
-    <ActionGroup overflowMode="collapse">
-      <Item href="https://apple.com/" target="_blank">
-        Apple
-      </Item>
-      <Item href="https://google.com/" target="_blank">
-        Google
-      </Item>
-      <Item href="https://microsoft.com/" target="_blank">
-        Microsoft
-      </Item>
+    <ActionGroup
+      overflowMode="collapse"
+      items={[
+        { id: 'apple', label: 'Apple', href: 'https://apple.com/' },
+        { id: 'google', label: 'Google', href: 'https://google.com/' },
+        {
+          id: 'microsoft',
+          label: 'Microsoft',
+          href: 'https://microsoft.com/',
+        },
+      ]}
+    >
+      {item => (
+        <ActionGroupItem
+          id={item.id}
+          href={item.href}
+          target="_blank"
+          textValue={item.label}
+        >
+          {item.label}
+        </ActionGroupItem>
+      )}
     </ActionGroup>
   </Resize>
 );
 
 CollapseWithLinks.story = {
   name: 'overflowMode: collapse + links',
-};
-
-export const ButtonLabelBehaviorHide = () => (
-  <Resize>
-    <ActionGroup
-      overflowMode="collapse"
-      buttonLabelBehavior="hide"
-      onAction={action('onAction')}
-    >
-      <Item key="bold">
-        <Icon src={boldIcon} />
-        <Text>Bold</Text>
-        <Kbd meta>B</Kbd>
-      </Item>
-      <Item key="italic">
-        <Icon src={italicIcon} />
-        <Text>Italic</Text>
-        <Kbd meta>I</Kbd>
-      </Item>
-      <Item key="underline">
-        <Icon src={underlineIcon} />
-        <Text>Underline</Text>
-      </Item>
-      <Item key="strike">
-        <Icon src={strikethroughIcon} />
-        <Text>Strikethrough</Text>
-      </Item>
-    </ActionGroup>
-  </Resize>
-);
-
-ButtonLabelBehaviorHide.story = {
-  name: 'buttonLabelBehavior: hide',
-};
-
-export const ButtonLabelBehaviorCollapse = () => (
-  <Resize>
-    <ActionGroup
-      overflowMode="collapse"
-      buttonLabelBehavior="collapse"
-      onAction={action('onAction')}
-    >
-      <Item key="bold">
-        <Icon src={boldIcon} />
-        <Text>Bold</Text>
-        <Kbd meta>B</Kbd>
-      </Item>
-      <Item key="italic">
-        <Icon src={italicIcon} />
-        <Text>Italic</Text>
-        <Kbd meta>I</Kbd>
-      </Item>
-      <Item key="underline">
-        <Icon src={underlineIcon} />
-        <Text>Underline</Text>
-      </Item>
-      <Item key="strike">
-        <Icon src={strikethroughIcon} />
-        <Text>Strikethrough</Text>
-      </Item>
-    </ActionGroup>
-  </Resize>
-);
-
-ButtonLabelBehaviorCollapse.story = {
-  name: 'buttonLabelBehavior: collapse',
 };
 
 export const OverflowModeCollapseSelection = () => (
@@ -459,7 +401,11 @@ function renderText<T extends object>(
       {...props}
     >
       {items.map(itemProps => (
-        <Item key={itemProps.name} textValue={itemProps.name} {...itemProps} />
+        <ActionGroupItem
+          id={itemProps.name}
+          textValue={itemProps.name}
+          {...itemProps}
+        />
       ))}
     </ActionGroup>
   );
@@ -478,14 +424,14 @@ function renderBoth<T extends object>(
       {items.map(itemProps => {
         let icon = iconMap[itemProps.children as keyof typeof iconMap];
         return (
-          <Item
-            key={itemProps.name}
+          <ActionGroupItem
+            id={itemProps.name}
             textValue={itemProps.name}
             aria-label={itemProps.children}
           >
             <Icon src={icon} />
             <Text>{itemProps.children}</Text>
-          </Item>
+          </ActionGroupItem>
         );
       })}
     </ActionGroup>
@@ -505,13 +451,13 @@ function renderIcons<T extends object>(
       {items.map(itemProps => {
         let icon = iconMap[itemProps.children as keyof typeof iconMap];
         return (
-          <Item
-            key={itemProps.name}
+          <ActionGroupItem
+            id={itemProps.name}
             textValue={itemProps.name}
             aria-label={itemProps.children}
           >
             <Icon src={icon} />
-          </Item>
+          </ActionGroupItem>
         );
       })}
     </ActionGroup>
@@ -532,12 +478,13 @@ function renderTooltips<T extends object>(
         let icon = iconMap[itemProps.children as keyof typeof iconMap];
         return (
           <TooltipTrigger key={itemProps.name}>
-            <Item
+            <ActionGroupItem
+              id={itemProps.name}
               textValue={itemProps.children}
               aria-label={itemProps.children}
             >
               <Icon src={icon} />
-            </Item>
+            </ActionGroupItem>
             <Tooltip>{itemProps.children}</Tooltip>
           </TooltipTrigger>
         );
@@ -550,30 +497,18 @@ function renderCollapsibleFormatting(props = {}) {
   return (
     <ActionGroup
       aria-label="Text style"
+      items={formattingItems}
       overflowMode="collapse"
       selectionMode="multiple"
       onSelectionChange={action('onSelectionChange')}
-      buttonLabelBehavior="hide"
       {...props}
     >
-      <Item key="bold">
-        <Icon src={boldIcon} />
-        <Text>Bold</Text>
-        <Kbd meta>B</Kbd>
-      </Item>
-      <Item key="italic">
-        <Icon src={italicIcon} />
-        <Text>Italic</Text>
-        <Kbd meta>I</Kbd>
-      </Item>
-      <Item key="underline">
-        <Icon src={underlineIcon} />
-        <Text>Underline</Text>
-      </Item>
-      <Item key="strike">
-        <Icon src={strikethroughIcon} />
-        <Text>Strikethrough</Text>
-      </Item>
+      {item => (
+        <ActionGroupItem id={item.name} textValue={item.children}>
+          <Icon src={iconMap[item.children as keyof typeof iconMap]} />
+          <Text>{item.children}</Text>
+        </ActionGroupItem>
+      )}
     </ActionGroup>
   );
 }
@@ -582,30 +517,25 @@ function renderCollapsibleAlignment(props = {}) {
   return (
     <ActionGroup
       aria-label="Text alignment"
+      items={[
+        { id: 'left', label: 'Align Left', icon: alignLeftIcon },
+        { id: 'center', label: 'Align Center', icon: alignCenterIcon },
+        { id: 'right', label: 'Align Right', icon: alignRightIcon },
+        { id: 'justify', label: 'Justify', icon: alignJustifyIcon },
+      ]}
       overflowMode="collapse"
       selectionMode="single"
       defaultSelectedKeys={['left']}
       disallowEmptySelection
       onSelectionChange={action('onSelectionChange')}
-      buttonLabelBehavior="hide"
       {...props}
     >
-      <Item key="left">
-        <Icon src={alignLeftIcon} />
-        <Text>Align Left</Text>
-      </Item>
-      <Item key="center">
-        <Icon src={alignCenterIcon} />
-        <Text>Align Center</Text>
-      </Item>
-      <Item key="right">
-        <Text>Align Right</Text>
-        <Icon src={alignRightIcon} />
-      </Item>
-      <Item key="justify">
-        <Icon src={alignJustifyIcon} />
-        <Text>Justify</Text>
-      </Item>
+      {item => (
+        <ActionGroupItem id={item.id} textValue={item.label}>
+          <Icon src={item.icon} />
+          <Text>{item.label}</Text>
+        </ActionGroupItem>
+      )}
     </ActionGroup>
   );
 }

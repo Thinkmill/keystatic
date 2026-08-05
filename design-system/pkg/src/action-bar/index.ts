@@ -1,6 +1,6 @@
 'use client';
 
-export { Item } from 'react-stately/Item';
+export { ActionGroupItem as ActionBarItem } from '@keystar/ui/action-group';
 
 export { ActionBar } from './ActionBar';
 export { ActionBarContainer } from './ActionBarContainer';

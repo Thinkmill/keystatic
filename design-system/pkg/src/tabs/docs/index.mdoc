@@ -11,21 +11,21 @@ category: Navigation
 ```jsx {% live=true %}
 <Tabs aria-label="Tabs example">
   <TabList>
-    <Item key="all">All items</Item>
-    <Item key="pending">Pending</Item>
-    <Item key="complete">Complete</Item>
+    <Tab id="all">All items</Tab>
+    <Tab id="pending">Pending</Tab>
+    <Tab id="complete">Complete</Tab>
   </TabList>
   <Divider marginBottom="large" />
   <TabPanels>
-    <Item key="all">
+    <TabPanel id="all">
       <Text>All panel</Text>
-    </Item>
-    <Item key="pending">
+    </TabPanel>
+    <TabPanel id="pending">
       <Text>Pending panel</Text>
-    </Item>
-    <Item key="complete">
+    </TabPanel>
+    <TabPanel id="complete">
       <Text>Complete panel</Text>
-    </Item>
+    </TabPanel>
   </TabPanels>
 </Tabs>
 ```
@@ -34,9 +34,9 @@ category: Navigation
 
 ### Collections
 
-Tabs implements `react-stately`
-[collection components](https://react-spectrum.adobe.com/react-stately/collections.html),
-`<Item>`.
+Tabs implements `react-aria-components`
+[collection components](https://react-spectrum.adobe.com/react-aria-components/collections.html),
+`<Tab>`.
 
 Static collections, seen in the example above, can be used when the full list of
 tabs is known ahead of time.
@@ -54,14 +54,16 @@ let tabs = [
 ];
 
 return (
-  <Tabs aria-label="Tabs collection example" items={tabs}>
-    <TabList>{item => <Item key={item.key}>{item.name}</Item>}</TabList>
+  <Tabs aria-label="Tabs collection example">
+    <TabList items={tabs}>
+      {item => <Tab id={item.key}>{item.name}</Tab>}
+    </TabList>
     <Divider marginBottom="large" />
-    <TabPanels>
+    <TabPanels items={tabs}>
       {item => (
-        <Item key={item.key}>
+        <TabPanel id={item.key}>
           <Text>{item.name} panel</Text>
-        </Item>
+        </TabPanel>
       )}
     </TabPanels>
   </Tabs>
@@ -70,7 +72,8 @@ return (
 
 #### Keys and IDs
 
-Dynamic collections provide an iterable list of `items` to the picker. Each item
+Dynamic collections provide an iterable list of `items` to both `TabList`
+and `TabPanels`. Each item
 accepts a unique `key` prop, which is passed to the `onSelectionChange` handler
 to identify the selected item. If the item objects contain an `id` property it
 is used automatically and a key prop is not required.
@@ -81,8 +84,8 @@ Setting a selected item can be done by using the `defaultSelectedKey` or
 `selectedKey` prop. The selected key corresponds to the key of an item, where
 `"id"` is used by default.
 
-See the `react-stately`
-[selection docs](https://react-spectrum.adobe.com/react-stately/selection.html#selected-key-data-type)
+See the `react-aria-components`
+[selection docs](https://react-spectrum.adobe.com/react-aria-components/selection.html#selected-key-data-type)
 for more information.
 
 #### Controlled
@@ -102,17 +105,18 @@ let [selectedTab, setSelectedTab] = React.useState(tabs[1].key);
 return (
   <Tabs
     aria-label="Tabs controlled selection example"
-    items={tabs}
     selectedKey={selectedTab}
     onSelectionChange={setSelectedTab}
   >
-    <TabList>{item => <Item key={item.key}>{item.name}</Item>}</TabList>
+    <TabList items={tabs}>
+      {item => <Tab id={item.key}>{item.name}</Tab>}
+    </TabList>
     <Divider marginBottom="large" />
-    <TabPanels>
+    <TabPanels items={tabs}>
       {item => (
-        <Item key={item.key}>
+        <TabPanel id={item.key}>
           <Text>{item.name} panel</Text>
-        </Item>
+        </TabPanel>
       )}
     </TabPanels>
   </Tabs>
@@ -133,16 +137,17 @@ let tabs = [
 return (
   <Tabs
     aria-label="Tabs uncontrolled selection example"
-    items={tabs}
     defaultSelectedKey={tabs[1].key}
   >
-    <TabList>{item => <Item key={item.key}>{item.name}</Item>}</TabList>
+    <TabList items={tabs}>
+      {item => <Tab id={item.key}>{item.name}</Tab>}
+    </TabList>
     <Divider marginBottom="large" />
-    <TabPanels>
+    <TabPanels items={tabs}>
       {item => (
-        <Item key={item.key}>
+        <TabPanel id={item.key}>
           <Text>{item.name} panel</Text>
-        </Item>
+        </TabPanel>
       )}
     </TabPanels>
   </Tabs>
@@ -156,30 +161,30 @@ Icons can be added as `children` of an item, to better communicate intent.
 ```jsx {% live=true %}
 <Tabs aria-label="Tabs icons example">
   <TabList>
-    <Item key="read">
+    <Tab id="read">
       <Icon src={eyeIcon} />
       <Text>Read</Text>
-    </Item>
-    <Item key="write">
+    </Tab>
+    <Tab id="write">
       <Icon src={editIcon} />
       <Text>Write</Text>
-    </Item>
-    <Item key="admin">
+    </Tab>
+    <Tab id="admin">
       <Icon src={userCheckIcon} />
       <Text>Admin</Text>
-    </Item>
+    </Tab>
   </TabList>
   <Divider marginBottom="large" />
   <TabPanels>
-    <Item key="read">
+    <TabPanel id="read">
       <Text>Read only</Text>
-    </Item>
-    <Item key="write">
+    </TabPanel>
+    <TabPanel id="write">
       <Text>Read and write</Text>
-    </Item>
-    <Item key="admin">
+    </TabPanel>
+    <TabPanel id="admin">
       <Text>Unrestricted access</Text>
-    </Item>
+    </TabPanel>
   </TabPanels>
 </Tabs>
 ```
@@ -199,21 +204,21 @@ should be used as sub-level navigation or for containers.
 ```jsx {% live=true %}
 <Tabs aria-label="Tabs prominence example" prominence="low">
   <TabList>
-    <Item key="all">All items</Item>
-    <Item key="pending">Pending</Item>
-    <Item key="complete">Complete</Item>
+    <Tab id="all">All items</Tab>
+    <Tab id="pending">Pending</Tab>
+    <Tab id="complete">Complete</Tab>
   </TabList>
   <Divider marginBottom="large" />
   <TabPanels>
-    <Item key="all">
+    <TabPanel id="all">
       <Text>All panel</Text>
-    </Item>
-    <Item key="pending">
+    </TabPanel>
+    <TabPanel id="pending">
       <Text>Pending panel</Text>
-    </Item>
-    <Item key="complete">
+    </TabPanel>
+    <TabPanel id="complete">
       <Text>Complete panel</Text>
-    </Item>
+    </TabPanel>
   </TabPanels>
 </Tabs>
 ```
@@ -227,25 +232,25 @@ available later.
 ```jsx {% live=true %}
 <Tabs aria-label="Tabs disabled example" disabledKeys={['val-2', 'val-3']}>
   <TabList>
-    <Item key="val-1">Tab 1</Item>
-    <Item key="val-2">Tab 2</Item>
-    <Item key="val-3">Tab 3</Item>
-    <Item key="val-4">Tab 4</Item>
+    <Tab id="val-1">Tab 1</Tab>
+    <Tab id="val-2">Tab 2</Tab>
+    <Tab id="val-3">Tab 3</Tab>
+    <Tab id="val-4">Tab 4</Tab>
   </TabList>
   <Divider marginBottom="large" />
   <TabPanels>
-    <Item key="val-1">
+    <TabPanel id="val-1">
       <Text>Panel 1</Text>
-    </Item>
-    <Item key="val-2">
+    </TabPanel>
+    <TabPanel id="val-2">
       <Text>Panel 2</Text>
-    </Item>
-    <Item key="val-3">
+    </TabPanel>
+    <TabPanel id="val-3">
       <Text>Panel 3</Text>
-    </Item>
-    <Item key="val-4">
+    </TabPanel>
+    <TabPanel id="val-4">
       <Text>Panel 4</Text>
-    </Item>
+    </TabPanel>
   </TabPanels>
 </Tabs>
 ```
@@ -257,21 +262,21 @@ busy state of the application.
 ```jsx {% live=true %}
 <Tabs aria-label="Tabs disabled example" isDisabled>
   <TabList>
-    <Item key="val-1">Tab 1</Item>
-    <Item key="val-2">Tab 2</Item>
-    <Item key="val-3">Tab 3</Item>
+    <Tab id="val-1">Tab 1</Tab>
+    <Tab id="val-2">Tab 2</Tab>
+    <Tab id="val-3">Tab 3</Tab>
   </TabList>
   <Divider marginBottom="large" />
   <TabPanels>
-    <Item key="val-1">
+    <TabPanel id="val-1">
       <Text>Panel 1</Text>
-    </Item>
-    <Item key="val-2">
+    </TabPanel>
+    <TabPanel id="val-2">
       <Text>Panel 2</Text>
-    </Item>
-    <Item key="val-3">
+    </TabPanel>
+    <TabPanel id="val-3">
       <Text>Panel 3</Text>
-    </Item>
+    </TabPanel>
   </TabPanels>
 </Tabs>
 ```
@@ -289,21 +294,21 @@ format.
   prominence="low"
 >
   <TabList>
-    <Item key="all">All items</Item>
-    <Item key="pending">Pending</Item>
-    <Item key="complete">Complete</Item>
+    <Tab id="all">All items</Tab>
+    <Tab id="pending">Pending</Tab>
+    <Tab id="complete">Complete</Tab>
   </TabList>
   <Divider marginEnd="large" orientation="vertical" />
   <TabPanels>
-    <Item key="all">
+    <TabPanel id="all">
       <Text>All panel</Text>
-    </Item>
-    <Item key="pending">
+    </TabPanel>
+    <TabPanel id="pending">
       <Text>Pending panel</Text>
-    </Item>
-    <Item key="complete">
+    </TabPanel>
+    <TabPanel id="complete">
       <Text>Complete panel</Text>
-    </Item>
+    </TabPanel>
   </TabPanels>
 </Tabs>
 ```
@@ -330,3 +335,4 @@ Tabs should:
 - Not force users to jump back and forth to do a single task. Users should be
   able to complete their work and find what they need under each tab.
 - Not be used for primary navigation.
+

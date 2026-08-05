@@ -1,5 +1,4 @@
-import { Item } from 'react-stately/Item';
-import { Combobox } from '@keystar/ui/combobox';
+import { Combobox, ComboboxItem } from '@keystar/ui/combobox';
 import { useReducer, useMemo, useState, useEffect } from 'react';
 import { useSlugsInCollection } from '../../../app/useSlugsInCollection';
 import { FormFieldInputProps } from '../../api';
@@ -50,7 +49,7 @@ export function RelationshipInput(
       errorMessage={errorMessage}
       width="auto"
     >
-      {item => <Item key={item.slug}>{item.slug}</Item>}
+      {item => <ComboboxItem id={item.slug}>{item.slug}</ComboboxItem>}
     </Combobox>
   );
 }

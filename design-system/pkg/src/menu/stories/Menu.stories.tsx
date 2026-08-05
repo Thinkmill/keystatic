@@ -12,7 +12,14 @@ import { action, ArgTypes } from '@keystar/ui-storybook';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Kbd, Text } from '@keystar/ui/typography';
 
-import { Item, Menu, MenuTrigger, Section } from '../index';
+import {
+  Menu,
+  MenuCollection,
+  MenuHeader,
+  MenuItem,
+  MenuSection,
+  MenuTrigger,
+} from '../index';
 
 let iconMap = {
   AlignHorizontalCenterIcon: alignCenterVerticalIcon,
@@ -48,14 +55,14 @@ let withSection = [
 
 let complexOptions = [
   {
-    name: 'Section 1',
+    name: 'MenuSection 1',
     children: [
       { name: 'Bold', icon: 'TextBoldIcon', shortcut: '⌘B' },
       { name: 'Italic', icon: 'TextItalicIcon', shortcut: '⌘I' },
     ],
   },
   {
-    name: 'Section 2',
+    name: 'MenuSection 2',
     children: [
       { name: 'Left', icon: 'AlignHorizontalLeftIcon', shortcut: '⌘L' },
       { name: 'Center', icon: 'AlignHorizontalCenterIcon', shortcut: '⌘C' },
@@ -78,9 +85,9 @@ export default {
 export const Static = (args: ArgTypes) =>
   render(
     <Menu onAction={action('onAction')}>
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
+      <MenuItem>One</MenuItem>
+      <MenuItem>Two</MenuItem>
+      <MenuItem>Three</MenuItem>
     </Menu>,
     args
   );
@@ -104,7 +111,7 @@ Static.argTypes = {
 export const Dynamic = () =>
   render(
     <Menu items={flatOptions} onAction={action('onAction')}>
-      {item => <Item key={item.name}>{item.name}</Item>}
+      {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
     </Menu>
   );
 
@@ -117,15 +124,15 @@ export const Links = () => {
     <MenuTrigger>
       <ActionButton>Trigger</ActionButton>
       <Menu>
-        <Item href="https://apple.com/" target="_blank">
+        <MenuItem href="https://apple.com/" target="_blank">
           Apple
-        </Item>
-        <Item href="https://google.com/" target="_blank">
+        </MenuItem>
+        <MenuItem href="https://google.com/" target="_blank">
           Google
-        </Item>
-        <Item href="https://microsoft.com/" target="_blank">
+        </MenuItem>
+        <MenuItem href="https://microsoft.com/" target="_blank">
           Microsoft
-        </Item>
+        </MenuItem>
       </Menu>
     </MenuTrigger>
   );
@@ -139,9 +146,9 @@ export const WithTooltip = () => {
         <Tooltip>Tooltip content</Tooltip>
       </TooltipTrigger>
       <Menu>
-        <Item>One</Item>
-        <Item>Two</Item>
-        <Item>Three</Item>
+        <MenuItem>One</MenuItem>
+        <MenuItem>Two</MenuItem>
+        <MenuItem>Three</MenuItem>
       </Menu>
     </MenuTrigger>
   );
@@ -150,16 +157,18 @@ export const WithTooltip = () => {
 export const SectionsStatic = () =>
   render(
     <Menu onAction={action('onAction')}>
-      <Section title="Marsupials">
-        <Item>Bilby</Item>
-        <Item>Kangaroo</Item>
-        <Item>Quokka</Item>
-      </Section>
-      <Section title="Other">
-        <Item>Echidna</Item>
-        <Item>Dingo</Item>
-        <Item>Cassowary</Item>
-      </Section>
+      <MenuSection>
+        <MenuHeader>Marsupials</MenuHeader>
+        <MenuItem>Bilby</MenuItem>
+        <MenuItem>Kangaroo</MenuItem>
+        <MenuItem>Quokka</MenuItem>
+      </MenuSection>
+      <MenuSection>
+        <MenuHeader>Other</MenuHeader>
+        <MenuItem>Echidna</MenuItem>
+        <MenuItem>Dingo</MenuItem>
+        <MenuItem>Cassowary</MenuItem>
+      </MenuSection>
     </Menu>
   );
 
@@ -176,16 +185,16 @@ SectionsDynamic.story = {
 export const TitlelessSectionsStatic = () =>
   render(
     <Menu onAction={action('onAction')}>
-      <Section aria-label="Marsupials">
-        <Item>Bilby</Item>
-        <Item>Kangaroo</Item>
-        <Item>Quokka</Item>
-      </Section>
-      <Section aria-label="Other">
-        <Item>Echidna</Item>
-        <Item>Dingo</Item>
-        <Item>Cassowary</Item>
-      </Section>
+      <MenuSection aria-label="Marsupials">
+        <MenuItem>Bilby</MenuItem>
+        <MenuItem>Kangaroo</MenuItem>
+        <MenuItem>Quokka</MenuItem>
+      </MenuSection>
+      <MenuSection aria-label="Other">
+        <MenuItem>Echidna</MenuItem>
+        <MenuItem>Dingo</MenuItem>
+        <MenuItem>Cassowary</MenuItem>
+      </MenuSection>
     </Menu>
   );
 
@@ -197,9 +206,11 @@ export const TitlelessSectionsDynamic = () =>
   render(
     <Menu items={withSection} onAction={action('onAction')}>
       {item => (
-        <Section key={item.name} items={item.children} aria-label={item.name}>
-          {item => <Item key={item.name}>{item.name}</Item>}
-        </Section>
+        <MenuSection id={item.name} aria-label={item.name}>
+          <MenuCollection items={item.children}>
+            {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+          </MenuCollection>
+        </MenuSection>
       )}
     </Menu>
   );
@@ -215,17 +226,19 @@ export const SelectionModeSingleControlledStatic = () =>
       onAction={action('onAction')}
       selectedKeys={['2']}
     >
-      <Section title="Section 1">
-        <Item key="1">One</Item>
-        <Item key="2">Two</Item>
-        <Item key="3">Three</Item>
-      </Section>
-      <Section title="Section 2">
-        <Item key="4">Four</Item>
-        <Item key="5">Five</Item>
-        <Item key="6">Six</Item>
-        <Item key="7">Seven</Item>
-      </Section>
+      <MenuSection>
+        <MenuHeader>MenuSection 1</MenuHeader>
+        <MenuItem id="1">One</MenuItem>
+        <MenuItem id="2">Two</MenuItem>
+        <MenuItem id="3">Three</MenuItem>
+      </MenuSection>
+      <MenuSection>
+        <MenuHeader>MenuSection 2</MenuHeader>
+        <MenuItem id="4">Four</MenuItem>
+        <MenuItem id="5">Five</MenuItem>
+        <MenuItem id="6">Six</MenuItem>
+        <MenuItem id="7">Seven</MenuItem>
+      </MenuSection>
     </Menu>
   );
 
@@ -251,17 +264,19 @@ export const SelectionModeSingleUncontrolledStatic = () =>
       onAction={action('onAction')}
       defaultSelectedKeys={['2']}
     >
-      <Section title="Section 1">
-        <Item key="1">One</Item>
-        <Item key="2">Two</Item>
-        <Item key="3">Three</Item>
-      </Section>
-      <Section title="Section 2">
-        <Item key="4">Four</Item>
-        <Item key="5">Five</Item>
-        <Item key="6">Six</Item>
-        <Item key="7">Seven</Item>
-      </Section>
+      <MenuSection>
+        <MenuHeader>MenuSection 1</MenuHeader>
+        <MenuItem id="1">One</MenuItem>
+        <MenuItem id="2">Two</MenuItem>
+        <MenuItem id="3">Three</MenuItem>
+      </MenuSection>
+      <MenuSection>
+        <MenuHeader>MenuSection 2</MenuHeader>
+        <MenuItem id="4">Four</MenuItem>
+        <MenuItem id="5">Five</MenuItem>
+        <MenuItem id="6">Six</MenuItem>
+        <MenuItem id="7">Seven</MenuItem>
+      </MenuSection>
     </Menu>
   );
 
@@ -288,16 +303,18 @@ export const SelectionModeMultipleControlledStatic = () =>
       selectedKeys={['2', '5']}
       disabledKeys={['2', '3']}
     >
-      <Section title="Section 1">
-        <Item key="1">One</Item>
-        <Item key="2">Two</Item>
-        <Item key="3">Three</Item>
-      </Section>
-      <Section title="Section 2">
-        <Item key="4">Four</Item>
-        <Item key="5">Five</Item>
-        <Item key="6">Six</Item>
-      </Section>
+      <MenuSection>
+        <MenuHeader>MenuSection 1</MenuHeader>
+        <MenuItem id="1">One</MenuItem>
+        <MenuItem id="2">Two</MenuItem>
+        <MenuItem id="3">Three</MenuItem>
+      </MenuSection>
+      <MenuSection>
+        <MenuHeader>MenuSection 2</MenuHeader>
+        <MenuItem id="4">Four</MenuItem>
+        <MenuItem id="5">Five</MenuItem>
+        <MenuItem id="6">Six</MenuItem>
+      </MenuSection>
     </Menu>
   );
 
@@ -324,16 +341,18 @@ export const SelectionModeMultipleUncontrolledStatic = () =>
       defaultSelectedKeys={['2', '5']}
       disabledKeys={['1', '3']}
     >
-      <Section title="Section 1">
-        <Item key="1">One</Item>
-        <Item key="2">Two</Item>
-        <Item key="3">Three</Item>
-      </Section>
-      <Section title="Section 2">
-        <Item key="4">Four</Item>
-        <Item key="5">Five</Item>
-        <Item key="6">Six</Item>
-      </Section>
+      <MenuSection>
+        <MenuHeader>MenuSection 1</MenuHeader>
+        <MenuItem id="1">One</MenuItem>
+        <MenuItem id="2">Two</MenuItem>
+        <MenuItem id="3">Three</MenuItem>
+      </MenuSection>
+      <MenuSection>
+        <MenuHeader>MenuSection 2</MenuHeader>
+        <MenuItem id="4">Four</MenuItem>
+        <MenuItem id="5">Five</MenuItem>
+        <MenuItem id="6">Six</MenuItem>
+      </MenuSection>
     </Menu>
   );
 
@@ -368,19 +387,20 @@ export const DisabledBehaviorSelection = () =>
       selectionMode="multiple"
       disabledKeys={['actionable-four', 'actionable-five', 'actionable-six']}
       defaultSelectedKeys={['selectable-one', 'selectable-two']}
-      disabledBehavior="selection"
       onAction={action('onAction')}
     >
-      <Section title="Selectable">
-        <Item key="selectable-one">One</Item>
-        <Item key="selectable-two">Two</Item>
-        <Item key="selectable-three">Three</Item>
-      </Section>
-      <Section title="Actionable">
-        <Item key="actionable-four">Four</Item>
-        <Item key="actionable-five">Five</Item>
-        <Item key="actionable-six">Six</Item>
-      </Section>
+      <MenuSection>
+        <MenuHeader>Selectable</MenuHeader>
+        <MenuItem id="selectable-one">One</MenuItem>
+        <MenuItem id="selectable-two">Two</MenuItem>
+        <MenuItem id="selectable-three">Three</MenuItem>
+      </MenuSection>
+      <MenuSection>
+        <MenuHeader>Actionable</MenuHeader>
+        <MenuItem id="actionable-four">Four</MenuItem>
+        <MenuItem id="actionable-five">Five</MenuItem>
+        <MenuItem id="actionable-six">Six</MenuItem>
+      </MenuSection>
     </Menu>,
     {},
     { disabledBehavior: 'selection' }
@@ -479,41 +499,44 @@ export const ComplexItemsStatic = (args: ArgTypes) =>
       disabledKeys={['zoom-in', 'italic']}
       // disabledBehavior="selection"
     >
-      <Section title="Section 1">
-        <Item key="bold" textValue="Bold">
+      <MenuSection>
+        <MenuHeader>MenuSection 1</MenuHeader>
+        <MenuItem id="bold" textValue="Bold">
           <Icon src={boldIcon} />
           <Text>Bold</Text>
           <Kbd meta>B</Kbd>
-        </Item>
-        <Item key="italic" textValue="Italic">
+        </MenuItem>
+        <MenuItem id="italic" textValue="Italic">
           <Icon src={italicIcon} />
           <Text>Italic</Text>
           <Kbd meta>I</Kbd>
-        </Item>
-      </Section>
-      <Section title="Section 2">
-        <Item key="zoom-in" textValue="Zoom in">
+        </MenuItem>
+      </MenuSection>
+      <MenuSection>
+        <MenuHeader>MenuSection 2</MenuHeader>
+        <MenuItem id="zoom-in" textValue="Zoom in">
           <Text>Zoom in</Text>
           <Kbd meta>+</Kbd>
-        </Item>
-        <Item key="zoom-out" textValue="Zoom out">
+        </MenuItem>
+        <MenuItem id="zoom-out" textValue="Zoom out">
           <Text>Zoom out</Text>
           <Kbd meta>-</Kbd>
-        </Item>
-        <Item key="zoom-full" textValue="Zoom to 100%">
+        </MenuItem>
+        <MenuItem id="zoom-full" textValue="Zoom to 100%">
           <Text>Zoom to 100%</Text>
           <Kbd meta shift>
             0
           </Kbd>
-        </Item>
-      </Section>
-      <Section title="Section 3">
-        <Item key="left" textValue="Left">
+        </MenuItem>
+      </MenuSection>
+      <MenuSection>
+        <MenuHeader>MenuSection 3</MenuHeader>
+        <MenuItem id="left" textValue="Left">
           <Icon src={alignStartVerticalIcon} />
           <Text>Left</Text>
           <Text slot="description">The description text for left is long</Text>
-        </Item>
-        <Item
+        </MenuItem>
+        <MenuItem
           key="center"
           textValue="Center has a long label that will eventually wrap, but it's pretty ridiculous"
         >
@@ -522,12 +545,12 @@ export const ComplexItemsStatic = (args: ArgTypes) =>
             Center has a long label that will eventually wrap, but it's pretty
             ridiculous
           </Text>
-        </Item>
-        <Item key="right" textValue="Right">
+        </MenuItem>
+        <MenuItem id="right" textValue="Right">
           <Icon src={alignEndVerticalIcon} />
           <Text>Right</Text>
-        </Item>
-      </Section>
+        </MenuItem>
+      </MenuSection>
     </Menu>,
     args
   );
@@ -553,9 +576,12 @@ export const ComplexItemsDynamic = () =>
   render(
     <Menu items={complexOptions} onAction={action('onAction')}>
       {item => (
-        <Section key={item.name} items={item.children} title={item.name}>
-          {item => customMenuItem(item)}
-        </Section>
+        <MenuSection id={item.name}>
+          <MenuHeader>{item.name}</MenuHeader>
+          <MenuCollection items={item.children}>
+            {item => customMenuItem(item)}
+          </MenuCollection>
+        </MenuSection>
       )}
     </Menu>
   );
@@ -586,9 +612,12 @@ export const MenuShouldPreventScrolling = () => (
           </ActionButton>
           <Menu items={withSection} onAction={action('action')}>
             {item => (
-              <Section key={item.name} items={item.children} title={item.name}>
-                {item => <Item key={item.name}>{item.name}</Item>}
-              </Section>
+              <MenuSection id={item.name}>
+                <MenuHeader>{item.name}</MenuHeader>
+                <MenuCollection items={item.children}>
+                  {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+                </MenuCollection>
+              </MenuSection>
             )}
           </Menu>
         </MenuTrigger>
@@ -633,9 +662,12 @@ export const MenuClosesOnBlur = () => (
           disabledKeys={['Quokka', 'Cassowary']}
         >
           {item => (
-            <Section key={item.name} items={item.children} title={item.name}>
-              {item => <Item key={item.name}>{item.name}</Item>}
-            </Section>
+            <MenuSection id={item.name}>
+              <MenuHeader>{item.name}</MenuHeader>
+              <MenuCollection items={item.children}>
+                {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+              </MenuCollection>
+            </MenuSection>
           )}
         </Menu>
       </MenuTrigger>
@@ -652,9 +684,9 @@ MenuClosesOnBlur.story = {
 export const WithFalsyKey = () =>
   render(
     <Menu onAction={action('onAction')}>
-      <Item key="1">One</Item>
-      <Item key="">Two</Item>
-      <Item key="3">Three</Item>
+      <MenuItem id="1">One</MenuItem>
+      <MenuItem id="">Two</MenuItem>
+      <MenuItem id="3">Three</MenuItem>
     </Menu>
   );
 
@@ -667,11 +699,11 @@ WithFalsyKey.story = {
 let customMenuItem = (item: any) => {
   let icon = iconMap[item.icon as keyof typeof iconMap];
   return (
-    <Item childItems={item.children} textValue={item.name} key={item.name}>
+    <MenuItem id={item.name} textValue={item.name}>
       {item.icon && <Icon src={icon} />}
       <Text>{item.name}</Text>
       {item.shortcut && <Kbd>{item.shortcut}</Kbd>}
-    </Item>
+    </MenuItem>
   );
 };
 
@@ -703,13 +735,12 @@ let defaultMenu = (
     disabledKeys={['Quokka', 'Cassowary']}
   >
     {(item: any) => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {(item: any) => (
-          <Item key={item.name} childItems={item.children}>
-            {item.name}
-          </Item>
-        )}
-      </Section>
+      <MenuSection id={item.name}>
+        <MenuHeader>{item.name}</MenuHeader>
+        <MenuCollection items={item.children}>
+          {(item: any) => <MenuItem id={item.name}>{item.name}</MenuItem>}
+        </MenuCollection>
+      </MenuSection>
     )}
   </Menu>
 );

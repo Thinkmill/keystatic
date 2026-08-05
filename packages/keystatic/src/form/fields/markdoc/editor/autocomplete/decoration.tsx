@@ -203,7 +203,8 @@ export function autocompleteDecoration(): Plugin<AutocompleteDecorationState> {
       handleKeyDown(view, event) {
         const state = key.getState(view.state);
         if (state?.kind === 'active' && event.key === 'Escape') {
-          removeAutocompleteDecoration(view.state.tr);
+          const tr = removeAutocompleteDecorationAndContent(view.state);
+          if (tr) view.dispatch(tr);
           return true;
         }
         return false;

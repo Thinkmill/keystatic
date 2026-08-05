@@ -13,7 +13,14 @@ import { Icon } from '@keystar/ui/icon';
 import { Box, Flex } from '@keystar/ui/layout';
 import { Text } from '@keystar/ui/typography';
 
-import { Item, Picker, Section } from '..';
+import {
+  Picker,
+  PickerCollection,
+  PickerHeader,
+  PickerItem,
+  PickerLoadMoreItem,
+  PickerSection,
+} from '..';
 
 let flatItems = [
   { id: 1, name: 'Echidna' },
@@ -44,11 +51,11 @@ export default {
 
 export const Default = () => (
   <Picker label="Test" onChange={action('change')}>
-    <Item key="One">One</Item>
-    <Item key="Two">Two</Item>
-    <Item key="Three has a long label that will wrap">
+    <PickerItem id="One">One</PickerItem>
+    <PickerItem id="Two">Two</PickerItem>
+    <PickerItem id="Three has a long label that will wrap">
       Three has a long label that will wrap
-    </Item>
+    </PickerItem>
   </Picker>
 );
 
@@ -58,16 +65,18 @@ Default.story = {
 
 export const Sections = () => (
   <Picker label="Test" onChange={action('change')}>
-    <Section title="Marsupials">
-      <Item key="Bilby">Bilby</Item>
-      <Item key="Kangaroo">Kangaroo</Item>
-      <Item key="Quokka">Quokka</Item>
-    </Section>
-    <Section title="Other">
-      <Item key="Echidna">Echidna</Item>
-      <Item key="Dingo">Dingo</Item>
-      <Item key="Cassowary">Cassowary</Item>
-    </Section>
+    <PickerSection>
+      <PickerHeader>Marsupials</PickerHeader>
+      <PickerItem id="Bilby">Bilby</PickerItem>
+      <PickerItem id="Kangaroo">Kangaroo</PickerItem>
+      <PickerItem id="Quokka">Quokka</PickerItem>
+    </PickerSection>
+    <PickerSection>
+      <PickerHeader>Other</PickerHeader>
+      <PickerItem id="Echidna">Echidna</PickerItem>
+      <PickerItem id="Dingo">Dingo</PickerItem>
+      <PickerItem id="Cassowary">Cassowary</PickerItem>
+    </PickerSection>
   </Picker>
 );
 
@@ -77,7 +86,7 @@ Sections.story = {
 
 export const Dynamic = () => (
   <Picker label="Test" items={flatItems} onChange={action('change')}>
-    {item => <Item>{item.name}</Item>}
+    {item => <PickerItem>{item.name}</PickerItem>}
   </Picker>
 );
 
@@ -88,9 +97,12 @@ Dynamic.story = {
 export const DynamicWithSections = () => (
   <Picker label="Test" items={nestedItems} onChange={action('change')}>
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <PickerSection id={item.name}>
+        <PickerHeader>{item.name}</PickerHeader>
+        <PickerCollection items={item.children}>
+          {item => <PickerItem id={item.name}>{item.name}</PickerItem>}
+        </PickerCollection>
+      </PickerSection>
     )}
   </Picker>
 );
@@ -102,9 +114,9 @@ DynamicWithSections.story = {
 export const Disabled = () => (
   <Flex gap="large" direction="column">
     <Picker label="Disabled" isDisabled onChange={action('change')}>
-      <Item key="One">One</Item>
-      <Item key="Two">Two</Item>
-      <Item key="Three">Three</Item>
+      <PickerItem id="One">One</PickerItem>
+      <PickerItem id="Two">Two</PickerItem>
+      <PickerItem id="Three">Three</PickerItem>
     </Picker>
     <Picker
       label="Disabled with selection"
@@ -112,27 +124,27 @@ export const Disabled = () => (
       value="One"
       onChange={action('change')}
     >
-      <Item key="One" textValue="One">
+      <PickerItem id="One" textValue="One">
         <Icon src={globeIcon} />
         <Text>One</Text>
-      </Item>
-      <Item key="Two" textValue="Two">
+      </PickerItem>
+      <PickerItem id="Two" textValue="Two">
         <Icon src={globeIcon} />
         <Text>Two</Text>
-      </Item>
-      <Item key="Three" textValue="Three">
+      </PickerItem>
+      <PickerItem id="Three" textValue="Three">
         <Icon src={globeIcon} />
         <Text>Three</Text>
-      </Item>
+      </PickerItem>
     </Picker>
     <Picker
       label="Disabled keys"
       disabledKeys={['Three']}
       onChange={action('change')}
     >
-      <Item key="One">One</Item>
-      <Item key="Two">Two</Item>
-      <Item key="Three">Three</Item>
+      <PickerItem id="One">One</PickerItem>
+      <PickerItem id="Two">Two</PickerItem>
+      <PickerItem id="Three">Three</PickerItem>
     </Picker>
   </Flex>
 );
@@ -143,9 +155,9 @@ Disabled.story = {
 
 export const Required = () => (
   <Picker label="Test" isRequired onChange={action('change')}>
-    <Item key="One">One</Item>
-    <Item key="Two">Two</Item>
-    <Item key="Three">Three</Item>
+    <PickerItem id="One">One</PickerItem>
+    <PickerItem id="Two">Two</PickerItem>
+    <PickerItem id="Three">Three</PickerItem>
   </Picker>
 );
 
@@ -155,31 +167,33 @@ Required.story = {
 
 export const ComplexItems = () => (
   <Picker label="Test" onChange={action('change')}>
-    <Section title="Section 1">
-      <Item textValue="Bold">
+    <PickerSection>
+      <PickerHeader>PickerSection 1</PickerHeader>
+      <PickerItem textValue="Bold">
         <Icon src={boldIcon} />
         <Text>Bold</Text>
-      </Item>
-      <Item textValue="Italic">
+      </PickerItem>
+      <PickerItem textValue="Italic">
         <Icon src={italicIcon} />
         <Text>Italic</Text>
-      </Item>
-    </Section>
-    <Section title="Section 3">
-      <Item textValue="Left">
+      </PickerItem>
+    </PickerSection>
+    <PickerSection>
+      <PickerHeader>PickerSection 3</PickerHeader>
+      <PickerItem textValue="Left">
         <Icon src={alignStartVerticalIcon} />
         <Text>Left</Text>
         <Text slot="description">The description text for left is long</Text>
-      </Item>
-      <Item textValue="Center has a long label that wraps">
+      </PickerItem>
+      <PickerItem textValue="Center has a long label that wraps">
         <Icon src={alignCenterVerticalIcon} />
         <Text>Center has a long label that wraps</Text>
-      </Item>
-      <Item textValue="Right">
+      </PickerItem>
+      <PickerItem textValue="Right">
         <Icon src={alignEndVerticalIcon} />
         <Text>Right</Text>
-      </Item>
-    </Section>
+      </PickerItem>
+    </PickerSection>
   </Picker>
 );
 
@@ -189,11 +203,13 @@ ComplexItems.story = {
 
 export const LongItemText = () => (
   <Picker label="Test" onChange={action('change')}>
-    <Item key="short">text</Item>
-    <Item key="long">your text here long long long long</Item>
-    <Item key="underscores">your_text_here_long_long_long_long</Item>
-    <Item key="hyphens">your-text-here-long-long-long-long</Item>
-    <Item key="singleWord">pneumonoultramicroscopicsilicovolcanoconiosis</Item>
+    <PickerItem id="short">text</PickerItem>
+    <PickerItem id="long">your text here long long long long</PickerItem>
+    <PickerItem id="underscores">your_text_here_long_long_long_long</PickerItem>
+    <PickerItem id="hyphens">your-text-here-long-long-long-long</PickerItem>
+    <PickerItem id="singleWord">
+      pneumonoultramicroscopicsilicovolcanoconiosis
+    </PickerItem>
   </Picker>
 );
 
@@ -203,9 +219,9 @@ LongItemText.story = {
 
 export const NoVisibleLabel = () => (
   <Picker aria-label="Test" onChange={action('change')}>
-    <Item>One</Item>
-    <Item>Two</Item>
-    <Item>Three</Item>
+    <PickerItem>One</PickerItem>
+    <PickerItem>Two</PickerItem>
+    <PickerItem>Three</PickerItem>
   </Picker>
 );
 
@@ -219,9 +235,9 @@ export const WithDescription = () => (
     description="Please select an item."
     onChange={action('change')}
   >
-    <Item>One</Item>
-    <Item>Two</Item>
-    <Item>Three</Item>
+    <PickerItem>One</PickerItem>
+    <PickerItem>Two</PickerItem>
+    <PickerItem>Three</PickerItem>
   </Picker>
 );
 
@@ -233,12 +249,12 @@ export const WithErrorMessage = () => (
   <Picker
     label="Test"
     errorMessage="Please select a valid item."
-    validationState="invalid"
+    isInvalid
     onChange={action('change')}
   >
-    <Item>One</Item>
-    <Item>Two</Item>
-    <Item>Three</Item>
+    <PickerItem>One</PickerItem>
+    <PickerItem>Two</PickerItem>
+    <PickerItem>Three</PickerItem>
   </Picker>
 );
 
@@ -253,14 +269,14 @@ export const CustomWidths = () => (
       onChange={action('change')}
       UNSAFE_style={{ width: 120 }}
     >
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
+      <PickerItem>One</PickerItem>
+      <PickerItem>Two</PickerItem>
+      <PickerItem>Three</PickerItem>
     </Picker>
     <Picker label="Test" width="auto" onChange={action('change')}>
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
+      <PickerItem>One</PickerItem>
+      <PickerItem>Two</PickerItem>
+      <PickerItem>Three</PickerItem>
     </Picker>
   </Flex>
 );
@@ -272,14 +288,14 @@ CustomWidths.story = {
 export const CustomMenuWidths = () => (
   <Flex gap="large" direction="column">
     <Picker label="Test" menuWidth={100} onChange={action('change')}>
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
+      <PickerItem>One</PickerItem>
+      <PickerItem>Two</PickerItem>
+      <PickerItem>Three</PickerItem>
     </Picker>
     <Picker label="Test" menuWidth={400} onChange={action('change')}>
-      <Item>One</Item>
-      <Item>Two</Item>
-      <Item>Three</Item>
+      <PickerItem>One</PickerItem>
+      <PickerItem>Two</PickerItem>
+      <PickerItem>Three</PickerItem>
     </Picker>
   </Flex>
 );
@@ -290,9 +306,9 @@ CustomMenuWidths.story = {
 
 export const Align = () => (
   <Picker label="Test" menuWidth={400} align="end" onChange={action('change')}>
-    <Item>One</Item>
-    <Item>Two</Item>
-    <Item>Three</Item>
+    <PickerItem>One</PickerItem>
+    <PickerItem>Two</PickerItem>
+    <PickerItem>Three</PickerItem>
   </Picker>
 );
 
@@ -302,9 +318,9 @@ Align.story = {
 
 export const Direction = () => (
   <Picker label="Test" direction="top" onChange={action('change')}>
-    <Item>One</Item>
-    <Item>Two</Item>
-    <Item>Three</Item>
+    <PickerItem>One</PickerItem>
+    <PickerItem>Two</PickerItem>
+    <PickerItem>Three</PickerItem>
   </Picker>
 );
 
@@ -319,9 +335,9 @@ export const IsOpenControlled = () => (
     onOpenChange={action('onOpenChange')}
     onChange={action('change')}
   >
-    <Item>One</Item>
-    <Item>Two</Item>
-    <Item>Three</Item>
+    <PickerItem>One</PickerItem>
+    <PickerItem>Two</PickerItem>
+    <PickerItem>Three</PickerItem>
   </Picker>
 );
 
@@ -336,9 +352,9 @@ export const DefaultOpenUncontrolled = () => (
     onOpenChange={action('onOpenChange')}
     onChange={action('change')}
   >
-    <Item>One</Item>
-    <Item>Two</Item>
-    <Item>Three</Item>
+    <PickerItem>One</PickerItem>
+    <PickerItem>Two</PickerItem>
+    <PickerItem>Three</PickerItem>
   </Picker>
 );
 
@@ -348,9 +364,9 @@ DefaultOpenUncontrolled.story = {
 
 export const ValueControlled = () => (
   <Picker label="Test" value="One" onChange={action('change')}>
-    <Item key="One">One</Item>
-    <Item key="Two">Two</Item>
-    <Item key="Three">Three</Item>
+    <PickerItem id="One">One</PickerItem>
+    <PickerItem id="Two">Two</PickerItem>
+    <PickerItem id="Three">Three</PickerItem>
   </Picker>
 );
 
@@ -360,9 +376,9 @@ ValueControlled.story = {
 
 export const DefaultValueUncontrolled = () => (
   <Picker label="Test" defaultValue="One" onChange={action('change')}>
-    <Item key="One">One</Item>
-    <Item key="Two">Two</Item>
-    <Item key="Three">Three</Item>
+    <PickerItem id="One">One</PickerItem>
+    <PickerItem id="Two">Two</PickerItem>
+    <PickerItem id="Three">Three</PickerItem>
   </Picker>
 );
 
@@ -371,8 +387,8 @@ DefaultValueUncontrolled.story = {
 };
 
 export const Loading = () => (
-  <Picker label="Test" isLoading items={[]}>
-    {() => <div />}
+  <Picker label="Test">
+    <PickerLoadMoreItem isLoading />
   </Picker>
 );
 
@@ -381,8 +397,11 @@ Loading.story = {
 };
 
 export const LoadingMore = () => (
-  <Picker label="Test" isLoading items={flatItems}>
-    {item => <Item>{item.name}</Item>}
+  <Picker label="Test">
+    <PickerCollection items={flatItems}>
+      {item => <PickerItem id={item.id}>{item.name}</PickerItem>}
+    </PickerCollection>
+    <PickerLoadMoreItem isLoading />
   </Picker>
 );
 
@@ -409,7 +428,7 @@ export const Focus = () => (
       onKeyDown={action('keydown')}
       onKeyUp={action('keyup')}
     >
-      {item => <Item>{item.name}</Item>}
+      {item => <PickerItem>{item.name}</PickerItem>}
     </Picker>
     <label htmlFor="focus-after">Focus after</label>
     <input id="focus-after" />
@@ -436,9 +455,9 @@ export const ScrollingContainer = () => (
   >
     <Box width="scale.5000" height="scale.2400">
       <Picker label="Test" autoFocus>
-        <Item key="One">One</Item>
-        <Item key="Two">Two</Item>
-        <Item key="Three">Three</Item>
+        <PickerItem id="One">One</PickerItem>
+        <PickerItem id="Two">Two</PickerItem>
+        <PickerItem id="Three">Three</PickerItem>
       </Picker>
     </Box>
   </Box>
@@ -470,13 +489,14 @@ function AsyncLoadingExample() {
   });
 
   return (
-    <Picker
-      label="Pick a Pokemon"
-      items={list.items}
-      isLoading={list.isLoading}
-      onLoadMore={list.loadMore}
-    >
-      {item => <Item key={item.name}>{item.name}</Item>}
+    <Picker label="Pick a Pokemon">
+      <PickerCollection items={list.items}>
+        {item => <PickerItem id={item.name}>{item.name}</PickerItem>}
+      </PickerCollection>
+      <PickerLoadMoreItem
+        isLoading={list.isLoading}
+        onLoadMore={list.loadMore}
+      />
     </Picker>
   );
 }
@@ -488,9 +508,9 @@ function ResizePicker() {
     <Flex gap="large" direction="column" alignItems="start">
       <div style={{ width: state ? '200px' : '300px' }}>
         <Picker label="Choose A" width="100%">
-          <Item key="A1">A1</Item>
-          <Item key="A2">A2</Item>
-          <Item key="A3">A3</Item>
+          <PickerItem id="A1">A1</PickerItem>
+          <PickerItem id="A2">A2</PickerItem>
+          <PickerItem id="A3">A3</PickerItem>
         </Picker>
       </div>
       <Button onPress={() => setState(!state)}>Toggle size</Button>

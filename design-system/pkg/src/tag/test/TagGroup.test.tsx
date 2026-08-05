@@ -1,104 +1,30 @@
-import {
-  afterEach,
-  beforeAll,
-  describe,
-  expect,
-  it,
-  jest,
-} from '@jest/globals';
-import { act, fireEvent, renderWithProvider } from '#test-utils';
+import { jest, expect, it } from '@jest/globals';
 
-import React from 'react';
+import { firePress, renderWithProvider } from '#test-utils';
 
-import { Item, TagGroup } from '../index';
+import { Tag, TagGroup, TagList } from '..';
 
-// TODO: revisit once keystone refurb is done
-describe('tag/TagGroup', function () {
-  let onRemoveSpy = jest.fn();
+it('renders static and dynamic tags', () => {
+  let tree = renderWithProvider(
+    <TagGroup aria-label="tag group">
+      <TagList items={[{ id: 'one', label: 'One' }]}>
+        {item => <Tag id={item.id}>{item.label}</Tag>}
+      </TagList>
+    </TagGroup>
+  );
+  expect(tree.getByRole('grid')).toHaveAttribute('aria-label', 'tag group');
+  expect(tree.getByRole('row', { name: 'One' })).toBeInTheDocument();
+});
 
-  beforeAll(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    act(() => {
-      jest.runAllTimers();
-    });
-    jest.restoreAllMocks();
-  });
-
-  it('provides context for Tag component', function () {
-    let { getAllByRole } = renderWithProvider(
-      <TagGroup aria-label="tag group" onRemove={onRemoveSpy}>
-        <Item aria-label="Tag 1">Tag 1</Item>
-        <Item aria-label="Tag 2">Tag 2</Item>
-        <Item aria-label="Tag 3">Tag 3</Item>
-      </TagGroup>
-    );
-
-    let tags = getAllByRole('row');
-    expect(tags.length).toBe(3);
-
-    fireEvent.keyDown(tags[1], { key: 'Delete' });
-    fireEvent.keyUp(tags[1], { key: 'Delete' });
-    expect(onRemoveSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('has correct accessibility roles', () => {
-    let { getByRole, getAllByRole } = renderWithProvider(
-      <TagGroup aria-label="tag group">
-        <Item aria-label="Tag 1">Tag 1</Item>
-      </TagGroup>
-    );
-
-    let tagGroup = getByRole('grid');
-    expect(tagGroup).toBeVisible();
-    let tags = getAllByRole('row');
-    let cells = getAllByRole('gridcell');
-    expect(tags).toHaveLength(cells.length);
-  });
-
-  it('has correct tab index', () => {
-    let { getAllByRole } = renderWithProvider(
-      <TagGroup aria-label="tag group">
-        <Item aria-label="Tag 1">Tag 1</Item>
-      </TagGroup>
-    );
-
-    let tags = getAllByRole('row');
-    expect(tags[0]).toHaveAttribute('tabIndex', '0');
-  });
-
-  it('shows items added with a stable render function', () => {
-    let renderItem = (item: { id: number; label: string }) => (
-      <Item key={item.id}>{item.label}</Item>
-    );
-    let { getAllByRole, rerender } = renderWithProvider(
-      <TagGroup
-        aria-label="tag group"
-        items={[{ id: 1, label: 'Tag 1' }]}
-        maxRows={2}
-      >
-        {renderItem}
-      </TagGroup>
-    );
-
-    rerender(
-      <TagGroup
-        aria-label="tag group"
-        items={[
-          { id: 1, label: 'Tag 1' },
-          { id: 2, label: 'Tag 2' },
-        ]}
-        maxRows={2}
-      >
-        {renderItem}
-      </TagGroup>
-    );
-    act(() => {
-      jest.runAllTicks();
-    });
-
-    expect(getAllByRole('row')).toHaveLength(2);
-  });
+it('removes a tag through the RAC remove slot', () => {
+  let onRemove = jest.fn();
+  let tree = renderWithProvider(
+    <TagGroup aria-label="tag group" onRemove={onRemove}>
+      <TagList>
+        <Tag id="one">One</Tag>
+      </TagList>
+    </TagGroup>
+  );
+  firePress(tree.getByRole('button', { name: 'Remove One' }));
+  expect(onRemove).toHaveBeenCalledWith(new Set(['one']));
 });

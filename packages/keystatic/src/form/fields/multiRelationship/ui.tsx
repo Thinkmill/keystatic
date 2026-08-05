@@ -1,14 +1,17 @@
-import { Item } from 'react-stately/Item';
 import { ItemDropTarget, Selection } from '@react-types/shared';
 import { useReducer, useMemo, useState, useEffect, Key } from 'react';
 
-import { ActionBar, ActionBarContainer } from '@keystar/ui/action-bar';
-import { Combobox } from '@keystar/ui/combobox';
+import {
+  ActionBar,
+  ActionBarContainer,
+  ActionBarItem,
+} from '@keystar/ui/action-bar';
+import { Combobox, ComboboxItem } from '@keystar/ui/combobox';
 import { move, useDragAndDrop } from '@keystar/ui/drag-and-drop';
 import { Icon } from '@keystar/ui/icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { VStack } from '@keystar/ui/layout';
-import { ListView } from '@keystar/ui/list-view';
+import { ListView, ListViewItem } from '@keystar/ui/list-view';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
@@ -75,7 +78,7 @@ export function MultiRelationshipInput(
         errorMessage={errorMessage}
         width="auto"
       >
-        {item => <Item key={item.slug}>{item.slug}</Item>}
+        {item => <ComboboxItem id={item.slug}>{item.slug}</ComboboxItem>}
       </Combobox>
       {true ? (
         <MultiRelationshipListView
@@ -176,9 +179,9 @@ function MultiRelationshipListView(
         {item => {
           const label = item.key;
           return (
-            <Item key={item.key} textValue={label}>
+            <ListViewItem id={item.key} textValue={label}>
               {label}
-            </Item>
+            </ListViewItem>
           );
         }}
       </ListView>
@@ -200,10 +203,10 @@ function MultiRelationshipListView(
           }
         }}
       >
-        <Item key="delete" textValue="Remove">
+        <ActionBarItem id="delete" textValue="Remove">
           <Icon src={trash2Icon} />
           <Text>Remove</Text>
-        </Item>
+        </ActionBarItem>
       </ActionBar>
     </ActionBarContainer>
   );

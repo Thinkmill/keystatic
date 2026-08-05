@@ -13,7 +13,7 @@ import { classes } from './utils';
 import { ContentComponent } from '../../../../content-components';
 import { NodeSelection } from 'prosemirror-state';
 import { css, tokenSchema } from '@keystar/ui/style';
-import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
+import { Menu, MenuItem, MenuTrigger } from '@keystar/ui/menu';
 import {
   deserializeValue,
   toSerialized,
@@ -647,7 +647,9 @@ export function getCustomNodeSpecs(
                           }}
                           items={items}
                         >
-                          {item => <Item key={item.key}>{item.label}</Item>}
+                          {item => (
+                            <MenuItem id={item.key}>{item.label}</MenuItem>
+                          )}
                         </Menu>
                       </MenuTrigger>
                     ))

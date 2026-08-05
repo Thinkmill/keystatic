@@ -5,7 +5,7 @@ import { monitorIcon } from '@keystar/ui/icon/icons/monitorIcon';
 import { moonIcon } from '@keystar/ui/icon/icons/moonIcon';
 import { sunIcon } from '@keystar/ui/icon/icons/sunIcon';
 import { Icon } from '@keystar/ui/icon';
-import { MenuTrigger, Menu, Item } from '@keystar/ui/menu';
+import { MenuTrigger, Menu, MenuItem } from '@keystar/ui/menu';
 import { useRootColorScheme } from '@keystar/ui/next';
 
 import { SCHEME_AUTO, SCHEME_DARK, SCHEME_LIGHT } from '@keystar/ui/primitives';
@@ -48,10 +48,10 @@ export function ColorSchemeMenu() {
         selectionMode="single"
       >
         {item => (
-          <Item key={item.key} textValue={item.label}>
+          <MenuItem id={item.key} textValue={item.label}>
             <Icon src={item.icon} />
             <Text>{item.label}</Text>
-          </Item>
+          </MenuItem>
         )}
       </Menu>
     </MenuTrigger>

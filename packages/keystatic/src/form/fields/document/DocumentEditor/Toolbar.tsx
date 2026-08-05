@@ -2,7 +2,7 @@ import { ReactNode, useMemo } from 'react';
 import { Editor, Element, Transforms } from 'slate';
 import { ReactEditor, useSlateStatic } from 'slate-react';
 
-import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionGroup, ActionGroupItem } from '@keystar/ui/action-group';
 import { ActionButton, Button } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
@@ -19,8 +19,8 @@ import { superscriptIcon } from '@keystar/ui/icon/icons/superscriptIcon';
 import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
 import { underlineIcon } from '@keystar/ui/icon/icons/underlineIcon';
 import { Box, Flex } from '@keystar/ui/layout';
-import { MenuTrigger, Menu } from '@keystar/ui/menu';
-import { Picker } from '@keystar/ui/picker';
+import { MenuTrigger, Menu, MenuItem } from '@keystar/ui/menu';
+import { Picker, PickerItem } from '@keystar/ui/picker';
 import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
@@ -308,7 +308,7 @@ const HeadingMenu = ({
           ReactEditor.focus(editor);
         }}
       >
-        {item => <Item key={item.id}>{item.name}</Item>}
+        {item => <PickerItem id={item.id}>{item.name}</PickerItem>}
       </Picker>
     ),
     [editor, isDisabled, items, selected]
@@ -369,7 +369,7 @@ function InsertBlockMenu() {
           ([, val]) => !val.toolbarIcon
         )}
       >
-        {([key, item]) => <Item key={key}>{item.label}</Item>}
+        {([key, item]) => <MenuItem id={key}>{item.label}</MenuItem>}
       </Menu>
     </MenuTrigger>
   );
@@ -478,11 +478,11 @@ function InlineMarks({
       >
         {item => {
           return (
-            <Item key={item.key} textValue={item.label}>
+            <ActionGroupItem id={item.key} textValue={item.label}>
               <Text>{item.label}</Text>
               {'shortcut' in item && <Kbd meta>{item.shortcut}</Kbd>}
               <Icon src={item.icon} />
-            </Item>
+            </ActionGroupItem>
           );
         }}
       </ActionGroup>

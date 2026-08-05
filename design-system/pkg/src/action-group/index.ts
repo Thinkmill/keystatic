@@ -1,7 +1,5 @@
 'use client';
 
-export { Item } from 'react-stately/Item';
+export { ActionGroup, ActionGroupItem } from './ActionGroup';
 
-export { ActionGroup } from './ActionGroup';
-
-export type { ActionGroupProps } from './types';
+export type { ActionGroupItemProps, ActionGroupProps } from './types';

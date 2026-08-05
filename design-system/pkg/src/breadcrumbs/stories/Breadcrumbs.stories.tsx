@@ -1,7 +1,7 @@
 import { Box, VStack } from '@keystar/ui/layout';
 import { StoryFn, StoryObj, action } from '@keystar/ui-storybook';
 
-import { Breadcrumbs, BreadcrumbsProps, Item } from '..';
+import { Breadcrumbs, BreadcrumbsProps, BreadcrumbItem } from '..';
 import { ReactNode } from 'react';
 
 export type BreadcrumbsStory = StoryObj<typeof Breadcrumbs>;
@@ -44,9 +44,9 @@ export const Sizes = () => (
   <VStack gap="large">
     {sizes.map(size => (
       <Breadcrumbs onAction={action('onAction')} key={size} size={size}>
-        <Item key="dashboard">Size: {size}</Item>
-        <Item key="posts">Second</Item>
-        <Item key="some-post-title">Third</Item>
+        <BreadcrumbItem id="dashboard">Size: {size}</BreadcrumbItem>
+        <BreadcrumbItem id="posts">Second</BreadcrumbItem>
+        <BreadcrumbItem id="some-post-title">Third</BreadcrumbItem>
       </Breadcrumbs>
     ))}
   </VStack>
@@ -54,23 +54,27 @@ export const Sizes = () => (
 
 export const ManyItems = () => (
   <Breadcrumbs onAction={action('onAction')}>
-    <Item key="Home">Home</Item>
-    <Item key="Products">Products</Item>
-    <Item key="Tools">Tools</Item>
-    <Item key="Power Tools">Power Tools</Item>
-    <Item key="Drills">Drills</Item>
-    <Item key="Impact Drill Drivers">Impact Drill Drivers</Item>
+    <BreadcrumbItem id="Home">Home</BreadcrumbItem>
+    <BreadcrumbItem id="Products">Products</BreadcrumbItem>
+    <BreadcrumbItem id="Tools">Tools</BreadcrumbItem>
+    <BreadcrumbItem id="Power Tools">Power Tools</BreadcrumbItem>
+    <BreadcrumbItem id="Drills">Drills</BreadcrumbItem>
+    <BreadcrumbItem id="Impact Drill Drivers">
+      Impact Drill Drivers
+    </BreadcrumbItem>
   </Breadcrumbs>
 );
 
 export const ShowRoot = () => (
-  <Breadcrumbs onAction={action('onAction')} showRoot>
-    <Item key="Home">Home</Item>
-    <Item key="Products">Products</Item>
-    <Item key="Tools">Tools</Item>
-    <Item key="Power Tools">Power Tools</Item>
-    <Item key="Drills">Drills</Item>
-    <Item key="Impact Drill Drivers">Impact Drill Drivers</Item>
+  <Breadcrumbs onAction={action('onAction')}>
+    <BreadcrumbItem id="Home">Home</BreadcrumbItem>
+    <BreadcrumbItem id="Products">Products</BreadcrumbItem>
+    <BreadcrumbItem id="Tools">Tools</BreadcrumbItem>
+    <BreadcrumbItem id="Power Tools">Power Tools</BreadcrumbItem>
+    <BreadcrumbItem id="Drills">Drills</BreadcrumbItem>
+    <BreadcrumbItem id="Impact Drill Drivers">
+      Impact Drill Drivers
+    </BreadcrumbItem>
   </Breadcrumbs>
 );
 
@@ -86,26 +90,28 @@ export const Resizable = () => (
     }}
   >
     <Breadcrumbs onAction={action('onAction')}>
-      <Item key="first">First item with long text</Item>
-      <Item key="second">Second item with long text</Item>
-      <Item key="third">Third item with long text</Item>
+      <BreadcrumbItem id="first">First item with long text</BreadcrumbItem>
+      <BreadcrumbItem id="second">Second item with long text</BreadcrumbItem>
+      <BreadcrumbItem id="third">Third item with long text</BreadcrumbItem>
     </Breadcrumbs>
   </Box>
 );
 
 export const SingleItem = () => (
   <Breadcrumbs onAction={action('onAction')}>
-    <Item key="dashboard">Dashboard</Item>
+    <BreadcrumbItem id="dashboard">Dashboard</BreadcrumbItem>
   </Breadcrumbs>
 );
 
 export const Links = () => (
   <Breadcrumbs>
-    <Item href="https://example.com">Example.com</Item>
-    <Item href="https://example.com/foo">Foo</Item>
-    <Item href="https://example.com/foo/bar">Bar</Item>
-    <Item href="https://example.com/foo/bar/baz">Baz</Item>
-    <Item href="https://example.com/foo/bar/baz/qux">Qux</Item>
+    <BreadcrumbItem href="https://example.com">Example.com</BreadcrumbItem>
+    <BreadcrumbItem href="https://example.com/foo">Foo</BreadcrumbItem>
+    <BreadcrumbItem href="https://example.com/foo/bar">Bar</BreadcrumbItem>
+    <BreadcrumbItem href="https://example.com/foo/bar/baz">Baz</BreadcrumbItem>
+    <BreadcrumbItem href="https://example.com/foo/bar/baz/qux">
+      Qux
+    </BreadcrumbItem>
   </Breadcrumbs>
 );
 
@@ -113,12 +119,14 @@ type Render = (() => ReactNode) & {
   storyName?: string;
 };
 
-function render<T>(props: Partial<BreadcrumbsProps<T>> = {}): Render {
+function render<T extends object>(
+  props: Partial<BreadcrumbsProps<T>> = {}
+): Render {
   return () => (
     <Breadcrumbs onAction={action('onAction')} {...props}>
-      <Item key="dashboard">Dashboard</Item>
-      <Item key="posts">Posts</Item>
-      <Item key="some-post-title">Some post title</Item>
+      <BreadcrumbItem id="dashboard">Dashboard</BreadcrumbItem>
+      <BreadcrumbItem id="posts">Posts</BreadcrumbItem>
+      <BreadcrumbItem id="some-post-title">Some post title</BreadcrumbItem>
     </Breadcrumbs>
   );
 }

@@ -16,7 +16,9 @@ import {
   SortDescriptor,
   TableView,
   TableBody,
+  TableCollection,
   TableHeader,
+  TableLoadMoreItem,
 } from '..';
 import { pokemonItems } from './data';
 import { ReorderExample } from './ReorderExample';
@@ -450,8 +452,8 @@ export const StickyCheckboxes = () => {
       <TableHeader
         columns={[
           // { name: 'ID', key: 'id', width: 55 },
-          { name: 'Name', key: 'name', width: '33%' },
-          { name: 'Type', key: 'type', width: '33%' },
+          { name: 'Name', key: 'name', width: '1fr' as const },
+          { name: 'Type', key: 'type', width: '1fr' as const },
           { name: 'HP', key: 'health', align: 'end' as const },
           { name: 'ATK', key: 'attack', align: 'end' as const },
           { name: 'DEF', key: 'defense', align: 'end' as const },
@@ -507,7 +509,11 @@ export const ManyCells = () => {
         {column => <Column minWidth={100}>{column.name}</Column>}
       </TableHeader>
       <TableBody items={manyRows}>
-        {item => <Row key={item.foo}>{key => <Cell>{item[key]}</Cell>}</Row>}
+        {item => (
+          <Row key={item.foo}>
+            {key => <Cell>{item[key as keyof typeof item]}</Cell>}
+          </Row>
+        )}
       </TableBody>
     </TableView>
   );
@@ -526,12 +532,14 @@ export const EmptyState = () => {
         aria-label="TableView with empty state"
         width="scale.6000"
         height="scale.3000"
-        renderEmptyState={renderEmptyState}
       >
         <TableHeader columns={manyColumns}>
           {column => <Column minWidth={100}>{column.name}</Column>}
         </TableHeader>
-        <TableBody items={isEmpty ? [] : manyRows}>
+        <TableBody
+          items={isEmpty ? [] : manyRows}
+          renderEmptyState={renderEmptyState}
+        >
           {item => (
             <Row key={item.foo}>
               {key => <Cell>{item[key as keyof typeof item]}</Cell>}
@@ -549,17 +557,12 @@ export const IsLoading = () => (
     aria-label="TableView with loading state"
     width="scale.6000"
     height="scale.3000"
-    renderEmptyState={renderEmptyState}
   >
     <TableHeader columns={manyColumns}>
       {column => <Column minWidth={100}>{column.name}</Column>}
     </TableHeader>
-    <TableBody items={true ? [] : manyRows} loadingState="loading">
-      {item => (
-        <Row key={item.foo}>
-          {key => <Cell>{item[key as keyof typeof item]}</Cell>}
-        </Row>
-      )}
+    <TableBody>
+      <TableLoadMoreItem isLoading />
     </TableBody>
   </TableView>
 );
@@ -632,30 +635,32 @@ function AsyncLoadingExample(props: any) {
             Comments
           </Column>
         </TableHeader>
-        <TableBody
-          items={list.items}
-          loadingState={list.loadingState}
-          onLoadMore={list.loadMore}
-        >
-          {item => (
-            <Row key={item.data.id}>
-              {key =>
-                key === 'title' ? (
-                  <Cell textValue={item.data.title}>
-                    <TextLink
-                      prominence="high"
-                      href={item.data.url}
-                      target="_blank"
-                    >
-                      {item.data.title}
-                    </TextLink>
-                  </Cell>
-                ) : (
-                  <Cell>{item.data[key as keyof typeof item.data]}</Cell>
-                )
-              }
-            </Row>
-          )}
+        <TableBody>
+          <TableCollection items={list.items}>
+            {item => (
+              <Row key={item.data.id}>
+                {key =>
+                  key === 'title' ? (
+                    <Cell textValue={item.data.title}>
+                      <TextLink
+                        prominence="high"
+                        href={item.data.url}
+                        target="_blank"
+                      >
+                        {item.data.title}
+                      </TextLink>
+                    </Cell>
+                  ) : (
+                    <Cell>{item.data[key as keyof typeof item.data]}</Cell>
+                  )
+                }
+              </Row>
+            )}
+          </TableCollection>
+          <TableLoadMoreItem
+            isLoading={list.loadingState !== 'idle'}
+            onLoadMore={list.loadMore}
+          />
         </TableBody>
       </TableView>
     </div>

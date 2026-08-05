@@ -18,7 +18,7 @@ import {
   within,
 } from '#test-utils';
 
-import { Item, TabList, TabPanels, Tabs, TabsProps } from '..';
+import { Tab, TabList, TabPanel, TabPanels, Tabs, TabsProps } from '..';
 
 let defaultItems = [
   { name: 'Tab 1', children: 'Tab 1 body' },
@@ -30,27 +30,18 @@ let defaultItems = [
 // the TabList and TabPanels components. Not sure how to do this.
 type TabItem = (typeof defaultItems)[0];
 
-function renderComponent<T>(
-  props: Partial<TabsProps<T>> = {},
-  itemProps?: any
-) {
+function renderComponent(props: Partial<TabsProps> = {}, itemProps?: any) {
   return renderWithProvider(
-    <Tabs aria-label="Tab Sample" {...props} items={defaultItems}>
-      <TabList>
+    <Tabs aria-label="Tab Sample" {...props}>
+      <TabList items={defaultItems}>
         {(item: TabItem) => (
-          <Item
-            {...itemProps}
-            key={item.name}
-            title={item.name || item.children}
-          />
+          <Tab {...itemProps} id={item.name}>
+            {item.name || item.children}
+          </Tab>
         )}
       </TabList>
-      <TabPanels>
-        {(item: TabItem) => (
-          <Item key={item.name} title={item.name}>
-            {item.children}
-          </Item>
-        )}
+      <TabPanels items={defaultItems}>
+        {(item: TabItem) => <TabPanel id={item.name}>{item.children}</TabPanel>}
       </TabPanels>
     </Tabs>
   );
@@ -67,6 +58,7 @@ describe('tabs/Tabs', function () {
       .spyOn(window.HTMLElement.prototype, 'clientHeight', 'get')
       .mockImplementation(() => 1000);
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
+    window.HTMLElement.prototype.getAnimations = jest.fn(() => []);
     jest.useFakeTimers();
   });
 
@@ -308,7 +300,6 @@ describe('tabs/Tabs', function () {
     let { getAllByRole, rerender } = renderComponent({
       disabledKeys: [defaultItems[0].name],
       onSelectionChange,
-      items: defaultItems,
     });
     userEvent.tab();
 
@@ -325,20 +316,13 @@ describe('tabs/Tabs', function () {
         aria-label="Tab Example"
         disabledKeys={[defaultItems[0].name]}
         onSelectionChange={onSelectionChange}
-        items={defaultItems.slice(0, 1)}
       >
-        <TabList>
-          {(item: TabItem) => (
-            <Item key={item.name} title={item.name || item.children}>
-              {item.children}
-            </Item>
-          )}
+        <TabList items={defaultItems.slice(0, 1)}>
+          {(item: TabItem) => <Tab id={item.name}>{item.children}</Tab>}
         </TabList>
-        <TabPanels>
+        <TabPanels items={defaultItems.slice(0, 1)}>
           {(item: TabItem) => (
-            <Item key={item.name} title={item.name}>
-              {item.children}
-            </Item>
+            <TabPanel id={item.name}>{item.children}</TabPanel>
           )}
         </TabPanels>
       </Tabs>
@@ -350,7 +334,6 @@ describe('tabs/Tabs', function () {
     let { getAllByRole, getByRole } = renderComponent({
       disabledKeys: defaultItems.map(item => item.name),
       onSelectionChange,
-      items: defaultItems,
     });
     userEvent.tab();
 
@@ -367,16 +350,16 @@ describe('tabs/Tabs', function () {
     let { getByRole, getAllByRole } = renderWithProvider(
       <Tabs aria-label="Tab Example" maxWidth="scale.5000">
         <TabList>
-          <Item>Tab 1</Item>
-          <Item>Tab 2</Item>
+          <Tab id="one">Tab 1</Tab>
+          <Tab id="two">Tab 2</Tab>
         </TabList>
         <TabPanels>
-          <Item>
+          <TabPanel id="one">
             <input />
-          </Item>
-          <Item>
+          </TabPanel>
+          <TabPanel id="two">
             <input disabled />
-          </Item>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     );
@@ -400,16 +383,16 @@ describe('tabs/Tabs', function () {
     let { getByDisplayValue, getAllByRole, getByTestId } = renderWithProvider(
       <Tabs aria-label="Tab Example" maxWidth="scale.5000">
         <TabList>
-          <Item>Tab 1</Item>
-          <Item>Tab 2</Item>
+          <Tab id="one">Tab 1</Tab>
+          <Tab id="two">Tab 2</Tab>
         </TabList>
         <TabPanels>
-          <Item>
+          <TabPanel id="one">
             <input data-testid="panel1_input" />
-          </Item>
-          <Item>
+          </TabPanel>
+          <TabPanel id="two">
             <input disabled data-testid="panel2_input" />
-          </Item>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     );
@@ -467,20 +450,14 @@ describe('tabs/Tabs', function () {
 
   it('updates the tab index of the selected tab if programatically changed', function () {
     let Example = (props: any) => (
-      <Tabs
-        aria-label="Test Tabs"
-        items={defaultItems}
-        selectedKey={props.selectedKey}
-      >
-        <TabList>
-          {(item: TabItem) => (
-            <Item key={item.name} title={item.name || item.children}>
-              {item.children}
-            </Item>
-          )}
+      <Tabs aria-label="Test Tabs" selectedKey={props.selectedKey}>
+        <TabList items={defaultItems}>
+          {(item: TabItem) => <Tab id={item.name}>{item.children}</Tab>}
         </TabList>
-        <TabPanels>
-          {(item: TabItem) => <Item key={item.name}>{item.children}</Item>}
+        <TabPanels items={defaultItems}>
+          {(item: TabItem) => (
+            <TabPanel id={item.name}>{item.children}</TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     );

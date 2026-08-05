@@ -12,7 +12,13 @@ import {
 import { useLocale } from 'react-aria/I18nProvider';
 import { KeystarProvider } from '@keystar/ui/core';
 import { Flex } from '@keystar/ui/layout';
-import { Item, Picker, Section } from '@keystar/ui/picker';
+import {
+  Picker,
+  PickerCollection,
+  PickerHeader,
+  PickerItem,
+  PickerSection,
+} from '@keystar/ui/picker';
 import { ArgTypes, action } from '@keystar/ui-storybook';
 import React from 'react';
 
@@ -282,7 +288,10 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
         ? pref.ordering
             .split(' ')
             .map(p => calendars.find(c => c.key === p))
-            .filter(Boolean)
+            .filter(
+              (calendar): calendar is NonNullable<typeof calendar> =>
+                calendar !== undefined
+            )
         : [calendars[0]],
     [pref]
   );
@@ -310,7 +319,7 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
           value={locale}
           onChange={updateLocale}
         >
-          {item => <Item key={item.locale}>{item.label}</Item>}
+          {item => <PickerItem id={item.locale}>{item.label}</PickerItem>}
         </Picker>
         <Picker
           label="Calendar"
@@ -321,12 +330,18 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
             }
           }}
         >
-          <Section title="Preferred" items={preferredCalendars}>
-            {item => <Item>{item?.name || 'ERROR'}</Item>}
-          </Section>
-          <Section title="Other" items={otherCalendars}>
-            {item => <Item>{item.name}</Item>}
-          </Section>
+          <PickerSection>
+            <PickerHeader>Preferred</PickerHeader>
+            <PickerCollection items={preferredCalendars}>
+              {item => <PickerItem id={item.key}>{item.name}</PickerItem>}
+            </PickerCollection>
+          </PickerSection>
+          <PickerSection>
+            <PickerHeader>Other</PickerHeader>
+            <PickerCollection items={otherCalendars}>
+              {item => <PickerItem id={item.key}>{item.name}</PickerItem>}
+            </PickerCollection>
+          </PickerSection>
         </Picker>
       </Flex>
       <KeystarProvider

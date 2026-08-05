@@ -46,11 +46,11 @@ function ActionBar<T extends object>(
   );
 }
 
-interface ActionBarInnerProps<T> extends ActionBarProps<T> {
+interface ActionBarInnerProps<T extends object> extends ActionBarProps<T> {
   isOpen?: boolean;
 }
 
-function ActionBarInner<T>(
+function ActionBarInner<T extends object>(
   props: ActionBarInnerProps<T>,
   ref: Ref<HTMLDivElement>
 ) {
@@ -158,7 +158,7 @@ function ActionBarInner<T>(
             items={items}
             aria-label={stringFormatter.format('actions')}
             prominence="low"
-            overflowMode="collapse"
+            overflowMode={items ? 'collapse' : 'wrap'}
             buttonLabelBehavior={buttonLabelBehavior}
             onAction={onAction}
             gridArea="actiongroup"
@@ -189,7 +189,9 @@ function ActionBarInner<T>(
   );
 }
 
-const ActionBarInnerWithRef = React.forwardRef(ActionBarInner) as <T>(
+const ActionBarInnerWithRef = React.forwardRef(ActionBarInner) as <
+  T extends object,
+>(
   props: ActionBarInnerProps<T> & { ref?: Ref<HTMLDivElement> }
 ) => ReactElement;
 
@@ -197,7 +199,7 @@ const ActionBarInnerWithRef = React.forwardRef(ActionBarInner) as <T>(
  * Action bars are used for single and bulk selection patterns when a user needs
  * to perform actions on one or more items at the same time.
  */
-const _ActionBar: <T>(
+const _ActionBar: <T extends object>(
   props: ActionBarProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
 ) => ReactElement = React.forwardRef(ActionBar as any) as any;
 

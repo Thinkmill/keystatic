@@ -1,13 +1,11 @@
-import { Fragment, ReactNode, useEffect, useRef } from 'react';
+import { Fragment, ReactNode, useMemo, useRef } from 'react';
 import { Transforms, Text, Editor, Path, Point, Node } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { matchSorter } from 'match-sorter';
-import scrollIntoView from 'scroll-into-view-if-needed';
 import { useOverlayTrigger } from 'react-aria/useOverlayTrigger';
-import { useListState } from 'react-stately/useListState';
 import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 
-import { Item, ListBoxBase, useListBoxLayout } from '@keystar/ui/listbox';
+import { EditorListbox, EditorListboxItem } from '@keystar/ui/editor';
 import { Popover } from '@keystar/ui/overlays';
 import { css, tokenSchema } from '@keystar/ui/style';
 
@@ -169,104 +167,12 @@ export function InsertMenu({
     }
   ).map((option, index) => ({ ...option, index }));
 
-  const stateRef = useRef({ options, text });
-
-  useEffect(() => {
-    stateRef.current = { options, text };
-  });
-
-  const listenerRef = useRef((_event: KeyboardEvent) => {});
-  useEffect(() => {
-    listenerRef.current = (event: KeyboardEvent) => {
-      if (event.defaultPrevented) return;
-      switch (event.key) {
-        case 'ArrowDown': {
-          if (stateRef.current.options.length) {
-            event.preventDefault();
-            state.selectionManager.setFocused(true);
-            state.selectionManager.setFocusedKey(
-              (Number(state.selectionManager.focusedKey) ===
-              stateRef.current.options.length - 1
-                ? 0
-                : Number(state.selectionManager.focusedKey) + 1
-              ).toString()
-            );
-          }
-          return;
-        }
-        case 'ArrowUp': {
-          if (stateRef.current.options.length) {
-            event.preventDefault();
-            state.selectionManager.setFocused(true);
-            state.selectionManager.setFocusedKey(
-              (state.selectionManager.focusedKey === '0'
-                ? stateRef.current.options.length - 1
-                : Number(state.selectionManager.focusedKey) - 1
-              ).toString()
-            );
-          }
-          return;
-        }
-        case 'Enter': {
-          const option =
-            stateRef.current.options[Number(state.selectionManager.focusedKey)];
-          if (option) {
-            insertOption(editor, stateRef.current.text, option);
-            event.preventDefault();
-          }
-          return;
-        }
-        case 'Escape': {
-          const path = ReactEditor.findPath(editor, stateRef.current.text);
-          Transforms.unsetNodes(editor, 'insertMenu', { at: path });
-          event.preventDefault();
-          return;
-        }
-      }
-    };
-  });
-
-  useEffect(() => {
-    const domNode = ReactEditor.toDOMNode(editor, editor);
-    let listener = (event: KeyboardEvent) => listenerRef.current(event);
-    domNode.addEventListener('keydown', listener);
-    return () => {
-      domNode.removeEventListener('keydown', listener);
-    };
-  }, [editor]);
   const triggerRef = useRef<HTMLSpanElement>(null);
   const overlayState = useOverlayTriggerState({ isOpen: true });
   const {
     triggerProps: { onPress, ...triggerProps },
     overlayProps,
   } = useOverlayTrigger({ type: 'listbox' }, overlayState, triggerRef);
-  let state = useListState({
-    items: options,
-    children: item => <Item key={item.index}>{item.label}</Item>,
-  });
-
-  useEffect(() => {
-    if (!state.selectionManager.isFocused && state.collection.size) {
-      state.selectionManager.setFocused(true);
-      state.selectionManager.setFocusedKey('0');
-    }
-  }, [state]);
-  const scrollableRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const element = scrollableRef.current?.querySelector(
-      '[role="listbox"] [role="presentation"]'
-    )?.children[state.selectionManager.focusedKey as number];
-    if (element) {
-      scrollIntoView(element, {
-        scrollMode: 'if-needed',
-        boundary: scrollableRef.current,
-        block: 'nearest',
-      });
-    }
-  }, [state.selectionManager.focusedKey]);
-  const listboxRef = useRef(null);
-  let layout = useListBoxLayout();
   return (
     <Fragment>
       <span
@@ -289,20 +195,20 @@ export function InsertMenu({
         state={overlayState}
         triggerRef={triggerRef}
       >
-        <div
-          className={css({ overflow: 'scroll', maxHeight: 300 })}
-          ref={scrollableRef}
-        >
-          <ListBoxBase
+        <div className={css({ overflow: 'scroll', maxHeight: 300 })}>
+          <EditorListbox
             aria-label="Insert block"
-            state={state}
-            shouldUseVirtualFocus
-            layout={layout}
-            ref={listboxRef}
+            items={options}
             onAction={key => {
               insertOption(editor, text, options[key as number]);
             }}
-          />
+          >
+            {item => (
+              <EditorListboxItem id={item.index}>
+                {item.label}
+              </EditorListboxItem>
+            )}
+          </EditorListbox>
         </div>
       </Popover>
     </Fragment>

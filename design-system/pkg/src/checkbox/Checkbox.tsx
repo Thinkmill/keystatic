@@ -128,7 +128,10 @@ function CheckboxInner(
           )}
         />
       </FocusRing>
-      <Indicator isIndeterminate={isIndeterminate} prominence={prominence} />
+      <CheckboxIndicator
+        isIndeterminate={isIndeterminate}
+        prominence={prominence}
+      />
       <SlotProvider slots={slots}>
         {children && (
           <Content>
@@ -146,7 +149,8 @@ function CheckboxInner(
 let sizeToken = tokenSchema.size.element.xsmall;
 type IndicatorProps = Pick<CheckboxProps, 'isIndeterminate' | 'prominence'>;
 
-const Indicator = (props: IndicatorProps) => {
+/** @private A presentational checkbox indicator for state-managed checkbox primitives. */
+export const CheckboxIndicator = (props: IndicatorProps) => {
   let { isIndeterminate, prominence } = props;
 
   return (
@@ -199,6 +203,10 @@ const Indicator = (props: IndicatorProps) => {
             boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
             margin: `calc(${tokenSchema.size.alias.focusRingGap} * -1)`,
           },
+          'label[data-focus-visible] &::after': {
+            boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
+            margin: `calc(${tokenSchema.size.alias.focusRingGap} * -1)`,
+          },
 
           // border / background
           '&::before': {
@@ -218,10 +226,23 @@ const Indicator = (props: IndicatorProps) => {
               borderColor: tokenSchema.color.alias.borderDisabled,
             },
           },
+          'label[data-disabled] &': {
+            color: tokenSchema.color.alias.foregroundDisabled,
+            '&::before': {
+              backgroundColor: tokenSchema.color.alias.borderDisabled,
+              borderColor: tokenSchema.color.alias.borderDisabled,
+            },
+          },
           'input[type="checkbox"]:enabled:hover + &::before': {
             borderColor: tokenSchema.color.scale.slate9,
           },
+          'label:not([data-disabled])[data-hovered] &::before': {
+            borderColor: tokenSchema.color.scale.slate9,
+          },
           'input[type="checkbox"]:enabled:active + &::before': {
+            borderColor: tokenSchema.color.scale.slate10,
+          },
+          'label:not([data-disabled])[data-pressed] &::before': {
             borderColor: tokenSchema.color.scale.slate10,
           },
 
@@ -237,7 +258,21 @@ const Indicator = (props: IndicatorProps) => {
                 transform: `scale(1)`,
               },
             },
+          'label[data-selected] &, label[data-indeterminate] &': {
+            '&::before': {
+              borderWidth: `calc(${sizeToken} / 2)`,
+            },
+
+            [checkboxClassList.selector('indicator')]: {
+              opacity: 1,
+              transform: `scale(1)`,
+            },
+          },
           'input[type="checkbox"]:enabled:checked + &::before, input[type="checkbox"]:enabled:indeterminate + &::before':
+            {
+              borderColor: 'var(--selected-idle-bg)',
+            },
+          'label:not([data-disabled])[data-selected] &::before, label:not([data-disabled])[data-indeterminate] &::before':
             {
               borderColor: 'var(--selected-idle-bg)',
             },
@@ -245,7 +280,15 @@ const Indicator = (props: IndicatorProps) => {
             {
               borderColor: 'var(--selected-hover-bg)',
             },
+          'label:not([data-disabled])[data-hovered][data-selected] &::before, label:not([data-disabled])[data-hovered][data-indeterminate] &::before':
+            {
+              borderColor: 'var(--selected-hover-bg)',
+            },
           'input[type="checkbox"]:enabled:checked:active + &::before, input[type="checkbox"]:enabled:indeterminate:active + &::before':
+            {
+              borderColor: 'var(--selected-pressed-bg)',
+            },
+          'label:not([data-disabled])[data-pressed][data-selected] &::before, label:not([data-disabled])[data-pressed][data-indeterminate] &::before':
             {
               borderColor: 'var(--selected-pressed-bg)',
             },

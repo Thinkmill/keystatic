@@ -6,32 +6,37 @@ category: Layout
 
 ## Example
 
-TableView is a complex [collection component](https://react-spectrum.adobe.com/react-stately/collections.html) that is built up from many child elements including columns, rows, and cells. Columns are defined within a `TableHeader` element and rows are defined within a `TableBody` element. Rows contain `Cell` elements that correspond to each column. Cells can contain any element, allowing you to have focusable children within the `TableView`.
+TableView uses the [React Aria Components collection API](https://react-spectrum.adobe.com/react-aria/collections.html) and is composed from explicit columns, rows, and cells. Columns are defined within a `TableHeader` element and rows are defined within a `TableBody` element. Rows contain `Cell` elements that correspond to each column. Cells can contain any element, allowing you to have focusable children within the `TableView`.
 
 ```jsx {% live=true %}
 <TableView aria-label="Example table" selectionMode="multiple">
   <TableHeader>
-    <Column width="50%">Name</Column>
+    <TableSelectionColumn />
+    <Column width="50%" isRowHeader>Name</Column>
     <Column>Type</Column>
     <Column align="end">Date added</Column>
   </TableHeader>
   <TableBody>
-    <Row>
+    <Row id="monitor">
+      <TableSelectionCell />
       <Cell>Dell Computer Monitor</Cell>
       <Cell>Computing</Cell>
       <Cell>7/6/2020</Cell>
     </Row>
-    <Row>
+    <Row id="ipad">
+      <TableSelectionCell />
       <Cell>iPad Pro 2017 Model</Cell>
       <Cell>Computing</Cell>
       <Cell>7/4/2021</Cell>
     </Row>
-    <Row>
+    <Row id="gopro">
+      <TableSelectionCell />
       <Cell>Gopro hero 7</Cell>
       <Cell>Media</Cell>
       <Cell>20/11/2010</Cell>
     </Row>
-    <Row>
+    <Row id="playstation">
+      <TableSelectionCell />
       <Cell>Playstation 4 Limited Edition</Cell>
       <Cell>Console</Cell>
       <Cell>18/1/2016</Cell>

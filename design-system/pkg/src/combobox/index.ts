@@ -1,7 +1,12 @@
 'use client';
 
-export { Item } from 'react-stately/Item';
-export { Section } from 'react-stately/Section';
+export {
+  ListBoxItem as ComboboxItem,
+  ListBoxHeader as ComboboxHeader,
+  ListBoxLoadMoreItem as ComboboxLoadMoreItem,
+  ListBoxSection as ComboboxSection,
+} from '@keystar/ui/listbox';
+export { Collection as ComboboxCollection } from 'react-aria-components/Collection';
 
 export { Combobox } from './Combobox';
 export { ComboboxMulti } from './ComboboxMulti';

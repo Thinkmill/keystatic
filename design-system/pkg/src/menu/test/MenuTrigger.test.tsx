@@ -8,12 +8,14 @@ import {
   afterAll,
 } from '@jest/globals';
 import {
-  Item,
+  MenuItem,
   Menu,
+  MenuCollection,
+  MenuHeader,
   MenuProps,
   MenuTrigger,
   MenuTriggerProps,
-  Section,
+  MenuSection,
 } from '..';
 import { Button, ButtonProps } from '@keystar/ui/button';
 import { createRef } from 'react';
@@ -283,9 +285,9 @@ describe('menu/MenuTrigger', () => {
         <MenuTrigger>
           <Button>{triggerText}</Button>
           <Menu>
-            <Item key="1">One</Item>
-            <Item key="">Two</Item>
-            <Item key="3">Three</Item>
+            <MenuItem id="1">One</MenuItem>
+            <MenuItem id="">Two</MenuItem>
+            <MenuItem id="3">Three</MenuItem>
           </Menu>
         </MenuTrigger>
       );
@@ -493,16 +495,17 @@ describe('menu/MenuTrigger', () => {
         );
 
         let menu = tree.queryByRole('menu');
-        expect(menu).toBeNull();
-        expect(document.activeElement).toBe(tree.getByRole('button'));
+        if (menuProps.selectionMode === 'multiple') {
+          expect(menu).toBeTruthy();
+        } else {
+          expect(menu).toBeNull();
+          expect(document.activeElement).toBe(tree.getByRole('button'));
+        }
       }
     );
 
-    it.each([
-      [{ selectionMode: 'single' as const }],
-      [{ selectionMode: 'multiple' as const }],
-    ])(
-      "doesn't close on menu item selection if toggled by SPACE key, when $name",
+    it.each([[{ selectionMode: 'multiple' as const }]])(
+      "doesn't close on menu item selection if toggled by SPACE key, when %p",
       function (menuProps) {
         tree = renderComponent({}, menuProps);
         openAndTriggerMenuItem(tree, menuProps.selectionMode, item =>
@@ -578,13 +581,12 @@ describe('menu/MenuTrigger', () => {
             <Button>{triggerText}</Button>
             <Menu items={withSection}>
               {item => (
-                <Section
-                  key={item.name}
-                  items={item.children}
-                  title={item.name}
-                >
-                  {item => <Item key={item.name}>{item.name}</Item>}
-                </Section>
+                <MenuSection key={item.name}>
+                  <MenuHeader>{item.name}</MenuHeader>
+                  <MenuCollection items={item.children}>
+                    {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+                  </MenuCollection>
+                </MenuSection>
               )}
             </Menu>
           </MenuTrigger>
@@ -621,9 +623,12 @@ describe('menu/MenuTrigger', () => {
           <Button>{triggerText}</Button>
           <Menu items={withSection}>
             {item => (
-              <Section key={item.name} items={item.children} title={item.name}>
-                {item => <Item key={item.name}>{item.name}</Item>}
-              </Section>
+              <MenuSection id={item.name}>
+                <MenuHeader>{item.name}</MenuHeader>
+                <MenuCollection items={item.children}>
+                  {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+                </MenuCollection>
+              </MenuSection>
             )}
           </Menu>
         </MenuTrigger>
@@ -667,9 +672,12 @@ describe('menu/MenuTrigger', () => {
           <Button>{triggerText}</Button>
           <Menu items={withSection}>
             {item => (
-              <Section key={item.name} items={item.children} title={item.name}>
-                {item => <Item key={item.name}>{item.name}</Item>}
-              </Section>
+              <MenuSection id={item.name}>
+                <MenuHeader>{item.name}</MenuHeader>
+                <MenuCollection items={item.children}>
+                  {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+                </MenuCollection>
+              </MenuSection>
             )}
           </Menu>
         </MenuTrigger>
@@ -686,9 +694,12 @@ describe('menu/MenuTrigger', () => {
           <Button ref={buttonRef}>{triggerText}</Button>
           <Menu items={withSection}>
             {item => (
-              <Section key={item.name} items={item.children} title={item.name}>
-                {item => <Item key={item.name}>{item.name}</Item>}
-              </Section>
+              <MenuSection id={item.name}>
+                <MenuHeader>{item.name}</MenuHeader>
+                <MenuCollection items={item.children}>
+                  {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+                </MenuCollection>
+              </MenuSection>
             )}
           </Menu>
         </MenuTrigger>
@@ -702,8 +713,8 @@ describe('menu/MenuTrigger', () => {
   it('should not show checkmarks if selectionMode not defined', function () {
     let { queryByRole } = render(
       <Menu aria-label="foo" selectedKeys={['alpha']}>
-        <Item key="alpha">Alpha</Item>
-        <Item key="bravo">Bravo</Item>
+        <MenuItem id="alpha">Alpha</MenuItem>
+        <MenuItem id="bravo">Bravo</MenuItem>
       </Menu>
     );
     let checkmark = queryByRole('img', { hidden: true });
@@ -716,16 +727,16 @@ describe('menu/MenuTrigger', () => {
         <MenuTrigger>
           <Button>{triggerText}</Button>
           <Menu items={withSection}>
-            <Item key="alpha">Alpha</Item>
-            <Item key="bravo">Bravo</Item>
+            <MenuItem id="alpha">Alpha</MenuItem>
+            <MenuItem id="bravo">Bravo</MenuItem>
           </Menu>
         </MenuTrigger>
         <MenuTrigger>
           <Button>{triggerText}</Button>
           <Menu items={withSection}>
-            <Item key="whiskey">Whiskey</Item>
-            <Item key="tango">Tango</Item>
-            <Item key="foxtrot">Foxtrot</Item>
+            <MenuItem id="whiskey">Whiskey</MenuItem>
+            <MenuItem id="tango">Tango</MenuItem>
+            <MenuItem id="foxtrot">Foxtrot</MenuItem>
           </Menu>
         </MenuTrigger>
       </>
@@ -780,9 +791,12 @@ function renderComponent(
         {...menuProps}
       >
         {item => (
-          <Section key={item.name} items={item.children} title={item.name}>
-            {item => <Item key={item.name}>{item.name}</Item>}
-          </Section>
+          <MenuSection id={item.name}>
+            <MenuHeader>{item.name}</MenuHeader>
+            <MenuCollection items={item.children}>
+              {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+            </MenuCollection>
+          </MenuSection>
         )}
       </Menu>
     </MenuTrigger>

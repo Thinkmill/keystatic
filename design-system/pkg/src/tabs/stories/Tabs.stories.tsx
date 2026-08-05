@@ -9,7 +9,7 @@ import { tokenSchema } from '@keystar/ui/style';
 import { Heading, Text } from '@keystar/ui/typography';
 import { useState } from 'react';
 
-import { Item, TabList, TabPanels, Tabs, TabsProps } from '..';
+import { Tab, TabList, TabPanel, TabPanels, Tabs, TabsProps } from '..';
 
 let cupcakeIpsum =
   'Cupcake ipsum dolor sit amet cotton candy sweet donut caramels. Gummies wafer tiramisu jelly candy canes chocolate croissant. Sugar plum sugar plum biscuit cake croissant jujubes ice cream. Pudding ice cream chocolate bar sesame snaps biscuit.';
@@ -107,19 +107,19 @@ export const FocusablePanelChild = () => {
       onSelectionChange={action('onSelectionChange')}
     >
       <TabList>
-        <Item key="val1">Tab 1</Item>
-        <Item key="val2">Tab 2</Item>
+        <Tab id="val1">Tab 1</Tab>
+        <Tab id="val2">Tab 2</Tab>
       </TabList>
       <Divider />
       <TabPanels UNSAFE_style={panelStyle}>
-        <Item key="val1">
+        <TabPanel id="val1">
           <Heading id="heading-1">Tab 1</Heading>
           <input aria-labelledby="heading-1" />
-        </Item>
-        <Item key="val2">
+        </TabPanel>
+        <TabPanel id="val2">
           <Heading id="heading-2">Tab 2</Heading>
           <input aria-labelledby="heading-2" />
-        </Item>
+        </TabPanel>
       </TabPanels>
     </Tabs>
   );
@@ -145,12 +145,11 @@ export const DynamicComposition = () => {
     <div style={{ width: '80%' }}>
       <Tabs
         aria-label="Dynamic example"
-        items={tabs}
         onSelectionChange={action('onSelectionChange')}
       >
         <Flex alignItems="center" paddingX="large">
-          <TabList flex UNSAFE_style={{ overflow: 'hidden' }}>
-            {(item: TabItem) => <Item key={item.name}>{item.name}</Item>}
+          <TabList items={tabs} flex UNSAFE_style={{ overflow: 'hidden' }}>
+            {(item: TabItem) => <Tab id={item.name}>{item.name}</Tab>}
           </TabList>
 
           <Flex gap="regular">
@@ -159,6 +158,7 @@ export const DynamicComposition = () => {
           </Flex>
         </Flex>
         <TabPanels
+          items={tabs}
           UNSAFE_style={{
             backgroundColor: tokenSchema.color.background.surface,
             borderTop: `1px solid ${tokenSchema.color.border.neutral}`,
@@ -168,10 +168,10 @@ export const DynamicComposition = () => {
           }}
         >
           {(item: TabItem) => (
-            <Item key={item.name}>
+            <TabPanel id={item.name}>
               <Heading>{item.children}</Heading>
               <Text>{cupcakeIpsum}</Text>
-            </Item>
+            </TabPanel>
           )}
         </TabPanels>
       </Tabs>
@@ -183,7 +183,7 @@ DynamicComposition.story = {
   name: 'dynamic + composition',
 };
 
-function render<T>(props: Partial<TabsProps<T>> = {}) {
+function render(props: Partial<TabsProps> = {}) {
   let panelStyle = getPanelStyles(props);
   return (
     <Tabs
@@ -193,40 +193,40 @@ function render<T>(props: Partial<TabsProps<T>> = {}) {
       onSelectionChange={action('onSelectionChange')}
     >
       <TabList>
-        <Item key="val1">Tab 1</Item>
-        <Item key="val2">Tab 2</Item>
-        <Item key="val3">Tab 3 long label</Item>
-        <Item key="val4">Tab 4</Item>
-        <Item key="val5">Tab 5</Item>
+        <Tab id="val1">Tab 1</Tab>
+        <Tab id="val2">Tab 2</Tab>
+        <Tab id="val3">Tab 3 long label</Tab>
+        <Tab id="val4">Tab 4</Tab>
+        <Tab id="val5">Tab 5</Tab>
       </TabList>
       <Divider orientation={props.orientation} />
       <TabPanels UNSAFE_style={panelStyle}>
-        <Item key="val1">
+        <TabPanel id="val1">
           <Heading>Tab body 1</Heading>
           <Text>{cupcakeIpsum}</Text>
-        </Item>
-        <Item key="val2">
+        </TabPanel>
+        <TabPanel id="val2">
           <Heading>Tab body 2</Heading>
           <Text>{cupcakeIpsum}</Text>
-        </Item>
-        <Item key="val3">
+        </TabPanel>
+        <TabPanel id="val3">
           <Heading>Tab body 3</Heading>
           <Text>{cupcakeIpsum}</Text>
-        </Item>
-        <Item key="val4">
+        </TabPanel>
+        <TabPanel id="val4">
           <Heading>Tab body 4</Heading>
           <Text>{cupcakeIpsum}</Text>
-        </Item>
-        <Item key="val5">
+        </TabPanel>
+        <TabPanel id="val5">
           <Heading>Tab body 5</Heading>
           <Text>{cupcakeIpsum}</Text>
-        </Item>
+        </TabPanel>
       </TabPanels>
     </Tabs>
   );
 }
 
-function renderWithIcons<T>(props: Partial<TabsProps<T>> = {}) {
+function renderWithIcons(props: Partial<TabsProps> = {}) {
   let panelStyle = getPanelStyles(props);
   return (
     <Tabs
@@ -236,39 +236,39 @@ function renderWithIcons<T>(props: Partial<TabsProps<T>> = {}) {
       onSelectionChange={action('onSelectionChange')}
     >
       <TabList>
-        <Item key="dashboard">
+        <Tab id="dashboard">
           <Icon src={gaugeIcon} />
           <Text>Dashboard</Text>
-        </Item>
-        <Item key="calendar">
+        </Tab>
+        <Tab id="calendar">
           <Icon src={calendarIcon} />
           <Text>Calendar</Text>
-        </Item>
-        <Item key="bookmark">
+        </Tab>
+        <Tab id="bookmark">
           <Icon src={bookmarkIcon} />
           <Text>Bookmark</Text>
-        </Item>
+        </Tab>
       </TabList>
       <Divider orientation={props.orientation} />
       <TabPanels UNSAFE_style={panelStyle}>
-        <Item key="dashboard">
+        <TabPanel id="dashboard">
           <Heading>Dashboard</Heading>
           <Text>{cupcakeIpsum}</Text>
-        </Item>
-        <Item key="calendar">
+        </TabPanel>
+        <TabPanel id="calendar">
           <Heading>Calendar</Heading>
           <Text>{cupcakeIpsum}</Text>
-        </Item>
-        <Item key="bookmark">
+        </TabPanel>
+        <TabPanel id="bookmark">
           <Heading>Bookmark</Heading>
           <Text>{cupcakeIpsum}</Text>
-        </Item>
+        </TabPanel>
       </TabPanels>
     </Tabs>
   );
 }
 
-function getPanelStyles<T>(props: Partial<TabsProps<T>> = {}) {
+function getPanelStyles(props: Partial<TabsProps> = {}) {
   let padProp =
     props.orientation === 'vertical'
       ? 'paddingInlineStart'

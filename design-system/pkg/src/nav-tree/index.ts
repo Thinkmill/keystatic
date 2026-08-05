@@ -1,8 +1,16 @@
 'use client';
 
-export { Item } from 'react-stately/Item';
-export { Section } from 'react-stately/Section';
+export {
+  NavTree,
+  NavTreeHeader,
+  NavTreeItem,
+  NavTreeItemContent,
+  NavTreeSection,
+} from './NavTree';
+export { Collection as NavTreeCollection } from 'react-aria-components/Collection';
 
-export { NavTree } from './NavTree';
-
-export type { NavTreeProps } from './types';
+export type {
+  NavTreeItemProps,
+  NavTreeProps,
+  NavTreeSectionProps,
+} from './types';

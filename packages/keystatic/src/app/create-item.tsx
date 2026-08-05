@@ -55,7 +55,7 @@ import { setValueToPreviewProps } from '../form/get-value';
 import { copyEntryToClipboard, getPastedEntry } from './entry-clipboard';
 import { clipboardCopyIcon } from '@keystar/ui/icon/icons/clipboardCopyIcon';
 import { clipboardPasteIcon } from '@keystar/ui/icon/icons/clipboardPasteIcon';
-import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionGroup, ActionGroupItem } from '@keystar/ui/action-group';
 import { Text } from '@keystar/ui/typography';
 import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
 
@@ -541,10 +541,10 @@ function CreateItemInner(props: {
             }}
           >
             {item => (
-              <Item key={item.key} textValue={item.label}>
+              <ActionGroupItem id={item.key} textValue={item.label}>
                 <Icon src={item.icon} />
                 <Text>{item.label}</Text>
-              </Item>
+              </ActionGroupItem>
             )}
           </ActionGroup>
           <Button

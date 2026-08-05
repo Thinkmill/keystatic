@@ -13,9 +13,9 @@ popover to improve usability.
 
 ```jsx {% live=true %}
 <Combobox label="Density">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <ComboboxItem id="compact">Compact</ComboboxItem>
+  <ComboboxItem id="regular">Regular</ComboboxItem>
+  <ComboboxItem id="spacious">Spacious</ComboboxItem>
 </Combobox>
 ```
 
@@ -23,9 +23,9 @@ popover to improve usability.
 
 ### Collections
 
-Combobox implements `react-stately`
-[collection components](https://react-spectrum.adobe.com/react-stately/collections.html),
-`<Item>` and `<Section>`.
+Combobox implements `react-aria-components`
+[collection components](https://react-spectrum.adobe.com/react-aria-components/collections.html),
+`<ComboboxItem>` and `<ComboboxSection>`.
 
 Static collections, seen in the example above, can be used when the full list of
 options is known ahead of time.
@@ -49,7 +49,7 @@ let [animalId, setAnimalId] = React.useState();
 return (
   <Flex direction="column" gap="large">
     <Combobox label="Animal" items={options} onSelectionChange={setAnimalId}>
-      {item => <Item>{item.name}</Item>}
+      {item => <ComboboxItem>{item.name}</ComboboxItem>}
     </Combobox>
     <Text>Selected ID: {animalId}</Text>
   </Flex>
@@ -67,27 +67,28 @@ then this is _used automatically and a **key prop is not required**_.
 
 #### Sections
 
-Use the `<Section>` component to group related items. Each `Section` takes a
-`title` and `key` prop.
+Use `<ComboboxSection>` with an explicit `<ComboboxHeader>` to group
+related items.
 
 ```jsx {% live=true %}
 <Combobox label="Animal">
-  <Section title="Marsupials">
-    <Item key="Bilby">Bilby</Item>
-    <Item key="Kangaroo">Kangaroo</Item>
-    <Item key="Quokka">Quokka</Item>
-  </Section>
-  <Section title="Other">
-    <Item key="Echidna">Echidna</Item>
-    <Item key="Dingo">Dingo</Item>
-    <Item key="Cassowary">Cassowary</Item>
-  </Section>
+  <ComboboxSection>
+    <ComboboxHeader>Marsupials</ComboboxHeader>
+    <ComboboxItem id="Bilby">Bilby</ComboboxItem>
+    <ComboboxItem id="Kangaroo">Kangaroo</ComboboxItem>
+    <ComboboxItem id="Quokka">Quokka</ComboboxItem>
+  </ComboboxSection>
+  <ComboboxSection>
+    <ComboboxHeader>Other</ComboboxHeader>
+    <ComboboxItem id="Echidna">Echidna</ComboboxItem>
+    <ComboboxItem id="Dingo">Dingo</ComboboxItem>
+    <ComboboxItem id="Cassowary">Cassowary</ComboboxItem>
+  </ComboboxSection>
 </Combobox>
 ```
 
-Sections used with dynamic items are populated from a hierarchical data
-structure. Similar to the combobox itself, `Section` takes an array of data
-using the `items` prop.
+Sections used with dynamic items are populated with an explicit
+`<ComboboxCollection>`.
 
 ```jsx {% live=true %}
 let items = [
@@ -116,9 +117,12 @@ return (
     onSelectionChange={selected => alert(selected)}
   >
     {item => (
-      <Section key={item.name} items={item.children} title={item.name}>
-        {item => <Item>{item.name}</Item>}
-      </Section>
+      <ComboboxSection id={item.name}>
+        <ComboboxHeader>{item.name}</ComboboxHeader>
+        <ComboboxCollection items={item.children}>
+          {item => <ComboboxItem>{item.name}</ComboboxItem>}
+        </ComboboxCollection>
+      </ComboboxSection>
     )}
   </Combobox>
 );
@@ -130,8 +134,8 @@ Setting a selected item can be done by using the `defaultSelectedKey` or
 `selectedKey` prop. The selected key corresponds to the key of an item, where
 `"id"` is used by default.
 
-See the `react-stately`
-[selection docs](https://react-spectrum.adobe.com/react-stately/selection.html#selected-key-data-type)
+See the `react-aria-components`
+[selection docs](https://react-spectrum.adobe.com/react-aria-components/selection.html#selected-key-data-type)
 for more information.
 
 #### Controlled
@@ -158,7 +162,7 @@ return (
     selectedKey={animal}
     onSelectionChange={setAnimal}
   >
-    {item => <Item key={item.name}>{item.name}</Item>}
+    {item => <ComboboxItem id={item.name}>{item.name}</ComboboxItem>}
   </Combobox>
 );
 ```
@@ -179,7 +183,7 @@ let items = [
 
 return (
   <Combobox label="Animal" items={items} defaultSelectedKey="Quokka">
-    {item => <Item key={item.name}>{item.name}</Item>}
+    {item => <ComboboxItem id={item.name}>{item.name}</ComboboxItem>}
   </Combobox>
 );
 ```
@@ -193,21 +197,21 @@ the prop `slot="description"` must be used to distinguish it from the primary
 
 ```jsx {% live=true %}
 <Combobox label="Permissions">
-  <Item textValue="Read">
+  <ComboboxItem textValue="Read">
     <Icon src={eyeIcon} />
     <Text>Read</Text>
     <Text slot="description">Read only</Text>
-  </Item>
-  <Item textValue="Write">
+  </ComboboxItem>
+  <ComboboxItem textValue="Write">
     <Icon src={editIcon} />
     <Text>Write</Text>
     <Text slot="description">Read and write</Text>
-  </Item>
-  <Item textValue="Admin">
+  </ComboboxItem>
+  <ComboboxItem textValue="Admin">
     <Icon src={userCheckIcon} />
     <Text>Admin</Text>
     <Text slot="description">Unrestricted access</Text>
-  </Item>
+  </ComboboxItem>
 </Combobox>
 ```
 
@@ -225,9 +229,9 @@ accessibility.
 
 ```jsx {% live=true %}
 <Combobox aria-label="Density">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <ComboboxItem id="compact">Compact</ComboboxItem>
+  <ComboboxItem id="regular">Regular</ComboboxItem>
+  <ComboboxItem id="spacious">Spacious</ComboboxItem>
 </Combobox>
 ```
 
@@ -238,9 +242,9 @@ available.
 
 ```jsx {% live=true %}
 <Combobox aria-label="Density" isDisabled>
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <ComboboxItem id="compact">Compact</ComboboxItem>
+  <ComboboxItem id="regular">Regular</ComboboxItem>
+  <ComboboxItem id="spacious">Spacious</ComboboxItem>
 </Combobox>
 ```
 
@@ -248,9 +252,9 @@ You can also provide `disabledKeys` to limit [selection](#selection).
 
 ```jsx {% live=true %}
 <Combobox aria-label="Density" disabledKeys={['spacious']}>
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <ComboboxItem id="compact">Compact</ComboboxItem>
+  <ComboboxItem id="regular">Regular</ComboboxItem>
+  <ComboboxItem id="spacious">Spacious</ComboboxItem>
 </Combobox>
 ```
 
@@ -261,9 +265,9 @@ field remains focusable and the contents can still be copied.
 
 ```jsx {% live=true %}
 <Combobox aria-label="Density" isReadOnly selectedKey="compact">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <ComboboxItem id="compact">Compact</ComboboxItem>
+  <ComboboxItem id="regular">Regular</ComboboxItem>
+  <ComboboxItem id="spacious">Spacious</ComboboxItem>
 </Combobox>
 ```
 
@@ -273,9 +277,9 @@ A combobox can be marked as required by setting the `isRequired` prop.
 
 ```jsx {% live=true %}
 <Combobox label="Default currency" isRequired>
-  <Item key="AUD">Australian dollar</Item>
-  <Item key="GBP">British pound</Item>
-  <Item key="JPY">Japanese yen</Item>
+  <ComboboxItem id="AUD">Australian dollar</ComboboxItem>
+  <ComboboxItem id="GBP">British pound</ComboboxItem>
+  <ComboboxItem id="JPY">Japanese yen</ComboboxItem>
 </Combobox>
 ```
 
@@ -289,9 +293,9 @@ requirements for what to choose.
   label="Default currency"
   description="Products without an ISO currency code will default to this currency."
 >
-  <Item key="AUD">Australian dollar</Item>
-  <Item key="GBP">British pound</Item>
-  <Item key="JPY">Japanese yen</Item>
+  <ComboboxItem id="AUD">Australian dollar</ComboboxItem>
+  <ComboboxItem id="GBP">British pound</ComboboxItem>
+  <ComboboxItem id="JPY">Japanese yen</ComboboxItem>
 </Combobox>
 ```
 
@@ -307,9 +311,9 @@ met, prompting the user to adjust what they had originally selected.
   isRequired
   selectedKey={null}
 >
-  <Item key="AUD">Australian dollar</Item>
-  <Item key="GBP">British pound</Item>
-  <Item key="JPY">Japanese yen</Item>
+  <ComboboxItem id="AUD">Australian dollar</ComboboxItem>
+  <ComboboxItem id="GBP">British pound</ComboboxItem>
+  <ComboboxItem id="JPY">Japanese yen</ComboboxItem>
 </Combobox>
 ```
 
@@ -319,9 +323,9 @@ The menu will assume the `width` of the invoking trigger.
 
 ```jsx {% live=true %}
 <Combobox label="Density" width="auto">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <ComboboxItem id="compact">Compact</ComboboxItem>
+  <ComboboxItem id="regular">Regular</ComboboxItem>
+  <ComboboxItem id="spacious">Spacious</ComboboxItem>
 </Combobox>
 ```
 
@@ -333,8 +337,9 @@ should always render above.
 
 ```jsx {% live=true %}
 <Combobox label="Density" direction="top">
-  <Item key="compact">Compact</Item>
-  <Item key="regular">Regular</Item>
-  <Item key="spacious">Spacious</Item>
+  <ComboboxItem id="compact">Compact</ComboboxItem>
+  <ComboboxItem id="regular">Regular</ComboboxItem>
+  <ComboboxItem id="spacious">Spacious</ComboboxItem>
 </Combobox>
 ```
+

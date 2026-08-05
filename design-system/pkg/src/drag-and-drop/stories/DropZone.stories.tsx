@@ -11,7 +11,7 @@ import { Text } from '@keystar/ui/typography';
 import { DropZone, FileDropItem, isFileDropItem } from '../index';
 import { FileTrigger } from '../FileTrigger';
 import { Image } from '@keystar/ui/image';
-import { ListView, Item } from '@keystar/ui/list-view';
+import { ListView, ListViewItem } from '@keystar/ui/list-view';
 
 export default {
   title: 'Components/DropZone',
@@ -221,10 +221,10 @@ export const RenderingContent = () => {
         )}
       >
         {item => (
-          <Item key={item.src} textValue={item.name}>
+          <ListViewItem id={item.src} textValue={item.name}>
             <Image src={item.src} alt="" aspectRatio="1" />
             <Text>{item.name}</Text>
-          </Item>
+          </ListViewItem>
         )}
       </ListView>
     </VStack>

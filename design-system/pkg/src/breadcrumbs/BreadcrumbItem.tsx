@@ -1,27 +1,29 @@
-import { useBreadcrumbItem } from 'react-aria/useBreadcrumbs';
+import {
+  Breadcrumb as AriaBreadcrumb,
+  type BreadcrumbRenderProps,
+} from 'react-aria-components/Breadcrumbs';
+import { Link } from 'react-aria-components/Link';
 import { useLocale } from 'react-aria/I18nProvider';
-import { useHover } from 'react-aria/useHover';
-import { mergeProps } from 'react-aria/mergeProps';
-import React, { Fragment, useMemo, useRef, ElementType } from 'react';
+import {
+  type ForwardedRef,
+  type ReactNode,
+  forwardRef,
+  useContext,
+} from 'react';
 
 import { Icon } from '@keystar/ui/icon';
-import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
 import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
+import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
 import {
   ClassList,
-  FocusRing,
   classNames,
   css,
-  toDataAttributes,
   tokenSchema,
+  useStyleProps,
 } from '@keystar/ui/style';
 
-import { BreadcrumbItemProps as _BreadcrumbItemProps } from './types';
-
-type BreadcrumbItemProps = _BreadcrumbItemProps & {
-  /** @private internal prop for distinguishing link behaviour. */
-  isMenu?: boolean;
-};
+import { BreadcrumbsStyleContext } from './context';
+import type { BreadcrumbItemProps } from './types';
 
 export const breadcrumbsClassList = new ClassList('Breadcrumbs', [
   'item',
@@ -30,106 +32,94 @@ export const breadcrumbsClassList = new ClassList('Breadcrumbs', [
   'separator',
 ]);
 
-export function BreadcrumbItem(props: BreadcrumbItemProps) {
-  let { children, isCurrent, isDisabled, isMenu, size = 'regular' } = props;
-  let { href, ...propsWithoutHref } = props;
-
+function BreadcrumbItemImpl(
+  props: BreadcrumbItemProps,
+  forwardedRef: ForwardedRef<HTMLLIElement>
+) {
+  let { children, href, size: sizeProp, ...otherProps } = props;
+  let { size: contextSize } = useContext(BreadcrumbsStyleContext);
+  let size = sizeProp ?? contextSize;
   let { direction } = useLocale();
-  let ref = useRef(null);
-  let ElementType: ElementType = href ? 'a' : 'span';
-  let { itemProps } = useBreadcrumbItem(
-    {
-      ...propsWithoutHref,
-      ...(href ? { href } : {}),
-      elementType: ElementType,
-    },
-    ref
-  );
-  let { hoverProps, isHovered } = useHover(props);
-  let icon = useMemo(() => {
-    return direction === 'rtl' ? chevronLeftIcon : chevronRightIcon;
-  }, [direction]);
-
-  // if this item contains a menu button, then it shouldn't be a link
-  if (isMenu) {
-    itemProps = {};
-  }
-
+  let styleProps = useStyleProps(props);
   return (
-    <Fragment>
-      <FocusRing>
-        <ElementType
-          {...mergeProps(itemProps, hoverProps)}
-          {...toDataAttributes({
-            size: size !== 'regular' ? size : undefined,
-            interaction: isHovered ? 'hover' : undefined,
-          })}
-          ref={ref}
-          className={classNames(
-            breadcrumbsClassList.element('link'),
-            css({
-              color: tokenSchema.color.foreground.neutral,
-              cursor: 'default',
-              fontSize: tokenSchema.typography.text.regular.size,
-              fontFamily: tokenSchema.typography.fontFamily.base,
-              fontWeight: tokenSchema.typography.fontWeight.medium,
-              outline: 0,
-              MozOsxFontSmoothing: 'auto',
-              WebkitFontSmoothing: 'auto',
-
-              '&[data-size=small]': {
-                fontSize: tokenSchema.typography.text.small.size,
-              },
-              '&[data-size=medium]': {
-                fontSize: tokenSchema.typography.text.medium.size,
-              },
-              '&[data-size=large]': {
-                fontSize: tokenSchema.typography.text.large.size,
-              },
-
-              '&:not([aria-current=page])': {
-                '&:not([aria-disabled=true])': {
-                  cursor: 'pointer',
+    <AriaBreadcrumb
+      {...otherProps}
+      {...styleProps}
+      ref={forwardedRef}
+      className={classNames(
+        breadcrumbsClassList.element('item'),
+        css({
+          alignItems: 'center',
+          display: 'inline-flex',
+          minWidth: 0,
+          whiteSpace: 'nowrap',
+          '&[data-current]': { overflow: 'hidden' },
+        }),
+        styleProps.className
+      )}
+    >
+      {states => (
+        <>
+          <Link
+            href={states.isCurrent ? undefined : href}
+            className={classNames(
+              breadcrumbsClassList.element('link'),
+              css({
+                color: tokenSchema.color.foreground.neutral,
+                cursor: 'pointer',
+                fontFamily: tokenSchema.typography.fontFamily.base,
+                fontSize: tokenSchema.typography.text.regular.size,
+                fontWeight: tokenSchema.typography.fontWeight.medium,
+                outline: 0,
+                '&[data-size=small]': {
+                  fontSize: tokenSchema.typography.text.small.size,
                 },
-
-                '&[data-interaction=hover]': {
-                  color: tokenSchema.color.foreground.neutralEmphasis,
-                  textDecoration: 'underline',
+                '&[data-size=medium]': {
+                  fontSize: tokenSchema.typography.text.medium.size,
                 },
-                '&[data-focus=visible]': {
-                  color: tokenSchema.color.foreground.neutralEmphasis,
-                  textDecoration: 'underline',
-                  textDecorationStyle: 'double',
+                '&[data-size=large]': {
+                  fontSize: tokenSchema.typography.text.large.size,
                 },
-                '&[aria-disabled=true]': {
+                '[data-current] &': {
+                  cursor: 'default',
+                  fontWeight: tokenSchema.typography.fontWeight.semibold,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
+                '[data-disabled] &': {
                   color: tokenSchema.color.alias.foregroundDisabled,
                 },
-              },
-              '&[aria-current=page]': {
-                color: tokenSchema.color.foreground.neutralEmphasis,
-                fontWeight: tokenSchema.typography.fontWeight.semibold,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              },
-            }),
-            {
-              'is-hovered': isHovered,
-            }
+              })
+            )}
+            data-size={size === 'regular' ? undefined : size}
+          >
+            {resolveChildren(children, states)}
+          </Link>
+          {!states.isCurrent && (
+            <Icon
+              src={direction === 'rtl' ? chevronLeftIcon : chevronRightIcon}
+              color={
+                states.isDisabled
+                  ? 'color.alias.foregroundDisabled'
+                  : 'neutralSecondary'
+              }
+              marginX="small"
+              UNSAFE_className={breadcrumbsClassList.element('separator')}
+            />
           )}
-        >
-          {children}
-        </ElementType>
-      </FocusRing>
-      {!isCurrent && (
-        <Icon
-          src={icon}
-          color={
-            isDisabled ? 'color.alias.foregroundDisabled' : 'neutralSecondary'
-          }
-          marginX="small"
-          UNSAFE_className={breadcrumbsClassList.element('separator')}
-        />
+        </>
       )}
-    </Fragment>
+    </AriaBreadcrumb>
   );
+}
+
+export const BreadcrumbItem = forwardRef(BreadcrumbItemImpl);
+
+function resolveChildren(
+  children: BreadcrumbItemProps['children'],
+  states: BreadcrumbRenderProps
+): ReactNode {
+  return typeof children === 'function'
+    ? (children as (states: BreadcrumbRenderProps) => ReactNode)(states)
+    : children;
 }

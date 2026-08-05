@@ -1,6 +1,6 @@
 import { action } from '@keystar/ui-storybook';
-import { Key } from '@react-types/shared';
-import { ReactElement, useEffect, useRef } from 'react';
+import type { Key } from '@react-types/shared';
+import { ReactElement, ReactNode } from 'react';
 
 import { Icon } from '@keystar/ui/icon';
 import { fileCodeIcon } from '@keystar/ui/icon/icons/fileCodeIcon';
@@ -18,7 +18,15 @@ import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { separatorHorizontalIcon } from '@keystar/ui/icon/icons/separatorHorizontalIcon';
 import { Kbd, KbdProps, Text } from '@keystar/ui/typography';
 
-import { EditorListbox, Item, Section } from '..';
+import {
+  EditorAutocomplete,
+  EditorListbox,
+  EditorListboxCollection,
+  EditorListboxHeader,
+  EditorListboxItem,
+  EditorListboxSection,
+  useEditorAutocompleteInputProps,
+} from '..';
 
 type KbdOption = 'alt' | 'meta' | 'shift';
 type KbdOptions = KbdOption[];
@@ -44,7 +52,7 @@ let basicItems = [
 ];
 let manyItems: any[] = [];
 for (let i = 0; i < 50; i++) {
-  manyItems.push({ label: 'Item ' + i, id: i });
+  manyItems.push({ label: 'EditorListboxItem ' + i, id: i });
 }
 
 export default {
@@ -52,16 +60,16 @@ export default {
 };
 
 export const Default = () => {
-  let listenerRef = useListenerRef();
   return (
-    <EditorListbox
-      aria-label="default example"
-      items={basicItems}
-      children={childRenderer}
-      listenerRef={listenerRef}
-      width="alias.singleLineWidth"
-      onAction={action('onAction')}
-    />
+    <EditorListboxExample>
+      <EditorListbox
+        aria-label="default example"
+        items={basicItems}
+        children={childRenderer}
+        width="alias.singleLineWidth"
+        onAction={action('onAction')}
+      />
+    </EditorListboxExample>
   );
 };
 
@@ -70,17 +78,17 @@ Default.story = {
 };
 
 export const ManyItems = () => {
-  let listenerRef = useListenerRef();
   return (
-    <EditorListbox
-      aria-label="many items example"
-      items={manyItems}
-      children={childRenderer}
-      listenerRef={listenerRef}
-      selectionMode="multiple"
-      width="alias.singleLineWidth"
-      height="alias.singleLineWidth"
-    />
+    <EditorListboxExample>
+      <EditorListbox
+        aria-label="many items example"
+        items={manyItems}
+        children={childRenderer}
+        selectionMode="multiple"
+        width="alias.singleLineWidth"
+        height="alias.singleLineWidth"
+      />
+    </EditorListboxExample>
   );
 };
 
@@ -89,19 +97,22 @@ ManyItems.story = {
 };
 
 export const ComplexItems = () => {
-  let listenerRef = useListenerRef();
   return (
-    <EditorListbox
-      aria-label="complex items example"
-      items={complexItems}
-      children={section => (
-        <Section key={section.id} aria-label={section.label}>
-          {section.children.map(childRenderer)}
-        </Section>
-      )}
-      listenerRef={listenerRef}
-      width="container.xsmall"
-    />
+    <EditorListboxExample>
+      <EditorListbox
+        aria-label="complex items example"
+        items={complexItems}
+        children={section => (
+          <EditorListboxSection id={section.id}>
+            <EditorListboxHeader>{section.label}</EditorListboxHeader>
+            <EditorListboxCollection items={section.children}>
+              {childRenderer}
+            </EditorListboxCollection>
+          </EditorListboxSection>
+        )}
+        width="container.xsmall"
+      />
+    </EditorListboxExample>
   );
 };
 
@@ -112,22 +123,30 @@ ComplexItems.story = {
 // Utils
 // -----------------------------------------------------------------------------
 
-function useListenerRef() {
-  let listenerRef = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    listenerRef.current = document.documentElement;
-  }, []);
-  return listenerRef;
+function EditorListboxExample({ children }: { children: ReactNode }) {
+  return (
+    <EditorAutocomplete>
+      <EditorInput />
+      {children}
+    </EditorAutocomplete>
+  );
+}
+
+function EditorInput() {
+  let inputProps = useEditorAutocompleteInputProps();
+  return (
+    <div {...inputProps} aria-label="Editor" contentEditable role="textbox" />
+  );
 }
 
 function childRenderer(item: ItemType) {
   return (
-    <Item key={item.id} textValue={item.label}>
+    <EditorListboxItem id={item.id} textValue={item.label}>
       <Text>{item.label}</Text>
       {item.description && <Text slot="description">{item.description}</Text>}
       {item.kbd && <Kbd {...getKbdProps(item.kbd)} />}
       {item.icon && <Icon src={item.icon} />}
-    </Item>
+    </EditorListboxItem>
   );
 }
 function getKbdProps(format: KbdFormat) {

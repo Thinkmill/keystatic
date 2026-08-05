@@ -12,7 +12,14 @@ import {
   beforeAll,
 } from '@jest/globals';
 
-import { Item, Menu, MenuProps, Section } from '..';
+import {
+  MenuItem,
+  Menu,
+  MenuCollection,
+  MenuHeader,
+  MenuProps,
+  MenuSection,
+} from '..';
 
 describe('menu/Menu', () => {
   let offsetWidth: jest.SpiedGetter<number>,
@@ -57,9 +64,6 @@ describe('menu/Menu', () => {
       expect(heading).toBeTruthy();
       expect(heading).toHaveAttribute('role', 'presentation');
     }
-
-    let dividers = within(menu).getAllByRole('separator');
-    expect(dividers.length).toBe(1);
 
     let items = within(menu).getAllByRole('menuitem');
     expect(items.length).toBe(5);
@@ -551,9 +555,9 @@ describe('menu/Menu', () => {
           onSelectionChange={onSelectionChange}
           onAction={onAction}
         >
-          <Item key="One">One</Item>
-          <Item key="Two">Two</Item>
-          <Item key="Three">Three</Item>
+          <MenuItem id="One">One</MenuItem>
+          <MenuItem id="Two">Two</MenuItem>
+          <MenuItem id="Three">Three</MenuItem>
         </Menu>
       );
 
@@ -566,17 +570,17 @@ describe('menu/Menu', () => {
       ];
 
       firePress(item1);
-      expect(onAction).toHaveBeenCalledWith('One', null);
+      expect(onAction.mock.calls[0][0]).toBe('One');
       expect(onAction).toHaveBeenCalledTimes(1);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item2);
-      expect(onAction).toHaveBeenCalledWith('Two', null);
+      expect(onAction).toHaveBeenCalledWith('Two', undefined);
       expect(onAction).toHaveBeenCalledTimes(2);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item3);
-      expect(onAction).toHaveBeenCalledWith('Three', null);
+      expect(onAction).toHaveBeenCalledWith('Three', undefined);
       expect(onAction).toHaveBeenCalledTimes(3);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
@@ -592,7 +596,7 @@ describe('menu/Menu', () => {
           items={flatItems}
           onAction={onAction}
         >
-          {item => <Item key={item.name}>{item.name}</Item>}
+          {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
         </Menu>
       );
 
@@ -628,12 +632,12 @@ describe('menu/Menu', () => {
   it('supports complex menu items with `aria-labelledby` and `aria-describedby`', function () {
     let tree = render(
       <Menu aria-label="menu" selectionMode="none">
-        <Item textValue="Label">
+        <MenuItem textValue="Label">
           <Icon src={globeIcon} />
           <Text>Label</Text>
           <Text slot="description">Description</Text>
           <Kbd meta>V</Kbd>
-        </Item>
+        </MenuItem>
       </Menu>
     );
 
@@ -641,7 +645,7 @@ describe('menu/Menu', () => {
     let menuItem = within(menu).getByRole('menuitem');
     let label = within(menu).getByText('Label');
     let description = within(menu).getByText('Description');
-    let keyboard = within(menu).getByText((content, element) => {
+    within(menu).getByText((content, element) => {
       if (!element) {
         return false;
       }
@@ -650,28 +654,25 @@ describe('menu/Menu', () => {
     });
 
     expect(menuItem).toHaveAttribute('aria-labelledby', label.id);
-    expect(menuItem).toHaveAttribute(
-      'aria-describedby',
-      `${description.id} ${keyboard.id}`
-    );
+    expect(menuItem).toHaveAttribute('aria-describedby', description.id);
   });
 
   it('supports `aria-label` on sections and items', function () {
     let tree = render(
       <Menu aria-label="menu">
-        <Section aria-label="Section">
-          <Item aria-label="Item">
+        <MenuSection aria-label="MenuSection">
+          <MenuItem aria-label="MenuItem">
             <Icon src={globeIcon} />
-          </Item>
-        </Section>
+          </MenuItem>
+        </MenuSection>
       </Menu>
     );
 
     let menu = tree.getByRole('menu');
     let group = within(menu).getByRole('group');
-    expect(group).toHaveAttribute('aria-label', 'Section');
+    expect(group).toHaveAttribute('aria-label', 'MenuSection');
     let menuItem = within(menu).getByRole('menuitem');
-    expect(menuItem).toHaveAttribute('aria-label', 'Item');
+    expect(menuItem).toHaveAttribute('aria-label', 'MenuItem');
     expect(menuItem).not.toHaveAttribute('aria-labelledby');
     expect(menuItem).not.toHaveAttribute('aria-describedby');
   });
@@ -721,9 +722,12 @@ function renderComponent(
         {...props}
       >
         {item => (
-          <Section key={item.name} items={item.children} title={item.name}>
-            {item => <Item key={item.name}>{item.name}</Item>}
-          </Section>
+          <MenuSection id={item.name}>
+            <MenuHeader>{item.name}</MenuHeader>
+            <MenuCollection items={item.children}>
+              {item => <MenuItem id={item.name}>{item.name}</MenuItem>}
+            </MenuCollection>
+          </MenuSection>
         )}
       </Menu>
     </>

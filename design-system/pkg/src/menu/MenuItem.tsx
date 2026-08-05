@@ -1,72 +1,95 @@
-import { useFocusRing } from 'react-aria/useFocusRing';
-import { useHover } from 'react-aria/useHover';
-import { useMenuItem } from 'react-aria/useMenu';
-import { mergeProps } from 'react-aria/mergeProps';
-import { TreeState } from 'react-stately/useTreeState';
-import { Node } from '@react-types/shared';
-import { useRef } from 'react';
+import {
+  MenuItem as AriaMenuItem,
+  type MenuItemProps as AriaMenuItemProps,
+  type MenuItemRenderProps,
+} from 'react-aria-components/Menu';
+import {
+  Children,
+  type ForwardedRef,
+  type ReactElement,
+  type ReactNode,
+  forwardRef,
+  isValidElement,
+} from 'react';
+import { Text as AriaText } from 'react-aria-components/Text';
 
 import { ListItem } from '@keystar/ui/listbox';
-import { Text } from '@keystar/ui/typography';
+import type { BaseStyleProps } from '@keystar/ui/style';
+import { Kbd, Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
-import { useMenuContext } from './context';
+export interface MenuItemProps<T = object>
+  extends Omit<AriaMenuItemProps<T>, 'className' | 'style'>,
+    BaseStyleProps {}
 
-type MenuItemProps<T> = {
-  item: Node<T>;
-  state: TreeState<T>;
-  isVirtualized?: boolean;
-};
-
-/** @private */
-export function MenuItem<T>(props: MenuItemProps<T>) {
-  let { item, state, isVirtualized } = props;
-  let { onClose, closeOnSelect } = useMenuContext();
-
-  let { rendered, key } = item;
-
-  let isSelected = state.selectionManager.isSelected(key);
-  let isDisabled = state.selectionManager.isDisabled(key);
-
-  let ref = useRef<HTMLLIElement>(null);
-  let { menuItemProps, labelProps, descriptionProps, keyboardShortcutProps } =
-    useMenuItem(
-      {
-        isSelected,
-        isDisabled,
-        'aria-label': item['aria-label'],
-        key,
-        onClose,
-        closeOnSelect,
-        isVirtualized,
-      },
-      state,
-      ref
-    );
-  let { hoverProps, isHovered } = useHover({ isDisabled });
-  let { focusProps, isFocusVisible } = useFocusRing();
-
-  let contents = isReactText(rendered) ? <Text>{rendered}</Text> : rendered;
-  // NOTE: Support for `disabledBehavior` is not yet implemented in react-aria.
-  let role =
-    state.selectionManager.disabledBehavior === 'selection' &&
-    state.disabledKeys.has(key)
-      ? 'menuitem'
-      : undefined;
-
+function MenuItem<T extends object>(
+  props: MenuItemProps<T>,
+  forwardedRef: ForwardedRef<HTMLDivElement>
+) {
+  let { children, ...otherProps } = props;
   return (
-    <ListItem
-      {...mergeProps(menuItemProps, { role }, hoverProps, focusProps)}
-      elementType={item.props.href ? 'a' : 'div'}
-      descriptionProps={descriptionProps}
-      keyboardShortcutProps={keyboardShortcutProps}
-      labelProps={labelProps}
-      isHovered={isHovered}
-      isFocused={isFocusVisible}
-      isSelected={isSelected}
-      ref={ref}
+    <AriaMenuItem
+      {...otherProps}
+      ref={forwardedRef}
+      textValue={
+        otherProps.textValue ??
+        (isReactText(children) ? String(children) : undefined)
+      }
     >
-      {contents}
-    </ListItem>
+      {states => {
+        let content = resolveChildren(children, states);
+        return (
+          <ListItem
+            aria-disabled={states.isDisabled}
+            isHovered={states.isHovered}
+            isFocused={states.isFocusVisible}
+            isSelected={states.isSelected}
+          >
+            {wrapItemContent(content)}
+          </ListItem>
+        );
+      }}
+    </AriaMenuItem>
   );
+}
+
+type TextChildProps = React.ComponentProps<typeof Text>;
+type KbdChildProps = React.ComponentProps<typeof Kbd>;
+
+function wrapItemContent(children: ReactNode): ReactNode {
+  if (isReactText(children)) return <Text>{children}</Text>;
+
+  return Children.map(children, child => {
+    if (isValidElement<TextChildProps>(child) && child.type === Text) {
+      let { children, slot, ...textProps } = child.props;
+      return (
+        <AriaText
+          slot={slot === 'description' ? 'description' : 'label'}
+          render={({ className: _, ...domProps }) => (
+            <Text {...textProps} {...domProps} slot={slot} />
+          )}
+        >
+          {children}
+        </AriaText>
+      );
+    }
+    if (isValidElement<KbdChildProps>(child) && child.type === Kbd) {
+      return child;
+    }
+    return child;
+  });
+}
+
+const _MenuItem = forwardRef(MenuItem) as <T extends object = object>(
+  props: MenuItemProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
+) => ReactElement;
+export { _MenuItem as MenuItem };
+
+function resolveChildren(
+  children: AriaMenuItemProps<object>['children'],
+  states: MenuItemRenderProps
+): ReactNode {
+  return typeof children === 'function'
+    ? (children as (states: MenuItemRenderProps) => ReactNode)(states)
+    : children;
 }
