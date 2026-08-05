@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
-export const runtime = 'edge';
-
 export async function POST(req: Request): Promise<Response> {
   if (req.headers.get('origin') !== new URL(req.url).origin) {
     return new Response('Invalid origin', { status: 400 });

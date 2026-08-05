@@ -1,8 +1,9 @@
-import withPreconstruct from '@preconstruct/next';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+
+initOpenNextCloudflareForDev();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
   serverExternalPackages: ['esbuild'],
   experimental: {
@@ -10,4 +11,4 @@ const nextConfig = {
   },
 };
 
-export default withPreconstruct(nextConfig);
+export default nextConfig;

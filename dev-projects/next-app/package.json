@@ -4,28 +4,30 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "cd ../.. && pnpm preconstruct build && cd dev-projects/next-app && next build",
+    "build": "next build",
+    "cloudflare:build": "opennextjs-cloudflare build",
+    "cloudflare:preview": "pnpm cloudflare:build && opennextjs-cloudflare preview",
     "dev": "next dev",
     "start": "next start"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@cloudflare/next-on-pages": "^1.11.0",
     "@keystar/ui": "workspace:*",
     "@keystatic/core": "workspace:^",
     "@keystatic/next": "workspace:^",
-    "@preconstruct/next": "^4.0.0",
-    "@types/react": "^19.0.8",
+    "@types/react": "^19.2.18",
     "graphql": "^16.6.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "vercel": "^33.6.3"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.2",
     "@ts-gql/compiler": "^0.16.7",
     "@ts-gql/next": "^17.0.1",
-    "next": "~15.1.10",
+    "next": "~16.3.0",
     "tsx": "^4.8.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "wrangler": "^4.118.0"
   }
 }

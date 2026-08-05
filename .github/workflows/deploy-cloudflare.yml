@@ -1,0 +1,122 @@
+name: Build and deploy Cloudflare Workers
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      app:
+        description: App to upload as a preview
+        required: true
+        default: docs
+        type: choice
+        options:
+          - docs
+          - design-system/docs
+          - dev-projects/next-app
+          - all
+
+permissions:
+  contents: read
+
+jobs:
+  configure:
+    name: Configure app matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - id: matrix
+        name: Select apps
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SELECTED_APP: ${{ inputs.app }}
+        run: |
+          all_apps='{"include":[{"app":"docs","worker":"keystatic-docs"},{"app":"design-system/docs","worker":"keystar-docs"},{"app":"dev-projects/next-app","worker":"keystatic-next-app"}]}'
+
+          if [[ "$EVENT_NAME" != "workflow_dispatch" || "$SELECTED_APP" == "all" ]]; then
+            matrix="$all_apps"
+          else
+            case "$SELECTED_APP" in
+              docs)
+                worker='keystatic-docs'
+                ;;
+              design-system/docs)
+                worker='keystar-docs'
+                ;;
+              dev-projects/next-app)
+                worker='keystatic-next-app'
+                ;;
+              *)
+                echo "Unsupported app: $SELECTED_APP" >&2
+                exit 1
+                ;;
+            esac
+            matrix="{\"include\":[{\"app\":\"$SELECTED_APP\",\"worker\":\"$worker\"}]}"
+          fi
+
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.app }}
+    if: github.event_name == 'pull_request'
+    needs: configure
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.configure.outputs.matrix) }}
+    concurrency:
+      group:
+        cloudflare-build-${{ matrix.worker }}-${{
+        github.event.pull_request.number }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - uses: ./.github/actions/setup-deps
+
+      - name: Build Worker
+        run: pnpm cloudflare:build
+        working-directory: ${{ matrix.app }}
+
+  deploy:
+    name:
+      ${{ github.event_name == 'workflow_dispatch' && 'Preview' || 'Deploy' }}
+      ${{ matrix.app }}
+    if: github.event_name != 'pull_request'
+    needs: configure
+    runs-on: ubuntu-latest
+    environment: Cloudflare
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.configure.outputs.matrix) }}
+    concurrency:
+      group:
+        cloudflare-${{ matrix.worker }}-${{ github.event_name ==
+        'workflow_dispatch' && 'preview' || 'production' }}
+      cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - uses: ./.github/actions/setup-deps
+
+      - name: Build Worker
+        run: pnpm cloudflare:build
+        working-directory: ${{ matrix.app }}
+
+      - name: Deploy to production
+        if: github.event_name == 'push'
+        run: pnpm exec opennextjs-cloudflare deploy
+        working-directory: ${{ matrix.app }}
+
+      - name: Upload preview
+        if: github.event_name == 'workflow_dispatch'
+        run: pnpm exec opennextjs-cloudflare upload --preview-alias preview
+        working-directory: ${{ matrix.app }}

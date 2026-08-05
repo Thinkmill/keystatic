@@ -1,3 +1,7 @@
+const { initOpenNextCloudflareForDev } = require('@opennextjs/cloudflare');
+
+initOpenNextCloudflareForDev();
+
 /** @type {import('next').NextConfig} */
 module.exports = {
   typescript: { ignoreBuildErrors: true },

@@ -9,6 +9,13 @@ packages:
   - 'packages/*'
   - 'templates/*'
 
+allowBuilds:
+  '@swc/core': true
+  core-js-pure: false
+  esbuild: true
+  sharp: true
+  workerd: true
+
 catalog:
   react-aria: 3.50.0
   react-stately: 3.48.0
