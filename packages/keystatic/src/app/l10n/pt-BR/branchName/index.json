@@ -1,6 +1,6 @@
 {
   "key": "branchName",
-  "value": "Nome da filial",
+  "value": "Nome do branch",
   "notes": "",
   "type": "git-related"
 }

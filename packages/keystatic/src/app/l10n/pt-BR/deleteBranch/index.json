@@ -1,6 +1,6 @@
 {
   "key": "deleteBranch",
-  "value": "Excluir ramificação",
+  "value": "Excluir branch",
   "notes": "",
   "type": "git-related"
 }
