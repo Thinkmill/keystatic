@@ -1,6 +1,4 @@
-import { useLink } from 'react-aria/useLink';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
+import { Link as AriaLink } from 'react-aria-components/Link';
 import { forwardRef } from 'react';
 
 import { useTextLink } from './useTextLink';
@@ -11,17 +9,19 @@ export const TextLinkAnchor = forwardRef<
   HTMLAnchorElement,
   TextLinkAnchorProps
 >(function TextLink(props, forwardedRef) {
-  const { children } = props;
-
-  const domRef = useObjectRef(forwardedRef);
-  const { Wrapper, ...styleProps } = useTextLink(props);
-  const { linkProps } = useLink(props, domRef);
+  const { children, prominence = 'default', ...otherProps } = props;
+  const { Wrapper, className } = useTextLink();
 
   return (
     <Wrapper>
-      <a ref={domRef} {...mergeProps(linkProps, styleProps)}>
+      <AriaLink
+        {...otherProps}
+        ref={forwardedRef}
+        data-prominence={prominence}
+        className={className}
+      >
         {children}
-      </a>
+      </AriaLink>
     </Wrapper>
   );
 });

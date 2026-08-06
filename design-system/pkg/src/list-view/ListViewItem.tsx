@@ -5,7 +5,7 @@ import {
   Text as AriaText,
   type GridListItemRenderProps,
 } from 'react-aria-components/GridList';
-import { useLocale } from 'react-aria/I18nProvider';
+import { useLocale } from 'react-aria-components';
 import {
   Children,
   type ForwardedRef,

@@ -1,4 +1,4 @@
-import { useLocale } from 'react-aria/I18nProvider';
+import { useLocale } from 'react-aria-components';
 import { createContext, PropsWithChildren, useContext, useRef } from 'react';
 
 import { ActionButton } from '@keystar/ui/button';

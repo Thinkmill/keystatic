@@ -1,24 +1,23 @@
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
-import { DismissButton } from 'react-aria/Overlay';
-import { useModalOverlay } from 'react-aria/useModalOverlay';
-import { useUpdateEffect } from 'react-aria/private/utils/useUpdateEffect';
 import {
-  OverlayTriggerState,
-  useOverlayTriggerState,
-} from 'react-stately/useOverlayTriggerState';
+  Dialog as AriaDialog,
+  Modal as AriaModal,
+  ModalOverlay as AriaModalOverlay,
+} from 'react-aria-components';
+import { useUpdateEffect } from 'react-aria/private/utils/useUpdateEffect';
 import { typedKeys } from 'emery';
 import {
   ReactNode,
   createContext,
   useCallback,
   useContext,
-  useRef,
+  useMemo,
+  useState,
 } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
 import { Divider, ScrollView, HStack, VStack } from '@keystar/ui/layout';
 import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
-import { Blanket } from '@keystar/ui/overlays';
 import { StatusLight } from '@keystar/ui/status-light';
 import {
   breakpoints,
@@ -42,7 +41,14 @@ import { GitMenu, ThemeMenu, UserActions } from './components';
 import { BranchPicker } from '../../branch-selection';
 import { useAppState, useConfig } from '../context';
 
-const SidebarContext = createContext<OverlayTriggerState | null>(null);
+type SidebarState = {
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+};
+
+const SidebarContext = createContext<SidebarState | null>(null);
 export function useSidebar() {
   let context = useContext(SidebarContext);
   if (!context) {
@@ -54,9 +60,18 @@ export function useSidebar() {
 const breakpointNames = typedKeys(breakpoints);
 export function SidebarProvider(props: { children: ReactNode }) {
   const matchedBreakpoints = useBreakpoint();
-  const state = useOverlayTriggerState({
-    defaultOpen: matchedBreakpoints.includes('desktop'),
-  });
+  const [isOpen, setOpen] = useState(
+    matchedBreakpoints.includes('desktop')
+  );
+  const state = useMemo<SidebarState>(
+    () => ({
+      isOpen,
+      open: () => setOpen(true),
+      close: () => setOpen(false),
+      toggle: () => setOpen(value => !value),
+    }),
+    [isOpen]
+  );
 
   let breakpointIndex = breakpointNames.indexOf(matchedBreakpoints[0]);
   let previousIndex = usePrevious(breakpointIndex) || 0;
@@ -168,22 +183,25 @@ export function SidebarDialog() {
     state.close();
   }, [router.href]);
 
-  let dialogRef = useRef<HTMLDivElement>(null);
-  let { modalProps, underlayProps } = useModalOverlay(
-    { isDismissable: true },
-    state,
-    dialogRef
-  );
-
   return (
-    <>
-      <Blanket {...underlayProps} isOpen={state.isOpen} zIndex={10} />
-      <div
-        data-visible={state.isOpen}
-        id={SIDE_PANEL_ID}
-        ref={dialogRef}
-        {...modalProps}
-        // styles
+    <AriaModalOverlay
+      isOpen={state.isOpen}
+      isDismissable
+      onOpenChange={isOpen => {
+        if (!isOpen) state.close();
+      }}
+      className={css({
+        backgroundColor: '#0006',
+        inset: 0,
+        opacity: 1,
+        position: 'fixed',
+        transition: transition('opacity', { easing: 'easeOut' }),
+        zIndex: 10,
+
+        '&[data-entering], &[data-exiting]': { opacity: 0 },
+      })}
+    >
+      <AriaModal
         className={css({
           backgroundColor: tokenSchema.color.background.surface,
           boxShadow: `${tokenSchema.size.shadow.large} ${tokenSchema.color.shadow.regular}`,
@@ -196,42 +214,29 @@ export function SidebarDialog() {
           maxWidth: `calc(100% - ${tokenSchema.size.element.medium})`,
           minWidth: tokenSchema.size.scale[3000],
           outline: 0,
-          pointerEvents: 'none',
           position: 'fixed',
-          transform: 'translateX(-100%)',
-          visibility: 'hidden',
+          transform: 'translateX(0)',
           zIndex: 10,
 
-          // exit animation
-          transition: [
-            transition('transform', {
-              easing: 'easeIn',
-              duration: 'short',
-              // delay: 'short',
-            }),
-            transition('visibility', {
-              delay: 'regular',
-              duration: 0,
-              easing: 'linear',
-            }),
-          ].join(', '),
+          transition: transition('transform', { easing: 'easeOut' }),
 
-          '&[data-visible=true]': {
-            transform: 'translateX(0)',
-            // enter animation
-            transition: transition('transform', { easing: 'easeOut' }),
-            pointerEvents: 'auto',
-            visibility: 'visible',
+          '&[data-entering], &[data-exiting]': {
+            transform: 'translateX(-100%)',
           },
         })}
       >
-        <SidebarHeader />
-        <SidebarGitActions />
-        <SidebarNav />
-        <SidebarFooter />
-        <DismissButton onDismiss={state.close} />
-      </div>
-    </>
+        <AriaDialog
+          id={SIDE_PANEL_ID}
+          aria-label="Navigation"
+          className={css({ display: 'contents', outline: 0 })}
+        >
+          <SidebarHeader />
+          <SidebarGitActions />
+          <SidebarNav />
+          <SidebarFooter />
+        </AriaDialog>
+      </AriaModal>
+    </AriaModalOverlay>
   );
 }
 

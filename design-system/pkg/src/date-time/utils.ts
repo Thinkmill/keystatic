@@ -1,5 +1,4 @@
-import { useDisplayNames } from 'react-aria/private/datepicker/useDisplayNames';
-import { createFocusManager } from 'react-aria/private/focus/FocusScope';
+import { useLocale } from 'react-aria-components';
 import { useDateFormatter } from 'react-aria/useDateFormatter';
 import {
   useLayoutEffect,
@@ -16,7 +15,11 @@ export function useFormatHelpText(props: {
   showFormatHelpText?: boolean;
 }) {
   let formatter = useDateFormatter({ dateStyle: 'short' });
-  let displayNames = useDisplayNames();
+  let { locale } = useLocale();
+  let displayNames = useMemo(
+    () => new Intl.DisplayNames(locale, { type: 'dateTimeField' }),
+    [locale]
+  );
   return useMemo(() => {
     if (props.description) {
       return props.description;
@@ -75,7 +78,9 @@ export function useFocusManagerRef(ref: Ref<HTMLDivElement>) {
   useImperativeHandle(ref, () => ({
     ...domRef.current,
     focus() {
-      createFocusManager(domRef).focusFirst({ tabbable: true });
+      domRef.current
+        ?.querySelector<HTMLElement>('[tabindex]:not([tabindex="-1"])')
+        ?.focus();
     },
   }));
   return domRef;

@@ -27,7 +27,7 @@ import {
   useContext,
   useMemo,
 } from 'react';
-import { VisuallyHidden } from 'react-aria/VisuallyHidden';
+import { VisuallyHidden } from 'react-aria-components';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 
 import { CheckboxIndicator } from '@keystar/ui/checkbox';

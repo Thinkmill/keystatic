@@ -1,5 +1,5 @@
 import { action } from '@keystar/ui-storybook';
-import { useListData } from 'react-stately/useListData';
+import { useListData } from 'react-aria-components';
 import { ItemDropTarget, Key } from '@react-types/shared';
 
 import React from 'react';

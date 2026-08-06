@@ -1,10 +1,5 @@
 import { HTMLAttributes, useContext } from 'react';
-import { I18nProvider, useLocale } from 'react-aria/I18nProvider';
-import {
-  ModalProvider,
-  useModalProvider,
-} from 'react-aria/private/overlays/useModal';
-import { RouterProvider } from 'react-aria-components';
+import { I18nProvider, RouterProvider, useLocale } from 'react-aria-components';
 import { filterDOMProps } from 'react-aria/filterDOMProps';
 
 import {
@@ -93,7 +88,7 @@ export const KeystarProvider = forwardRefWithAs<KeystarProviderProps, 'div'>(
       <Context.Provider value={context}>
         <BreakpointProvider value={matchedBreakpoints}>
           <I18nProvider locale={locale}>
-            <ModalProvider>{contents}</ModalProvider>
+            {contents}
           </I18nProvider>
         </BreakpointProvider>
       </Context.Provider>
@@ -107,12 +102,10 @@ const ProviderWrapper = forwardRefWithAs<
 >(function ProviderWrapper(props, forwardedRef) {
   let { children, style } = props;
   let { locale, direction } = useLocale();
-  let { modalProviderProps } = useModalProvider();
   let { colorScheme } = useProvider();
   const ElementType = props.elementType ?? 'div';
   return (
     <ElementType
-      {...modalProviderProps}
       className={`${
         props.UNSAFE_className ? `${props.UNSAFE_className} ` : ''
       }${documentElementClasses({

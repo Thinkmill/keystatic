@@ -3,7 +3,7 @@ import {
   type BreadcrumbRenderProps,
 } from 'react-aria-components/Breadcrumbs';
 import { Link } from 'react-aria-components/Link';
-import { useLocale } from 'react-aria/I18nProvider';
+import { useLocale } from 'react-aria-components';
 import {
   type ForwardedRef,
   type ReactNode,

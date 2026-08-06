@@ -6,7 +6,7 @@ import {
   TreeSection as AriaTreeSection,
   type TreeItemRenderProps,
 } from 'react-aria-components/Tree';
-import { useLocale } from 'react-aria/I18nProvider';
+import { useLocale } from 'react-aria-components';
 import {
   type CSSProperties,
   type ForwardedRef,

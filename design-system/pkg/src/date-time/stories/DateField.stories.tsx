@@ -9,7 +9,7 @@ import {
   parseZonedDateTime,
   toZoned,
 } from '@internationalized/date';
-import { useLocale } from 'react-aria/I18nProvider';
+import { useLocale } from 'react-aria-components';
 import { KeystarProvider } from '@keystar/ui/core';
 import { Flex } from '@keystar/ui/layout';
 import {

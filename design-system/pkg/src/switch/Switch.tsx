@@ -1,4 +1,3 @@
-import { type AriaSwitchProps } from 'react-aria/useSwitch';
 import {
   Switch as AriaSwitch,
   type SwitchProps as AriaSwitchComponentProps,
@@ -7,6 +6,7 @@ import {
 import {
   ForwardedRef,
   ForwardRefExoticComponent,
+  ReactNode,
   forwardRef,
   useMemo,
 } from 'react';
@@ -26,8 +26,12 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
-export type SwitchProps = AriaSwitchProps &
+export type SwitchProps = Omit<
+  AriaSwitchComponentProps,
+  'children' | 'className' | 'style'
+> &
   BaseStyleProps & {
+    children?: ReactNode;
     /**
      * The prominence of the switch element.
      * @default 'default'

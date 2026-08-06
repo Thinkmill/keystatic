@@ -1,4 +1,4 @@
-import { useAsyncList } from 'react-stately/useAsyncList';
+import { useAsyncList } from 'react-aria-components';
 import { action } from '@keystar/ui-storybook';
 import { useState } from 'react';
 
