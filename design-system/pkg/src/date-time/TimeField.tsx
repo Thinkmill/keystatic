@@ -1,60 +1,58 @@
-import { useTimeField } from 'react-aria/useTimeField';
-import { useLocale } from 'react-aria/I18nProvider';
-import React, { ReactElement, Ref, useRef } from 'react';
-
-import { TimeValue, useTimeFieldState } from 'react-stately/useTimeFieldState';
+import {
+  TimeField as AriaTimeField,
+  type TimeFieldProps as AriaTimeFieldProps,
+  type TimeValue,
+} from 'react-aria-components/TimeField';
+import React, { ReactElement, Ref } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
-import { FieldPrimitive } from '@keystar/ui/field';
+import { classNames, filterStyleProps, useStyleProps } from '@keystar/ui/style';
 
-import { Input } from './Input';
-import { InputSegment } from './InputSegment';
+import { SegmentedDateInput } from './SegmentedDateInput';
 import { TimeFieldProps } from './types';
 import { useFocusManagerRef } from './utils';
+import {
+  FieldDescriptionElement,
+  FieldErrorElement,
+  FieldLabelElement,
+  fieldRootClassName,
+} from '../field/FieldElements';
 
 function TimeField<T extends TimeValue>(
   props: TimeFieldProps<T>,
   ref: Ref<HTMLDivElement>
 ) {
   props = useProviderProps(props);
-  let { autoFocus, isDisabled } = props;
-
   let domRef = useFocusManagerRef(ref);
-  let { locale } = useLocale();
-  let state = useTimeFieldState({ ...props, locale });
-
-  let inputRef = useRef(null);
-  let { labelProps, fieldProps, descriptionProps, errorMessageProps } =
-    useTimeField(props, state, inputRef);
-
-  if (props.errorMessage) {
-    state = {
-      ...state,
-      validationState: 'invalid',
-    };
-  }
+  let {
+    contextualHelp,
+    description,
+    errorMessage,
+    isRequired,
+    label,
+    labelElementType: _labelElementType,
+    ...otherProps
+  } = props;
+  let styleProps = useStyleProps(props);
 
   return (
-    <FieldPrimitive
-      {...props}
+    <AriaTimeField
+      {...(filterStyleProps(otherProps) as AriaTimeFieldProps<T>)}
       ref={domRef}
-      labelProps={labelProps}
-      descriptionProps={descriptionProps}
-      errorMessageProps={errorMessageProps}
-      // validationState={state.validationState}
+      isInvalid={Boolean(errorMessage)}
+      isRequired={isRequired}
+      className={classNames(fieldRootClassName, styleProps.className)}
+      style={styleProps.style}
     >
-      <Input
-        ref={inputRef}
-        fieldProps={fieldProps}
-        isDisabled={isDisabled}
-        autoFocus={autoFocus}
-        isInvalid={state.isInvalid}
-      >
-        {state.segments.map((segment, i) => (
-          <InputSegment key={i} segment={segment} state={state} />
-        ))}
-      </Input>
-    </FieldPrimitive>
+      <FieldLabelElement
+        contextualHelp={contextualHelp}
+        isRequired={isRequired}
+        label={label}
+      />
+      <FieldDescriptionElement>{description}</FieldDescriptionElement>
+      <SegmentedDateInput />
+      <FieldErrorElement>{errorMessage}</FieldErrorElement>
+    </AriaTimeField>
   );
 }
 

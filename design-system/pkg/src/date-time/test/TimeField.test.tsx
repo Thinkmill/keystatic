@@ -9,14 +9,11 @@ import { TimeField } from '..';
 
 describe('date-time/TimeField', () => {
   it('should be labellable', () => {
-    let { getAllByRole, getByText } = renderWithProvider(
-      <TimeField label="Time" />
-    );
-
-    let label = getByText('Time');
+    let { getAllByRole } = renderWithProvider(<TimeField label="Time" />);
 
     let group = getAllByRole('group')[0];
-    expect(group).toHaveAttribute('aria-labelledby', label.id);
+    let labelId = group.getAttribute('aria-labelledby')!;
+    expect(document.getElementById(labelId)).toHaveTextContent('Time');
 
     let segments = getAllByRole('spinbutton');
     for (let segment of segments) {
@@ -24,7 +21,7 @@ describe('date-time/TimeField', () => {
       let segmentId = segment.getAttribute('id');
       expect(segment).toHaveAttribute(
         'aria-labelledby',
-        `${segmentId} ${label.id}`
+        `${segmentId} ${labelId}`
       );
     }
   });
@@ -57,10 +54,10 @@ describe('date-time/TimeField', () => {
     }
   });
   it('should pass through data attributes', function () {
-    let { getByTestId } = renderWithProvider(
+    let { getByRole, getByTestId } = renderWithProvider(
       <TimeField label="Time" data-testid="foo" />
     );
-    expect(getByTestId('foo')).toHaveAttribute('role', 'group');
+    expect(getByTestId('foo')).toContainElement(getByRole('group'));
   });
   it('should support focusing via a ref', function () {
     let ref = createRef<HTMLDivElement>();
