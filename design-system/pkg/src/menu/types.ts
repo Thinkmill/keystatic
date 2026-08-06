@@ -1,5 +1,7 @@
-import type { MenuProps as AriaMenuProps } from 'react-aria-components/Menu';
-import type { MenuTriggerProps as AriaMenuTriggerProps } from 'react-stately/useMenuTriggerState';
+import type {
+  MenuProps as AriaMenuProps,
+  MenuTriggerProps as AriaMenuTriggerProps,
+} from 'react-aria-components/Menu';
 import type {
   Alignment,
   AriaLabelingProps,

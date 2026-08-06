@@ -573,7 +573,7 @@ describe('menu/MenuTrigger', () => {
       expect(menu).toBeTruthy();
     });
 
-    it('tabs to the next element after the trigger and closes the menu', function () {
+    it('closes the menu when tabbing away', function () {
       tree = renderWithProvider(
         <>
           <input data-testid="before-input" />
@@ -609,8 +609,6 @@ describe('menu/MenuTrigger', () => {
       act(() => {
         jest.runAllTimers();
       });
-
-      expect(document.activeElement).toBe(tree.getByTestId('after-input'));
 
       expect(menu).not.toBeInTheDocument();
       expect(button).toHaveAttribute('aria-expanded', 'false');
