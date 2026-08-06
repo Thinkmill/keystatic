@@ -1,9 +1,10 @@
-import { useObjectRef } from 'react-aria/useObjectRef';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
   Ref,
+  useState,
 } from 'react';
 
 import { ActionButton, ActionButtonProps } from '@keystar/ui/button';
@@ -11,14 +12,11 @@ import { Icon } from '@keystar/ui/icon';
 import { eyeIcon } from '@keystar/ui/icon/icons/eyeIcon';
 import { eyeOffIcon } from '@keystar/ui/icon/icons/eyeOffIcon';
 import { ClassList, css, tokenSchema } from '@keystar/ui/style';
-import {
-  TextFieldPrimitive,
-  validateTextFieldProps,
-} from '@keystar/ui/text-field';
+import { validateTextFieldProps } from '@keystar/ui/text-field';
 
 import { PasswordFieldProps } from './types';
-import { usePasswordField } from './usePasswordField';
-import { usePasswordFieldState } from './usePasswordFieldState';
+import localizedMessages from './l10n';
+import { TextFieldBase } from '../text-field/TextFieldBase';
 
 const classList = new ClassList('PasswordField', ['input']);
 
@@ -32,48 +30,28 @@ export const PasswordField: ForwardRefExoticComponent<
   forwardedRef: ForwardedRef<HTMLInputElement>
 ) {
   props = validateTextFieldProps(props);
-  let {
-    description,
-    allowTextReveal = true,
-    isDisabled,
-    isReadOnly,
-    isRequired,
-    label,
-    ...styleProps
-  } = props;
-
-  let inputRef = useObjectRef(forwardedRef);
-  let state = usePasswordFieldState(props);
-  let {
-    labelProps,
-    inputProps,
-    revealButtonProps,
-    descriptionProps,
-    errorMessageProps,
-  } = usePasswordField(props, state, inputRef);
+  let { allowTextReveal = true, isDisabled, ...otherProps } = props;
+  let [secureTextEntry, setSecureTextEntry] = useState(true);
+  let formatter = useLocalizedStringFormatter(localizedMessages);
+  let fieldLabel =
+    props['aria-label'] || (typeof props.label === 'string' ? props.label : '');
 
   return (
-    <TextFieldPrimitive
-      {...styleProps}
-      label={label}
-      description={description}
-      descriptionProps={descriptionProps}
-      errorMessageProps={errorMessageProps}
-      labelProps={labelProps}
-      ref={inputRef}
-      inputProps={{
-        ...inputProps,
-        className: classList.element('input'),
-      }}
+    <TextFieldBase
+      {...otherProps}
+      ref={forwardedRef}
+      autoComplete={props.autoComplete ?? 'current-password'}
+      inputClassName={classList.element('input')}
       isDisabled={isDisabled}
-      isReadOnly={isReadOnly}
-      isRequired={isRequired}
+      type={secureTextEntry ? 'password' : 'text'}
       endElement={
         allowTextReveal && (
           <RevealButton
             isDisabled={isDisabled}
-            secureTextEntry={state.secureTextEntry}
-            {...revealButtonProps}
+            secureTextEntry={secureTextEntry}
+            aria-label={formatter.format('show', { fieldLabel }).trim()}
+            aria-pressed={!secureTextEntry}
+            onPress={() => setSecureTextEntry(isSecure => !isSecure)}
           />
         )
       }

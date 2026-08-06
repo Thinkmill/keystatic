@@ -1,23 +1,26 @@
-import { chain } from 'react-aria/chain';
-import { useLayoutEffect, forwardRef, useCallback } from 'react';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { useControlledState } from 'react-stately/useControlledState';
+import {
+  useLayoutEffect,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
-import { TextFieldPrimitive } from './TextFieldPrimitive';
+import { TextFieldBase } from './TextFieldBase';
 import { TextAreaProps } from './types';
 import { validateTextFieldProps } from './validateTextFieldProps';
-import { useTextField } from 'react-aria/useTextField';
 
 /** Text areas allow users to input multiple lines of text with a keyboard. */
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   function TextArea({ onChange, ...props }, forwardedRef) {
     props = validateTextFieldProps(props);
-    let domRef = useObjectRef(forwardedRef);
-    let [inputValue, setInputValue] = useControlledState(
-      props.value,
-      props.defaultValue ?? '',
-      () => {}
+    let domRef = useRef<HTMLTextAreaElement>(null);
+    useImperativeHandle(forwardedRef, () => domRef.current!);
+    let [uncontrolledValue, setUncontrolledValue] = useState(
+      props.defaultValue ?? ''
     );
+    let inputValue = props.value ?? uncontrolledValue;
 
     let onHeightChange = useCallback(() => {
       let input = domRef.current;
@@ -45,25 +48,15 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       }
     }, [onHeightChange, inputValue, domRef]);
 
-    let { labelProps, inputProps, descriptionProps, errorMessageProps } =
-      useTextField(
-        {
-          ...props,
-          onChange: chain(onChange, setInputValue),
-          inputElementType: 'textarea',
-        },
-        domRef
-      );
-
     return (
-      <TextFieldPrimitive
+      <TextFieldBase
         {...props}
         ref={domRef}
-        labelProps={labelProps}
-        inputProps={inputProps}
-        descriptionProps={descriptionProps}
-        errorMessageProps={errorMessageProps}
         isMultiline
+        onChange={value => {
+          setUncontrolledValue(value);
+          onChange?.(value);
+        }}
       />
     );
   }

@@ -1,11 +1,9 @@
-import { useButton, AriaButtonProps } from 'react-aria/useButton';
-import { useHover } from 'react-aria/useHover';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
+import {
+  Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
+} from 'react-aria-components/Button';
 
-import { ForwardedRef, forwardRef } from 'react';
-
-import { useProvider, useProviderProps } from '@keystar/ui/core';
+import { useProvider } from '@keystar/ui/core';
 import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
 import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
@@ -24,37 +22,21 @@ interface StepButtonProps extends AriaButtonProps {
 }
 
 /** @private "step" buttons for incrementing and decrementing. */
-export const StepButton = forwardRef(function StepButton(
-  props: StepButtonProps,
-  forwardedRef: ForwardedRef<HTMLDivElement>
-) {
-  props = useProviderProps(props);
+export function StepButton(props: StepButtonProps) {
   let { scale } = useProvider();
-  let { direction } = props;
-  let domRef = useObjectRef(forwardedRef);
-  /**
-   * Must use div for now because Safari pointer event bugs on disabled form elements.
-   * Link https://bugs.webkit.org/show_bug.cgi?id=219188.
-   */
-  let { buttonProps, isPressed } = useButton(
-    { ...props, elementType: 'div' },
-    domRef
-  );
-  let { hoverProps, isHovered } = useHover(props);
+  let { direction, ...otherProps } = props;
 
   let incrementIcon = scale === 'large' ? plusIcon : chevronUpIcon;
   let decrementIcon = scale === 'large' ? minusIcon : chevronDownIcon;
 
   return (
-    <div
+    <AriaButton
+      {...otherProps}
+      slot={direction === 'up' ? 'increment' : 'decrement'}
       {...toDataAttributes({
         direction,
-        hovered: isHovered || undefined,
-        pressed: isPressed || undefined,
         scale,
       })}
-      {...mergeProps(hoverProps, buttonProps)}
-      ref={domRef}
       className={classNames(
         css({
           alignItems: 'center',
@@ -76,7 +58,7 @@ export const StepButton = forwardRef(function StepButton(
           '&[data-pressed]': {
             backgroundColor: tokenSchema.color.alias.backgroundPressed,
           },
-          '&[aria-disabled=true]': {
+          '&[data-disabled]': {
             backgroundColor: tokenSchema.color.background.surfaceSecondary,
             color: tokenSchema.color.alias.foregroundDisabled,
           },
@@ -127,6 +109,6 @@ export const StepButton = forwardRef(function StepButton(
     >
       {direction === 'up' && <Icon src={incrementIcon} />}
       {direction === 'down' && <Icon src={decrementIcon} />}
-    </div>
+    </AriaButton>
   );
-});
+}

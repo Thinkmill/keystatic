@@ -56,12 +56,12 @@ describe('search-field/SearchField', () => {
   });
 
   it('clears the value when the clear button is pressed', async () => {
-    const { getByRole, getByTestId } = renderSearchField({
+    const { getByRole } = renderSearchField({
       defaultValue: inputText,
       onClear,
       onChange,
     });
-    const field = getByTestId(testId);
+    const field = getByRole('searchbox');
     expect(field).toHaveValue(inputText);
 
     await userEvent.click(getByRole('button', { hidden: true }));

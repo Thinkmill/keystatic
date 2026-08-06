@@ -41,9 +41,10 @@ describe('text-field/TextArea', () => {
   });
   it('supports a ref and data attributes', () => {
     const ref = React.createRef<HTMLTextAreaElement>();
-    const { getByTestId } = renderTextArea({}, ref);
-    const field = getByTestId(testId);
+    const { getByRole, getByTestId } = renderTextArea({}, ref);
+    const field = getByRole('textbox');
 
+    expect(getByTestId(testId)).toBeInTheDocument();
     expect(ref.current).toBe(field);
   });
 

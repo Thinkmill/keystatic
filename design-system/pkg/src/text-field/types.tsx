@@ -1,10 +1,4 @@
-import {
-  HTMLAttributes,
-  InputHTMLAttributes,
-  LabelHTMLAttributes,
-  ReactElement,
-  TextareaHTMLAttributes,
-} from 'react';
+import { ReactElement } from 'react';
 import type { AriaTextFieldProps } from 'react-aria/useTextField';
 
 import { FieldProps } from '@keystar/ui/field';
@@ -47,20 +41,3 @@ export type TextAreaProps = Omit<
   TextFieldProps<HTMLTextAreaElement>,
   'pattern' | 'type' | 'startElement' | 'endElement'
 >;
-
-export type TextFieldPrimitiveProps = (TextFieldProps | TextAreaProps) & {
-  /**
-   * When true, text will wrap onto multiple lines using a `textarea` instead of
-   * the traditional `input` element.
-   */
-  isMultiline?: boolean;
-  startElement?: Conditional<ReactElement>;
-  endElement?: Conditional<ReactElement>;
-  labelProps?: LabelHTMLAttributes<HTMLLabelElement>;
-  inputProps:
-    | InputHTMLAttributes<HTMLInputElement>
-    | TextareaHTMLAttributes<HTMLTextAreaElement>;
-  descriptionProps?: HTMLAttributes<HTMLElement>;
-  errorMessageProps?: HTMLAttributes<HTMLElement>;
-  inputWrapperProps?: HTMLAttributes<HTMLElement>;
-};
