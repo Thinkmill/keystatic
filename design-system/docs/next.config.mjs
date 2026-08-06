@@ -8,6 +8,7 @@ const nextConfig = {
   serverExternalPackages: ['esbuild'],
   experimental: {
     externalDir: true,
+    prefetchInlining: false,
   },
 };
 

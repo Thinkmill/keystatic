@@ -10,6 +10,7 @@ const nextConfig = {
   },
   experimental: {
     externalDir: true,
+    prefetchInlining: false,
   },
   async redirects() {
     return [
