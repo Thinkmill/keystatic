@@ -18,7 +18,7 @@ import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
 import { Icon } from '@keystar/ui/icon';
 import { Flex } from '@keystar/ui/layout';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
-import { Kbd, Text } from '@keystar/ui/typography';
+import { Text } from '@keystar/ui/typography';
 import { PropsWithChildren } from 'react';
 
 import { ActionGroup, ActionGroupProps, ActionGroupItem } from '..';

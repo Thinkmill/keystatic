@@ -155,6 +155,7 @@ function ActionBarInner<T extends object>(
           )}
         >
           <ActionGroup
+            role="group"
             items={items}
             aria-label={stringFormatter.format('actions')}
             prominence="low"

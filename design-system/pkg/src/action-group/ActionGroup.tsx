@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react';
 import type { Key } from '@react-types/shared';
-import { ToolbarContext } from 'react-aria-components/Toolbar';
+import { Toolbar } from 'react-aria-components/Toolbar';
 
 import {
   ActionButton,
@@ -66,9 +66,9 @@ function ActionGroup<T extends object>(
     disallowEmptySelection = false,
     onSelectionChange,
     summaryIcon,
+    role = selectionMode === 'none' ? 'toolbar' : 'group',
   } = props;
   let styleProps = useStyleProps(props);
-  let toolbarContext = useContext(ToolbarContext);
   if (
     overflowMode === 'collapse' &&
     (!items || typeof children !== 'function')
@@ -141,6 +141,52 @@ function ActionGroup<T extends object>(
 
   let visibleItems = elements.slice(0, visibleCount);
   let overflowItems = elements.slice(visibleCount);
+  let groupContents = (
+    <>
+      {visibleItems}
+      {overflowItems.length > 0 && (
+        <MenuTrigger>
+          <ActionButton aria-label="More actions" prominence={prominence}>
+            {summaryIcon ?? <Icon src={moreHorizontalIcon} />}
+          </ActionButton>
+          <Menu onAction={key => toggle(key)}>
+            {overflowItems.map(item => (
+              <MenuItem
+                id={item.props.id}
+                key={item.props.id}
+                isDisabled={isDisabled || item.props.isDisabled}
+                textValue={item.props.textValue}
+                href={item.props.href}
+                target={item.props.target}
+                rel={item.props.rel}
+              >
+                {item.props.children}
+              </MenuItem>
+            ))}
+          </Menu>
+        </MenuTrigger>
+      )}
+    </>
+  );
+  let groupProps = {
+    ref: groupRef,
+    'aria-label': props['aria-label'],
+    'aria-labelledby': props['aria-labelledby'],
+    ...toDataAttributes({
+      compact: density === 'compact' || undefined,
+      justified: isJustified || undefined,
+      orientation,
+      overflow: overflowMode,
+    }),
+    className: css({
+      display: 'flex',
+      flexDirection: orientation === 'vertical' ? 'column' : 'row',
+      flexWrap: overflowMode === 'wrap' ? 'wrap' : 'nowrap',
+      gap: tokenSchema.size.space.regular,
+      minWidth: 0,
+      '&[data-justified] > *': { flexGrow: 1 },
+    }),
+  } as const;
   return (
     <ActionGroupContext.Provider
       value={{
@@ -162,52 +208,15 @@ function ActionGroup<T extends object>(
           styleProps.className
         )}
       >
-        <div
-          ref={groupRef}
-          role={
-            selectionMode === 'none' && !toolbarContext ? 'toolbar' : 'group'
-          }
-          aria-label={props['aria-label']}
-          aria-labelledby={props['aria-labelledby']}
-          {...toDataAttributes({
-            compact: density === 'compact' || undefined,
-            justified: isJustified || undefined,
-            orientation,
-            overflow: overflowMode,
-          })}
-          className={css({
-            display: 'flex',
-            flexDirection: orientation === 'vertical' ? 'column' : 'row',
-            flexWrap: overflowMode === 'wrap' ? 'wrap' : 'nowrap',
-            gap: tokenSchema.size.space.regular,
-            minWidth: 0,
-            '&[data-justified] > *': { flexGrow: 1 },
-          })}
-        >
-          {visibleItems}
-          {overflowItems.length > 0 && (
-            <MenuTrigger>
-              <ActionButton aria-label="More actions" prominence={prominence}>
-                {summaryIcon ?? <Icon src={moreHorizontalIcon} />}
-              </ActionButton>
-              <Menu onAction={key => toggle(key)}>
-                {overflowItems.map(item => (
-                  <MenuItem
-                    id={item.props.id}
-                    key={item.props.id}
-                    isDisabled={isDisabled || item.props.isDisabled}
-                    textValue={item.props.textValue}
-                    href={item.props.href}
-                    target={item.props.target}
-                    rel={item.props.rel}
-                  >
-                    {item.props.children}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </MenuTrigger>
-          )}
-        </div>
+        {role === 'toolbar' ? (
+          <Toolbar {...groupProps} orientation={orientation}>
+            {groupContents}
+          </Toolbar>
+        ) : (
+          <div {...groupProps} role="group">
+            {groupContents}
+          </div>
+        )}
       </div>
     </ActionGroupContext.Provider>
   );

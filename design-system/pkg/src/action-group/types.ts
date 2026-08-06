@@ -35,6 +35,8 @@ export interface ActionGroupProps<T = object> extends BaseStyleProps {
   onSelectionChange?: (keys: Set<Key>) => void;
   onAction?: (key: Key) => void;
   summaryIcon?: ReactElement;
+  /** The composite role. Use `group` when nesting within another toolbar. */
+  role?: 'toolbar' | 'group';
   'aria-label'?: string;
   'aria-labelledby'?: string;
 }
