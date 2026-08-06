@@ -24,6 +24,7 @@ type ClearButtonProps = Omit<
 > & {
   excludeFromTabOrder?: boolean;
   preventFocus?: boolean;
+  slot?: AriaButtonProps['slot'];
   static?: 'dark' | 'light';
 };
 

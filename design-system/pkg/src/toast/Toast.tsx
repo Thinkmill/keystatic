@@ -1,118 +1,84 @@
+import {
+  Text as AriaText,
+  UNSTABLE_Toast as AriaToast,
+  UNSTABLE_ToastContent as AriaToastContent,
+  UNSTABLE_ToastStateContext as ToastStateContext,
+} from 'react-aria-components/Toast';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
-import { useToast } from 'react-aria/useToast';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { ForwardedRef, forwardRef, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { Button, ClearButton } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
+import { alertTriangleIcon } from '@keystar/ui/icon/icons/alertTriangleIcon';
 import { checkCircle2Icon } from '@keystar/ui/icon/icons/checkCircle2Icon';
 import { infoIcon } from '@keystar/ui/icon/icons/infoIcon';
-import { alertTriangleIcon } from '@keystar/ui/icon/icons/alertTriangleIcon';
 import { SlotProvider } from '@keystar/ui/slots';
-import {
-  classNames,
-  css,
-  tokenSchema,
-  useMediaQuery,
-  useStyleProps,
-} from '@keystar/ui/style';
+import { css, tokenSchema, useMediaQuery } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
+import { useProvider } from '../core';
 import intlMessages from './l10n';
 import { ToastProps } from './types';
-import { useProvider } from '../core';
 
 const ICONS = {
   info: infoIcon,
   critical: alertTriangleIcon,
-  // neutral: infoIcon,
   positive: checkCircle2Icon,
 };
 
-function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
+export function Toast({ toast }: ToastProps) {
   let {
-    toast: {
-      key,
-      content: { children, tone, actionLabel, onAction, shouldCloseOnAction },
-    },
-    state,
-    ...otherProps
-  } = props;
-  let domRef = useObjectRef(ref);
-  let { closeButtonProps, titleProps, toastProps, contentProps } = useToast(
-    props,
-    state,
-    domRef
-  );
-  let styleProps = useStyleProps(otherProps);
-
+    key,
+    content: { children, tone, actionLabel, onAction, shouldCloseOnAction },
+  } = toast;
+  let state = useContext(ToastStateContext);
   let stringFormatter = useLocalizedStringFormatter(intlMessages);
-  let iconLabel =
-    tone && tone !== 'neutral' ? stringFormatter.format(tone) : null;
-  let icon = tone && tone !== 'neutral' ? ICONS[tone] : null;
-
-  const colorScheme = useColorScheme();
-  const staticColor =
+  let iconLabel = tone !== 'neutral' ? stringFormatter.format(tone) : undefined;
+  let icon = tone !== 'neutral' ? ICONS[tone] : undefined;
+  let colorScheme = useColorScheme();
+  let staticColor: 'light' | 'dark' =
     tone === 'neutral' && colorScheme === 'dark' ? 'dark' : 'light';
+  let slots = useMemo(() => ({ text: { color: 'inherit' } }) as const, []);
 
-  const handleAction = () => {
-    if (onAction) {
-      onAction();
-    }
-
-    if (shouldCloseOnAction) {
-      state.close(key);
-    }
+  let handleAction = () => {
+    onAction?.();
+    if (shouldCloseOnAction) state?.close(key);
   };
-  let slots = useMemo(
-    () =>
-      ({
-        text: { color: 'inherit' },
-      }) as const,
-    []
-  );
 
   return (
-    <div
-      {...styleProps}
-      {...toastProps}
-      ref={domRef}
+    <AriaToast
+      toast={toast}
       data-tone={tone}
-      className={classNames(
-        css({
-          borderRadius: tokenSchema.size.radius.regular,
-          display: 'flex',
-          margin: tokenSchema.size.space.large,
-          maxWidth: tokenSchema.size.container.xsmall,
-          minHeight: tokenSchema.size.element.large,
-          padding: tokenSchema.size.space.regular,
-          paddingInlineStart: tokenSchema.size.space.large,
-          pointerEvents: 'auto',
-          position: 'absolute',
+      className={css({
+        borderRadius: tokenSchema.size.radius.regular,
+        color: tokenSchema.color.foreground.onEmphasis,
+        display: 'flex',
+        margin: tokenSchema.size.space.large,
+        maxWidth: tokenSchema.size.container.xsmall,
+        minHeight: tokenSchema.size.element.large,
+        padding: tokenSchema.size.space.regular,
+        paddingInlineStart: tokenSchema.size.space.large,
+        pointerEvents: 'auto',
+        position: 'absolute',
 
-          // tones
-          color: tokenSchema.color.foreground.onEmphasis,
-          '&[data-tone=neutral]': {
-            backgroundColor: tokenSchema.color.background.inverse,
-            color: tokenSchema.color.foreground.inverse,
-          },
-          '&[data-tone=info]': {
-            background: tokenSchema.color.background.accentEmphasis,
-          },
-          '&[data-tone=positive]': {
-            background: tokenSchema.color.background.positiveEmphasis,
-          },
-          '&[data-tone=critical]': {
-            background: tokenSchema.color.background.criticalEmphasis,
-          },
-        }),
-        styleProps.className
-      )}
-      style={styleProps.style}
+        '&[data-tone=neutral]': {
+          backgroundColor: tokenSchema.color.background.inverse,
+          color: tokenSchema.color.foreground.inverse,
+        },
+        '&[data-tone=info]': {
+          background: tokenSchema.color.background.accentEmphasis,
+        },
+        '&[data-tone=positive]': {
+          background: tokenSchema.color.background.positiveEmphasis,
+        },
+        '&[data-tone=critical]': {
+          background: tokenSchema.color.background.criticalEmphasis,
+        },
+      })}
     >
       <SlotProvider slots={slots}>
-        <div {...contentProps} className={css({ display: 'flex' })}>
+        <AriaToastContent className={css({ display: 'flex' })}>
           {icon && (
             <Icon
               aria-label={iconLabel}
@@ -123,36 +89,33 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
             />
           )}
           <div
-            className={classNames(
-              css({
-                alignItems: 'center',
-                display: 'flex',
-                columnGap: tokenSchema.size.space.large,
-                flex: 1,
-                flexWrap: 'wrap',
-                justifyContent: 'flex-end',
-                paddingInlineEnd: tokenSchema.size.space.large,
-              })
-            )}
+            className={css({
+              alignItems: 'center',
+              columnGap: tokenSchema.size.space.large,
+              display: 'flex',
+              flex: 1,
+              flexWrap: 'wrap',
+              justifyContent: 'flex-end',
+              paddingInlineEnd: tokenSchema.size.space.large,
+            })}
           >
-            <div
-              className={classNames(
-                css({
-                  flexGrow: 1,
-                  paddingBlock: tokenSchema.size.space.regular,
-                })
-              )}
-              {...titleProps}
+            <AriaText
+              elementType="div"
+              slot="title"
+              className={css({
+                flexGrow: 1,
+                paddingBlock: tokenSchema.size.space.regular,
+              })}
             >
               {isReactText(children) ? <Text>{children}</Text> : children}
-            </div>
+            </AriaText>
             {actionLabel && (
               <Button onPress={handleAction} static={staticColor}>
                 {actionLabel}
               </Button>
             )}
           </div>
-        </div>
+        </AriaToastContent>
         <div
           className={css({
             borderInlineStart: `${tokenSchema.size.border.regular} solid var(--divider)`,
@@ -160,23 +123,19 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
             '--divider': 'color-mix(in srgb, transparent, currentColor 20%)',
           })}
         >
-          <ClearButton static={staticColor} {...closeButtonProps} />
+          <ClearButton slot="close" static={staticColor} />
         </div>
       </SlotProvider>
-    </div>
+    </AriaToast>
   );
 }
 
-function useColorScheme() {
-  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
-  const preferred = useProvider();
-
-  if (preferred.colorScheme === 'auto') {
-    return prefersDark ? 'dark' : 'light';
-  }
-
-  return preferred.colorScheme;
+function useColorScheme(): 'light' | 'dark' {
+  let prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+  let preferred = useProvider();
+  return preferred.colorScheme === 'auto'
+    ? prefersDark
+      ? 'dark'
+      : 'light'
+    : preferred.colorScheme;
 }
-
-let _Toast = forwardRef(Toast);
-export { _Toast as Toast };
