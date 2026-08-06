@@ -1,14 +1,8 @@
-import { useCheckbox } from 'react-aria/useCheckbox';
-import { useCheckboxGroupItem } from 'react-aria/useCheckboxGroup';
-import { useToggleState } from 'react-stately/useToggleState';
 import {
-  HTMLAttributes,
-  InputHTMLAttributes,
-  RefObject,
-  useContext,
-  useMemo,
-  useRef,
-} from 'react';
+  Checkbox as AriaCheckbox,
+  type CheckboxProps as AriaCheckboxProps,
+} from 'react-aria-components/Checkbox';
+import { HTMLAttributes, useMemo } from 'react';
 
 import { Icon } from '@keystar/ui/icon';
 import { checkIcon } from '@keystar/ui/icon/icons/checkIcon';
@@ -16,9 +10,9 @@ import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
   ClassList,
-  FocusRing,
   classNames,
   css,
+  filterStyleProps,
   tokenSchema,
   transition,
   useStyleProps,
@@ -27,65 +21,11 @@ import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
 import { CheckboxProps } from './types';
-import { CheckboxGroupContext } from './context';
 
 const checkboxClassList = new ClassList('Checkbox', ['indicator']);
 
 export function Checkbox(props: CheckboxProps) {
-  let groupState = useContext(CheckboxGroupContext);
-  return groupState ? (
-    <CheckboxInGroup groupState={groupState} {...props} />
-  ) : (
-    <CheckboxAlone {...props} />
-  );
-}
-
-function CheckboxInGroup({
-  groupState,
-  ...props
-}: CheckboxProps & { groupState: CheckboxGroupContext }) {
-  let inputRef = useRef<HTMLInputElement>(null);
-  const { inputProps } = useCheckboxGroupItem(
-    {
-      ...props,
-      // Value is optional for standalone checkboxes, but required for
-      // CheckboxGroup items; it's passed explicitly here to avoid
-      // typescript error (requires ignore).
-      // @ts-ignore
-      value: props.value,
-    },
-    groupState.state,
-    inputRef
-  );
-  return (
-    <CheckboxInner inputRef={inputRef} inputProps={inputProps} {...props} />
-  );
-}
-
-function CheckboxAlone(props: CheckboxProps) {
-  let inputRef = useRef<HTMLInputElement>(null);
-  const { inputProps } = useCheckbox(props, useToggleState(props), inputRef);
-  return (
-    <CheckboxInner inputRef={inputRef} inputProps={inputProps} {...props} />
-  );
-}
-
-function CheckboxInner(
-  props: CheckboxProps & {
-    inputRef: RefObject<HTMLInputElement | null>;
-    inputProps: InputHTMLAttributes<HTMLInputElement>;
-  }
-) {
-  let {
-    autoFocus,
-    children,
-    inputProps,
-    inputRef,
-    isDisabled = false,
-    isIndeterminate = false,
-    prominence,
-    ...otherProps
-  } = props;
+  let { children, prominence, ...otherProps } = props;
 
   let styleProps = useStyleProps(otherProps);
 
@@ -108,38 +48,27 @@ function CheckboxInner(
   );
 
   return (
-    <label
-      data-disabled={isDisabled}
+    <AriaCheckbox
+      {...(filterStyleProps(otherProps) as AriaCheckboxProps)}
       className={classNames(styleProps.className, labelClassName)}
       style={styleProps.style}
     >
-      <FocusRing autoFocus={autoFocus}>
-        <input
-          {...inputProps}
-          ref={inputRef}
-          className={classNames(
-            css({
-              position: 'absolute',
-              zIndex: 1,
-              inset: 0,
-              insetInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
-              opacity: 0.0001,
-            })
-          )}
-        />
-      </FocusRing>
-      <CheckboxIndicator
-        isIndeterminate={isIndeterminate}
-        prominence={prominence}
-      />
-      <SlotProvider slots={slots}>
-        {children && (
-          <Content>
-            {isReactText(children) ? <Text>{children}</Text> : children}
-          </Content>
-        )}
-      </SlotProvider>
-    </label>
+      {({ isIndeterminate }) => (
+        <>
+          <CheckboxIndicator
+            isIndeterminate={isIndeterminate}
+            prominence={prominence}
+          />
+          <SlotProvider slots={slots}>
+            {children && (
+              <Content>
+                {isReactText(children) ? <Text>{children}</Text> : children}
+              </Content>
+            )}
+          </SlotProvider>
+        </>
+      )}
+    </AriaCheckbox>
   );
 }
 
@@ -323,6 +252,12 @@ const Content = (props: HTMLAttributes<HTMLDivElement>) => {
           },
 
           'input[type="checkbox"]:disabled ~ &': {
+            color: tokenSchema.color.alias.foregroundDisabled,
+          },
+          'label[data-hovered] &': {
+            color: tokenSchema.color.alias.foregroundHovered,
+          },
+          'label[data-disabled] &': {
             color: tokenSchema.color.alias.foregroundDisabled,
           },
         })

@@ -1,12 +1,15 @@
-import { useRadio } from 'react-aria/useRadioGroup';
-import { HTMLAttributes, useMemo, useRef } from 'react';
+import {
+  Radio as AriaRadio,
+  type RadioProps as AriaRadioProps,
+} from 'react-aria-components/RadioGroup';
+import { HTMLAttributes, useMemo } from 'react';
 
 import { SlotProvider } from '@keystar/ui/slots';
 import {
   ClassList,
-  FocusRing,
   classNames,
   css,
+  filterStyleProps,
   resetClassName,
   tokenSchema,
   transition,
@@ -15,32 +18,13 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
-import { useRadioProvider } from './context';
 import { RadioProps } from './types';
 
 const radioClassList = new ClassList('Radio', ['indicator']);
 
 export function Radio(props: RadioProps) {
-  let { children, autoFocus, ...otherProps } = props;
+  let { children, ...otherProps } = props;
   let styleProps = useStyleProps(otherProps);
-
-  let inputRef = useRef<HTMLInputElement>(null);
-
-  let radioGroupProps = useRadioProvider();
-  let { state } = radioGroupProps;
-
-  let { inputProps } = useRadio(
-    { ...props, ...radioGroupProps },
-    state,
-    inputRef
-  );
-
-  const inputClassName = css({
-    position: 'absolute',
-    zIndex: 1,
-    inset: 0,
-    opacity: 0.0001,
-  });
   const labelClassName = css({
     alignItems: 'flex-start',
     display: 'inline-flex',
@@ -58,18 +42,12 @@ export function Radio(props: RadioProps) {
   );
 
   return (
-    <label
+    <AriaRadio
+      {...(filterStyleProps(otherProps) as AriaRadioProps)}
       className={classNames(styleProps.className, labelClassName)}
       style={styleProps.style}
     >
-      <FocusRing autoFocus={autoFocus}>
-        <input
-          {...inputProps}
-          ref={inputRef}
-          className={classNames(inputClassName)}
-        />
-      </FocusRing>
-      <Indicator inputClassName={inputClassName} />
+      <Indicator />
       <SlotProvider slots={slots}>
         {children && (
           <Content>
@@ -77,7 +55,7 @@ export function Radio(props: RadioProps) {
           </Content>
         )}
       </SlotProvider>
-    </label>
+    </AriaRadio>
   );
 }
 
@@ -85,11 +63,7 @@ export function Radio(props: RadioProps) {
 // -----------------------------------------------------------------------------
 
 let sizeToken = tokenSchema.size.element.xsmall;
-type IndicatorProps = { inputClassName: string };
-
-const Indicator = (props: IndicatorProps) => {
-  let { inputClassName } = props;
-
+const Indicator = () => {
   return (
     <span
       className={classNames(
@@ -124,7 +98,7 @@ const Indicator = (props: IndicatorProps) => {
               easing: 'easeOut',
             }),
           },
-          [`.${inputClassName}[data-focus=visible] + &::after`]: {
+          'label[data-focus-visible] &::after': {
             boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
             margin: `calc(${tokenSchema.size.alias.focusRingGap} * -1)`,
           },
@@ -142,22 +116,22 @@ const Indicator = (props: IndicatorProps) => {
             }),
           },
 
-          [`.${inputClassName}:disabled + &`]: {
+          'label[data-disabled] &': {
             color: tokenSchema.color.alias.foregroundDisabled,
             '&::before': {
               backgroundColor: tokenSchema.color.alias.borderDisabled,
               borderColor: tokenSchema.color.alias.borderDisabled,
             },
           },
-          [`.${inputClassName}:enabled:hover + &::before`]: {
+          'label:not([data-disabled])[data-hovered] &::before': {
             borderColor: tokenSchema.color.scale.slate9,
           },
-          [`.${inputClassName}:enabled:active + &::before`]: {
+          'label:not([data-disabled])[data-pressed] &::before': {
             borderColor: tokenSchema.color.scale.slate10,
           },
 
           // checked states
-          [`.${inputClassName}:checked + &`]: {
+          'label[data-selected] &': {
             '&::before': {
               borderWidth: `calc(${sizeToken} / 2)`,
             },
@@ -167,13 +141,13 @@ const Indicator = (props: IndicatorProps) => {
               transform: `scale(1)`,
             },
           },
-          [`.${inputClassName}:enabled:checked + &::before`]: {
+          'label:not([data-disabled])[data-selected] &::before': {
             borderColor: tokenSchema.color.scale.indigo9,
           },
-          [`.${inputClassName}:enabled:checked:hover + &::before`]: {
+          'label:not([data-disabled])[data-selected][data-hovered] &::before': {
             borderColor: tokenSchema.color.scale.indigo10,
           },
-          [`.${inputClassName}:enabled:checked:active + &::before`]: {
+          'label:not([data-disabled])[data-selected][data-pressed] &::before': {
             borderColor: tokenSchema.color.scale.indigo11,
           },
         })
@@ -210,6 +184,12 @@ const Content = (props: HTMLAttributes<HTMLDivElement>) => {
           },
 
           'input[type="radio"]:disabled ~ &': {
+            color: tokenSchema.color.alias.foregroundDisabled,
+          },
+          'label[data-hovered] &': {
+            color: tokenSchema.color.alias.foregroundHovered,
+          },
+          'label[data-disabled] &': {
             color: tokenSchema.color.alias.foregroundDisabled,
           },
         })
