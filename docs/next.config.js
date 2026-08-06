@@ -7,6 +7,7 @@ module.exports = {
   typescript: { ignoreBuildErrors: true },
   experimental: {
     externalDir: true,
+    prefetchInlining: false,
   },
   async rewrites() {
     return [{ source: '/keystatic/:path*', destination: '/keystatic' }];
