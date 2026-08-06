@@ -1,20 +1,21 @@
-import { createCalendar } from '@internationalized/date';
-import { useCalendar } from 'react-aria/useCalendar';
-import { useLocale } from 'react-aria/I18nProvider';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { useCalendarState, DateValue } from 'react-stately/useCalendarState';
-
 import {
-  forwardRef,
+  Calendar as AriaCalendar,
+  type CalendarProps as AriaCalendarProps,
+  type CalendarState,
+  type DateValue,
+} from 'react-aria-components/Calendar';
+import {
   ForwardedRef,
   ReactElement,
+  forwardRef,
   useImperativeHandle,
-  useMemo,
+  useRef,
 } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
+import { classNames, filterStyleProps, useStyleProps } from '@keystar/ui/style';
 
-import { CalendarBase } from './CalendarBase';
+import { CalendarBase, calendarRootClassName } from './CalendarBase';
 import { CalendarProps } from './types';
 
 function Calendar<T extends DateValue>(
@@ -22,51 +23,36 @@ function Calendar<T extends DateValue>(
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   props = useProviderProps(props);
-  let { visibleMonths = 1 } = props;
-  visibleMonths = Math.max(visibleMonths, 1);
-  let visibleDuration = useMemo(
-    () => ({ months: visibleMonths }),
-    [visibleMonths]
-  );
-  let { locale } = useLocale();
-  let state = useCalendarState({
-    ...props,
-    locale,
-    visibleDuration,
-    createCalendar,
-  });
+  let visibleMonths = Math.max(props.visibleMonths ?? 1, 1);
+  let { visibleMonths: _visibleMonths, ...otherProps } = props;
+  let domRef = useRef<HTMLDivElement>(null);
+  let stateRef = useRef<CalendarState<'single'> | null>(null);
+  let styleProps = useStyleProps(props);
 
-  let domRef = useObjectRef(forwardedRef);
-  // @ts-expect-error FIXME: not sure how to properly resolve this type issue
   useImperativeHandle(forwardedRef, () => ({
-    ...domRef.current,
+    ...domRef.current!,
     focus() {
-      state.setFocused(true);
+      stateRef.current?.setFocused(true);
     },
   }));
 
-  let { calendarProps, prevButtonProps, nextButtonProps } = useCalendar(
-    props,
-    state
-  );
-
   return (
-    <CalendarBase
-      {...props}
-      visibleMonths={visibleMonths}
-      state={state}
-      calendarRef={domRef}
-      calendarProps={calendarProps}
-      prevButtonProps={prevButtonProps}
-      nextButtonProps={nextButtonProps}
-    />
+    <AriaCalendar
+      {...(filterStyleProps(otherProps) as AriaCalendarProps<T>)}
+      ref={domRef}
+      visibleDuration={{ months: visibleMonths }}
+      className={classNames(calendarRootClassName, styleProps.className)}
+      style={styleProps.style}
+    >
+      {({ state }) => {
+        stateRef.current = state;
+        return <CalendarBase state={state} visibleMonths={visibleMonths} />;
+      }}
+    </AriaCalendar>
   );
 }
 
-/**
- * Calendars display a grid of days in one or more months and allow users to
- * select a single date.
- */
+/** Calendars display one or more months and allow single-date selection. */
 const _Calendar = forwardRef(Calendar) as <T extends DateValue>(
   props: CalendarProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
 ) => ReactElement;
