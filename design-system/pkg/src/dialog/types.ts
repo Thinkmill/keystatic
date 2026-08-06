@@ -1,9 +1,9 @@
 import { ReactElement, ReactNode, RefObject } from 'react';
 import { AriaLabelingProps, DOMProps } from '@react-types/shared';
+import type { DialogTriggerProps as AriaDialogTriggerProps } from 'react-aria-components/Dialog';
+import type { PopoverProps as AriaPopoverProps } from 'react-aria-components/Popover';
 
-import { OverlayTriggerProps, PositionProps } from '@keystar/ui/overlays';
 import { BaseStyleProps } from '@keystar/ui/style';
-import { OverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 
 export type DialogType = 'modal' | 'popover' | 'tray' | 'fullscreen';
 export type DialogSize = 'small' | 'medium' | 'large';
@@ -12,19 +12,6 @@ export interface DialogContainerValue {
   type: DialogType;
   dismiss(): void;
 }
-
-export type DialogTriggerBase = {
-  type: DialogType;
-  state: OverlayTriggerState;
-  isDismissable?: boolean;
-  dialogProps?: DialogProps | {};
-  triggerProps?: any;
-  hideArrow?: boolean;
-  overlay: ReactElement;
-  trigger: ReactElement;
-};
-
-// -----------------------------------------------------------------------------
 
 export type DialogRenderFn = (close: () => void) => ReactElement;
 
@@ -49,8 +36,17 @@ export type DialogTriggerProps = {
   isDismissable?: boolean;
   /** Whether pressing the escape key to close the dialog should be disabled. */
   isKeyboardDismissDisabled?: boolean;
-} & OverlayTriggerProps &
-  PositionProps;
+} & Omit<AriaDialogTriggerProps, 'children'> &
+  Pick<
+    AriaPopoverProps,
+    | 'boundaryElement'
+    | 'containerPadding'
+    | 'crossOffset'
+    | 'offset'
+    | 'placement'
+    | 'scrollRef'
+    | 'shouldFlip'
+  >;
 
 export interface DialogContainerProps {
   /** The dialog to display, if any. */

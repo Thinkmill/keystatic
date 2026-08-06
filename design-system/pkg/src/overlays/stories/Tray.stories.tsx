@@ -1,7 +1,4 @@
-import { chain } from 'react-aria/chain';
-import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
-import { action } from '@keystar/ui-storybook';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { Box, Divider, Flex, Grid } from '@keystar/ui/layout';
 import { Heading, Text } from '@keystar/ui/typography';
@@ -13,9 +10,8 @@ export default {
 };
 
 export const Default = () => {
-  let state = useOverlayTriggerState({ isOpen: true });
   return (
-    <Tray state={state}>
+    <Tray isOpen>
       <Box padding="xlarge">
         <Text>
           Trays are containers that display transient content such as menus
@@ -34,23 +30,11 @@ Default.story = {
 
 export const Controlled = () => {
   let [isOpen, setOpen] = useState(false);
-  let state = useOverlayTriggerState({ isOpen, onOpenChange: setOpen });
-  let invokeButton = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <button onClick={state.toggle} ref={invokeButton}>
-        Open tray
-      </button>
-      <Tray
-        state={state}
-        onEnter={action('onEnter')}
-        onEntered={action('onEntered')}
-        onEntering={action('onEntering')}
-        onExit={chain(action('onExit'), () => invokeButton.current?.focus())}
-        onExited={action('onExited')}
-        onExiting={action('onExiting')}
-      >
+      <button onClick={() => setOpen(open => !open)}>Open tray</button>
+      <Tray isOpen={isOpen} onOpenChange={setOpen}>
         <Box padding="xlarge">
           <Text>Click outside to dismiss</Text>
         </Box>
@@ -64,7 +48,7 @@ Controlled.story = {
 };
 
 export const ScrollBlocking = () => {
-  let state = useOverlayTriggerState({ defaultOpen: false });
+  let [isOpen, setOpen] = useState(false);
 
   return (
     <>
@@ -76,10 +60,10 @@ export const ScrollBlocking = () => {
         height="100vh"
       >
         <Heading size="large">Scroll down</Heading>
-        <button onClick={state.toggle}>Open tray</button>
+        <button onClick={() => setOpen(open => !open)}>Open tray</button>
       </Flex>
       <div style={{ height: '100vh' }} />
-      <Tray state={state}>
+      <Tray isOpen={isOpen} onOpenChange={setOpen}>
         <Flex direction="column" padding="xlarge" gap="medium">
           <Text>Scroll should be disabled while the tray is open.</Text>
           <Text>
@@ -98,13 +82,14 @@ ScrollBlocking.story = {
 
 export const FixedHeight = () => {
   let [paragraphs, setParagraphs] = useState(1);
-  let state = useOverlayTriggerState({ defaultOpen: false });
+  let [isOpen, setOpen] = useState(false);
 
   return (
     <>
-      <button onClick={state.toggle}>Open tray</button>
+      <button onClick={() => setOpen(open => !open)}>Open tray</button>
       <Tray
-        state={state}
+        isOpen={isOpen}
+        onOpenChange={setOpen}
         isFixedHeight
         // style props
         UNSAFE_className="custom-tray"

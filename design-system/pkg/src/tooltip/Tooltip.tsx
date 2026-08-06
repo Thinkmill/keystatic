@@ -5,7 +5,7 @@ import {
 } from 'react-aria-components/Tooltip';
 import { ForwardedRef, forwardRef, useMemo } from 'react';
 
-import { Axis, DirectionIndicator } from '@keystar/ui/overlays';
+import { DirectionIndicator } from '@keystar/ui/overlays';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
   classNames,
@@ -100,7 +100,7 @@ export const Tooltip = forwardRef(function Tooltip(
         {({ placement }) => (
           <DirectionIndicator
             fill={toneToFill[tone]}
-            placement={placement as Axis}
+            placement={placement as 'top' | 'bottom' | 'left' | 'right'}
             size="xsmall"
           />
         )}

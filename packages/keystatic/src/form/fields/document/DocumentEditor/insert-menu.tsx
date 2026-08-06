@@ -1,9 +1,7 @@
-import { Fragment, ReactNode, useMemo, useRef } from 'react';
+import { Fragment, ReactNode, useRef } from 'react';
 import { Transforms, Text, Editor, Path, Point, Node } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { matchSorter } from 'match-sorter';
-import { useOverlayTrigger } from 'react-aria/useOverlayTrigger';
-import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 
 import { EditorListbox, EditorListboxItem } from '@keystar/ui/editor';
 import { Popover } from '@keystar/ui/overlays';
@@ -168,16 +166,9 @@ export function InsertMenu({
   ).map((option, index) => ({ ...option, index }));
 
   const triggerRef = useRef<HTMLSpanElement>(null);
-  const overlayState = useOverlayTriggerState({ isOpen: true });
-  const {
-    triggerProps: { onPress, ...triggerProps },
-    overlayProps,
-  } = useOverlayTrigger({ type: 'listbox' }, overlayState, triggerRef);
   return (
     <Fragment>
       <span
-        {...triggerProps}
-        role="button"
         className={css({
           color: tokenSchema.color.foreground.accent,
           fontWeight: tokenSchema.typography.fontWeight.medium,
@@ -189,10 +180,9 @@ export function InsertMenu({
       <Popover
         width="alias.singleLineWidth"
         placement="bottom start"
+        isOpen
         isNonModal
         hideArrow
-        {...overlayProps}
-        state={overlayState}
         triggerRef={triggerRef}
       >
         <div className={css({ overflow: 'scroll', maxHeight: 300 })}>

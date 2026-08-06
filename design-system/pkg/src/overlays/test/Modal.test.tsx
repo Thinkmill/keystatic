@@ -1,7 +1,3 @@
-import {
-  OverlayTriggerProps,
-  useOverlayTriggerState,
-} from 'react-stately/useOverlayTriggerState';
 import { expect, it, describe, jest } from '@jest/globals';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { TestProvider } from '@keystar/ui/core';
@@ -89,11 +85,10 @@ describe('overlays/Modal', () => {
   });
 });
 
-function TestModal(props: OverlayTriggerProps & Omit<ModalProps, 'state'>) {
-  let state = useOverlayTriggerState(props);
+function TestModal(props: ModalProps) {
   return (
     <TestProvider>
-      <Modal {...props} state={state} />
+      <Modal {...props} />
     </TestProvider>
   );
 }

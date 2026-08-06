@@ -1,7 +1,4 @@
-import { chain } from 'react-aria/chain';
-import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
-import { action } from '@keystar/ui-storybook';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { Box, Flex, Grid } from '@keystar/ui/layout';
 import { Heading, Text } from '@keystar/ui/typography';
@@ -13,9 +10,8 @@ export default {
 };
 
 export const Default = () => {
-  let state = useOverlayTriggerState({ isOpen: true });
   return (
-    <Modal state={state}>
+    <Modal isOpen>
       <Box padding="xlarge" width="container.xsmall">
         <Text>
           Modal is a low-level utility component for implementing things like
@@ -32,23 +28,11 @@ Default.story = {
 
 export const Controlled = () => {
   let [isOpen, setOpen] = useState(false);
-  let state = useOverlayTriggerState({ isOpen, onOpenChange: setOpen });
-  let invokeButton = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <button onClick={state.toggle} ref={invokeButton}>
-        Open modal
-      </button>
-      <Modal
-        state={state}
-        onEnter={action('onEnter')}
-        onEntered={action('onEntered')}
-        onEntering={action('onEntering')}
-        onExit={chain(action('onExit'), () => invokeButton.current?.focus())}
-        onExited={action('onExited')}
-        onExiting={action('onExiting')}
-      >
+      <button onClick={() => setOpen(open => !open)}>Open modal</button>
+      <Modal isOpen={isOpen} onOpenChange={setOpen}>
         <Box padding="xlarge">
           <button onClick={() => setOpen(false)} autoFocus>
             Close
@@ -64,14 +48,17 @@ Controlled.story = {
 };
 
 export const Dismissable = () => {
-  let state = useOverlayTriggerState({ defaultOpen: false });
+  let [isOpen, setOpen] = useState(false);
 
   return (
     <>
-      <button onClick={state.toggle} style={{ marginTop: -100 }}>
+      <button
+        onClick={() => setOpen(open => !open)}
+        style={{ marginTop: -100 }}
+      >
         Open modal
       </button>
-      <Modal state={state} isDismissable>
+      <Modal isOpen={isOpen} onOpenChange={setOpen} isDismissable>
         <Box padding="xlarge">
           <Text>Click outside to dismiss</Text>
         </Box>
@@ -85,7 +72,7 @@ Dismissable.story = {
 };
 
 export const ScrollBlocking = () => {
-  let state = useOverlayTriggerState({ defaultOpen: false });
+  let [isOpen, setOpen] = useState(false);
 
   return (
     <>
@@ -97,10 +84,10 @@ export const ScrollBlocking = () => {
         height="100vh"
       >
         <Heading size="large">Scroll down</Heading>
-        <button onClick={state.toggle}>Open modal</button>
+        <button onClick={() => setOpen(open => !open)}>Open modal</button>
       </Flex>
       <div style={{ height: '100vh' }} />
-      <Modal state={state} isDismissable>
+      <Modal isOpen={isOpen} onOpenChange={setOpen} isDismissable>
         <Flex direction="column" padding="xlarge" gap="medium">
           <Text>Scroll should be disabled while the modal is open.</Text>
           <Text>
@@ -118,13 +105,14 @@ ScrollBlocking.story = {
 };
 
 export const StyleProps = () => {
-  let state = useOverlayTriggerState({ defaultOpen: false });
+  let [isOpen, setOpen] = useState(false);
 
   return (
     <>
-      <button onClick={state.toggle}>Open modal</button>
+      <button onClick={() => setOpen(open => !open)}>Open modal</button>
       <Modal
-        state={state}
+        isOpen={isOpen}
+        onOpenChange={setOpen}
         isDismissable
         // style props
         width="container.xsmall"

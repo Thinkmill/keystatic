@@ -1,21 +1,17 @@
-import { PressResponder } from 'react-aria/private/interactions/PressResponder';
-import { useOverlayTrigger } from 'react-aria/useOverlayTrigger';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useEffectEvent } from 'react-aria/private/utils/useEffectEvent';
 import {
-  OverlayTriggerState,
-  useOverlayTriggerState,
-} from 'react-stately/useOverlayTriggerState';
-import { assertNever } from 'emery';
-import { Fragment, ReactElement, useEffect, useRef, type JSX } from 'react';
+  DialogTrigger as AriaDialogTrigger,
+  OverlayTriggerStateContext,
+} from 'react-aria-components/Dialog';
+import { type ReactElement, useContext } from 'react';
 
-import { Modal, Popover, PopoverProps, Tray } from '@keystar/ui/overlays';
+import { Modal, Popover, Tray } from '@keystar/ui/overlays';
 import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
 
 import { DialogContext } from './context';
-import { DialogRenderFn, DialogProps, DialogTriggerProps } from './types';
+import { DialogRenderFn, DialogTriggerProps, DialogType } from './types';
 
-function DialogTrigger(props: DialogTriggerProps) {
+/** Links a RAC-aware trigger with a dialog overlay. */
+export function DialogTrigger(props: DialogTriggerProps) {
   let {
     children,
     type = 'modal',
@@ -24,194 +20,115 @@ function DialogTrigger(props: DialogTriggerProps) {
     targetRef,
     isDismissable,
     isKeyboardDismissDisabled,
+    isOpen,
+    defaultOpen,
+    onOpenChange,
     ...positionProps
   } = props;
-  if (!Array.isArray(children) || children.length > 2) {
+  if (!Array.isArray(children) || children.length !== 2) {
     throw new Error('DialogTrigger must have exactly 2 children');
   }
-  // if a function is passed as the second child, it won't appear in toArray
   let [trigger, content] = children as [ReactElement, DialogRenderFn];
 
-  // On small devices, show a modal or tray instead of a popover.
   let isMobile = useMediaQuery(breakpointQueries.below.tablet);
   if (isMobile) {
-    // handle cases where desktop popovers need a close button for the mobile modal view
     if (type !== 'modal' && mobileType === 'modal') {
       isDismissable = true;
     }
-
     type = mobileType;
   }
 
-  let state = useOverlayTriggerState(props);
-  let wasOpen = useRef(false);
-  wasOpen.current = state.isOpen;
-  let isExiting = useRef(false);
-  let onExiting = () => (isExiting.current = true);
-  let onExited = () => (isExiting.current = false);
-
-  const onUnmount = useEffectEvent(() => {
-    if (
-      (wasOpen.current || isExiting.current) &&
-      type !== 'popover' &&
-      type !== 'tray'
-    ) {
-      console.warn(
-        'A DialogTrigger unmounted while open. This is likely due to being placed within a trigger that unmounts or inside a conditional. Consider using a DialogContainer instead.'
-      );
-    }
-  });
-
-  // eslint-disable-next-line arrow-body-style
-  useEffect(() => {
-    return onUnmount;
-  }, [onUnmount]);
-
-  if (type === 'popover') {
-    return (
-      <PopoverTrigger
-        {...positionProps}
-        state={state}
-        targetRef={targetRef}
-        trigger={trigger}
-        content={content}
-        isKeyboardDismissDisabled={isKeyboardDismissDisabled}
-        hideArrow={hideArrow}
-      />
-    );
-  }
-
-  let renderOverlay = () => {
-    switch (type) {
-      case 'fullscreen':
-      case 'modal':
-        return (
-          <Modal
-            state={state}
-            isDismissable={type === 'modal' ? isDismissable : false}
-            type={type}
-            isKeyboardDismissDisabled={isKeyboardDismissDisabled}
-            onExiting={onExiting}
-            onExited={onExited}
-          >
-            {typeof content === 'function' ? content(state.close) : content}
-          </Modal>
-        );
-      case 'tray':
-        return (
-          <Tray
-            state={state}
-            isKeyboardDismissDisabled={isKeyboardDismissDisabled}
-          >
-            {typeof content === 'function' ? content(state.close) : content}
-          </Tray>
-        );
-    }
-
-    assertNever(type as never);
-  };
+  let dialog = (
+    <DialogContent
+      type={type}
+      isDismissable={isDismissable}
+      content={content}
+    />
+  );
 
   return (
-    <DialogTriggerBase
-      type={type}
-      state={state}
-      isDismissable={isDismissable}
-      trigger={trigger}
-      overlay={renderOverlay()}
-    />
+    <AriaDialogTrigger
+      isOpen={isOpen}
+      defaultOpen={defaultOpen}
+      onOpenChange={onOpenChange}
+    >
+      {trigger}
+      {renderOverlay(type, dialog, {
+        ...positionProps,
+        hideArrow,
+        isDismissable,
+        isKeyboardDismissDisabled,
+        targetRef,
+      })}
+    </AriaDialogTrigger>
   );
 }
 
-/**
- * DialogTrigger serves as a wrapper around a Dialog and its associated trigger, linking the Dialog's
- * open state with the trigger's press state. Additionally, it allows you to customize the type and
- * positioning of the Dialog.
- */
+function renderOverlay(
+  type: DialogType,
+  dialog: ReactElement,
+  props: Omit<DialogTriggerProps, 'children' | 'type' | 'mobileType'>
+) {
+  let {
+    hideArrow,
+    isDismissable,
+    isKeyboardDismissDisabled,
+    targetRef,
+    ...positionProps
+  } = props;
 
-export { DialogTrigger };
+  switch (type) {
+    case 'popover':
+      return (
+        <Popover
+          {...positionProps}
+          hideArrow={hideArrow}
+          isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+          triggerRef={targetRef}
+        >
+          {dialog}
+        </Popover>
+      );
+    case 'tray':
+      return (
+        <Tray
+          isDismissable
+          isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+        >
+          {dialog}
+        </Tray>
+      );
+    case 'fullscreen':
+    case 'modal':
+      return (
+        <Modal
+          type={type}
+          isDismissable={type === 'modal' ? isDismissable : false}
+          isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+        >
+          {dialog}
+        </Modal>
+      );
+  }
+}
 
-function PopoverTrigger({
-  state,
-  targetRef,
-  trigger,
+function DialogContent({
   content,
-  hideArrow,
-  ...props
-}: Omit<PopoverProps, 'children' | 'triggerRef'> &
-  Omit<DialogTriggerProps, 'children'> & {
-    trigger: ReactElement;
-    content: DialogRenderFn | ReactElement;
-  }) {
-  let triggerRef = useRef<HTMLElement>(null);
-  let { triggerProps, overlayProps } = useOverlayTrigger(
-    { type: 'dialog' },
-    state,
-    triggerRef
-  );
+  isDismissable,
+  type,
+}: {
+  content: DialogRenderFn | ReactElement;
+  isDismissable?: boolean;
+  type: DialogType;
+}) {
+  let state = useContext(OverlayTriggerStateContext);
+  if (!state) return null;
 
-  let triggerPropsWithRef = {
-    ...triggerProps,
-    ref: targetRef ? undefined : triggerRef,
-  };
-
-  let overlay = (
-    <Popover
-      {...props}
-      hideArrow={hideArrow}
-      triggerRef={targetRef || triggerRef}
-      state={state}
+  return (
+    <DialogContext.Provider
+      value={{ type, isDismissable, onClose: state.close }}
     >
       {typeof content === 'function' ? content(state.close) : content}
-    </Popover>
-  );
-
-  return (
-    <DialogTriggerBase
-      type="popover"
-      state={state}
-      triggerProps={triggerPropsWithRef}
-      dialogProps={overlayProps}
-      trigger={trigger}
-      overlay={overlay}
-    />
-  );
-}
-
-interface DialogTriggerBase {
-  type: 'modal' | 'popover' | 'tray' | 'fullscreen';
-  state: OverlayTriggerState;
-  isDismissable?: boolean;
-  dialogProps?: DialogProps | {};
-  triggerProps?: any;
-  overlay: ReactElement;
-  trigger: ReactElement;
-}
-
-function DialogTriggerBase({
-  type,
-  state,
-  isDismissable,
-  dialogProps = {},
-  triggerProps = {},
-  overlay,
-  trigger,
-}: DialogTriggerBase) {
-  let context = {
-    type,
-    onClose: state.close,
-    isDismissable,
-    ...dialogProps,
-  };
-
-  return (
-    <Fragment>
-      <PressResponder
-        {...mergeProps(triggerProps, { onPress: state.open })}
-        isPressed={state.isOpen && type !== 'modal' && type !== 'fullscreen'}
-      >
-        {trigger}
-      </PressResponder>
-      <DialogContext.Provider value={context}>{overlay}</DialogContext.Provider>
-    </Fragment>
+    </DialogContext.Provider>
   );
 }

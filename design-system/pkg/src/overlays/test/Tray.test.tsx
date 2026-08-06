@@ -1,7 +1,3 @@
-import {
-  OverlayTriggerProps,
-  useOverlayTriggerState,
-} from 'react-stately/useOverlayTriggerState';
 import { expect, jest, describe, it } from '@jest/globals';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { TestProvider } from '@keystar/ui/core';
@@ -72,11 +68,10 @@ describe('overlays/Tray', () => {
   });
 });
 
-function TestTray(props: OverlayTriggerProps & Omit<TrayProps, 'state'>) {
-  let state = useOverlayTriggerState(props);
+function TestTray(props: TrayProps) {
   return (
     <TestProvider>
-      <Tray {...props} state={state} />
+      <Tray {...props} />
     </TestProvider>
   );
 }
