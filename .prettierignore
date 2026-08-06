@@ -38,6 +38,7 @@ node_modules/
 
 # Next.js build output
 .next
+**/next-env.d.ts
 
 # Preconstruct build output
 dist

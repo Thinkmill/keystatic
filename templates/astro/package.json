@@ -20,10 +20,10 @@
     "@astrojs/react": "^6.0.0",
     "@keystatic/astro": "workspace:^",
     "@keystatic/core": "workspace:^",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "astro": "^7.0.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   }
 }

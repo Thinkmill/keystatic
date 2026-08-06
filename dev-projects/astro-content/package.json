@@ -19,11 +19,11 @@
     "@keystatic/core": "workspace:^",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "^4.3.2",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "astro": "^7.0.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "tailwindcss": "^4.3.2"
   }
 }

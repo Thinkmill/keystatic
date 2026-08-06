@@ -6,11 +6,10 @@ import { PressResponder } from 'react-aria/private/interactions/PressResponder';
 import { filterDOMProps } from 'react-aria/filterDOMProps';
 import { isMac } from 'react-aria/private/utils/platform';
 import { mergeProps } from 'react-aria/mergeProps';
-import { AriaLabelingProps, DOMAttributes } from '@react-types/shared';
+import { AriaLabelingProps, DOMAttributes, Key } from '@react-types/shared';
 import { assert, assertNever } from 'emery';
 import {
   Dispatch,
-  Key,
   KeyboardEvent,
   PropsWithChildren,
   ReactNode,

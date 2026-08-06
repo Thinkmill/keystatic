@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build && pnpm pagefind",
+    "cloudflare:build": "opennextjs-cloudflare build",
+    "cloudflare:preview": "pnpm cloudflare:build && opennextjs-cloudflare preview",
     "pagefind": "pagefind --site .next --output-path .next/static/chunks/app/\\(public\\)/pagefind",
     "start": "next start",
     "pagefind:local": "npm run build && cp -r .next/static/chunks/app/\\(public\\)/pagefind public/pagefind/"
@@ -13,7 +15,6 @@
   "keywords": [],
   "author": "",
   "dependencies": {
-    "@cloudflare/next-on-pages": "^1.11.0",
     "@fontsource/inter": "^5.0.5",
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.16",
@@ -25,24 +26,26 @@
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.3",
     "@types/node": "25.0.3",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "emery": "^1.4.1",
-    "next": "~15.1.10",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "next": "~16.3.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-focus-lock": "^2.9.4",
     "shiki": "^0.14.2",
     "typescript": "^5.5.3",
     "vercel": "^33.6.3"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/typography": "^0.5.9",
     "autoprefixer": "^10.4.13",
     "pagefind": "^1.0.4",
     "postcss": "^8.4.21",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.6",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "wrangler": "^4.118.0"
   }
 }
