@@ -10,28 +10,17 @@ import {
 
 import { ButtonProps } from './types';
 
-type ButtonState = {
-  isHovered: boolean;
-  isPressed: boolean;
-  isPending?: boolean;
-  isSelected?: boolean;
-};
-
 export const buttonClassList = new ClassList('Button', ['icon', 'text']);
 
-export function useButtonStyles(props: ButtonProps, state: ButtonState) {
+export function useButtonStyles(props: ButtonProps) {
   const {
     prominence = 'default',
     tone = prominence === 'high' ? 'accent' : 'neutral',
   } = props;
-  const { isHovered, isPending, isPressed } = state;
   const styleProps = useStyleProps(props);
 
   return {
     ...toDataAttributes({
-      hovered: isHovered || undefined,
-      pending: isPending || undefined,
-      pressed: isPressed || undefined,
       prominence: prominence === 'default' ? undefined : prominence,
       tone: tone,
       static: props.static,
@@ -73,7 +62,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           fontWeight: 'inherit',
           marginInline: tokenSchema.size.space.regular,
         },
-        [`&[data-pending] ${buttonClassList.selector('text')}`]: {
+        [`&[data-progress-visible] ${buttonClassList.selector('text')}`]: {
           opacity: 0,
         },
 
@@ -83,7 +72,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           height: tokenSchema.size.scale[225],
           width: tokenSchema.size.scale[225],
         },
-        [`&[data-pending] ${buttonClassList.selector('icon')}`]: {
+        [`&[data-progress-visible] ${buttonClassList.selector('icon')}`]: {
           opacity: 0,
         },
 
@@ -105,7 +94,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             easing: 'easeOut',
           }),
         },
-        '&[data-focus=visible]::after': {
+        '&[data-focus-visible]::after': {
           boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} var(--focus-ring-color)`,
           margin: `calc(-1 * ${tokenSchema.size.alias.focusRingGap})`,
         },
@@ -115,7 +104,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           backgroundColor: tokenSchema.color.scale.slate4,
           color: tokenSchema.color.foreground.neutralEmphasis,
 
-          '&[data-hovered], &[data-focus="visible"]': {
+          '&[data-hovered], &[data-focus-visible]': {
             backgroundColor: tokenSchema.color.scale.slate5,
           },
           '&[data-pressed]': {
@@ -141,7 +130,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: '#ffffff12',
             color: '#fff',
 
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: '#ffffff1a',
             },
             '&[data-pressed]': {
@@ -156,7 +145,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: '#00000012',
             color: '#000',
 
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: '#0000001a',
             },
             '&[data-pressed]': {
@@ -174,7 +163,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           backgroundColor: tokenSchema.color.scale.slate10,
           color: tokenSchema.color.foreground.inverse,
 
-          '&[data-hovered], &[data-focus="visible"]': {
+          '&[data-hovered], &[data-focus-visible]': {
             backgroundColor: tokenSchema.color.scale.slate11,
           },
           '&[data-pressed]': {
@@ -186,7 +175,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: tokenSchema.color.scale.indigo9,
             color: tokenSchema.color.foreground.onEmphasis,
 
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: tokenSchema.color.scale.indigo10,
             },
             '&[data-pressed]': {
@@ -197,7 +186,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: tokenSchema.color.scale.red9,
             color: tokenSchema.color.foreground.onEmphasis,
 
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: tokenSchema.color.scale.red10,
             },
             '&[data-pressed]': {
@@ -216,7 +205,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: '#ffffffe6',
             color: '#000',
 
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: '#fff',
             },
             '&[data-pressed]': {
@@ -231,7 +220,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: '#000000e6',
             color: '#fff',
 
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: '#000',
             },
             '&[data-pressed]': {
@@ -249,7 +238,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           color: tokenSchema.color.foreground.neutral,
 
           // neutral interactions
-          '&[data-hovered], &[data-focus="visible"]': {
+          '&[data-hovered], &[data-focus-visible]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
             color: tokenSchema.color.foreground.neutralEmphasis,
           },
@@ -260,7 +249,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           // tones
           '&[data-tone=accent]': {
             color: tokenSchema.color.foreground.accent,
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: tokenSchema.color.scale.indigo3,
             },
             '&[data-pressed]': {
@@ -269,7 +258,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           },
           '&[data-tone=critical]': {
             color: tokenSchema.color.foreground.critical,
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: tokenSchema.color.scale.red3,
             },
             '&[data-pressed]': {
@@ -286,7 +275,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           '&[data-static=light]': {
             color: '#fff',
 
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: '#ffffff1a',
             },
             '&[data-pressed]': {
@@ -299,7 +288,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           '&[data-static=dark]': {
             color: '#000',
 
-            '&[data-hovered], &[data-focus="visible"]': {
+            '&[data-hovered], &[data-focus-visible]': {
               backgroundColor: '#0000001a',
             },
             '&[data-pressed]': {

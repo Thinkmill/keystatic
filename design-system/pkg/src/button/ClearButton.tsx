@@ -1,7 +1,7 @@
-import { useButton } from 'react-aria/useButton';
-import { useHover } from 'react-aria/useHover';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
+import {
+  Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
+} from 'react-aria-components/Button';
 import { ForwardedRef, forwardRef } from 'react';
 
 import { xIcon } from '@keystar/ui/icon/icons/xIcon';
@@ -9,13 +9,12 @@ import { Icon } from '@keystar/ui/icon';
 import {
   classNames,
   css,
-  FocusRing,
+  filterStyleProps,
   toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { PropsWithElementType } from '@keystar/ui/utils/ts';
 
 import { ButtonProps } from './types';
 
@@ -35,49 +34,30 @@ type ClearButtonProps = Omit<
  * search.
  */
 export const ClearButton = forwardRef(function ClearButton(
-  props: PropsWithElementType<ClearButtonProps>,
+  props: ClearButtonProps,
   forwardedRef: ForwardedRef<HTMLButtonElement>
 ) {
-  let {
-    autoFocus,
-    isDisabled,
-    preventFocus,
-    elementType = preventFocus ? 'div' : 'button',
-    ...otherProps
-  } = props;
+  let { autoFocus, excludeFromTabOrder, preventFocus, ...otherProps } = props;
 
-  let domRef = useObjectRef(forwardedRef);
-  let { buttonProps, isPressed } = useButton({ ...props, elementType }, domRef);
-  let { hoverProps, isHovered } = useHover({ isDisabled });
-  let styleProps = useClearButtonStyles(otherProps, { isHovered, isPressed });
-
-  // For cases like the clear button in a search field, remove the tabIndex so
-  // iOS 14 with VoiceOver doesn't focus the button and hide the keyboard when
-  // moving the cursor over the clear button.
-  if (preventFocus) {
-    const { tabIndex, ..._buttonProps } = buttonProps;
-    buttonProps = _buttonProps;
-  }
-
-  let ElementType = elementType;
+  let styleProps = useClearButtonStyles(otherProps);
   return (
-    <FocusRing autoFocus={autoFocus}>
-      <ElementType
-        {...styleProps}
-        {...mergeProps(buttonProps, hoverProps)}
-        ref={domRef}
-      >
-        <Icon src={xIcon} />
-      </ElementType>
-    </FocusRing>
+    <AriaButton
+      {...(filterStyleProps(props, [
+        'preventFocus',
+        'static',
+      ]) as AriaButtonProps)}
+      {...styleProps}
+      autoFocus={autoFocus}
+      excludeFromTabOrder={preventFocus || excludeFromTabOrder}
+      onMouseDown={preventFocus ? event => event.preventDefault() : undefined}
+      ref={forwardedRef}
+    >
+      <Icon src={xIcon} />
+    </AriaButton>
   );
 });
 
-function useClearButtonStyles(
-  props: ClearButtonProps,
-  state: { isHovered: boolean; isPressed: boolean }
-) {
-  let { isPressed, isHovered } = state;
+function useClearButtonStyles(props: ClearButtonProps) {
   let styleProps = useStyleProps(props);
 
   const clearButtonStyles = css({
@@ -107,15 +87,15 @@ function useClearButtonStyles(
         easing: 'easeOut',
       }),
     },
-    '&[data-focus=visible]::after': {
+    '&[data-focus-visible]::after': {
       boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} var(--focus-ring-color)`,
       margin: `calc(-1 * ${tokenSchema.size.alias.focusRingGap})`,
     },
 
-    '&[data-interaction=hover]': {
+    '&[data-hovered]': {
       color: tokenSchema.color.foreground.neutral,
     },
-    '&[data-interaction=press]': {
+    '&[data-pressed]': {
       color: tokenSchema.color.foreground.neutralEmphasis,
     },
     '&:disabled, &[aria-disabled]': {
@@ -126,10 +106,10 @@ function useClearButtonStyles(
     '&[data-static=light]': {
       color: '#fff',
 
-      '&[data-interaction=hover], &[data-focus="visible"]': {
+      '&[data-hovered], &[data-focus-visible]': {
         backgroundColor: '#ffffff1a',
       },
-      '&[data-interaction=press]': {
+      '&[data-pressed]': {
         backgroundColor: '#ffffff26',
       },
       '&:disabled, &[aria-disabled]': {
@@ -140,10 +120,10 @@ function useClearButtonStyles(
     '&[data-static=dark]': {
       color: '#000',
 
-      '&[data-interaction=hover], &[data-focus="visible"]': {
+      '&[data-hovered], &[data-focus-visible]': {
         backgroundColor: '#0000001a',
       },
-      '&[data-interaction=press]': {
+      '&[data-pressed]': {
         backgroundColor: '#00000026',
       },
       '&:disabled, &[aria-disabled]': {
@@ -156,7 +136,6 @@ function useClearButtonStyles(
     ...styleProps,
     ...toDataAttributes({
       static: props.static,
-      interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
     }),
     className: classNames(clearButtonStyles, styleProps.className),
   };

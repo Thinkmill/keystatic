@@ -1,6 +1,6 @@
 'use client';
 
-export { VisuallyHidden } from 'react-aria/VisuallyHidden';
+export { VisuallyHidden } from 'react-aria-components';
 
 export { Heading, headingClassList, useHeadingContext } from './heading';
 export { Text, textClassList, useTextStyles, useTextContext } from './text';

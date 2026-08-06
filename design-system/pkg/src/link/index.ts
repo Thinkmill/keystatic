@@ -1,7 +1,7 @@
 'use client';
 
-// re-export from @react-aria for convenience
-export { useLink } from 'react-aria/useLink';
+export { Link } from 'react-aria-components/Link';
+export type { LinkProps } from 'react-aria-components/Link';
 
 export { TextLink } from './TextLink';
 

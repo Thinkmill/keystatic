@@ -1,19 +1,19 @@
-import { useButton } from 'react-aria/useButton';
-import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
-import { useHover } from 'react-aria/useHover';
-import { useLink } from 'react-aria/useLink';
-import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
+import {
+  Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
+} from 'react-aria-components/Button';
+import {
+  Link as AriaLink,
+  type LinkProps as AriaLinkProps,
+} from 'react-aria-components/Link';
 import { ForwardedRef, forwardRef, useEffect, useMemo, useState } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
 import { SlotProvider, useSlotProps } from '@keystar/ui/slots';
-import { FocusRing } from '@keystar/ui/style';
+import { filterStyleProps } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
-import localizedMessages from './l10n';
 import {
   ButtonElementProps,
   ButtonProps,
@@ -34,24 +34,25 @@ export const Button = forwardRef(function Button(
   props = useProviderProps(props);
   props = useSlotProps(props, 'button');
   const children = useButtonChildren(props);
-  const domRef = useObjectRef(forwardedRef);
 
   if ('href' in props && props.href) {
     return (
-      <FocusRing autoFocus={props.autoFocus}>
-        <LinkButton ref={domRef as ForwardedRef<HTMLAnchorElement>} {...props}>
-          {children}
-        </LinkButton>
-      </FocusRing>
+      <LinkButton
+        ref={forwardedRef as ForwardedRef<HTMLAnchorElement>}
+        {...props}
+      >
+        {children}
+      </LinkButton>
     );
   }
 
   return (
-    <FocusRing autoFocus={props.autoFocus}>
-      <BaseButton ref={domRef as ForwardedRef<HTMLButtonElement>} {...props}>
-        {children}
-      </BaseButton>
-    </FocusRing>
+    <BaseButton
+      ref={forwardedRef as ForwardedRef<HTMLButtonElement>}
+      {...props}
+    >
+      {children}
+    </BaseButton>
   );
 });
 
@@ -63,25 +64,21 @@ const LinkButton = forwardRef(function Button(
   props: LinkElementProps,
   forwardedRef: ForwardedRef<HTMLAnchorElement>
 ) {
-  const { children, isDisabled, ...otherProps } = props;
-
-  const domRef = useObjectRef(forwardedRef);
-  const { buttonProps, isPressed } = useButton(
-    { elementType: 'a', ...props },
-    domRef
-  );
-  const { linkProps } = useLink(props, domRef);
-  const { hoverProps, isHovered } = useHover({ isDisabled });
-  const styleProps = useButtonStyles(props, { isHovered, isPressed });
+  const { children } = props;
+  const styleProps = useButtonStyles(props);
 
   return (
-    <a
-      {...filterDOMProps(otherProps)}
-      {...mergeProps(buttonProps, linkProps, hoverProps, styleProps)}
-      ref={domRef}
+    <AriaLink
+      {...(filterStyleProps(props, [
+        'prominence',
+        'tone',
+        'static',
+      ]) as AriaLinkProps)}
+      {...styleProps}
+      ref={forwardedRef}
     >
       {children}
-    </a>
+    </AriaLink>
   );
 });
 
@@ -90,19 +87,10 @@ const BaseButton = forwardRef(function Button(
   props: ButtonElementProps,
   forwardedRef: ForwardedRef<HTMLButtonElement>
 ) {
-  props = disablePendingProps(props);
-  const { children, isDisabled, isPending, ...otherProps } = props;
+  const { children, isPending } = props;
 
   const [isProgressVisible, setIsProgressVisible] = useState(false);
-  const stringFormatter = useLocalizedStringFormatter(localizedMessages);
-  const domRef = useObjectRef(forwardedRef);
-  const { buttonProps, isPressed } = useButton(props, domRef);
-  const { hoverProps, isHovered } = useHover({ isDisabled });
-  const styleProps = useButtonStyles(props, {
-    isHovered,
-    isPending: isProgressVisible,
-    isPressed,
-  });
+  const styleProps = useButtonStyles(props);
 
   // wait a second before showing the progress indicator. for actions that
   // resolve quickly, this prevents a flash of the pending treatment.
@@ -121,56 +109,29 @@ const BaseButton = forwardRef(function Button(
     };
   }, [isPending]);
 
-  // prevent form submission when while pending
-  const pendingProps = isPending
-    ? {
-        onClick: (e: MouseEvent) => e.preventDefault(),
-      }
-    : {
-        onClick: () => {}, // satisfy TS expectations…
-      };
-
   return (
-    <button
-      ref={domRef}
+    <AriaButton
+      {...(filterStyleProps(props, [
+        'prominence',
+        'tone',
+        'static',
+      ]) as AriaButtonProps)}
       {...styleProps}
-      {...filterDOMProps(otherProps, { propNames: new Set(['form']) })}
-      {...mergeProps(buttonProps, hoverProps, pendingProps)}
-      aria-disabled={isPending ? 'true' : undefined}
+      ref={forwardedRef}
+      data-progress-visible={isProgressVisible || undefined}
     >
       {children}
       {isProgressVisible && (
         <ProgressCircle
-          aria-atomic="false"
-          aria-live="assertive"
-          aria-label={stringFormatter.format('pending')}
+          aria-hidden
           isIndeterminate
           size="small"
           UNSAFE_style={{ position: 'absolute' }}
         />
       )}
-    </button>
+    </AriaButton>
   );
 });
-
-// Utils
-// -----------------------------------------------------------------------------
-
-function disablePendingProps(props: ButtonElementProps) {
-  // disallow interaction while the button is pending
-  if (props.isPending) {
-    props = { ...props };
-    props.onKeyDown = undefined;
-    props.onKeyUp = undefined;
-    props.onPress = undefined;
-    props.onPressChange = undefined;
-    props.onPressEnd = undefined;
-    props.onPressStart = undefined;
-    props.onPressUp = undefined;
-  }
-
-  return props;
-}
 
 export const useButtonChildren = (props: CommonButtonProps) => {
   const { children } = props;

@@ -4,7 +4,7 @@ import {
   ModalProvider,
   useModalProvider,
 } from 'react-aria/private/overlays/useModal';
-import { RouterProvider } from 'react-aria/private/utils/openLink';
+import { RouterProvider } from 'react-aria-components';
 import { filterDOMProps } from 'react-aria/filterDOMProps';
 
 import {
