@@ -5,9 +5,19 @@ import {
 
 import { classNames, css, tokenSchema } from '@keystar/ui/style';
 
-export function SegmentedDateInput({ className }: { className?: string }) {
+export function SegmentedDateInput({
+  className,
+  slot,
+  ...props
+}: {
+  className?: string;
+  slot?: string;
+  'data-testid'?: string;
+}) {
   return (
     <AriaDateInput
+      {...props}
+      slot={slot}
       className={classNames(
         css({
           alignItems: 'center',

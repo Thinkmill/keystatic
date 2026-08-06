@@ -1,84 +1,48 @@
-import { AriaDatePickerProps } from 'react-aria/useDatePicker';
-import { AriaDateRangePickerProps } from 'react-aria/useDateRangePicker';
-import { DateValue } from 'react-stately/useCalendarState';
-import { Granularity, MappedDateValue } from 'react-stately/useDateFieldState';
-import { MappedTimeValue, TimeValue } from 'react-stately/useTimeFieldState';
-import { FocusableProps, RangeValue, ValueBase } from '@react-types/shared';
+import type {
+  DateFieldProps as AriaDateFieldProps,
+  DateValue,
+} from 'react-aria-components/DateField';
+import type { DatePickerProps as AriaDatePickerProps } from 'react-aria-components/DatePicker';
+import type { DateRangePickerProps as AriaDateRangePickerProps } from 'react-aria-components/DateRangePicker';
+import type {
+  TimeFieldProps as AriaTimeFieldProps,
+  TimeValue,
+} from 'react-aria-components/TimeField';
 
 import { FieldProps } from '@keystar/ui/field';
+import { BaseStyleProps } from '@keystar/ui/style';
 
-type DateFieldBase<T extends DateValue> = {
-  /** The minimum allowed date that a user may select. */
-  minValue?: DateValue;
-  /** The maximum allowed date that a user may select. */
-  maxValue?: DateValue;
-  /** Callback that is called for each date of the calendar. If it returns true, then the date is unavailable. */
-  isDateUnavailable?: (date: DateValue) => boolean;
-  /** A placeholder date that influences the format of the placeholder shown when no value is selected. Defaults to today's date at midnight. */
-  placeholderValue?: T;
-  /** Whether to display the time in 12 or 24 hour format. By default, this is determined by the user's locale. */
-  hourCycle?: 12 | 24;
-  /** Determines the smallest unit that is displayed in the date picker. By default, this is `"day"` for dates, and `"minute"` for times. */
-  granularity?: Granularity;
-  /**
-   * Whether to hide the time zone abbreviation.
-   * @default false
-   */
-  hideTimeZone?: boolean;
-  /**
-   * Whether to always show leading zeros in the month, day, and hour fields.
-   * By default, this is determined by the user's locale.
-   */
-  shouldForceLeadingZeros?: boolean;
+type FieldCompositionProps = FieldProps & BaseStyleProps;
+
+export type DateFieldProps<T extends DateValue> = Omit<
+  AriaDateFieldProps<T>,
+  'children' | 'className' | 'style' | keyof FieldCompositionProps
+> &
+  FieldCompositionProps;
+
+export type TimeFieldProps<T extends TimeValue> = Omit<
+  AriaTimeFieldProps<T>,
+  'children' | 'className' | 'style' | keyof FieldCompositionProps
+> &
+  FieldCompositionProps;
+
+type PickerOptions = {
+  /** The maximum number of months to display at once. */
+  maxVisibleMonths?: number;
+  /** Whether the calendar popover should flip when space is limited. */
+  shouldFlip?: boolean;
 };
 
-export type DateFieldProps<T extends DateValue> = DateFieldBase<T> &
-  FocusableProps &
-  ValueBase<T | null, MappedDateValue<T> | null> &
-  FieldProps;
+export type DatePickerProps<T extends DateValue> = Omit<
+  AriaDatePickerProps<T>,
+  'children' | 'className' | 'style' | keyof FieldCompositionProps
+> &
+  FieldCompositionProps &
+  PickerOptions;
 
-export type TimeFieldProps<T extends TimeValue> = {
-  /** Whether to display the time in 12 or 24 hour format. By default, this is determined by the user's locale. */
-  hourCycle?: 12 | 24;
-  /**
-   * Determines the smallest unit that is displayed in the time picker.
-   * @default 'minute'
-   */
-  granularity?: Exclude<Granularity, 'day'>;
-  /** Whether to hide the time zone abbreviation. */
-  hideTimeZone?: boolean;
-  /**
-   * A placeholder time that influences the format of the placeholder shown when no value is selected.
-   * Defaults to 12:00 AM or 00:00 depending on the hour cycle.
-   */
-  placeholderValue?: T;
-  /** The minimum allowed time that a user may select. */
-  minValue?: TimeValue;
-  /** The maximum allowed time that a user may select. */
-  maxValue?: TimeValue;
-} & FocusableProps &
-  ValueBase<T | null, MappedTimeValue<T> | null> &
-  FieldProps;
-
-type DatePickerBase<T extends DateValue> = {
-  /**
-   * The maximum number of months to display at once in the calendar popover, if screen space permits.
-   * @default 1
-   */
-  maxVisibleMonths?: number;
-  /**
-   * Whether the calendar popover should automatically flip direction when space is limited.
-   * @default true
-   */
-  shouldFlip?: boolean;
-} & DateFieldBase<T> &
-  FocusableProps &
-  FieldProps;
-
-export type DatePickerProps<T extends DateValue> = DatePickerBase<T> &
-  AriaDatePickerProps<T> &
-  ValueBase<T | null, MappedDateValue<T> | null>;
-
-export type DateRangePickerProps<T extends DateValue> = DatePickerBase<T> &
-  AriaDateRangePickerProps<T> &
-  ValueBase<RangeValue<T> | null, RangeValue<MappedDateValue<T>>>;
+export type DateRangePickerProps<T extends DateValue> = Omit<
+  AriaDateRangePickerProps<T>,
+  'children' | 'className' | 'style' | keyof FieldCompositionProps
+> &
+  FieldCompositionProps &
+  PickerOptions;

@@ -1,29 +1,49 @@
-import { useDateRangePicker } from 'react-aria/useDateRangePicker';
-import { useFocusRing } from 'react-aria/useFocusRing';
-import { useHover } from 'react-aria/useHover';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useDateRangePickerState } from 'react-stately/useDateRangePickerState';
-import { DateValue } from 'react-stately/useCalendarState';
-import React, { ReactElement, Ref, useRef } from 'react';
+import {
+  DateRangePicker as AriaDateRangePicker,
+  type DateRangePickerProps as AriaDateRangePickerProps,
+  type DateValue,
+} from 'react-aria-components/DateRangePicker';
+import { Dialog } from 'react-aria-components/Dialog';
+import { Group } from 'react-aria-components/Group';
+import { Popover } from 'react-aria-components/Popover';
+import React, { ReactElement, Ref } from 'react';
 
 import { FieldButton } from '@keystar/ui/button';
 import { RangeCalendar } from '@keystar/ui/calendar';
 import { useProviderProps } from '@keystar/ui/core';
-import { FieldPrimitive } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
 import { calendarDaysIcon } from '@keystar/ui/icon/icons/calendarDaysIcon';
+import {
+  classNames,
+  css,
+  filterStyleProps,
+  tokenSchema,
+  useStyleProps,
+} from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
-import { Input } from './Input';
-import { DatePickerField } from './DatePickerField';
-import { usePickerStyles } from './DatePicker';
-import { DatePickerPopover } from './DatePickerPopover';
+import {
+  pickerButtonClassName,
+  pickerCalendarContainerClassName,
+  pickerDialogClassName,
+  pickerGroupClassName,
+  pickerInputClassName,
+  pickerPopoverClassName,
+  pickerRootClassName,
+} from './DatePicker';
 import { DateRangePickerProps } from './types';
+import { SegmentedDateInput } from './SegmentedDateInput';
 import {
   useFocusManagerRef,
   useFormatHelpText,
   useVisibleMonths,
 } from './utils';
+import {
+  FieldDescriptionElement,
+  FieldErrorElement,
+  FieldLabelElement,
+  fieldRootClassName,
+} from '../field/FieldElements';
 
 function DateRangePicker<T extends DateValue>(
   props: DateRangePickerProps<T>,
@@ -31,138 +51,92 @@ function DateRangePicker<T extends DateValue>(
 ) {
   props = useProviderProps(props);
   let {
-    autoFocus,
-    isDisabled,
-    isReadOnly,
+    contextualHelp,
+    errorMessage,
+    isRequired,
+    label,
+    labelElementType: _labelElementType,
     maxVisibleMonths = 1,
     pageBehavior,
+    shouldFlip,
+    ...otherProps
   } = props;
-  let { hoverProps, isHovered } = useHover({ isDisabled });
-
-  let triggerRef = useRef<HTMLDivElement>(null);
-  let domRef = useFocusManagerRef(forwardedRef);
-  let state = useDateRangePickerState(props);
-  if (props.errorMessage) {
-    state = {
-      ...state,
-      validationState: 'invalid',
-    };
-  }
-  let {
-    buttonProps,
-    calendarProps,
-    descriptionProps,
-    dialogProps,
-    endFieldProps,
-    errorMessageProps,
-    groupProps,
-    labelProps,
-    startFieldProps,
-  } = useDateRangePicker(props, state, triggerRef);
-
-  let { isFocused, isFocusVisible, focusProps } = useFocusRing({
-    within: true,
-    isTextInput: true,
-    autoFocus,
-  });
-
-  let { isFocused: isFocusedButton, focusProps: focusPropsButton } =
-    useFocusRing({
-      within: false,
-      isTextInput: false,
-      autoFocus,
-    });
-
-  // Note: this description is intentionally not passed to useDateRangePicker.
-  // The format help text is unnecessary for screen reader users because each segment already has a label.
   let description = useFormatHelpText(props);
-  if (description && !props.description) {
-    const { id, ..._descriptionProps } = descriptionProps;
-    descriptionProps = _descriptionProps;
-  }
-
   let visibleMonths = useVisibleMonths(maxVisibleMonths);
-
-  let styleProps = usePickerStyles({
-    isHovered,
-    isFocused,
-    isFocusVisible: isFocusVisible && !isFocusedButton,
-    isDisabled,
-    isReadOnly,
-    isInvalid: state.validationState === 'invalid',
-  });
+  let domRef = useFocusManagerRef(forwardedRef);
+  let styleProps = useStyleProps(props);
 
   return (
-    <FieldPrimitive
-      {...props}
+    <AriaDateRangePicker
+      {...(filterStyleProps(otherProps) as AriaDateRangePickerProps<T>)}
       ref={domRef}
-      description={description}
-      labelElementType="span"
-      labelProps={labelProps}
-      descriptionProps={descriptionProps}
-      errorMessageProps={errorMessageProps}
-      // validationState={state.validationState}
+      isInvalid={Boolean(errorMessage)}
+      isRequired={isRequired}
+      className={classNames(
+        fieldRootClassName,
+        pickerRootClassName,
+        styleProps.className
+      )}
+      style={styleProps.style}
     >
-      <div
-        {...mergeProps(groupProps, hoverProps, focusProps)}
-        {...styleProps.root}
-        ref={triggerRef}
-      >
-        <Input
-          isDisabled={isDisabled}
-          isInvalid={state.isInvalid}
-          disableFocusRing
-          {...styleProps.input}
-        >
-          {/* @ts-expect-error can't reconcile changes to react-aria errorMessage fn type */}
-          <DatePickerField
-            rangeFieldType="start"
-            data-testid="start-date"
-            {...startFieldProps}
-          />
-          {/* em—dash */}
-          <Text aria-hidden="true" trim={false}>
-            {'\u2014'}
-          </Text>
-          {/* @ts-expect-error can't reconcile changes to react-aria errorMessage fn type */}
-          <DatePickerField
-            rangeFieldType="end"
-            data-testid="end-date"
-            {...endFieldProps}
-          />
-        </Input>
+      <FieldLabelElement
+        contextualHelp={contextualHelp}
+        isRequired={isRequired}
+        label={label}
+      />
+      <FieldDescriptionElement>{description}</FieldDescriptionElement>
+      <Group className={pickerGroupClassName}>
+        <SegmentedDateInput
+          slot="start"
+          data-testid="start-date"
+          className={classNames(pickerInputClassName, rangeStartClassName)}
+        />
+        <Text aria-hidden="true" trim={false}>
+          {'\u2014'}
+        </Text>
+        <SegmentedDateInput
+          slot="end"
+          data-testid="end-date"
+          className={classNames(pickerInputClassName, rangeEndClassName)}
+        />
         <FieldButton
-          {...mergeProps(buttonProps, focusPropsButton)}
-          {...styleProps.button}
-          isInvalid={state.isInvalid}
-          isDisabled={isDisabled || isReadOnly}
+          UNSAFE_className={pickerButtonClassName}
+          aria-label="Open calendar"
         >
           <Icon src={calendarDaysIcon} />
         </FieldButton>
-        <DatePickerPopover
-          dialogProps={dialogProps}
-          shouldFlip={props.shouldFlip}
-          state={state}
-          triggerRef={triggerRef}
-        >
-          <RangeCalendar
-            {...calendarProps}
-            visibleMonths={visibleMonths}
-            pageBehavior={pageBehavior}
-          />
-        </DatePickerPopover>
-      </div>
-    </FieldPrimitive>
+      </Group>
+      <Popover
+        placement="bottom start"
+        shouldFlip={shouldFlip}
+        className={pickerPopoverClassName}
+      >
+        <Dialog className={pickerDialogClassName}>
+          <div className={pickerCalendarContainerClassName}>
+            <RangeCalendar
+              visibleMonths={visibleMonths}
+              pageBehavior={pageBehavior}
+            />
+          </div>
+        </Dialog>
+      </Popover>
+      <FieldErrorElement>{errorMessage}</FieldErrorElement>
+    </AriaDateRangePicker>
   );
 }
 
-// forwardRef doesn't support generic parameters, so cast the result to the correct type
-// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
+const rangeStartClassName = css({
+  borderEndEndRadius: 0,
+  borderStartEndRadius: 0,
+  paddingInlineEnd: tokenSchema.size.space.regular,
+});
 
-/**
- * DateRangePickers combine two DateFields and a RangeCalendar popover to allow users
- * to enter or select a date and time range.
- */
+const rangeEndClassName = css({
+  borderRadius: 0,
+  paddingInlineStart: tokenSchema.size.space.regular,
+});
+
+/** Date range pickers combine two segmented inputs with a range calendar. */
 const _DateRangePicker: <T extends DateValue>(
   props: DateRangePickerProps<T> & { ref?: Ref<HTMLDivElement> }
 ) => ReactElement = React.forwardRef(DateRangePicker as any) as any;

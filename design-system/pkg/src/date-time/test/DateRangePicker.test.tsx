@@ -219,10 +219,10 @@ describe('date-time/DateRangePicker', () => {
   });
 
   it('should pass through data attributes', function () {
-    let { getByTestId } = renderWithProvider(
+    let { getAllByRole, getByTestId } = renderWithProvider(
       <DateRangePicker label="Date" data-testid="foo" />
     );
-    expect(getByTestId('foo')).toHaveAttribute('role', 'group');
+    expect(getByTestId('foo')).toContainElement(getAllByRole('group')[0]);
   });
 
   // eslint-disable-next-line jest/no-disabled-tests
