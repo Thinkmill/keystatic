@@ -63,22 +63,21 @@ export function NavItem({
           <ComingSoonBadge />
         </div>
       ) : (
-        <Link href={href} legacyBehavior>
-          <a
-            className={cx(
-              styleShared,
-              isCurrentPage ? styleCurrent : styleIdle,
-              hasStatusBadge ? 'flex items-center gap-1' : ''
-            )}
-            href={href}
-            title={title}
-            tabIndex={tabIndex}
-          >
-            {label}
-            {status === 'new' && <NewBadge />}
-            {status === 'experimental' && <ComingSoonBadge />}
-            {status === 'deprecated' && <DeprecatedBadge />}
-          </a>
+        <Link
+          href={href}
+          className={cx(
+            styleShared,
+            isCurrentPage ? styleCurrent : styleIdle,
+            hasStatusBadge ? 'flex items-center gap-1' : ''
+          )}
+          title={title}
+          tabIndex={tabIndex}
+          prefetch={false}
+        >
+          {label}
+          {status === 'new' && <NewBadge />}
+          {status === 'experimental' && <ComingSoonBadge />}
+          {status === 'deprecated' && <DeprecatedBadge />}
         </Link>
       )}
     </li>
