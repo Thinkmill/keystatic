@@ -12,6 +12,7 @@ import {
   useState,
 } from 'react';
 import type { Key } from '@react-types/shared';
+import { ToolbarContext } from 'react-aria-components/Toolbar';
 
 import {
   ActionButton,
@@ -67,6 +68,7 @@ function ActionGroup<T extends object>(
     summaryIcon,
   } = props;
   let styleProps = useStyleProps(props);
+  let toolbarContext = useContext(ToolbarContext);
   if (
     overflowMode === 'collapse' &&
     (!items || typeof children !== 'function')
@@ -162,7 +164,9 @@ function ActionGroup<T extends object>(
       >
         <div
           ref={groupRef}
-          role={selectionMode === 'none' ? 'toolbar' : 'group'}
+          role={
+            selectionMode === 'none' && !toolbarContext ? 'toolbar' : 'group'
+          }
           aria-label={props['aria-label']}
           aria-labelledby={props['aria-labelledby']}
           {...toDataAttributes({

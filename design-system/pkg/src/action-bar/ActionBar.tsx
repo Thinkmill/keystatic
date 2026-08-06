@@ -1,11 +1,12 @@
 import { FocusScope } from 'react-aria/FocusScope';
 import { announce } from 'react-aria/private/live-announcer/LiveAnnouncer';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
-import { useKeyboard } from 'react-aria/useKeyboard';
 import { filterDOMProps } from 'react-aria/filterDOMProps';
 import { useObjectRef } from 'react-aria/useObjectRef';
+import { Toolbar } from 'react-aria-components/Toolbar';
 import React, {
   ForwardedRef,
+  KeyboardEvent,
   ReactElement,
   Ref,
   useEffect,
@@ -78,14 +79,12 @@ function ActionBarInner<T extends object>(
     setLastCount(selectedItemCount);
   }
 
-  let { keyboardProps } = useKeyboard({
-    onKeyDown(e) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClearSelection();
-      }
-    },
-  });
+  let onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      onClearSelection();
+    }
+  };
 
   // Announce "actions available" on mount.
   let isInitial = useRef(true);
@@ -102,7 +101,7 @@ function ActionBarInner<T extends object>(
       <div
         {...filterDOMProps(props)}
         {...styleProps}
-        {...keyboardProps}
+        onKeyDown={onKeyDown}
         data-open={isOpen}
         ref={ref}
         className={classNames(
@@ -124,7 +123,8 @@ function ActionBarInner<T extends object>(
           styleProps.className
         )}
       >
-        <div
+        <Toolbar
+          aria-label={stringFormatter.format('actions')}
           data-open={isOpen}
           className={classNames(
             css({
@@ -183,7 +183,7 @@ function ActionBarInner<T extends object>(
               stringFormatter.format('selected', { count: lastCount })
             */}
           </Text>
-        </div>
+        </Toolbar>
       </div>
     </FocusScope>
   );
