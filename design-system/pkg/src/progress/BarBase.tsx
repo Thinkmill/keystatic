@@ -1,92 +1,49 @@
-import { clamp } from 'react-stately/private/utils/number';
 import { warning } from 'emery';
-import { CSSProperties, ForwardedRef, forwardRef, HTMLAttributes } from 'react';
+import { Fragment } from 'react';
+import { Label } from 'react-aria-components/Label';
 
 import {
   classNames,
   css,
   keyframes,
-  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
-import { ProgressBarProps } from './types';
+import { CommonBarProps } from './types';
 
-interface BarBaseProps extends ProgressBarProps {
-  barClassName?: string;
-  barProps?: HTMLAttributes<HTMLDivElement>;
-  labelProps?: Omit<HTMLAttributes<HTMLLabelElement>, 'color'>;
-}
+type BarBaseProps = CommonBarProps & {
+  isIndeterminate?: boolean;
+  percentage?: number;
+  valueText?: string;
+};
 
-/** @private Internal component shared between `Meter` and `ProgressBar`. */
-export const BarBase = forwardRef(function BarBase(
-  props: BarBaseProps,
-  forwardedRef: ForwardedRef<HTMLDivElement>
-) {
+/** @private Visual content shared between `Meter` and `ProgressBar`. */
+export function BarBase(props: BarBaseProps) {
   let {
-    value = 0,
-    minValue = 0,
-    maxValue = 100,
     label,
-    barClassName,
     showValueLabel = !!label,
+    valueLabel,
+    valueText,
+    percentage,
     isIndeterminate,
-    barProps,
-    labelProps,
-    'aria-label': ariaLabel,
-    'aria-labelledby': ariaLabelledby,
-    ...otherProps
   } = props;
-  let styleProps = useStyleProps(otherProps);
-
-  value = clamp(value, minValue, maxValue);
-
-  let barStyle: CSSProperties = {};
-  if (!isIndeterminate) {
-    let percentage = (value - minValue) / (maxValue - minValue);
-    barStyle.width = `${Math.round(percentage * 100)}%`;
-  }
 
   warning(
-    !!(label || ariaLabel || ariaLabelledby),
+    !!(label || props['aria-label'] || props['aria-labelledby']),
     'If you do not provide a visible label via children, you must specify an aria-label or aria-labelledby attribute for accessibility.'
   );
 
   return (
-    <div
-      {...barProps}
-      {...styleProps}
-      ref={forwardedRef}
-      className={classNames(
-        css({
-          '--bar-fill': tokenSchema.color.background.accentEmphasis,
-
-          alignItems: 'flex-start',
-          display: 'inline-flex',
-          gap: tokenSchema.size.space.regular,
-          flexFlow: 'wrap',
-          isolation: 'isolate',
-          justifyContent: 'space-between',
-          minWidth: 0,
-          position: 'relative',
-          verticalAlign: 'top',
-          width: tokenSchema.size.alias.singleLineWidth,
-        }),
-        barClassName,
-        styleProps.className
-      )}
-    >
+    <Fragment>
       {label && (
-        <Text {...labelProps} flex>
-          {label}
-        </Text>
+        <Label>
+          <Text flex>{label}</Text>
+        </Label>
       )}
-      {showValueLabel && barProps && (
-        <Text flexShrink={0}>{barProps['aria-valuetext']}</Text>
-      )}
+      {showValueLabel && <Text flexShrink={0}>{valueLabel ?? valueText}</Text>}
       <div
         className={css({
           backgroundColor: tokenSchema.color.border.muted,
@@ -99,7 +56,7 @@ export const BarBase = forwardRef(function BarBase(
         })}
       >
         <div
-          {...toDataAttributes({ indeterminate: isIndeterminate ?? undefined })}
+          data-indeterminate={isIndeterminate || undefined}
           className={css({
             backgroundColor: 'var(--bar-fill)',
             height: tokenSchema.size.space.regular,
@@ -114,12 +71,36 @@ export const BarBase = forwardRef(function BarBase(
               },
             },
           })}
-          style={barStyle}
+          style={{ width: percentage == null ? undefined : `${percentage}%` }}
         />
       </div>
-    </div>
+    </Fragment>
   );
-});
+}
+
+export function useBarStyles(props: CommonBarProps, className?: string) {
+  let styleProps = useStyleProps(props);
+  return {
+    ...styleProps,
+    className: classNames(
+      css({
+        '--bar-fill': tokenSchema.color.background.accentEmphasis,
+        alignItems: 'flex-start',
+        display: 'inline-flex',
+        gap: tokenSchema.size.space.regular,
+        flexFlow: 'wrap',
+        isolation: 'isolate',
+        justifyContent: 'space-between',
+        minWidth: 0,
+        position: 'relative',
+        verticalAlign: 'top',
+        width: tokenSchema.size.alias.singleLineWidth,
+      }),
+      className,
+      styleProps.className
+    ),
+  };
+}
 
 const indeterminateLoopLtr = keyframes({
   from: { transform: 'translate(-100%)' },

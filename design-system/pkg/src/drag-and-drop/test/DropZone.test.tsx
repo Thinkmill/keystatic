@@ -85,20 +85,18 @@ describe('drag-and-drop/DropZone', () => {
     expect(dropzone).not.toHaveAttribute('data-focus-visible');
   });
 
-  it('should apply correct default aria-labelledby', () => {
-    let { getByRole, getByText } = render(
+  it('should apply the default accessible name', () => {
+    let { getByRole } = render(
       <DropZone className="test">
         <Text slot="label">Test</Text>
       </DropZone>
     );
-    let text = getByText('Test');
-    let div = getByText('DropZone');
     let button = getByRole('button');
-    expect(button).toHaveAttribute('aria-labelledby', `${div.id} ${text.id}`);
+    expect(button).toHaveAccessibleName('DropZone');
   });
 
   it('should allow custom aria-label', () => {
-    let { getAllByRole, getByText } = render(
+    let { getAllByRole } = render(
       <DropZone data-testid="foo" aria-label="test aria-label">
         <FileTrigger>
           <TextLink>Upload</TextLink>
@@ -106,8 +104,7 @@ describe('drag-and-drop/DropZone', () => {
       </DropZone>
     );
     let button = getAllByRole('button')[0];
-    let div = getByText('test aria-label');
-    expect(button).toHaveAttribute('aria-labelledby', `${div.id}`);
+    expect(button).toHaveAccessibleName('test aria-label');
   });
 
   it('should render FileTrigger as a child', () => {

@@ -1,147 +1,93 @@
 'use client';
 
-import { DropOptions, useDrop } from 'react-aria/useDrop';
-import { useClipboard } from 'react-aria/useClipboard';
-import { useFocusRing } from 'react-aria/useFocusRing';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
-import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useLabels } from 'react-aria/private/utils/useLabels';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { useSlotId } from 'react-aria/private/utils/useId';
-import { VisuallyHidden } from 'react-aria/VisuallyHidden';
+import {
+  DropZone as AriaDropZone,
+  type DropZoneProps as AriaDropZoneProps,
+} from 'react-aria-components/DropZone';
 import { AriaLabelingProps, DOMProps } from '@react-types/shared';
-import { useMemo, useRef } from 'react';
+import { ForwardedRef, forwardRef } from 'react';
 
 import {
   BaseStyleProps,
   ClassList,
   classNames,
   css,
-  toDataAttributes,
+  filterStyleProps,
   tokenSchema,
   useStyleProps,
 } from '@keystar/ui/style';
 import { WithRenderProps } from '@keystar/ui/types';
-import { useRenderProps } from '@keystar/ui/utils';
-import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
 import localizedMessages from './l10n';
 import { SlotProvider } from '../slots';
 
 export type DropZoneProps = Omit<
-  DropOptions,
-  'getDropOperationForPoint' | 'ref' | 'hasDropButton'
+  AriaDropZoneProps,
+  'children' | 'className' | 'style'
 > &
   WithRenderProps<{ isDropTarget: boolean }> &
   BaseStyleProps &
   DOMProps &
-  AriaLabelingProps;
+  AriaLabelingProps & {
+    className?: string;
+  };
 
 export const dropZoneClassList = new ClassList('DropZone');
 
-/**
- * A DropZone is an area into which one or multiple objects can be dragged and
- * dropped.
- */
-export const DropZone = forwardRefWithAs<DropZoneProps, 'div'>(
-  function DropZone(props, forwardedRef) {
-    let dropzoneRef = useObjectRef(forwardedRef);
-    let buttonRef = useRef<HTMLButtonElement>(null);
-    let { dropProps, dropButtonProps, isDropTarget } = useDrop({
-      ...props,
-      ref: buttonRef,
-      hasDropButton: true,
-    });
-    let { clipboardProps } = useClipboard({
-      onPaste: items =>
-        props.onDrop?.({
-          type: 'drop',
-          items,
-          x: 0,
-          y: 0,
-          dropOperation: 'copy',
+/** A DropZone is an area into which one or multiple objects may be dropped. */
+export const DropZone = forwardRef(function DropZone(
+  props: DropZoneProps,
+  forwardedRef: ForwardedRef<HTMLDivElement>
+) {
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
+  let { className, ...styleInputProps } = props;
+  let styleProps = useStyleProps(styleInputProps);
+  let children = props.children;
+
+  return (
+    <AriaDropZone
+      {...(filterStyleProps(props, ['className']) as AriaDropZoneProps)}
+      {...styleProps}
+      aria-label={
+        props['aria-label'] || stringFormatter.format('dropzoneLabel')
+      }
+      ref={forwardedRef}
+      className={classNames(
+        dropZoneClassList.element('root'),
+        css({
+          border: `${tokenSchema.size.border.medium} dashed ${tokenSchema.color.border.neutral}`,
+          borderRadius: tokenSchema.size.radius.regular,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: tokenSchema.size.space.medium,
+
+          '&[data-drop-target]': {
+            backgroundColor: tokenSchema.color.alias.backgroundSelected,
+            borderColor: tokenSchema.color.alias.focusRing,
+            borderStyle: 'solid',
+            cursor: 'copy',
+          },
+          '&[data-focus-visible]': {
+            borderColor: tokenSchema.color.alias.focusRing,
+          },
         }),
-    });
-    let { focusProps, isFocused, isFocusVisible } = useFocusRing();
-    let stringFormatter = useLocalizedStringFormatter(localizedMessages);
-    let labelId = useSlotId();
-    let dropzoneId = useSlotId();
-    let ariaLabel =
-      props['aria-label'] || stringFormatter.format('dropzoneLabel');
-    let messageId = props['aria-labelledby'];
-    // Chrome + VO will not announce the drop zone's accessible name if useLabels combines an aria-label and aria-labelledby
-    let ariaLabelledby = [dropzoneId, labelId, messageId]
-      .filter(Boolean)
-      .join(' ');
-    let labelProps = useLabels({ 'aria-labelledby': ariaLabelledby });
-
-    // Use the "label" slot so consumers can choose whether to put it on a
-    // `Heading` or `Text` instance.
-    // TODO: warn when no label is provided
-    let slots = {
-      icon: { color: isDropTarget ? 'accent' : 'neutral' },
-      label: {
-        id: labelId,
-        color: isDropTarget ? 'accent' : undefined,
-      },
-    } as const;
-
-    let renderProps = useMemo(() => ({ isDropTarget }), [isDropTarget]);
-    let children = useRenderProps(props, renderProps);
-    let styleProps = useStyleProps(props);
-    let ElementType = props.elementType || 'div';
-
-    return (
-      <ElementType
-        {...dropProps}
-        {...styleProps}
-        {...filterDOMProps(props, { labelable: true })}
-        {...toDataAttributes(
-          { isDropTarget, isFocused, isFocusVisible },
-          { omitFalsyValues: true, trimBooleanKeys: true }
-        )}
-        ref={dropzoneRef}
-        className={classNames(
-          dropZoneClassList.element('root'),
-          css({
-            border: `${tokenSchema.size.border.medium} dashed ${tokenSchema.color.border.neutral}`,
-            borderRadius: tokenSchema.size.radius.regular,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: tokenSchema.size.space.medium,
-
-            '&[data-drop-target]': {
-              backgroundColor: tokenSchema.color.alias.backgroundSelected,
-              borderColor: tokenSchema.color.alias.focusRing,
-              borderStyle: 'solid',
-              cursor: 'copy',
-            },
-            '&[data-focus-visible]': {
-              borderColor: tokenSchema.color.alias.focusRing,
-            },
-          }),
-          styleProps.className
-        )}
-      >
-        <VisuallyHidden>
-          {/* Added as a workaround for a Chrome + VO bug where it will not announce the aria label */}
-          <div id={dropzoneId} aria-hidden="true">
-            {ariaLabel}
-          </div>
-          <button
-            {...mergeProps(
-              dropButtonProps,
-              focusProps,
-              clipboardProps,
-              labelProps
-            )}
-            ref={buttonRef}
-          />
-        </VisuallyHidden>
-
-        <SlotProvider slots={slots}>{children}</SlotProvider>
-      </ElementType>
-    );
-  }
-);
+        className,
+        styleProps.className
+      )}
+    >
+      {({ isDropTarget }) => (
+        <SlotProvider
+          slots={{
+            icon: { color: isDropTarget ? 'accent' : 'neutral' },
+            label: { color: isDropTarget ? 'accent' : undefined },
+          }}
+        >
+          {typeof children === 'function'
+            ? children({ isDropTarget })
+            : children}
+        </SlotProvider>
+      )}
+    </AriaDropZone>
+  );
+});
