@@ -1,278 +1,193 @@
-import { FocusScope } from 'react-aria/FocusScope';
-import { createFocusManager } from 'react-aria/private/focus/FocusScope';
-import { useLocale } from 'react-aria/I18nProvider';
-import { PressProps } from 'react-aria/usePress';
-import { PressResponder } from 'react-aria/private/interactions/PressResponder';
-import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { isMac } from 'react-aria/private/utils/platform';
-import { mergeProps } from 'react-aria/mergeProps';
-import { AriaLabelingProps, DOMAttributes, Key } from '@react-types/shared';
-import { assert, assertNever } from 'emery';
+import { Toolbar, type ToolbarProps } from 'react-aria-components/Toolbar';
 import {
-  Dispatch,
-  KeyboardEvent,
-  PropsWithChildren,
-  ReactNode,
-  RefObject,
-  SetStateAction,
-  createContext,
-  useContext,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+  ToggleButtonGroup,
+  type ToggleButtonGroupProps,
+} from 'react-aria-components/ToggleButtonGroup';
+import { Separator } from 'react-aria-components/Separator';
+import type { Key } from '@react-types/shared';
+import { type ReactNode, createContext, useContext } from 'react';
 
+import { ToggleButton, type ToggleButtonProps } from '@keystar/ui/button';
 import {
-  ActionButton,
-  ToggleButton,
-  ToggleButtonProps,
-} from '@keystar/ui/button';
-import { HStack } from '@keystar/ui/layout';
-import {
-  BaseStyleProps,
+  type BaseStyleProps,
+  classNames,
   css,
-  onlyStyleProps,
+  filterStyleProps,
   tokenSchema,
+  useStyleProps,
 } from '@keystar/ui/style';
 
-type EditorToolbarState = {
-  /** The value of the last focused node. */
-  readonly lastFocusedId: Key | null;
-  /** Sets the last focused node. */
-  setLastFocusedId: Dispatch<SetStateAction<Key | null>>;
-};
-type EditorToolbarContextType = EditorToolbarState;
-const EditorToolbarContext = createContext<EditorToolbarContextType | null>(
-  null
-);
-function useToolbarContext() {
-  let context = useContext(EditorToolbarContext);
-  if (context == null) {
-    throw new Error('useToolbarContext must be used within a EditorToolbar');
-  }
-  return { state: context };
-}
+type EditorToolbarProps = Omit<
+  ToolbarProps,
+  'children' | 'className' | 'style'
+> &
+  BaseStyleProps & {
+    children: ReactNode;
+  };
 
-type EditorToolbarProps = PropsWithChildren<BaseStyleProps> & AriaLabelingProps;
+/** A formatting toolbar with RAC roving focus and keyboard navigation. */
 export function EditorToolbar(props: EditorToolbarProps) {
   let { children } = props;
-  let ref = useRef<HTMLDivElement>(null);
-  let { state, toolbarProps } = useToolbar(props, ref);
+  let styleProps = useStyleProps(props);
 
   return (
-    <EditorToolbarContext.Provider value={state}>
-      <FocusScope>
-        <HStack alignItems="center" gap="regular" ref={ref} {...toolbarProps}>
-          {children}
-        </HStack>
-      </FocusScope>
-    </EditorToolbarContext.Provider>
+    <Toolbar
+      {...(filterStyleProps(props) as ToolbarProps)}
+      className={classNames(
+        css({
+          alignItems: 'center',
+          display: 'flex',
+          gap: tokenSchema.size.space.regular,
+        }),
+        styleProps.className
+      )}
+      style={styleProps.style}
+    >
+      {children}
+    </Toolbar>
   );
 }
 
-// =============================================================================
-// Group
-// =============================================================================
-
-type GroupSelectionType =
-  | {
-      disabledKeys?: Iterable<Key>;
-      selectionMode: 'single';
-      value: Key | null;
-      onChange: (value: Key) => void;
-    }
-  | {
-      disabledKeys?: Iterable<Key>;
-      selectionMode: 'multiple';
-      value: Key[];
-      onChange: (value: Key) => void;
-    };
-const GroupSelectionContext = createContext<GroupSelectionType | null>(null);
-function useGroupSelectionContext() {
-  let context = useContext(GroupSelectionContext);
-
-  assert(
-    context !== null,
-    'An `EditorToolbarItem` is only valid inside an `EditorToolbarGroup` with a `selectionMode` of "single" or "multiple". When no selection is needed, use `EditorToolbarButton` instead.'
-  );
-
-  let disabledKeys = useSetFromIterable(context.disabledKeys);
-
-  return { ...context, disabledKeys };
-}
-function useSelectionItem(props: EditorToolbarItemProps): {
-  isDisabled: boolean;
-  isSelected: boolean;
-  buttonProps: PressProps & DOMAttributes;
-} {
-  let context = useGroupSelectionContext();
-
-  if (context.selectionMode === 'single') {
-    let { disabledKeys, value, onChange } = context;
-    let isDisabled = disabledKeys.has(props.value);
-    let isSelected = value === props.value;
-
-    return {
-      isDisabled,
-      isSelected,
-      buttonProps: {
-        ...filterDOMProps(props, { labelable: true }),
-        role: 'radio' as const,
-        'aria-checked': isSelected,
-        onPress: () => {
-          if (isDisabled) {
-            return;
-          }
-          onChange(props.value);
-        },
-      },
-    };
-  }
-  if (context.selectionMode === 'multiple') {
-    let { disabledKeys, value, onChange } = context;
-    let isDisabled = disabledKeys.has(props.value);
-    let isSelected = value.includes(props.value);
-
-    return {
-      isDisabled,
-      isSelected,
-      buttonProps: {
-        ...filterDOMProps(props, { labelable: true }),
-        role: 'checkbox' as const,
-        'aria-checked': isSelected,
-        onPress: () => {
-          if (isDisabled) {
-            return;
-          }
-          onChange(props.value);
-        },
-      },
-    };
-  }
-  assertNever(context);
-}
+type GroupSelectionProps = {
+  disabledKeys?: Iterable<Key>;
+  selectionMode: 'single' | 'multiple';
+};
+const GroupSelectionContext = createContext<GroupSelectionProps | null>(null);
 
 export type SelectionMode = 'none' | 'single' | 'multiple';
-type ChangeHandler<T> = (value: T) => void;
-type EditorToolbarGroupProps = AriaLabelingProps & {
-  /** The contents of the group. */
+type EditorToolbarGroupProps = {
   children?: ReactNode;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 } & (
-    | {
-        selectionMode: 'multiple';
-        disabledKeys?: Iterable<Key>;
-        onChange: ChangeHandler<Key>;
-        value: Key[];
-      }
-    | {
-        selectionMode: 'single';
-        disabledKeys?: Iterable<Key>;
-        onChange: ChangeHandler<Key>;
-        value: Key | null;
-      }
-    | {
-        selectionMode?: 'none';
-        disabledKeys?: never;
-        onChange?: never;
-        value?: never;
-      }
-  );
+  | {
+      selectionMode: 'multiple';
+      disabledKeys?: Iterable<Key>;
+      onChange: (value: Key) => void;
+      value: Key[];
+    }
+  | {
+      selectionMode: 'single';
+      disabledKeys?: Iterable<Key>;
+      onChange: (value: Key) => void;
+      value: Key | null;
+    }
+  | {
+      selectionMode?: 'none';
+      disabledKeys?: never;
+      onChange?: never;
+      value?: never;
+    }
+);
+
 export function EditorToolbarGroup(props: EditorToolbarGroupProps) {
-  if (props.selectionMode === 'single') {
-    return <EditorSingleSelectionGroup {...props} />;
-  }
-  if (props.selectionMode === 'multiple') {
-    return <EditorMultipleSelectionGroup {...props} />;
-  }
+  let className = css({
+    alignItems: 'center',
+    display: 'flex',
+    gap: tokenSchema.size.space.xsmall,
+  });
 
-  return (
-    <HStack gap="xsmall" role="group" {...filterPropsWithLabelWarning(props)}>
-      {props.children}
-    </HStack>
-  );
-}
-/** @private SINGLE selection */
-function EditorSingleSelectionGroup(
-  props: EditorToolbarGroupProps & { selectionMode: 'single' }
-) {
-  let { children, ...context } = props;
-
-  return (
-    <GroupSelectionContext.Provider value={context}>
-      <HStack
-        gap="xsmall"
-        role="radiogroup"
-        {...filterPropsWithLabelWarning(props)}
-      >
-        {children}
-      </HStack>
-    </GroupSelectionContext.Provider>
-  );
-}
-/** @private MULTI selection */
-function EditorMultipleSelectionGroup(
-  props: EditorToolbarGroupProps & { selectionMode: 'multiple' }
-) {
-  let { children, ...context } = props;
-
-  return (
-    <GroupSelectionContext.Provider value={context}>
-      <HStack gap="xsmall" role="group" {...filterPropsWithLabelWarning(props)}>
-        {children}
-      </HStack>
-    </GroupSelectionContext.Provider>
-  );
-}
-
-// =============================================================================
-// Item
-// =============================================================================
-
-type EditorToolbarItemProps = {
-  /** The contents of the item. */
-  children?: ReactNode;
-  /** The value of the item. */
-  value: Key;
-} & AriaLabelingProps;
-
-/** A toolbar item may be a checkbox/radio/toggle button, depending on context. */
-export function EditorToolbarItem(props: EditorToolbarItemProps) {
-  let { isDisabled, isSelected, buttonProps } = useSelectionItem(props);
-  let { itemProps } = useToolbarItem({ ...props, isDisabled });
-
-  // Use a PressResponder to send DOM props through, allow overriding things
-  // like role and tabIndex.
-  return (
-    <PressResponder {...mergeProps(buttonProps, itemProps)}>
-      <ActionButton
-        prominence="low"
-        isDisabled={isDisabled}
-        isSelected={isSelected}
+  if (!props.selectionMode || props.selectionMode === 'none') {
+    return (
+      <div
+        role="group"
+        aria-label={props['aria-label']}
+        aria-labelledby={props['aria-labelledby']}
+        className={className}
       >
         {props.children}
-      </ActionButton>
-    </PressResponder>
+      </div>
+    );
+  }
+
+  let selectedValues: Key[] =
+    props.selectionMode === 'single'
+      ? props.value == null
+        ? []
+        : [props.value]
+      : props.value || [];
+  let selectedKeys = selectedValues.map(toItemId);
+  let onChange = props.onChange!;
+  let onSelectionChange: ToggleButtonGroupProps['onSelectionChange'] = keys => {
+    let previousKeys = new Set(selectedKeys);
+    let nextKeys = new Set([...keys].map(String));
+    let changedKey = [...nextKeys].find(key => !previousKeys.has(key));
+    changedKey ??= [...previousKeys].find(key => !nextKeys.has(key));
+    if (changedKey != null) onChange(fromItemId(String(changedKey)));
+  };
+
+  return (
+    <GroupSelectionContext.Provider
+      value={{
+        disabledKeys: props.disabledKeys,
+        selectionMode: props.selectionMode,
+      }}
+    >
+      <ToggleButtonGroup
+        aria-label={props['aria-label']}
+        aria-labelledby={props['aria-labelledby']}
+        selectionMode={props.selectionMode}
+        selectedKeys={selectedKeys}
+        onSelectionChange={onSelectionChange}
+        className={className}
+      >
+        {props.children}
+      </ToggleButtonGroup>
+    </GroupSelectionContext.Provider>
   );
+}
+
+type EditorToolbarItemProps = {
+  children?: ReactNode;
+  value: Key;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+};
+
+/** A toggle item whose selection is managed by its RAC toggle group. */
+export function EditorToolbarItem(props: EditorToolbarItemProps) {
+  let context = useContext(GroupSelectionContext);
+  if (!context) {
+    throw new Error(
+      'EditorToolbarItem must be inside a single or multiple EditorToolbarGroup.'
+    );
+  }
+  let isDisabled = new Set(
+    context.disabledKeys ? [...context.disabledKeys].map(toItemId) : []
+  ).has(toItemId(props.value));
+
+  return (
+    <ToggleButton
+      id={toItemId(props.value)}
+      prominence="low"
+      isDisabled={isDisabled}
+      aria-label={props['aria-label']}
+      aria-labelledby={props['aria-labelledby']}
+    >
+      {props.children}
+    </ToggleButton>
+  );
+}
+
+function toItemId(key: Key) {
+  return `${typeof key}:${key}`;
+}
+
+function fromItemId(id: string): Key {
+  let [type, ...value] = id.split(':');
+  let key = value.join(':');
+  return type === 'number' ? Number(key) : key;
 }
 
 type EditorToolbarButtonProps = Omit<ToggleButtonProps, 'prominence'>;
 export function EditorToolbarButton(props: EditorToolbarButtonProps) {
-  let { itemProps } = useToolbarItem(props);
-
-  return (
-    <PressResponder {...itemProps}>
-      <ToggleButton prominence="low" {...props} />
-    </PressResponder>
-  );
+  return <ToggleButton prominence="low" {...props} />;
 }
 
 export function EditorToolbarSeparator() {
   return (
-    <div
-      role="separator"
-      aria-orientation="vertical"
+    <Separator
+      orientation="vertical"
       className={css({
         alignSelf: 'center',
         backgroundColor: tokenSchema.color.border.muted,
@@ -281,135 +196,5 @@ export function EditorToolbarSeparator() {
         width: tokenSchema.size.border.regular,
       })}
     />
-  );
-}
-
-// =============================================================================
-// Utils
-// =============================================================================
-
-function filterPropsWithLabelWarning<P extends AriaLabelingProps>(props: P) {
-  let { 'aria-labelledby': ariaLabelledby, 'aria-label': ariaLabel } = props;
-
-  if (!ariaLabelledby && !ariaLabel) {
-    console.warn(
-      'You must specify an aria-label or aria-labelledby attribute for accessibility.'
-    );
-  }
-
-  return {
-    ...onlyStyleProps(props),
-    ...filterDOMProps(props, { labelable: true }),
-  };
-}
-
-function useToolbarItem<P extends { isDisabled?: boolean }>(props: P) {
-  let { isDisabled } = props;
-  let { state } = useToolbarContext();
-  let { lastFocusedId, setLastFocusedId } = state;
-  let id = useId();
-  let tabIndex = lastFocusedId === id || lastFocusedId == null ? 0 : -1;
-
-  // clear the last focused ID when the item is unmounted or becomes disabled,
-  // which will reset the tabIndex for each item to 0 avoiding a situation where
-  // the user cannot tab to any items
-  useEffect(() => {
-    let reset = (lastId: Key | null) => (lastId === id ? null : lastId);
-    if (isDisabled) {
-      setLastFocusedId(reset);
-    }
-    return () => {
-      setLastFocusedId(reset);
-    };
-  }, [id, isDisabled, setLastFocusedId]);
-
-  return {
-    itemProps: {
-      tabIndex,
-      onFocus: () => {
-        setLastFocusedId(id);
-      },
-    },
-  };
-}
-
-function useToolbar(
-  props: EditorToolbarProps,
-  ref: RefObject<HTMLElement | null>
-) {
-  let [lastFocusedId, setLastFocusedId] = useState<Key | null>(null);
-  let { direction } = useLocale();
-  let focusManager = createFocusManager(ref, { wrap: true });
-  let isRtl = direction === 'rtl';
-
-  let onKeyDown = (e: KeyboardEvent) => {
-    if (!e.currentTarget.contains(e.target as HTMLElement)) {
-      return;
-    }
-
-    // let users navigate by group with alt/ctrl + arrow keys
-    let accept = (node: Element) => {
-      let isFirstChild = node.parentElement?.firstElementChild === node;
-      let isGroupChild = /group/.test(node.parentElement?.role || '');
-
-      return !isGroupChild || isFirstChild;
-    };
-    let options = (isMac() ? e.altKey : e.ctrlKey) ? { accept } : {};
-
-    switch (e.key) {
-      case 'Home':
-        e.preventDefault();
-        e.stopPropagation();
-        focusManager.focusFirst();
-        break;
-      case 'End':
-        e.preventDefault();
-        e.stopPropagation();
-        focusManager.focusLast();
-        break;
-      case 'ArrowRight':
-      case 'ArrowDown':
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.key === 'ArrowRight' && isRtl) {
-          focusManager.focusPrevious(options);
-        } else {
-          focusManager.focusNext(options);
-        }
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.key === 'ArrowLeft' && isRtl) {
-          focusManager.focusNext(options);
-        } else {
-          focusManager.focusPrevious(options);
-        }
-        break;
-    }
-  };
-
-  return {
-    toolbarProps: {
-      ...filterPropsWithLabelWarning(props),
-      onKeyDown,
-      role: 'toolbar',
-      'aria-orientation': 'horizontal' as const,
-    },
-    state: useMemo(
-      () => ({
-        lastFocusedId,
-        setLastFocusedId,
-      }),
-      [lastFocusedId]
-    ),
-  };
-}
-
-function useSetFromIterable<T>(value?: Iterable<T> | null) {
-  return useMemo(
-    () => (value == null ? new Set<Key>() : new Set(value)),
-    [value]
   );
 }
