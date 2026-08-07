@@ -1,6 +1,6 @@
 {
   "name": "@example/next-pages",
-  "version": "0.0.142",
+  "version": "0.0.148",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@keystar/ui": "workspace:^",
+    "@keystar/ui": "workspace:*",
     "@keystatic/core": "workspace:^",
     "@keystatic/next": "workspace:^",
     "@preconstruct/next": "^4.0.0",
-    "@types/react": "^19.0.8",
+    "@types/react": "^19.2.18",
     "graphql": "^16.6.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@ts-gql/compiler": "^0.16.7",

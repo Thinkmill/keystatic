@@ -1,4 +1,4 @@
-import { TabListState } from '@react-stately/tabs';
+import { TabListState } from 'react-stately/useTabListState';
 import React, { MutableRefObject, useContext } from 'react';
 import { TabsProps } from './types';
 

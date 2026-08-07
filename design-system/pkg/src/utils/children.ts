@@ -1,5 +1,5 @@
-import { useLayoutEffect } from '@react-aria/utils';
 import {
+  useLayoutEffect,
   Attributes,
   cloneElement,
   isValidElement,

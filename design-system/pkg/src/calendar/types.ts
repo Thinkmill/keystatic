@@ -1,8 +1,6 @@
-import {
-  AriaCalendarProps,
-  AriaRangeCalendarProps,
-  DateValue,
-} from '@react-types/calendar';
+import { AriaCalendarProps } from 'react-aria/useCalendar';
+import { AriaRangeCalendarProps } from 'react-aria/useRangeCalendar';
+import { DateValue } from 'react-stately/useCalendarState';
 import { BaseStyleProps } from '@keystar/ui/style';
 
 export interface CalendarProps<T extends DateValue>

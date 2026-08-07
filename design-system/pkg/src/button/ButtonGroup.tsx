@@ -1,11 +1,6 @@
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import {
-  filterDOMProps,
   useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-  useValueEffect,
-} from '@react-aria/utils';
-import {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
@@ -15,6 +10,9 @@ import {
   useMemo,
   useRef,
 } from 'react';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { useValueEffect } from 'react-aria/private/utils/useValueEffect';
 
 import {
   KeystarProvider,

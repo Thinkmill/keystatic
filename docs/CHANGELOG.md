@@ -1,5 +1,59 @@
 # keystatic-docs
 
+## 1.0.74
+
+### Patch Changes
+
+- Updated dependencies [[`4a17a65`](https://github.com/Thinkmill/keystatic/commit/4a17a65c7720a8cc08dad82a18d0de53d80374c4)]:
+  - @keystar/ui@0.9.2
+  - @keystatic/core@0.6.4
+  - @keystatic/next@5.0.4
+
+## 1.0.73
+
+### Patch Changes
+
+- Updated dependencies [[`43c049b`](https://github.com/Thinkmill/keystatic/commit/43c049b3b7738276f1262e975e32252cf2c19b90)]:
+  - @keystar/ui@0.9.1
+  - @keystatic/core@0.6.3
+  - @keystatic/next@5.0.4
+
+## 1.0.72
+
+### Patch Changes
+
+- Updated dependencies [[`3cd13ab`](https://github.com/Thinkmill/keystatic/commit/3cd13ab337cf86a61481dc09cccd4a0881468ed2)]:
+  - @keystar/ui@0.9.0
+  - @keystatic/core@0.6.2
+  - @keystatic/next@5.0.4
+
+## 1.0.71
+
+### Patch Changes
+
+- Updated dependencies [[`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9)]:
+  - @keystatic/core@0.6.1
+  - @keystar/ui@0.8.1
+  - @keystatic/next@5.0.4
+
+## 1.0.70
+
+### Patch Changes
+
+- Updated dependencies [[`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a), [`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a)]:
+  - @keystatic/core@0.6.0
+  - @keystar/ui@0.8.0
+  - @keystatic/next@5.0.4
+
+## 1.0.69
+
+### Patch Changes
+
+- Updated dependencies [[`c5c297a`](https://github.com/Thinkmill/keystatic/commit/c5c297a390d6c73d2773ddc7a8f88ba05c540d18)]:
+  - @keystar/ui@0.7.22
+  - @keystatic/core@0.5.51
+  - @keystatic/next@5.0.4
+
 ## 1.0.68
 
 ### Patch Changes

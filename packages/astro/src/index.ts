@@ -37,14 +37,14 @@ import "@keystatic/core/ui";
         );
 
         injectRoute({
-          // @ts-ignore
+          // @ts-ignore — kept for Astro 2/3 where the option was named `entryPoint`
           entryPoint: '@keystatic/astro/internal/keystatic-astro-page.astro',
           entrypoint: '@keystatic/astro/internal/keystatic-astro-page.astro',
           pattern: '/keystatic/[...params]',
           prerender: false,
         });
         injectRoute({
-          // @ts-ignore
+          // @ts-ignore — kept for Astro 2/3 where the option was named `entryPoint`
           entryPoint: '@keystatic/astro/internal/keystatic-api.js',
           entrypoint: '@keystatic/astro/internal/keystatic-api.js',
           pattern: '/api/keystatic/[...params]',

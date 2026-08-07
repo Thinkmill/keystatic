@@ -1,9 +1,9 @@
-import { AriaToastRegionProps } from '@react-aria/toast';
+import { AriaToastRegionProps } from 'react-aria/useToast';
 import {
   QueuedToast,
   ToastOptions as SpectrumToastOptions,
   ToastState,
-} from '@react-stately/toast';
+} from 'react-stately/useToastState';
 import { ReactNode } from 'react';
 
 export type ToasterProps = AriaToastRegionProps & {

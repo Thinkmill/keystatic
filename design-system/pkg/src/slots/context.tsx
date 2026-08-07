@@ -1,4 +1,4 @@
-import { mergeProps } from '@react-aria/utils';
+import { mergeProps } from 'react-aria/mergeProps';
 import React, { useContext, useMemo } from 'react';
 
 import {

@@ -1,5 +1,53 @@
 # @keystatic/remix-test-app
 
+## 0.1.54
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.4
+  - @keystatic/remix@5.0.3
+
+## 0.1.53
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.3
+  - @keystatic/remix@5.0.3
+
+## 0.1.52
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.2
+  - @keystatic/remix@5.0.3
+
+## 0.1.51
+
+### Patch Changes
+
+- Updated dependencies [[`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9)]:
+  - @keystatic/core@0.6.1
+  - @keystatic/remix@5.0.3
+
+## 0.1.50
+
+### Patch Changes
+
+- Updated dependencies [[`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a)]:
+  - @keystatic/core@0.6.0
+  - @keystatic/remix@5.0.3
+
+## 0.1.49
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.5.51
+  - @keystatic/remix@5.0.3
+
 ## 0.1.48
 
 ### Patch Changes

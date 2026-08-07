@@ -1,6 +1,6 @@
-import { useFocusRing } from '@react-aria/focus';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps } from '@react-aria/utils';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { useHover } from 'react-aria/useHover';
+import { mergeProps } from 'react-aria/mergeProps';
 import { Fragment } from 'react';
 
 import {

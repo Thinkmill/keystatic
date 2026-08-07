@@ -4,7 +4,7 @@ import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
-import { Item } from '@react-stately/collections';
+import { Item } from 'react-stately/Item';
 import { Command, EditorState, Plugin } from 'prosemirror-state';
 import {
   addColumnAfter,

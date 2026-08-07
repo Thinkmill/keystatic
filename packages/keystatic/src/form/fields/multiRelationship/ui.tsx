@@ -1,4 +1,4 @@
-import { Item } from '@react-stately/collections';
+import { Item } from 'react-stately/Item';
 import { ItemDropTarget, Selection } from '@react-types/shared';
 import { useReducer, useMemo, useState, useEffect, Key } from 'react';
 
@@ -38,7 +38,7 @@ export function MultiRelationshipInput(
     (props.forceValidation || blurred) &&
     validateMultiRelationshipLength(props.validation, props.value);
   // this state & effect shouldn't really exist
-  // it's here because react-aria/stately calls onSelectionChange with null
+  // it's here because react-aria/stately calls onChange with null
   // after selecting an item if we immediately remove the error message
   // so we delay it with an effect
   const [errorMessage, setErrorMessage] = useState(_errorMessage);
@@ -56,9 +56,9 @@ export function MultiRelationshipInput(
       <Combobox
         label={props.label}
         description={props.description}
-        selectedKey={null}
+        value={null}
         placeholder={items.length === 0 ? 'All selected' : undefined}
-        onSelectionChange={key => {
+        onChange={key => {
           if (typeof key === 'string') {
             props.onChange([...props.value, key]);
           }

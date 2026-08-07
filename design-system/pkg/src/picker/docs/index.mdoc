@@ -48,7 +48,7 @@ let [animalId, setAnimalId] = React.useState();
 
 return (
   <Flex direction="column" gap="large">
-    <Picker label="Animal" items={options} onSelectionChange={setAnimalId}>
+    <Picker label="Animal" items={options} onChange={setAnimalId}>
       {item => <Item>{item.name}</Item>}
     </Picker>
     <Text>Selected ID: {animalId}</Text>
@@ -59,7 +59,7 @@ return (
 #### Keys and IDs
 
 Dynamic collections provide an iterable list of `items` to the picker. Each item
-accepts a unique `key` prop, which is passed to the `onSelectionChange` handler
+accepts a unique `key` prop, which is passed to the `onChange` handler
 to identify the selected item.
 
 If the item objects contain an `id` property, as shown in the example above,
@@ -113,7 +113,7 @@ return (
   <Picker
     label="Animal"
     items={items}
-    onSelectionChange={selected => alert(selected)}
+    onChange={selected => alert(selected)}
   >
     {item => (
       <Section key={item.name} items={item.children} title={item.name}>
@@ -126,8 +126,8 @@ return (
 
 ### Selection
 
-Setting a selected item can be done by using the `defaultSelectedKey` or
-`selectedKey` prop. The selected key corresponds to the key of an item, where
+Setting a selected item can be done by using the `defaultValue` or
+`value` prop. The selected key corresponds to the key of an item, where
 `"id"` is used by default.
 
 See the `react-stately`
@@ -136,9 +136,9 @@ for more information.
 
 #### Controlled
 
-Use the `selectedKey` the control the value of the picker and watch for changes
-with the `onSelectionChange` handler, which accepts the selected item’s key as
-its only argument.
+Use `value` to control the value of the picker and watch for changes with the
+`onChange` handler, which accepts the selected item’s key or `null` as its only
+argument.
 
 ```jsx {% live=true %}
 let items = [
@@ -155,8 +155,8 @@ return (
   <Picker
     label="Animal"
     items={items}
-    selectedKey={animal}
-    onSelectionChange={setAnimal}
+    value={animal}
+    onChange={setAnimal}
   >
     {item => <Item key={item.name}>{item.name}</Item>}
   </Picker>
@@ -165,7 +165,7 @@ return (
 
 #### Uncontrolled
 
-Use the `defaultSelectedKey` prop for uncontrolled cases.
+Use the `defaultValue` prop for uncontrolled cases.
 
 ```jsx {% live=true %}
 let items = [
@@ -178,7 +178,7 @@ let items = [
 ];
 
 return (
-  <Picker label="Animal" items={items} defaultSelectedKey="Quokka">
+  <Picker label="Animal" items={items} defaultValue="Quokka">
     {item => <Item key={item.name}>{item.name}</Item>}
   </Picker>
 );
@@ -292,7 +292,7 @@ met, prompting the user to adjust what they had originally selected.
   label="Default currency"
   errorMessage="You must select a default currency."
   isRequired
-  selectedKey={null}
+  value={null}
 >
   <Item key="AUD">Australian dollar</Item>
   <Item key="GBP">British pound</Item>

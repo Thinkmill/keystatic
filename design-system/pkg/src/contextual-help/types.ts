@@ -1,8 +1,5 @@
-import {
-  OverlayTriggerProps,
-  Placement,
-  PositionProps,
-} from '@react-types/overlays';
+import { OverlayTriggerProps } from 'react-stately/useOverlayTriggerState';
+import { Placement, PositionProps } from 'react-aria/useOverlayPosition';
 import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 import { ReactNode } from 'react';
 

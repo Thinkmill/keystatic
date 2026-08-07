@@ -1,4 +1,4 @@
-import { AriaGridListProps } from '@react-aria/gridlist';
+import { AriaGridListProps } from 'react-aria/useGridList';
 import {
   AsyncLoadable,
   LoadingState,

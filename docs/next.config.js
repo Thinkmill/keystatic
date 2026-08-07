@@ -1,8 +1,13 @@
+const { initOpenNextCloudflareForDev } = require('@opennextjs/cloudflare');
+
+initOpenNextCloudflareForDev();
+
 /** @type {import('next').NextConfig} */
 module.exports = {
   typescript: { ignoreBuildErrors: true },
   experimental: {
     externalDir: true,
+    prefetchInlining: false,
   },
   async rewrites() {
     return [{ source: '/keystatic/:path*', destination: '/keystatic' }];

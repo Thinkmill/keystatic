@@ -1,5 +1,41 @@
 # @keystar/ui
 
+## 0.9.2
+
+### Patch Changes
+
+- [#1572](https://github.com/Thinkmill/keystatic/pull/1572) [`4a17a65`](https://github.com/Thinkmill/keystatic/commit/4a17a65c7720a8cc08dad82a18d0de53d80374c4) Thanks [@emmatown](https://github.com/emmatown)! - Fix comboboxes sometimes only opening on second click
+
+## 0.9.1
+
+### Patch Changes
+
+- [#1569](https://github.com/Thinkmill/keystatic/pull/1569) [`43c049b`](https://github.com/Thinkmill/keystatic/commit/43c049b3b7738276f1262e975e32252cf2c19b90) Thanks [@emmatown](https://github.com/emmatown)! - Fix `TagGroup` not showing items added after the initial render when `maxRows` is set
+
+## 0.9.0
+
+### Minor Changes
+
+- [#1566](https://github.com/Thinkmill/keystatic/pull/1566) [`3cd13ab`](https://github.com/Thinkmill/keystatic/commit/3cd13ab337cf86a61481dc09cccd4a0881468ed2) Thanks [@emmatown](https://github.com/emmatown)! - `@keystar/ui` class names are now prefixed with `kui-` and use an internal implementation of `@emotion/css` to avoid dependencies on a large number of Babel-related dependencies
+
+## 0.8.1
+
+### Patch Changes
+
+- [#1564](https://github.com/Thinkmill/keystatic/pull/1564) [`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9) Thanks [@emmatown](https://github.com/emmatown)! - Make `react-aria`, `react-stately` and `@keystar/ui` non-optional peer dependencies + normal dependencies instead of optional peer dependencies + normal dependencies to fix installing with pnpm
+
+## 0.8.0
+
+### Minor Changes
+
+- [#1557](https://github.com/Thinkmill/keystatic/pull/1557) [`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a) Thanks [@emmatown](https://github.com/emmatown)! - Updated to `react-aria@3.50.0` and `react-stately@3.48.0`. The versions of these are now pinned to exact versions and are declared as standard dependencies as well as optional peer dependencies. If you have explicit dependencies on `react-aria` or `react-stately`, you should ensure you have the same versions installed otherwise you will get a peer dependency error/warning. In future, `@keystar/ui` may bump these packages in patch versions so you should likely pin `@keystar/ui` to an exact version if you depend on these packages yourself.
+
+## 0.7.22
+
+### Patch Changes
+
+- [#1556](https://github.com/Thinkmill/keystatic/pull/1556) [`c5c297a`](https://github.com/Thinkmill/keystatic/commit/c5c297a390d6c73d2773ddc7a8f88ba05c540d18) Thanks [@emmatown](https://github.com/emmatown)! - Remove warning about placeholder without description
+
 ## 0.7.21
 
 ### Patch Changes

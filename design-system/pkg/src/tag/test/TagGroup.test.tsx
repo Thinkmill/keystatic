@@ -68,4 +68,37 @@ describe('tag/TagGroup', function () {
     let tags = getAllByRole('row');
     expect(tags[0]).toHaveAttribute('tabIndex', '0');
   });
+
+  it('shows items added with a stable render function', () => {
+    let renderItem = (item: { id: number; label: string }) => (
+      <Item key={item.id}>{item.label}</Item>
+    );
+    let { getAllByRole, rerender } = renderWithProvider(
+      <TagGroup
+        aria-label="tag group"
+        items={[{ id: 1, label: 'Tag 1' }]}
+        maxRows={2}
+      >
+        {renderItem}
+      </TagGroup>
+    );
+
+    rerender(
+      <TagGroup
+        aria-label="tag group"
+        items={[
+          { id: 1, label: 'Tag 1' },
+          { id: 2, label: 'Tag 2' },
+        ]}
+        maxRows={2}
+      >
+        {renderItem}
+      </TagGroup>
+    );
+    act(() => {
+      jest.runAllTicks();
+    });
+
+    expect(getAllByRole('row')).toHaveLength(2);
+  });
 });

@@ -48,18 +48,6 @@ describe('text-field/TextField', () => {
 
     expect(ref.current).toBe(field);
   });
-  it('should render with placeholder, but show warning', () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    const { getByTestId } = renderTextField({ placeholder: inputText });
-    const field = getByTestId(testId);
-
-    expect(field).toHaveAttribute('placeholder', inputText);
-    expect(console.warn).toHaveBeenCalledWith(
-      'Warning: Placeholder text is not accessible. Use the `description` prop to provide information that will aid user input.'
-    );
-
-    spy.mockRestore();
-  });
 
   it('calls onChange when text changes', async () => {
     const { getByRole } = renderTextField({ onBlur, onChange, onFocus });

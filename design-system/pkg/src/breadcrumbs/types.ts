@@ -1,7 +1,7 @@
 import {
   AriaBreadcrumbsProps,
   BreadcrumbItemProps as ReactBreadcrumbItemProps,
-} from '@react-types/breadcrumbs';
+} from 'react-aria/useBreadcrumbs';
 import { ItemProps } from '@react-types/shared';
 import { Key, ReactElement } from 'react';
 

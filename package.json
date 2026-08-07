@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "packageManager": "pnpm@9.15.5",
+  "packageManager": "pnpm@11.20.0",
   "engines": {
-    "pnpm": "9.15.5"
+    "pnpm": "11.20.0"
   },
   "scripts": {
     "build:docs": "pnpm --filter=keystatic-docs build",
@@ -30,7 +30,7 @@
     "postinstall": "preconstruct dev && manypkg check && tsx design-system/pkg/build-l10n.mts && cd packages/keystatic && pnpm run setup",
     "lint": "eslint --fix",
     "prettier": "prettier **/*.{ts,tsx}",
-    "release": "pnpm build:packages && changeset publish",
+    "release": "pnpm build:packages && node scripts/prepare-publish.mjs && changeset publish",
     "start:docs": "pnpm --filter=keystatic-docs start",
     "start:designsystem": "pnpm --filter=@keystar/docs start",
     "static": "pnpm run validate && pnpm run test",
@@ -72,14 +72,15 @@
     "jest-environment-jsdom": "^30.0.0-alpha.2",
     "prettier": "^3.0.3",
     "prettier-plugin-packagejson": "^2.2.18",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "tsx": "^4.8.2",
     "typescript": "^5.5.3"
   },
   "manypkg": {
     "ignoredRules": [
-      "INVALID_DEV_AND_PEER_DEPENDENCY_RELATIONSHIP"
+      "INVALID_DEV_AND_PEER_DEPENDENCY_RELATIONSHIP",
+      "EXTERNAL_MISMATCH"
     ],
     "workspaceProtocol": "require"
   },

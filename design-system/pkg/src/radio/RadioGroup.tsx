@@ -1,5 +1,5 @@
-import { useRadioGroup } from '@react-aria/radio';
-import { useRadioGroupState } from '@react-stately/radio';
+import { useRadioGroup } from 'react-aria/useRadioGroup';
+import { useRadioGroupState } from 'react-stately/useRadioGroupState';
 import React, {
   ForwardRefExoticComponent,
   ForwardedRef,

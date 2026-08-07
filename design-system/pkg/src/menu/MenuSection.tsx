@@ -1,7 +1,7 @@
-import { useMenuSection } from '@react-aria/menu';
-import { useSeparator } from '@react-aria/separator';
-import { getChildNodes } from '@react-stately/collections';
-import { TreeState } from '@react-stately/tree';
+import { useMenuSection } from 'react-aria/useMenu';
+import { useSeparator } from 'react-aria/useSeparator';
+import { getChildNodes } from 'react-stately/private/collections/getChildNodes';
+import { TreeState } from 'react-stately/useTreeState';
 import { Node } from '@react-types/shared';
 import { Fragment } from 'react';
 

@@ -1,4 +1,4 @@
-import { useLandmark } from '@react-aria/landmark';
+import { useLandmark } from 'react-aria/useLandmark';
 import React, { useRef, useState } from 'react';
 
 import { ActionButton } from '@keystar/ui/button';

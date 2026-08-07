@@ -1,9 +1,7 @@
-import { AriaDialogProps, useDialog } from '@react-aria/dialog';
-import { useLocale } from '@react-aria/i18n';
-import {
-  DatePickerState,
-  DateRangePickerState,
-} from '@react-stately/datepicker';
+import { AriaDialogProps, useDialog } from 'react-aria/useDialog';
+import { useLocale } from 'react-aria/I18nProvider';
+import { DatePickerState } from 'react-stately/useDatePickerState';
+import { DateRangePickerState } from 'react-stately/useDateRangePickerState';
 import { ReactNode, RefObject, useRef } from 'react';
 
 import { Popover, Tray } from '@keystar/ui/overlays';

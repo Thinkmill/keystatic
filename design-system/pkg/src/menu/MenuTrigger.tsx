@@ -1,8 +1,8 @@
-import { PressResponder } from '@react-aria/interactions';
-import { useMenuTrigger } from '@react-aria/menu';
-import { useObjectRef } from '@react-aria/utils';
-import { useMenuTriggerState } from '@react-stately/menu';
-import { Placement } from '@react-types/overlays';
+import { PressResponder } from 'react-aria/private/interactions/PressResponder';
+import { useMenuTrigger } from 'react-aria/useMenu';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useMenuTriggerState } from 'react-stately/useMenuTriggerState';
+import { Placement } from 'react-aria/useOverlayPosition';
 import React, { ForwardedRef, forwardRef, Fragment, useRef } from 'react';
 
 import { Popover, Tray } from '@keystar/ui/overlays';

@@ -1,6 +1,5 @@
-import { useDateSegment } from '@react-aria/datepicker';
-import { DateFieldState, DateSegment } from '@react-stately/datepicker';
-import { DatePickerBase, DateValue } from '@react-types/datepicker';
+import { useDateSegment } from 'react-aria/useDateField';
+import { DateFieldState, DateSegment } from 'react-stately/useDateFieldState';
 import React, { useRef } from 'react';
 
 import {
@@ -14,21 +13,17 @@ import { Text } from '@keystar/ui/typography';
 
 const segmentClassList = new ClassList('InputSegment', ['editable']);
 
-interface InputSegmentProps extends DatePickerBase<DateValue> {
+interface InputSegmentProps {
   segment: DateSegment;
   state: DateFieldState;
 }
 
-export function InputSegment({
-  segment,
-  state,
-  ...otherProps
-}: InputSegmentProps) {
+export function InputSegment({ segment, state }: InputSegmentProps) {
   if (segment.type === 'literal') {
     return <LiteralSegment segment={segment} />;
   }
 
-  return <EditableSegment segment={segment} state={state} {...otherProps} />;
+  return <EditableSegment segment={segment} state={state} />;
 }
 
 /** A separator, e.g. punctuation like "/" or "." */

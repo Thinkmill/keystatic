@@ -1,6 +1,7 @@
-import { AriaModalOverlayProps, AriaPopoverProps } from '@react-aria/overlays';
-import { OverlayTriggerState } from '@react-stately/overlays';
-import { OverlayProps } from '@react-types/overlays';
+import { AriaModalOverlayProps } from 'react-aria/useModalOverlay';
+import { AriaPopoverProps } from 'react-aria/usePopover';
+import { OverlayProps as ReactAriaOverlayProps } from 'react-aria/Overlay';
+import { OverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 import { HTMLAttributes, MutableRefObject, ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
@@ -47,3 +48,12 @@ export type TransitionProps = {
   onExited?: () => void;
   onExiting?: () => void;
 };
+
+export type OverlayProps = Omit<
+  ReactAriaOverlayProps,
+  'portalContainer' | 'isExiting'
+> &
+  TransitionProps & {
+    container?: ReactAriaOverlayProps['portalContainer'];
+    isKeyboardDismissDisabled?: boolean;
+  };

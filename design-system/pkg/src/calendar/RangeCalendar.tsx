@@ -1,9 +1,9 @@
 import { createCalendar } from '@internationalized/date';
-import { useRangeCalendar } from '@react-aria/calendar';
-import { useLocale } from '@react-aria/i18n';
-import { useObjectRef } from '@react-aria/utils';
-import { useRangeCalendarState } from '@react-stately/calendar';
-import { DateValue } from '@react-types/calendar';
+import { useRangeCalendar } from 'react-aria/useRangeCalendar';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useRangeCalendarState } from 'react-stately/useRangeCalendarState';
+import { DateValue } from 'react-stately/useCalendarState';
 import {
   forwardRef,
   ForwardedRef,

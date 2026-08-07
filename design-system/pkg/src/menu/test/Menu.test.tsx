@@ -566,17 +566,17 @@ describe('menu/Menu', () => {
       ];
 
       firePress(item1);
-      expect(onAction).toHaveBeenCalledWith('One');
+      expect(onAction).toHaveBeenCalledWith('One', null);
       expect(onAction).toHaveBeenCalledTimes(1);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item2);
-      expect(onAction).toHaveBeenCalledWith('Two');
+      expect(onAction).toHaveBeenCalledWith('Two', null);
       expect(onAction).toHaveBeenCalledTimes(2);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item3);
-      expect(onAction).toHaveBeenCalledWith('Three');
+      expect(onAction).toHaveBeenCalledWith('Three', null);
       expect(onAction).toHaveBeenCalledTimes(3);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
@@ -609,17 +609,17 @@ describe('menu/Menu', () => {
       ];
 
       firePress(item1);
-      expect(onAction).toHaveBeenCalledWith('One');
+      expect(onAction).toHaveBeenCalledWith('One', flatItems[0]);
       expect(onAction).toHaveBeenCalledTimes(1);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item2);
-      expect(onAction).toHaveBeenCalledWith('Two');
+      expect(onAction).toHaveBeenCalledWith('Two', flatItems[1]);
       expect(onAction).toHaveBeenCalledTimes(2);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item3);
-      expect(onAction).toHaveBeenCalledWith('Three');
+      expect(onAction).toHaveBeenCalledWith('Three', flatItems[2]);
       expect(onAction).toHaveBeenCalledTimes(3);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
@@ -698,7 +698,14 @@ describe('menu/Menu', () => {
   });
 });
 
-function renderComponent<T>(props: Partial<Omit<MenuProps<T>, 'items'>> = {}) {
+type TestMenuSection = {
+  name: string;
+  children: { name: string }[];
+};
+
+function renderComponent(
+  props: Partial<Omit<MenuProps<TestMenuSection>, 'items'>> = {}
+) {
   return render(
     <>
       <span id="label">Label</span>

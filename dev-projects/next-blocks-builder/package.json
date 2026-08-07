@@ -1,6 +1,6 @@
 {
   "name": "@example/next-block-builder",
-  "version": "0.1.50",
+  "version": "0.1.56",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,13 +14,13 @@
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/typography": "^0.5.9",
     "next": "~15.1.10",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@types/node": "25.0.3",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.18.0",
     "eslint-config-next": "^12.1.6",

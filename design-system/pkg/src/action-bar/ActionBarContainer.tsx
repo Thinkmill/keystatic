@@ -1,4 +1,5 @@
-import { filterDOMProps, useObjectRef } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import React, { ForwardRefExoticComponent, ForwardedRef, Ref } from 'react';
 
 import { classNames, css, useStyleProps } from '@keystar/ui/style';

@@ -1,10 +1,11 @@
-import { PressResponder } from '@react-aria/interactions';
-import { useOverlayTrigger } from '@react-aria/overlays';
-import { mergeProps, useEffectEvent } from '@react-aria/utils';
+import { PressResponder } from 'react-aria/private/interactions/PressResponder';
+import { useOverlayTrigger } from 'react-aria/useOverlayTrigger';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useEffectEvent } from 'react-aria/private/utils/useEffectEvent';
 import {
   OverlayTriggerState,
   useOverlayTriggerState,
-} from '@react-stately/overlays';
+} from 'react-stately/useOverlayTriggerState';
 import { assertNever } from 'emery';
 import {
   Children,

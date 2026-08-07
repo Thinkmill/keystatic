@@ -2,6 +2,8 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 
+export const prerender = true;
+
 const posts = await getCollection('posts');
 ---
 
@@ -20,7 +22,7 @@ const posts = await getCollection('posts');
       {
         posts.map(post => (
           <li>
-            <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+            <a href={`/posts/${post.id}`}>{post.data.title}</a>
           </li>
         ))
       }

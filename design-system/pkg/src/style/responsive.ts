@@ -8,7 +8,7 @@ import {
   ResponsiveProp,
   StyleResolver,
 } from './types';
-import { CSSObject } from '@emotion/css/create-instance';
+import type { CSSObject } from '@emotion/serialize';
 
 // Breakpoints
 // ----------------------------------------------------------------------------
