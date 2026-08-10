@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { dimensionToPixelUnitless } from './dimensionToPixelUnitless';
+import { dimensionToPixelUnitless } from './dimensionToPixelUnitless.ts';
 
 describe('Transformer: dimensionToPixelUnitless', () => {
   it('transforms pixel string tokens', () => {

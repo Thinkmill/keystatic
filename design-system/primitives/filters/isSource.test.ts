@@ -1,8 +1,8 @@
 import type StyleDictionary from 'style-dictionary';
 
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { isSource } from './isSource';
+import { isSource } from './isSource.ts';
 
 describe('Filter: isSource', () => {
   it('Returns true if isSource property is true', () => {

@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { namePathToDotNotation } from './namePathToDotNotation';
+import { namePathToDotNotation } from './namePathToDotNotation.ts';
 
 describe('Transformer: namePathToDotNotation', () => {
   it('converts path elements to dot.notation and ignores name proprty', () => {

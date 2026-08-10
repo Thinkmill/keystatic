@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { fontWeightToNumber } from './fontWeightToNumber';
+import { fontWeightToNumber } from './fontWeightToNumber.ts';
 
 describe('Transformer: fontWeightToNumbers', () => {
   it('keeps number if within range of 1-1000', () => {

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "downlevelIteration": true,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,

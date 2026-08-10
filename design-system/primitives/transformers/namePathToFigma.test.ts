@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { namePathToFigma } from './namePathToFigma';
+import { namePathToFigma } from './namePathToFigma.ts';
 
 describe('Transformer: namePathToFigma', () => {
   it('converts path elements to dot.notation and ignores name proprty', () => {

@@ -3,7 +3,7 @@ import type StyleDictionary from 'style-dictionary';
 import {
   invalidTokenValueError,
   invalidTokenValuePropertyError,
-} from './invalidTokenError';
+} from './invalidTokenError.ts';
 
 export const getTokenValue = (
   token: StyleDictionary.TransformedToken,

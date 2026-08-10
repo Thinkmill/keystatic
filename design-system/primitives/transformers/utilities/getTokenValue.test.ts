@@ -1,6 +1,6 @@
 import { expect, describe, it } from '@jest/globals';
-import { getMockToken } from '../../test-utilities';
-import { getTokenValue } from './getTokenValue';
+import { getMockToken } from '../../test-utilities/index.ts';
+import { getTokenValue } from './getTokenValue.ts';
 
 describe('Utilities: getTokenValue', () => {
   it('it retrieves the token value', () => {

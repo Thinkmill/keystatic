@@ -1,7 +1,7 @@
 import StyleDictionary from 'style-dictionary';
 
-import { isCubicBezier } from '../filters/isCubicBezier';
-import { CubicBezierTokenValue } from '../types';
+import { isCubicBezier } from '../filters/isCubicBezier.ts';
+import type { CubicBezierTokenValue } from '../types.ts';
 
 export const cubicBezierToCss: StyleDictionary.Transform = {
   type: `value`,

@@ -1,4 +1,4 @@
-import { toCamelCase } from './toCamelCase';
+import { toCamelCase } from './toCamelCase.ts';
 import { expect, it, describe } from '@jest/globals';
 
 describe('Utilities: toCamelCase', () => {

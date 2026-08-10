@@ -1,9 +1,9 @@
 import { mix, toHex } from 'color2k';
 import type StyleDictionary from 'style-dictionary';
 
-import { isColor } from '../filters';
-import { getTokenValue } from './utilities/getTokenValue';
-import { rgbaFloatToHex } from './utilities/rgbaFloatToHex';
+import { isColor } from '../filters/index.ts';
+import { getTokenValue } from './utilities/getTokenValue.ts';
+import { rgbaFloatToHex } from './utilities/rgbaFloatToHex.ts';
 
 const toRgbaFloat = (
   token: StyleDictionary.TransformedToken,

@@ -1,4 +1,4 @@
-import { checkRequiredTokenProperties } from './checkRequiredTokenProperties';
+import { checkRequiredTokenProperties } from './checkRequiredTokenProperties.ts';
 import { expect, it, describe } from '@jest/globals';
 
 describe('Utilities: checkRequiredTokenProperties', () => {

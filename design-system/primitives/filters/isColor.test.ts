@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { isColor } from './isColor';
+import { isColor } from './isColor.ts';
 
 describe('Filter: isColor', () => {
   it('returns true if $type property is `color`', () => {

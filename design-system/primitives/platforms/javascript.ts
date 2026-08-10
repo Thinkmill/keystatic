@@ -1,8 +1,8 @@
 import StyleDictionary from 'style-dictionary';
 
-import { TOKEN_PREFIX } from '../constants';
-import { isSource } from '../filters';
-import { PlatformInitializer } from '../types';
+import { TOKEN_PREFIX } from '../constants.ts';
+import { isSource } from '../filters/index.ts';
+import type { PlatformInitializer } from '../types.ts';
 
 export const javascript: PlatformInitializer = (
   outputFile,

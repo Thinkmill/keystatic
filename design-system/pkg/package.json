@@ -8,7 +8,7 @@
     "directory": "design-system/pkg"
   },
   "scripts": {
-    "build-icons": "tsx build-icons.ts && cd ../.. && pnpm preconstruct fix"
+    "build-icons": "node build-icons.ts && cd ../.. && pnpm preconstruct fix"
   },
   "type": "module",
   "exports": {
@@ -1506,8 +1506,7 @@
     "next": "~15.1.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "svgo": "^3.3.2",
-    "tsx": "^4.8.2"
+    "svgo": "^3.3.2"
   },
   "peerDependencies": {
     "next": ">=14",

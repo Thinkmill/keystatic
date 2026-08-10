@@ -1,7 +1,7 @@
 import StyleDictionary from 'style-dictionary';
 
-import { typographyToCapsize } from './typographyToCapsize';
-import { getMockToken } from '../test-utilities';
+import { typographyToCapsize } from './typographyToCapsize.ts';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
 
 describe('Transformer: typographyToCapsize', () => {

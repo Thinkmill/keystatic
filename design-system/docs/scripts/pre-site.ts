@@ -1,4 +1,3 @@
-import { isDefined } from 'emery/guards';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -29,7 +28,7 @@ async function getComponentReexports() {
         }
       })
     )
-  ).filter(isDefined);
+  ).filter(x => x !== undefined);
 
   return packages
     .sort()
