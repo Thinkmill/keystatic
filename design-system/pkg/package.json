@@ -7,6 +7,9 @@
     "url": "https://github.com/Thinkmill/keystatic/",
     "directory": "design-system/pkg"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build-icons": "node build-icons.ts && cd ../.. && pnpm preconstruct fix"
   },
