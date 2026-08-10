@@ -1,6 +1,0 @@
-{
-  "key": "theCurrentlyCheckedOutBranch",
-  "value": "La rama actualmente seleccionada. Elige esto si necesitas continuar trabajando sobre el progreso existente de la rama actual.",
-  "notes": "",
-  "type": "git-related"
-}

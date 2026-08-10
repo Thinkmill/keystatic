@@ -1,6 +1,0 @@
-{
-  "key": "theCurrentlyCheckedOutBranch",
-  "value": "Trenutno odjavljena poslovnica. Odaberite ovo ako trebate graditi na postojećem radu iz trenutne grane.",
-  "notes": "",
-  "type": "git-related"
-}
