@@ -53,4 +53,46 @@ describe('action-group/ActionGroup', () => {
 
     expect(result.getByRole('button', { name: 'Bold' })).toBeVisible();
   });
+
+  it('keeps disabled actions disabled after collapsing into the menu', () => {
+    let bounds = jest
+      .spyOn(window.HTMLElement.prototype, 'getBoundingClientRect')
+      .mockReturnValue(new DOMRect(0, 0, 40, 40));
+    let originalResizeObserver = global.ResizeObserver;
+    global.ResizeObserver = class {
+      constructor(private callback: ResizeObserverCallback) {}
+      observe() {
+        this.callback([], this as unknown as ResizeObserver);
+      }
+      disconnect() {}
+      unobserve() {}
+    } as typeof ResizeObserver;
+    let onAction = jest.fn();
+    try {
+      let result = renderWithProvider(
+        <ActionGroup
+          aria-label="Actions"
+          disabledKeys={['delete']}
+          items={[{ id: 'delete' }]}
+          overflowMode="collapse"
+          onAction={onAction}
+        >
+          {item => (
+            <ActionGroupItem id={item.id} key={item.id}>
+              Delete
+            </ActionGroupItem>
+          )}
+        </ActionGroup>
+      );
+
+      firePress(result.getByRole('button', { name: 'More actions' }));
+      let deleteAction = result.getByRole('menuitem', { name: 'Delete' });
+      expect(deleteAction).toHaveAttribute('aria-disabled', 'true');
+      firePress(deleteAction);
+      expect(onAction).not.toHaveBeenCalled();
+    } finally {
+      bounds.mockRestore();
+      global.ResizeObserver = originalResizeObserver;
+    }
+  });
 });

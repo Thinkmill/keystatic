@@ -8,15 +8,15 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import type { Key } from '@react-types/shared';
 import { Toolbar } from 'react-aria-components/Toolbar';
+import { useObjectRef } from 'react-aria/useObjectRef';
 
 import {
-  ActionButton,
   actionButtonClassList,
+  ActionButton,
   ToggleButton,
 } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
@@ -89,7 +89,7 @@ function ActionGroup<T extends object>(
     : uncontrolledKeys;
   let disabledKeys = new Set(disabledKeysProp);
   let [visibleCount, setVisibleCount] = useState(elements.length);
-  let groupRef = useRef<HTMLDivElement>(null);
+  let groupRef = useObjectRef(forwardedRef);
 
   useEffect(() => {
     let element = groupRef.current;
@@ -121,6 +121,7 @@ function ActionGroup<T extends object>(
   }, [elements.length, overflowMode, selectionMode]);
 
   let toggle = (key: Key) => {
+    if (isDisabled || disabledKeys.has(key)) return;
     if (selectionMode === 'none') {
       onAction?.(key);
       return;
@@ -154,7 +155,11 @@ function ActionGroup<T extends object>(
               <MenuItem
                 id={item.props.id}
                 key={item.props.id}
-                isDisabled={isDisabled || item.props.isDisabled}
+                isDisabled={
+                  isDisabled ||
+                  disabledKeys.has(item.props.id) ||
+                  item.props.isDisabled
+                }
                 textValue={item.props.textValue}
                 href={item.props.href}
                 target={item.props.target}
@@ -177,6 +182,7 @@ function ActionGroup<T extends object>(
       justified: isJustified || undefined,
       orientation,
       overflow: overflowMode,
+      prominence: prominence === 'default' ? undefined : prominence,
     }),
     className: css({
       display: 'flex',
@@ -185,6 +191,30 @@ function ActionGroup<T extends object>(
       gap: tokenSchema.size.space.regular,
       minWidth: 0,
       '&[data-justified] > *': { flexGrow: 1 },
+      '&[data-compact]:not([data-prominence=low])': {
+        gap: 0,
+        [actionButtonClassList.selector('root', 'child')]: {
+          borderRadius: 0,
+          '&:first-of-type': {
+            borderBottomLeftRadius: tokenSchema.size.radius.regular,
+            borderTopLeftRadius: tokenSchema.size.radius.regular,
+          },
+          '&:last-of-type': {
+            borderBottomRightRadius: tokenSchema.size.radius.regular,
+            borderTopRightRadius: tokenSchema.size.radius.regular,
+          },
+          '&:not(:last-of-type)': {
+            marginInlineEnd: `calc(${tokenSchema.size.border.regular} * -1)`,
+          },
+          '&[data-focus-visible], &[data-hovered], &[data-pressed]': {
+            zIndex: 1,
+          },
+          '&[data-selected]': { zIndex: 2 },
+        },
+      },
+      '&[data-compact][data-prominence=low]': {
+        gap: tokenSchema.size.space.small,
+      },
     }),
   } as const;
   return (
@@ -200,24 +230,31 @@ function ActionGroup<T extends object>(
         toggle,
       }}
     >
-      <div
-        {...styleProps}
-        ref={forwardedRef}
-        className={classNames(
-          css({ display: 'flex', minWidth: 0 }),
-          styleProps.className
-        )}
-      >
-        {role === 'toolbar' ? (
-          <Toolbar {...groupProps} orientation={orientation}>
-            {groupContents}
-          </Toolbar>
-        ) : (
-          <div {...groupProps} role="group">
-            {groupContents}
-          </div>
-        )}
-      </div>
+      {role === 'toolbar' ? (
+        <Toolbar
+          {...groupProps}
+          style={styleProps.style}
+          className={classNames(
+            css({ display: 'flex', minWidth: 0 }),
+            groupProps.className
+          )}
+          orientation={orientation}
+        >
+          {groupContents}
+        </Toolbar>
+      ) : (
+        <div
+          {...groupProps}
+          style={styleProps.style}
+          className={classNames(
+            css({ display: 'flex', minWidth: 0 }),
+            groupProps.className
+          )}
+          role="group"
+        >
+          {groupContents}
+        </div>
+      )}
     </ActionGroupContext.Provider>
   );
 }
