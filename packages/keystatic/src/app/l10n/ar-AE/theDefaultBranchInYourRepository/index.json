@@ -1,6 +1,0 @@
-{
-  "key": "theDefaultBranchInYourRepository",
-  "value": "الفرع الافتراضي في المستودع الخاص بك. اختر هذا لبدء شيء جديد لا يعتمد على فرعك الحالي.",
-  "notes": "",
-  "type": "git-related"
-}
