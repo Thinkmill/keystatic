@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it, jest } from '@jest/globals';
 
 import { renderWithProvider } from '#test-utils';
 import { BreadcrumbItem, Breadcrumbs } from '..';
@@ -85,5 +85,26 @@ describe('breadcrumbs/Breadcrumbs', () => {
     );
 
     expect(result.getByText('Folder 1')).not.toHaveAttribute('href');
+  });
+
+  it('collapses intermediate breadcrumbs when space is limited', () => {
+    let width = jest
+      .spyOn(window.HTMLElement.prototype, 'offsetWidth', 'get')
+      .mockImplementation(function (this: HTMLElement) {
+        return this.tagName === 'OL' ? 80 : 30;
+      });
+    let result = renderWithProvider(
+      <Breadcrumbs aria-label="Breadcrumbs">
+        <BreadcrumbItem href="/one">Folder 1</BreadcrumbItem>
+        <BreadcrumbItem href="/two">Folder 2</BreadcrumbItem>
+        <BreadcrumbItem href="/three">Folder 3</BreadcrumbItem>
+        <BreadcrumbItem href="/four">Folder 4</BreadcrumbItem>
+        <BreadcrumbItem>Folder 5</BreadcrumbItem>
+      </Breadcrumbs>
+    );
+
+    expect(result.getAllByRole('listitem')).toHaveLength(3);
+    expect(result.getByRole('button', { name: 'More breadcrumbs' })).toBeVisible();
+    width.mockRestore();
   });
 });
