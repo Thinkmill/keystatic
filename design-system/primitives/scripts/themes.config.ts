@@ -1,4 +1,4 @@
-import type { TokenBuildInput } from '../types';
+import type { TokenBuildInput } from '../types.ts';
 
 // NOTE: order is important. scales must be first.
 export const themes: TokenBuildInput[] = [

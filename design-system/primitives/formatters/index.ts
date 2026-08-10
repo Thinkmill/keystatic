@@ -1,4 +1,4 @@
-export { cssThemed } from './cssThemed';
-export { cssVariables } from './cssVariables';
-export { javascriptTokenMap } from './javascriptTokenMap';
-export { jsonFigma } from './jsonFigma';
+export { cssThemed } from './cssThemed.ts';
+export { cssVariables } from './cssVariables.ts';
+export { javascriptTokenMap } from './javascriptTokenMap.ts';
+export { jsonFigma } from './jsonFigma.ts';

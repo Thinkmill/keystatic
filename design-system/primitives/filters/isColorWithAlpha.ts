@@ -1,5 +1,5 @@
 import type StyleDictionary from 'style-dictionary';
-import { isColor } from './isColor';
+import { isColor } from './isColor.ts';
 
 /**
  * @description Checks if token is color with an alpha value

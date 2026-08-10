@@ -1,3 +1,3 @@
-export { filenameFromPath } from './filenameFromPath';
-export { toCamelCase } from './toCamelCase';
-export { upperCaseFirstCharacter } from './upperCaseFirstCharacter';
+export { filenameFromPath } from './filenameFromPath.ts';
+export { toCamelCase } from './toCamelCase.ts';
+export { upperCaseFirstCharacter } from './upperCaseFirstCharacter.ts';

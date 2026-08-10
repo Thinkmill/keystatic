@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { isFontFamily } from './isFontFamily';
+import { isFontFamily } from './isFontFamily.ts';
 
 describe('Filter: isFontFamily', () => {
   it('returns true if $type property is `fontFamily`', () => {

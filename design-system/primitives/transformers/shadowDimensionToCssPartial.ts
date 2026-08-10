@@ -1,8 +1,8 @@
 import StyleDictionary from 'style-dictionary';
 
-import { isShadowDimension } from '../filters';
-import { ShadowDimensionTokenValue } from '../types';
-import { checkRequiredTokenProperties } from './utilities/checkRequiredTokenProperties';
+import { isShadowDimension } from '../filters/index.ts';
+import type { ShadowDimensionTokenValue } from '../types.ts';
+import { checkRequiredTokenProperties } from './utilities/checkRequiredTokenProperties.ts';
 
 /** temp until we consolidate shadows, which should contain a color value */
 export const shadowDimensionToCssPartial: StyleDictionary.Transform = {

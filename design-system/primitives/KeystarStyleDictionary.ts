@@ -5,8 +5,8 @@ import {
   cssVariables,
   javascriptTokenMap,
   jsonFigma,
-} from './formatters';
-import { w3cJsonParser } from './parsers';
+} from './formatters/index.ts';
+import { w3cJsonParser } from './parsers/index.ts';
 import {
   colorToCssAlpha,
   colorToHex,
@@ -20,7 +20,7 @@ import {
   namePathToKebabCase,
   shadowDimensionToCssPartial,
   typographyToCapsize,
-} from './transformers';
+} from './transformers/index.ts';
 
 // Parsers
 // -----------------------------------------------------------------------------

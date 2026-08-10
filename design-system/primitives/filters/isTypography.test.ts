@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { isTypography } from './isTypography';
+import { isTypography } from './isTypography.ts';
 
 describe('Filter: isTypography', () => {
   it('returns true if $type property is `typography`', () => {

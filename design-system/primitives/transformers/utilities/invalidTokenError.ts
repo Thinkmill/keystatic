@@ -1,6 +1,6 @@
 import type { TransformedToken } from 'style-dictionary';
 
-import { namePathToDotNotation } from '../namePathToDotNotation';
+import { namePathToDotNotation } from '../namePathToDotNotation.ts';
 
 const composeValueErrorMessage = (token: TransformedToken) => {
   return `Invalid token "${namePathToDotNotation.transformer(

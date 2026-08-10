@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { isCapsize } from './isCapsize';
+import { isCapsize } from './isCapsize.ts';
 
 describe('Filter: isCapsize', () => {
   it('returns true if $type property is `capsize`', () => {

@@ -1,1 +1,1 @@
-export { w3cJsonParser } from './w3cJsonParser';
+export { w3cJsonParser } from './w3cJsonParser.ts';

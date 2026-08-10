@@ -1,8 +1,8 @@
 import { toHex } from 'color2k';
 import type StyleDictionary from 'style-dictionary';
 
-import { isColor } from '../filters';
-import { getTokenValue } from './utilities/getTokenValue';
+import { isColor } from '../filters/index.ts';
+import { getTokenValue } from './utilities/getTokenValue.ts';
 
 /**
  * @description converts color tokens value to `hex6` or `hex8`

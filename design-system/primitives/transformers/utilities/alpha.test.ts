@@ -1,4 +1,4 @@
-import { alpha } from './alpha';
+import { alpha } from './alpha.ts';
 import { expect, it, describe } from '@jest/globals';
 
 describe('Utilities: alpha', () => {

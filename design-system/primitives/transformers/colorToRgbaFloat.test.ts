@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
+import { getMockToken } from '../test-utilities/index.ts';
 import { describe, expect, it } from '@jest/globals';
-import { colorToRgbaFloat } from './colorToRgbaFloat';
+import { colorToRgbaFloat } from './colorToRgbaFloat.ts';
 
 describe('Transformer: colorToRgbaFloat', () => {
   it('transforms `hex3`, `hex6`, and `hex8` tokens to rgb float value', () => {

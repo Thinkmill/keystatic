@@ -23,12 +23,6 @@
     "dist",
     "internal"
   ],
-  "scripts": {
-    "setup": "ts-gql build && tsx scripts/l10n.ts",
-    "build": "pnpm run setup && next build",
-    "dev": "next dev",
-    "start": "next start"
-  },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@types/react": "^19.0.8",

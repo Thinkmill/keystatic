@@ -1,4 +1,4 @@
-import { filenameFromPath } from './filenameFromPath';
+import { filenameFromPath } from './filenameFromPath.ts';
 import { expect, it, describe } from '@jest/globals';
 
 describe('Utilities: filenameFromPath', () => {

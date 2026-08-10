@@ -1,5 +1,5 @@
-import { getMockToken } from '../../test-utilities';
-import { invalidTokenValueError } from './invalidTokenError';
+import { getMockToken } from '../../test-utilities/index.ts';
+import { invalidTokenValueError } from './invalidTokenError.ts';
 import { expect, it, describe } from '@jest/globals';
 
 describe('Utilities: invalidTokenValueError', () => {
