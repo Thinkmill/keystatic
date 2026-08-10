@@ -500,45 +500,6 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2
 
-  dev-projects/localization:
-    dependencies:
-      '@keystatic/core':
-        specifier: workspace:^
-        version: link:../../packages/keystatic
-      '@keystatic/next':
-        specifier: workspace:^
-        version: link:../../packages/next
-      '@preconstruct/next':
-        specifier: ^4.0.0
-        version: 4.0.0
-      '@types/node':
-        specifier: 25.0.3
-        version: 25.0.3
-      '@types/react':
-        specifier: ^19.2.18
-        version: 19.2.18
-      '@types/react-dom':
-        specifier: ^19.2.4
-        version: 19.2.4(@types/react@19.2.18)
-      eslint:
-        specifier: ^8.18.0
-        version: 8.48.0(supports-color@10.2.2)
-      eslint-config-next:
-        specifier: ^12.1.6
-        version: 12.3.4(eslint@8.48.0(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.5.3)
-      next:
-        specifier: ~15.1.10
-        version: 15.1.11(@babel/core@7.29.0(supports-color@10.2.2))(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@0.0.0-experimental-938cd9a-20240601)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      react:
-        specifier: ^19.2.8
-        version: 19.2.8
-      react-dom:
-        specifier: ^19.2.8
-        version: 19.2.8(react@19.2.8)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.5.3
-
   dev-projects/next-app:
     dependencies:
       '@babel/runtime':
