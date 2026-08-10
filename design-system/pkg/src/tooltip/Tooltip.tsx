@@ -3,7 +3,13 @@ import {
   Tooltip as AriaTooltip,
   type TooltipProps as AriaTooltipProps,
 } from 'react-aria-components/Tooltip';
-import { ForwardedRef, forwardRef, useMemo } from 'react';
+import {
+  createContext,
+  ForwardedRef,
+  forwardRef,
+  useContext,
+  useMemo,
+} from 'react';
 
 import { DirectionIndicator } from '@keystar/ui/overlays';
 import { SlotProvider } from '@keystar/ui/slots';
@@ -20,12 +26,21 @@ import { isReactText } from '@keystar/ui/utils';
 
 import { TooltipProps } from './types';
 
+export const TooltipTriggerContext = createContext<
+  Pick<TooltipProps, 'placement' | 'offset' | 'crossOffset' | 'shouldFlip'>
+>({});
+
 /** A short, non-interactive description shown on hover or keyboard focus. */
 export const Tooltip = forwardRef(function Tooltip(
   props: TooltipProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let { children, tone = 'neutral', ...otherProps } = props;
+  let triggerProps = useContext(TooltipTriggerContext);
+  let placement = otherProps.placement ?? triggerProps.placement;
+  let offset = otherProps.offset ?? triggerProps.offset ?? 9;
+  let crossOffset = otherProps.crossOffset ?? triggerProps.crossOffset;
+  let shouldFlip = otherProps.shouldFlip ?? triggerProps.shouldFlip;
   let styleProps = useStyleProps(otherProps);
   let slots = useMemo(
     () =>
@@ -40,6 +55,10 @@ export const Tooltip = forwardRef(function Tooltip(
   return (
     <AriaTooltip
       {...(filterStyleProps(otherProps) as AriaTooltipProps)}
+      placement={placement}
+      offset={offset}
+      crossOffset={crossOffset}
+      shouldFlip={shouldFlip}
       ref={forwardedRef}
       data-tone={tone}
       className={classNames(

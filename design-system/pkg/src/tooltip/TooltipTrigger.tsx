@@ -1,6 +1,7 @@
 import { TooltipTrigger as AriaTooltipTrigger } from 'react-aria-components/Tooltip';
-import { Children, cloneElement, isValidElement } from 'react';
+import { Children } from 'react';
 
+import { TooltipTriggerContext } from './Tooltip';
 import { TooltipTriggerProps } from './types';
 
 export const MOUSE_REST_TIMEOUT = 600;
@@ -18,15 +19,12 @@ export function TooltipTrigger({
   let [trigger, tooltip] = Children.toArray(children);
   return (
     <AriaTooltipTrigger {...triggerProps} delay={delay}>
-      {trigger}
-      {isValidElement(tooltip)
-        ? cloneElement(tooltip, {
-            placement,
-            offset,
-            crossOffset,
-            shouldFlip,
-          } as {})
-        : tooltip}
+      <TooltipTriggerContext.Provider
+        value={{ placement, offset, crossOffset, shouldFlip }}
+      >
+        {trigger}
+        {tooltip}
+      </TooltipTriggerContext.Provider>
     </AriaTooltipTrigger>
   );
 }

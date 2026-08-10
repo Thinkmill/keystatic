@@ -5,13 +5,13 @@ import {
 } from 'react-aria-components/DateRangePicker';
 import { Dialog } from 'react-aria-components/Dialog';
 import { Group } from 'react-aria-components/Group';
-import { Popover } from 'react-aria-components/Popover';
 import React, { ReactElement, Ref } from 'react';
 
 import { FieldButton } from '@keystar/ui/button';
 import { RangeCalendar } from '@keystar/ui/calendar';
 import { useProviderProps } from '@keystar/ui/core';
 import { Icon } from '@keystar/ui/icon';
+import { Popover } from '@keystar/ui/overlays';
 import { calendarDaysIcon } from '@keystar/ui/icon/icons/calendarDaysIcon';
 import {
   classNames,
@@ -109,7 +109,8 @@ function DateRangePicker<T extends DateValue>(
       <Popover
         placement="bottom start"
         shouldFlip={shouldFlip}
-        className={pickerPopoverClassName}
+        hideArrow
+        UNSAFE_className={pickerPopoverClassName}
       >
         <Dialog className={pickerDialogClassName}>
           <div className={pickerCalendarContainerClassName}>

@@ -1,5 +1,4 @@
 import { Button as AriaButton } from 'react-aria-components/Button';
-import { Popover as AriaPopover } from 'react-aria-components/Popover';
 import {
   Select as AriaSelect,
   type SelectProps as AriaSelectProps,
@@ -13,6 +12,7 @@ import type { FieldButtonProps } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { chevronsUpDownIcon } from '@keystar/ui/icon/icons/chevronsUpDownIcon';
 import { ListBox } from '@keystar/ui/listbox';
+import { Popover } from '@keystar/ui/overlays';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
   classNames,
@@ -113,15 +113,16 @@ function Picker<T extends object>(
           })}
         />
       </AriaButton>
-      <AriaPopover
+      <Popover
         placement={`${direction} ${align}`}
         shouldFlip={shouldFlip}
-        style={{ minWidth: 'var(--trigger-width)', width: menuWidth }}
+        hideArrow
+        UNSAFE_style={{ minWidth: 'var(--trigger-width)', width: menuWidth }}
       >
         <ListBox items={items} dependencies={dependencies}>
           {children}
         </ListBox>
-      </AriaPopover>
+      </Popover>
       <FieldErrorElement>{errorMessage}</FieldErrorElement>
     </AriaSelect>
   );

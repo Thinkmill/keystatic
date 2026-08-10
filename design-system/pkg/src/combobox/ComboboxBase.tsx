@@ -4,7 +4,6 @@ import {
   type ComboBoxProps as AriaComboBoxProps,
 } from 'react-aria-components/ComboBox';
 import { Input } from 'react-aria-components/Input';
-import { Popover } from 'react-aria-components/Popover';
 import type { ForwardedRef } from 'react';
 
 import { FieldButton } from '@keystar/ui/button';
@@ -12,6 +11,7 @@ import type { FieldButtonProps } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { chevronsUpDownIcon } from '@keystar/ui/icon/icons/chevronsUpDownIcon';
 import { ListBox } from '@keystar/ui/listbox';
+import { Popover } from '@keystar/ui/overlays';
 import {
   classNames,
   css,
@@ -117,7 +117,8 @@ export function ComboboxBase<T extends object, M extends 'single' | 'multiple'>(
       <Popover
         placement={`${direction} ${align}`}
         shouldFlip={shouldFlip}
-        style={{ minWidth: 'var(--trigger-width)', width: menuWidth }}
+        hideArrow
+        UNSAFE_style={{ minWidth: 'var(--trigger-width)', width: menuWidth }}
       >
         <ListBox dependencies={dependencies}>{children}</ListBox>
       </Popover>
