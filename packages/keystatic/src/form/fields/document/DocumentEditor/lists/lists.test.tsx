@@ -1,7 +1,7 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { nestList, toggleList } from './lists';
 import { jsx, makeEditor } from '../tests/utils';
 
@@ -1156,7 +1156,7 @@ test('nesting a list item in an ordered list into an unordered list makes the it
 });
 
 // TODO: fix this(the snapshot shows the correct output)
-// eslint-disable-next-line jest/no-disabled-tests
+// eslint-disable-next-line @vitest/no-disabled-tests
 test.skip('toggling unordered-list in a nested unordered-list moves the list item out of the list', () => {
   let editor = makeEditor(
     <editor>
@@ -1211,7 +1211,7 @@ test.skip('toggling unordered-list in a nested unordered-list moves the list ite
 });
 
 // TODO: fix this
-// eslint-disable-next-line jest/no-disabled-tests
+// eslint-disable-next-line @vitest/no-disabled-tests
 test.skip('nesting multiple items at the same time works', () => {
   let editor = makeEditor(
     <editor>

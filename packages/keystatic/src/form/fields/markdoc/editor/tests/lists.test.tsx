@@ -1,7 +1,7 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { jsx, renderEditor } from '../tests/utils';
 
 test('ordered list shortcut', async () => {
@@ -921,7 +921,7 @@ test('changing the type of a nested list to something which it is nested inside'
 });
 
 // TODO: fix this
-// eslint-disable-next-line jest/no-disabled-tests
+// eslint-disable-next-line @vitest/no-disabled-tests
 test.skip('nesting a list item in an ordered list into an unordered list makes the item unordered', async () => {
   const { state, user } = renderEditor(
     <doc>
@@ -987,7 +987,7 @@ test.skip('nesting a list item in an ordered list into an unordered list makes t
 });
 
 // TODO: fix this(the snapshot shows the correct output)
-// eslint-disable-next-line jest/no-disabled-tests
+// eslint-disable-next-line @vitest/no-disabled-tests
 test.skip('toggling unordered_list in a nested unordered_list moves the list item out of the list', async () => {
   const { state, user, rendered } = renderEditor(
     <doc>
@@ -1040,7 +1040,7 @@ test.skip('toggling unordered_list in a nested unordered_list moves the list ite
 });
 
 // TODO: fix this
-// eslint-disable-next-line jest/no-disabled-tests
+// eslint-disable-next-line @vitest/no-disabled-tests
 test.skip('nesting multiple items at the same time works', async () => {
   const { state, user } = renderEditor(
     <doc>

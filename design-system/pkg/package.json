@@ -1494,7 +1494,6 @@
   },
   "devDependencies": {
     "@internationalized/string-compiler": "^3.2.6",
-    "@jest/globals": "^29.7.0",
     "@keystar/ui": "workspace:*",
     "@keystar/ui-storybook": "workspace:^",
     "@svgr/core": "^6.5.1",
@@ -1509,7 +1508,8 @@
     "next": "~15.1.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "svgo": "^3.3.2"
+    "svgo": "^3.3.2",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "next": ">=14",

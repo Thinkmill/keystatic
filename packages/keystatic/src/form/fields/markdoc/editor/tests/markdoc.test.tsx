@@ -1,7 +1,7 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { EditorStateDescription, jsx, toEditorState } from './utils';
 import { markdocToProseMirror } from '../markdoc/parse';
 import { proseMirrorToMarkdoc } from '../markdoc/serialize';
@@ -534,7 +534,7 @@ test('undefined component', () => {
   expect(() => {
     fromMarkdoc('{% component-that-does-not-exist /%}');
   }).toThrowErrorMatchingInlineSnapshot(
-    `"0:Missing component definition for component-that-does-not-exist"`
+    `[Error: 0:Missing component definition for component-that-does-not-exist]`
   );
 });
 

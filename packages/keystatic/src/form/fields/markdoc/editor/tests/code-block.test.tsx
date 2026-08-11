@@ -1,7 +1,7 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { jsx, renderEditor } from './utils';
 
 const basicDoc = (
@@ -41,7 +41,7 @@ for (const type of [' ', '{Enter}'] as const) {
       </doc>
     );
   });
-  // eslint-disable-next-line jest/no-disabled-tests
+  // eslint-disable-next-line @vitest/no-disabled-tests
   test.skip(`inserting a code block with an unknown language a shortcut ending with a ${type}`, async () => {
     const { state, user } = renderEditor(basicDoc);
     await user.keyboard(`\`\`\`asdasdasdasdasdfasdfasdf${type}some content`);

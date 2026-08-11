@@ -6,8 +6,8 @@ import {
   afterAll,
   afterEach,
   beforeAll,
-  jest,
-} from '@jest/globals';
+  vi,
+} from 'vitest';
 
 import {
   act,
@@ -57,26 +57,35 @@ function renderComponent<T>(
 }
 
 describe('tabs/Tabs', function () {
-  let onSelectionChange = jest.fn();
+  let onSelectionChange = vi.fn();
+  let user: ReturnType<typeof userEvent.setup>;
 
   beforeAll(function () {
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientWidth', 'get')
-      .mockImplementation(() => 1000);
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientHeight', 'get')
-      .mockImplementation(() => 1000);
-    window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.useFakeTimers();
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientWidth',
+      'get'
+    ).mockImplementation(() => 1000);
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientHeight',
+      'get'
+    ).mockImplementation(() => 1000);
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    vi.useFakeTimers();
+    user = userEvent.setup({
+      delay: null,
+      advanceTimers: vi.advanceTimersByTimeAsync,
+    });
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    act(() => jest.runAllTimers());
+    vi.clearAllMocks();
+    act(() => vi.runAllTimers());
   });
 
   afterAll(function () {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('renders properly', function () {
@@ -250,7 +259,7 @@ describe('tabs/Tabs', function () {
     let { getAllByRole } = renderComponent({
       defaultSelectedKey: defaultItems[1].name,
     });
-    userEvent.tab();
+    await user.tab();
 
     let tabs = getAllByRole('tab');
     await waitFor(() => {
@@ -263,7 +272,7 @@ describe('tabs/Tabs', function () {
       defaultSelectedKey: defaultItems[1].name,
       isDisabled: true,
     });
-    userEvent.tab();
+    await user.tab();
 
     let tabpanel = getByRole('tabpanel');
     await waitFor(() => {
@@ -277,7 +286,7 @@ describe('tabs/Tabs', function () {
       disabledKeys: [defaultItems[1].name],
       onSelectionChange,
     });
-    userEvent.tab();
+    await user.tab();
 
     let tabs = getAllByRole('tab');
     await waitFor(() => {
@@ -294,13 +303,13 @@ describe('tabs/Tabs', function () {
       disabledKeys: [defaultItems[1].name],
       onSelectionChange,
     });
-    userEvent.tab();
+    await user.tab();
 
     let tabs = getAllByRole('tab');
     await waitFor(() => {
       expect(document.activeElement).toBe(tabs[0]);
     });
-    userEvent.click(tabs[1]);
+    await user.click(tabs[1]);
     expect(onSelectionChange).not.toHaveBeenCalled();
   });
 
@@ -310,7 +319,7 @@ describe('tabs/Tabs', function () {
       onSelectionChange,
       items: defaultItems,
     });
-    userEvent.tab();
+    await user.tab();
 
     let tabs = getAllByRole('tab');
     await waitFor(() => {
@@ -352,7 +361,7 @@ describe('tabs/Tabs', function () {
       onSelectionChange,
       items: defaultItems,
     });
-    userEvent.tab();
+    await user.tab();
 
     let tabs = getAllByRole('tab');
     let tabpanel = getByRole('tabpanel');

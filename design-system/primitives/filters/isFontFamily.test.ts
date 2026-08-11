@@ -1,5 +1,5 @@
 import { getMockToken } from '../test-utilities/index.ts';
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { isFontFamily } from './isFontFamily.ts';
 
 describe('Filter: isFontFamily', () => {

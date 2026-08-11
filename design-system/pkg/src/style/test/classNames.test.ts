@@ -1,5 +1,5 @@
 import { classNames, resetClassName } from '@keystar/ui/style';
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it } from 'vitest';
 
 describe('style/classNames', function () {
   it('includes the reset className, once', function () {

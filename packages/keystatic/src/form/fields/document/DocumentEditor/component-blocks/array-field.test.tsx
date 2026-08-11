@@ -1,7 +1,7 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import React from 'react';
 import { Transforms } from 'slate';
 import { jsx, makeEditor } from '../tests/utils';
@@ -473,7 +473,7 @@ test('inserting an item from empty works', () => {
   `);
 });
 
-// eslint-disable-next-line jest/no-disabled-tests
+// eslint-disable-next-line @vitest/no-disabled-tests
 test.skip('removing an item using the preview props works', async () => {
   const editor = makeEditor(
     <editor>

@@ -1,7 +1,7 @@
 import type StyleDictionary from 'style-dictionary';
 
 import { getMockToken } from '../test-utilities/index.ts';
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { isSource } from './isSource.ts';
 
 describe('Filter: isSource', () => {

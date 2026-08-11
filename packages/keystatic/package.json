@@ -176,8 +176,6 @@
   },
   "devDependencies": {
     "@internationalized/string-compiler": "^3.2.6",
-    "@jest/expect": "^29.7.0",
-    "@jest/globals": "^29.7.0",
     "@testing-library/user-event": "^14.6.1",
     "@ts-gql/compiler": "^0.16.7",
     "@ts-gql/eslint-plugin": "^0.9.1",
@@ -189,9 +187,9 @@
     "@types/prismjs": "^1.26.0",
     "@types/react-dom": "^19.0.3",
     "@types/signal-exit": "^3.0.1",
-    "@vitest/pretty-format": "^3.0.5",
+    "@vitest/pretty-format": "^4.1.10",
+    "@vitest/utils": "^4.1.10",
     "eslint": "^8.18.0",
-    "jest-diff": "^29.0.1",
     "outdent": "^0.8.0",
     "prismjs": "^1.29.0",
     "react": "^19.0.0",
@@ -200,7 +198,8 @@
     "resize-observer-polyfill": "^1.5.1",
     "signal-exit": "^3.0.7",
     "slate-hyperscript": "^0.77.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@keystar/ui": "*",

@@ -1,12 +1,13 @@
 import {
+  type MockInstance,
   expect,
   describe,
   it,
-  jest,
+  vi,
   beforeAll,
   afterAll,
   afterEach,
-} from '@jest/globals';
+} from 'vitest';
 
 import { Button } from '@keystar/ui/button';
 import {
@@ -19,11 +20,11 @@ import {
 
 import { ListView, Item } from '..';
 
-// eslint-disable-next-line jest/no-disabled-tests
+// eslint-disable-next-line @vitest/no-disabled-tests
 describe.skip('list-view/ListView', () => {
-  let offsetWidth: jest.SpiedGetter<number>,
-    offsetHeight: jest.SpiedGetter<number>,
-    scrollHeight: jest.SpiedGetter<number>;
+  let offsetWidth: MockInstance<() => number>,
+    offsetHeight: MockInstance<() => number>,
+    scrollHeight: MockInstance<() => number>;
   let items = [
     { key: 'foo', label: 'Foo' },
     { key: 'bar', label: 'Bar' },
@@ -36,22 +37,22 @@ describe.skip('list-view/ListView', () => {
   }
 
   beforeAll(function () {
-    offsetWidth = jest
+    offsetWidth = vi
       .spyOn(window.HTMLElement.prototype, 'clientWidth', 'get')
       .mockImplementation(() => 1000);
-    offsetHeight = jest
+    offsetHeight = vi
       .spyOn(window.HTMLElement.prototype, 'clientHeight', 'get')
       .mockImplementation(() => 1000);
-    scrollHeight = jest
+    scrollHeight = vi
       .spyOn(window.HTMLElement.prototype, 'scrollHeight', 'get')
       .mockImplementation(() => 40);
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(function () {
     fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
     fireEvent.keyUp(document.activeElement!, { key: 'Escape' });
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterAll(function () {
@@ -64,7 +65,7 @@ describe.skip('list-view/ListView', () => {
     let tree = renderWithProvider(children);
     // Allow for Virtualizer layout to update
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
     return tree;
   };
@@ -193,7 +194,7 @@ describe.skip('list-view/ListView', () => {
     let cell = within(getRow(tree, 'Bar')).getByRole('gridcell');
     firePress(cell);
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
     expect(document.activeElement).toBe(getRow(tree, 'Bar'));
   });

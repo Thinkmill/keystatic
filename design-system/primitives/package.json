@@ -13,7 +13,6 @@
   "devDependencies": {
     "@capsizecss/core": "^3.1.1",
     "@capsizecss/metrics": "^1.2.0",
-    "@jest/globals": "^29.7.0",
     "@keystar/ui": "workspace:*",
     "@types/lodash": "^4.14.191",
     "color2k": "^2.0.2",
@@ -22,7 +21,8 @@
     "lodash": "^4.17.21",
     "prettier": "^3.0.3",
     "style-dictionary": "^3.8.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "@prettier/sync": "^0.3.0"

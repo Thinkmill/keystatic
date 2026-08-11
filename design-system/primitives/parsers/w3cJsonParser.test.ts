@@ -3,7 +3,7 @@ import {
   getMockParserInput,
 } from '../test-utilities/index.ts';
 import { w3cJsonParser } from './w3cJsonParser.ts';
-import { expect, it, describe } from '@jest/globals';
+import { expect, it, describe } from 'vitest';
 
 describe('Parser: w3c token json5 parser', () => {
   it('parses valid w3c json5', () => {

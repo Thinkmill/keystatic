@@ -1,6 +1,6 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { htmlToEditor } from './utils';
 
 test('confluence', async () => {
