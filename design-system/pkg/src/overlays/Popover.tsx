@@ -55,16 +55,23 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
   props: PopoverWrapperProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let { children, isOpen, hideArrow, isNonModal, state, wrapperRef } = props;
+  let {
+    children,
+    isOpen,
+    hideArrow,
+    isNonModal,
+    state,
+    wrapperRef,
+    maxHeight: _maxHeight,
+    ...ariaProps
+  } = props;
 
   let popoverRef = useObjectRef(forwardedRef);
   let { popoverProps, arrowProps, underlayProps, placement } = usePopover(
     {
-      ...props,
+      ...ariaProps,
       containerPadding: 8,
       popoverRef,
-      // @ts-expect-error we need to override the default value, but `undefined` doesn't work.
-      maxHeight: null,
     },
     state
   );
