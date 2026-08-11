@@ -1,12 +1,13 @@
 import {
-  jest,
+  type MockInstance,
+  vi,
   describe,
   it,
   expect,
   afterEach,
   beforeAll,
   afterAll,
-} from '@jest/globals';
+} from 'vitest';
 import {
   Item,
   Menu,
@@ -38,28 +39,28 @@ let withSection = [
 ];
 
 describe('menu/MenuTrigger', () => {
-  let offsetWidth: jest.SpiedGetter<number>,
-    offsetHeight: jest.SpiedGetter<number>;
-  let onOpenChange = jest.fn();
-  let onSelect = jest.fn();
-  let onSelectionChange = jest.fn();
+  let offsetWidth: MockInstance<() => number>,
+    offsetHeight: MockInstance<() => number>;
+  let onOpenChange = vi.fn();
+  let onSelect = vi.fn();
+  let onSelectionChange = vi.fn();
 
   beforeAll(function () {
-    offsetWidth = jest
+    offsetWidth = vi
       .spyOn(window.HTMLElement.prototype, 'offsetWidth', 'get')
       .mockImplementation(() => 1000);
-    offsetHeight = jest
+    offsetHeight = vi
       .spyOn(window.HTMLElement.prototype, 'offsetHeight', 'get')
       .mockImplementation(() => 1000);
-    window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.spyOn(window.screen, 'width', 'get').mockImplementation(() => 1024);
-    jest.useFakeTimers();
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    vi.spyOn(window.screen, 'width', 'get').mockImplementation(() => 1024);
+    vi.useFakeTimers();
   });
 
   afterAll(function () {
     offsetWidth.mockReset();
     offsetHeight.mockReset();
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   afterEach(() => {
@@ -80,7 +81,7 @@ describe('menu/MenuTrigger', () => {
 
     triggerEvent(triggerButton);
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     let menu = tree.getByRole('menu');
@@ -101,7 +102,7 @@ describe('menu/MenuTrigger', () => {
 
     triggerEvent(triggerButton, menu);
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
     expect(menu).not.toBeInTheDocument();
 
@@ -155,7 +156,7 @@ describe('menu/MenuTrigger', () => {
   it('supports `isOpen` (controlled)', function () {
     let tree = renderComponent({ onOpenChange, isOpen: true });
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
     expect(onOpenChange).toHaveBeenCalledTimes(0);
 
@@ -165,7 +166,7 @@ describe('menu/MenuTrigger', () => {
     let triggerButton = tree.getByText('Menu Button');
     firePress(triggerButton);
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     menu = tree.getByRole('menu');
@@ -176,7 +177,7 @@ describe('menu/MenuTrigger', () => {
   it('supports `defaultOpen` (uncontrolled) ', function () {
     let tree = renderComponent({ onOpenChange, defaultOpen: true });
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
     expect(onOpenChange).toHaveBeenCalledTimes(0);
 
@@ -186,7 +187,7 @@ describe('menu/MenuTrigger', () => {
     let triggerButton = tree.getByText('Menu Button');
     firePress(triggerButton);
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(menu).not.toBeInTheDocument();
@@ -198,7 +199,7 @@ describe('menu/MenuTrigger', () => {
     let button = tree.getByRole('button');
     firePress(button);
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
     let menu = tree.queryByRole('menu');
     expect(menu).toBeNull();
@@ -212,12 +213,12 @@ describe('menu/MenuTrigger', () => {
         { selectedKeys: ['Bar'], selectionMode: 'single' }
       );
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
@@ -226,19 +227,19 @@ describe('menu/MenuTrigger', () => {
       expect(selectedItem).toBe(document.activeElement);
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       expect(menu).not.toBeInTheDocument();
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       // Opening menu via down arrow still autofocuses the selected item
       fireEvent.keyDown(button, KEYS.ArrowDown);
       fireEvent.keyUp(button, KEYS.ArrowDown);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       menu = tree.getByRole('menu');
       menuItems = within(menu).getAllByRole('menuitemradio');
@@ -246,7 +247,7 @@ describe('menu/MenuTrigger', () => {
       expect(selectedItem).toBe(document.activeElement);
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(menu).not.toBeInTheDocument();
 
@@ -324,7 +325,7 @@ describe('menu/MenuTrigger', () => {
     ) {
       let triggerButton = tree.getByRole('button');
       act(() => firePress(triggerButton));
-      act(() => jest.runAllTimers());
+      act(() => vi.runAllTimers());
 
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
@@ -342,10 +343,10 @@ describe('menu/MenuTrigger', () => {
         triggerEvent(itemToAction);
       });
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       }); // FocusScope useLayoutEffect cleanup
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       }); // FocusScope raf
     }
 
@@ -355,17 +356,17 @@ describe('menu/MenuTrigger', () => {
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
       fireEvent.keyDown(menu, KEYS.Escape);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       }); // FocusScope useLayoutEffect cleanup
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       }); // FocusScope raf
       expect(menu).not.toBeInTheDocument();
       expect(document.activeElement).toBe(button);
@@ -377,7 +378,7 @@ describe('menu/MenuTrigger', () => {
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       let menu = tree.getByRole('menu');
@@ -385,10 +386,10 @@ describe('menu/MenuTrigger', () => {
       fireEvent.mouseDown(document.body);
       fireEvent.mouseUp(document.body);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       }); // FocusScope useLayoutEffect cleanup
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       }); // FocusScope raf
       expect(menu).not.toBeInTheDocument();
       expect(document.activeElement).toBe(button);
@@ -403,7 +404,7 @@ describe('menu/MenuTrigger', () => {
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       let menu = tree.getByRole('menu');
@@ -432,7 +433,7 @@ describe('menu/MenuTrigger', () => {
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       let menu = tree.getByRole('menu');
@@ -445,7 +446,7 @@ describe('menu/MenuTrigger', () => {
       fireEvent.keyDown(menuItem1, KEYS.Enter);
       fireEvent.keyUp(menuItem1, KEYS.Enter);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(menu).toBeInTheDocument();
@@ -526,13 +527,13 @@ describe('menu/MenuTrigger', () => {
       expect(document.activeElement).toBe(tree.getByRole('button'));
     });
 
-    it('closes the menu when blurring the menu', function () {
+    it('closes the menu when blurring the menu', async function () {
       tree = renderComponent({ onOpenChange });
       expect(onOpenChange).toHaveBeenCalledTimes(0);
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       let menu = tree.getByRole('menu');
@@ -540,11 +541,11 @@ describe('menu/MenuTrigger', () => {
       expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(button).toHaveAttribute('aria-expanded', 'true');
 
-      act(() => {
-        (document.activeElement as HTMLElement)?.blur();
-      });
-      act(() => {
-        jest.runAllTimers();
+      await act(async () => {
+        fireEvent.blur(document.activeElement as HTMLElement, {
+          relatedTarget: document.body,
+        });
+        await vi.runAllTimersAsync();
       });
       expect(menu).not.toBeInTheDocument();
       expect(button).toHaveAttribute('aria-expanded', 'false');
@@ -595,7 +596,7 @@ describe('menu/MenuTrigger', () => {
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       let menu = tree.getByRole('menu');
@@ -605,7 +606,7 @@ describe('menu/MenuTrigger', () => {
 
       fireEvent.keyDown(document.activeElement!, { key: 'Tab' });
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       expect(document.activeElement).toBe(tree.getByTestId('after-input'));
@@ -633,7 +634,7 @@ describe('menu/MenuTrigger', () => {
       act(() => {
         firePress(button);
       });
-      act(() => jest.runAllTimers());
+      act(() => vi.runAllTimers());
 
       let menu = getByRole('menu');
       expect(menu).toBeTruthy();
@@ -647,10 +648,10 @@ describe('menu/MenuTrigger', () => {
         fireEvent.click(buttons[0]);
       });
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       }); // FocusScope useLayoutEffect cleanup
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       }); // FocusScope raf
       expect(onOpenChange).toHaveBeenCalledTimes(2);
 
@@ -732,7 +733,7 @@ describe('menu/MenuTrigger', () => {
     );
     let [button1, button2] = getAllByRole('button');
     firePress(button1);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
     let menu = getByRole('menu');
     let menuItem1 = within(menu).getByText('Alpha');
     expect(menuItem1).toBeInTheDocument();
@@ -740,16 +741,16 @@ describe('menu/MenuTrigger', () => {
     // pressing once on button 2 should close menu1, but not open menu2 yet
     firePress(button2);
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     }); // FocusScope useLayoutEffect cleanup
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     }); // FocusScope raf
     expect(queryByRole('menu')).toBeNull();
 
     // second press of button2 should open menu2
     firePress(button2);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
     let menu2 = getByRole('menu');
     let menu2Item1 = within(menu2).getByText('Whiskey');
     expect(menu2Item1).toBeInTheDocument();

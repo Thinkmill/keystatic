@@ -1,7 +1,7 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { test } from '@jest/globals';
+import { test } from 'vitest';
 import React, { ReactElement } from 'react';
 import { jsx, makeEditor } from '../tests/utils';
 import {

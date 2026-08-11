@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { parse, format } from '#markdoc';
 import path from 'path';
 import { createReader } from '../../../../../reader';

@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { useStyleProps } from '@keystar/ui/style';
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it } from 'vitest';
 
 describe('style/useStyleProps', function () {
   it('should allow escape hatches', function () {

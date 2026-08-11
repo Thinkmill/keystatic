@@ -1,11 +1,11 @@
-/** @jest-environment node */
+/** @vitest-environment node */
 import {
   treeEntriesToTreeNodes,
   treeSha,
   updateTreeWithChanges,
 } from './trees';
 import { webcrypto } from 'node:crypto';
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 
 // node only started setting the web crypto api globally in newer versions
 if (!globalThis.crypto) {

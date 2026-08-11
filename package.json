@@ -36,8 +36,7 @@
     "static": "pnpm run validate && pnpm run test",
     "test": "pnpm run test:unit",
     "test-strict": "STRICT_MODE=1 pnpm run test",
-    "test:coverage": "jest ---coverage",
-    "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:unit": "vitest run",
     "validate": "pnpm run '/check:*/'",
     "version-packages": "changeset version && pnpm i --frozen-lockfile=false && pnpm run format \"**/CHANGELOG.md\""
   },
@@ -59,22 +58,22 @@
     "@types/node": "25.0.3",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
+    "@vitest/eslint-plugin": "^1.6.27",
     "babel-plugin-react-compiler": "^0.0.0-experimental-696af53-20240625",
-    "eslint": "^8.18.0",
+    "eslint": "^8.57.1",
     "eslint-config-next": "^12.1.6",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.5.3",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-compiler": "^0.0.0-experimental-0998c1e-20240625",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "jest": "^30.0.0-alpha.2",
-    "jest-environment-jsdom": "^30.0.0-alpha.2",
+    "jsdom": "^26.1.0",
     "prettier": "^3.0.3",
     "prettier-plugin-packagejson": "^2.2.18",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.10"
   },
   "manypkg": {
     "ignoredRules": [

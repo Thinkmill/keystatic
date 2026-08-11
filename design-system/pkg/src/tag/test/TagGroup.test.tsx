@@ -1,11 +1,4 @@
-import {
-  afterEach,
-  beforeAll,
-  describe,
-  expect,
-  it,
-  jest,
-} from '@jest/globals';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, renderWithProvider } from '#test-utils';
 
 import React from 'react';
@@ -14,17 +7,17 @@ import { Item, TagGroup } from '../index';
 
 // TODO: revisit once keystone refurb is done
 describe('tag/TagGroup', function () {
-  let onRemoveSpy = jest.fn();
+  let onRemoveSpy = vi.fn();
 
   beforeAll(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('provides context for Tag component', function () {
@@ -69,7 +62,7 @@ describe('tag/TagGroup', function () {
     expect(tags[0]).toHaveAttribute('tabIndex', '0');
   });
 
-  it('shows items added with a stable render function', () => {
+  it('shows items added with a stable render function', async () => {
     let renderItem = (item: { id: number; label: string }) => (
       <Item key={item.id}>{item.label}</Item>
     );
@@ -95,8 +88,8 @@ describe('tag/TagGroup', function () {
         {renderItem}
       </TagGroup>
     );
-    act(() => {
-      jest.runAllTicks();
+    await act(async () => {
+      await vi.runAllTimersAsync();
     });
 
     expect(getAllByRole('row')).toHaveLength(2);

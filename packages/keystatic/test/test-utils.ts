@@ -5,7 +5,7 @@ import outdent from 'outdent';
 import onExit from 'signal-exit';
 import { tmpdir } from 'os';
 import { randomUUID } from 'crypto';
-import { expect } from '@jest/globals';
+import { expect } from 'vitest';
 
 export const js = outdent;
 export const ts = outdent;

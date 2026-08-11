@@ -1,4 +1,4 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { EditorStateDescription, jsx, toEditorState } from './utils';
@@ -19,7 +19,7 @@ import { proseMirrorToMDXRoot } from '../mdx/serialize';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import { mdxjs } from 'micromark-extension-mdxjs';
 import { mdxToProseMirror } from '../mdx/parse';
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { block, inline, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
 import { gfmAutolinkLiteral } from 'micromark-extension-gfm-autolink-literal';
@@ -821,7 +821,7 @@ test('undefined component', () => {
   expect(() => {
     fromMDX('<ComponentThatDoesNotExist />');
   }).toThrowErrorMatchingInlineSnapshot(
-    `"Missing component definition for ComponentThatDoesNotExist"`
+    `[Error: Missing component definition for ComponentThatDoesNotExist]`
   );
 });
 
@@ -829,8 +829,8 @@ test('other syntax', () => {
   expect(() => {
     fromMDX('export const a = true;');
   }).toThrowErrorMatchingInlineSnapshot(`
-    "Unhandled type mdxjsEsm: export const a = true;
-    "
+    [Error: Unhandled type mdxjsEsm: export const a = true;
+    ]
   `);
 });
 

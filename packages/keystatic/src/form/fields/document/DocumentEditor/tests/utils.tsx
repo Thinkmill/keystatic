@@ -1,5 +1,5 @@
 import { act, render } from '@testing-library/react';
-import { diff } from 'jest-diff';
+import { diff } from '@vitest/utils/diff';
 import { plugins, Plugin, format } from '@vitest/pretty-format';
 import { ReactElement, createElement, MutableRefObject, useState } from 'react';
 import { Editor, Node, Path, Text, Range } from 'slate';
@@ -12,7 +12,7 @@ import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
 import { KeystarProvider } from '@keystar/ui/core';
 import { normaliseDocumentFeatures } from '../..';
 
-import { expect } from '@jest/globals';
+import { expect } from 'vitest';
 
 export { __jsx as jsx } from './jsx/namespace';
 
@@ -39,12 +39,12 @@ console.error = (...stuff: any[]) => {
   );
 
   // i very much don't like calling process.exit here
-  // but it seems to be the only way to get Jest to fail a test suite
-  // without throwing an error that is caught by Jest
+  // but it seems to be the only way to get Vitest to fail a test suite
+  // without throwing an error that is caught by Vitest
   // re why not just throw an error: console.error might be called
   // in a promise that isn't handled for whatever reason
   // so we can't know that throwing an error will actually fail the tests
-  // (idk why Jest doesn't fail on unhandled rejections)
+  // (idk why Vitest doesn't fail on unhandled rejections)
 
   // for whoever is trying to debug why this is failing here:
   // you should remove the process.exit call and replace it with a throw
@@ -58,14 +58,10 @@ function formatEditor(editor: Node) {
   });
 }
 
-declare module '@jest/expect' {
+declare module 'vitest' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  export interface Matchers<R extends void | Promise<void>, T> {
-    toEqualEditor(
-      expected: [T] extends [Editor]
-        ? Editor
-        : 'toEqualEditor only accepts an Editor'
-    ): R;
+  export interface Matchers<T = any> {
+    toEqualEditor(expected: Editor): void;
   }
 }
 

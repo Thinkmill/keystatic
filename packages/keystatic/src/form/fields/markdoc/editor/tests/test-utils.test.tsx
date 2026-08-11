@@ -1,7 +1,7 @@
-/** @jest-environment jsdom */
+/** @vitest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { jsx, renderEditor } from './utils';
 
 test('basic cursor snapshot', () => {
@@ -577,7 +577,7 @@ test("throws on input that doesn't conform to the schema", () => {
       </doc>
     )
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Invalid content for node paragraph: <paragraph("sometext")>"`
+    `[RangeError: Invalid content for node paragraph: <paragraph("sometext")>]`
   );
 });
 

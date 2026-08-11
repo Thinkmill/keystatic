@@ -1,4 +1,4 @@
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it } from 'vitest';
 import { getMockToken } from '../../test-utilities/index.ts';
 import { getTokenValue } from './getTokenValue.ts';
 
