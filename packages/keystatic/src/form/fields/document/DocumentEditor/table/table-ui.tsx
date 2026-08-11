@@ -20,7 +20,7 @@ import { sheetIcon } from '@keystar/ui/icon/icons/sheetIcon';
 import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Flex } from '@keystar/ui/layout';
-import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
+import { Menu, MenuItem, MenuTrigger } from '@keystar/ui/menu';
 import { css, toDataAttributes, tokenSchema } from '@keystar/ui/style';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
@@ -698,7 +698,7 @@ function CellMenu(props: {
               key,
             }))}
           >
-            {item => <Item key={item.key}>{item.label}</Item>}
+            {item => <MenuItem id={item.key}>{item.label}</MenuItem>}
           </Menu>
         </MenuTrigger>
         <Tooltip>Options</Tooltip>

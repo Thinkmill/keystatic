@@ -1,7 +1,7 @@
-import { useButton } from 'react-aria/useButton';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { forwardRef } from 'react';
+import { Pressable } from 'react-aria-components';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { mergeRefs } from 'react-aria/mergeRefs';
+import { forwardRef, useEffect, useRef } from 'react';
 
 import { TextLinkButtonProps } from './types';
 import { useTextLink } from './useTextLink';
@@ -9,20 +9,33 @@ import { useTextLink } from './useTextLink';
 /** @private Forked variant where an "href" is NOT provided. */
 export const TextLinkButton = forwardRef<HTMLSpanElement, TextLinkButtonProps>(
   function TextLink(props, forwardedRef) {
-    const { children, ...otherProps } = props;
+    const {
+      children,
+      prominence = 'default',
+      autoFocus,
+      ...otherProps
+    } = props;
+    const domRef = useRef<HTMLSpanElement>(null);
+    const { Wrapper, className } = useTextLink();
 
-    const domRef = useObjectRef(forwardedRef);
-    const { Wrapper, ...styleProps } = useTextLink(otherProps);
-    const { buttonProps } = useButton(
-      { elementType: 'span', ...otherProps },
-      domRef
-    );
+    useEffect(() => {
+      if (autoFocus) domRef.current?.focus();
+    }, [autoFocus]);
 
     return (
       <Wrapper>
-        <span ref={domRef} {...mergeProps(buttonProps, styleProps)}>
-          {children}
-        </span>
+        <Pressable {...otherProps}>
+          <span
+            {...filterDOMProps(otherProps, { labelable: true })}
+            ref={mergeRefs(domRef, forwardedRef)}
+            role="button"
+            tabIndex={0}
+            data-prominence={prominence}
+            className={className}
+          >
+            {children}
+          </span>
+        </Pressable>
       </Wrapper>
     );
   }

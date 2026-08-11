@@ -14,9 +14,9 @@ popover to improve usability.
 <MenuTrigger>
   <ActionButton>Actions</ActionButton>
   <Menu>
-    <Item>Edit</Item>
-    <Item>Share</Item>
-    <Item>Duplicate</Item>
+    <MenuItem>Edit</MenuItem>
+    <MenuItem>Share</MenuItem>
+    <MenuItem>Duplicate</MenuItem>
   </Menu>
 </MenuTrigger>
 ```
@@ -25,9 +25,9 @@ popover to improve usability.
 
 ### Collections
 
-Menu implements `react-stately`
-[collection components](https://react-spectrum.adobe.com/react-stately/collections.html),
-`<Item>` and `<Section>`.
+Menu implements `react-aria-components`
+[collection components](https://react-spectrum.adobe.com/react-aria-components/collections.html),
+`<MenuItem>` and `<MenuSection>`.
 
 Static collections, seen in the example above, can be used when the full list of
 options is known ahead of time.
@@ -48,7 +48,7 @@ return (
   <MenuTrigger>
     <ActionButton>Actions</ActionButton>
     <Menu label="Animal" items={options} onAction={key => alert(key)}>
-      {item => <Item key={item.key}>{item.name}</Item>}
+      {item => <MenuItem id={item.key}>{item.name}</MenuItem>}
     </Menu>
   </MenuTrigger>
 );
@@ -64,30 +64,31 @@ then this is _used automatically and a **key prop is not required**_.
 
 #### Sections
 
-Use the `<Section>` component to group related items. Each `Section` takes a
-`title` and `key` prop.
+Use `<MenuSection>` with an explicit `<MenuHeader>` to group related
+items.
 
 ```jsx {% live=true %}
 <MenuTrigger>
   <ActionButton>Animals</ActionButton>
   <Menu>
-    <Section title="Marsupials">
-      <Item key="Bilby">Bilby</Item>
-      <Item key="Kangaroo">Kangaroo</Item>
-      <Item key="Quokka">Quokka</Item>
-    </Section>
-    <Section title="Other">
-      <Item key="Echidna">Echidna</Item>
-      <Item key="Dingo">Dingo</Item>
-      <Item key="Cassowary">Cassowary</Item>
-    </Section>
+    <MenuSection>
+      <MenuHeader>Marsupials</MenuHeader>
+      <MenuItem id="Bilby">Bilby</MenuItem>
+      <MenuItem id="Kangaroo">Kangaroo</MenuItem>
+      <MenuItem id="Quokka">Quokka</MenuItem>
+    </MenuSection>
+    <MenuSection>
+      <MenuHeader>Other</MenuHeader>
+      <MenuItem id="Echidna">Echidna</MenuItem>
+      <MenuItem id="Dingo">Dingo</MenuItem>
+      <MenuItem id="Cassowary">Cassowary</MenuItem>
+    </MenuSection>
   </Menu>
 </MenuTrigger>
 ```
 
-Sections used with dynamic items are populated from a hierarchical data
-structure. Similar to the menu itself, `Section` takes an array of data using
-the `items` prop.
+Sections used with dynamic items are populated with an explicit
+`<MenuCollection>`.
 
 ```jsx {% live=true %}
 let items = [
@@ -114,9 +115,12 @@ return (
     <ActionButton>Animals</ActionButton>
     <Menu items={items}>
       {item => (
-        <Section key={item.name} items={item.children} title={item.name}>
-          {item => <Item>{item.name}</Item>}
-        </Section>
+        <MenuSection id={item.name}>
+          <MenuHeader>{item.name}</MenuHeader>
+          <MenuCollection items={item.children}>
+            {item => <MenuItem>{item.name}</MenuItem>}
+          </MenuCollection>
+        </MenuSection>
       )}
     </Menu>
   </MenuTrigger>
@@ -128,8 +132,8 @@ Sections without a `title` must provide an `aria-label` for accessibility.
 ### Selection
 
 Enable the selection of items with the `selectionMode` prop. See the
-`react-stately`
-[selection docs](https://react-spectrum.adobe.com/react-stately/selection.html#selected-key-data-type)
+`react-aria-components`
+[selection docs](https://react-spectrum.adobe.com/react-aria-components/selection.html#selected-key-data-type)
 for more information about selection.
 
 Use `defaultSelectedKeys` to provide a default set of selected items
@@ -149,9 +153,9 @@ return (
         selectedKeys={selected}
         onSelectionChange={setSelected}
       >
-        <Item key="left">Left</Item>
-        <Item key="center">Center</Item>
-        <Item key="right">Right</Item>
+        <MenuItem id="left">Left</MenuItem>
+        <MenuItem id="center">Center</MenuItem>
+        <MenuItem id="right">Right</MenuItem>
       </Menu>
     </MenuTrigger>
     <Text>Selected keys: {selected}</Text>
@@ -173,11 +177,11 @@ return (
         selectedKeys={selected}
         onSelectionChange={setSelected}
       >
-        <Item key="name">Name</Item>
-        <Item key="createdAt">Created date</Item>
-        <Item key="category">Category</Item>
-        <Item key="priority">Priority</Item>
-        <Item key="status">Status</Item>
+        <MenuItem id="name">Name</MenuItem>
+        <MenuItem id="createdAt">Created date</MenuItem>
+        <MenuItem id="category">Category</MenuItem>
+        <MenuItem id="priority">Priority</MenuItem>
+        <MenuItem id="status">Status</MenuItem>
       </Menu>
     </MenuTrigger>
     <Text>Selected keys: {[...selected].join(', ')}</Text>
@@ -190,22 +194,22 @@ return (
 By default, interacting with an item in a menu triggers `onAction` and
 optionally `onSelectionChange` depending on the `selectionMode`. Alternatively,
 items may be links to another page or website. This can be achieved by passing
-the `href` prop to the `<Item>` component. Link items in a menu are not
+the `href` prop to the `<MenuItem>` component. Link items in a menu are not
 selectable.
 
 ```jsx {% live=true %}
 <MenuTrigger>
   <ActionButton>Monorepo tools</ActionButton>
   <Menu>
-    <Item href="https://github.com/changesets/changesets" target="_blank">
+    <MenuItem href="https://github.com/changesets/changesets" target="_blank">
       Changesets
-    </Item>
-    <Item href="https://github.com/Thinkmill/manypkg" target="_blank">
+    </MenuItem>
+    <MenuItem href="https://github.com/Thinkmill/manypkg" target="_blank">
       Manypkg
-    </Item>
-    <Item href="https://github.com/preconstruct/preconstruct" target="_blank">
+    </MenuItem>
+    <MenuItem href="https://github.com/preconstruct/preconstruct" target="_blank">
       Preconstruct
-    </Item>
+    </MenuItem>
   </Menu>
 </MenuTrigger>
 ```
@@ -221,21 +225,21 @@ added, the prop `slot="description"` must be used to distinguish it from the
 <MenuTrigger>
   <ActionButton>Edit</ActionButton>
   <Menu>
-    <Item key="cut" textValue="cut">
+    <MenuItem id="cut" textValue="cut">
       <Icon src={scissorsIcon} />
       <Text>Cut</Text>
       <Kbd meta>X</Kbd>
-    </Item>
-    <Item key="copy" textValue="copy">
+    </MenuItem>
+    <MenuItem id="copy" textValue="copy">
       <Icon src={copyIcon} />
       <Text>Copy</Text>
       <Kbd meta>C</Kbd>
-    </Item>
-    <Item key="paste" textValue="paste">
+    </MenuItem>
+    <MenuItem id="paste" textValue="paste">
       <Icon src={clipboardCopyIcon} />
       <Text>Paste</Text>
       <Kbd meta>V</Kbd>
-    </Item>
+    </MenuItem>
   </Menu>
 </MenuTrigger>
 ```
@@ -251,9 +255,9 @@ use the `onAction` callback to handle press events on items.
 <MenuTrigger>
   <ActionButton>Actions</ActionButton>
   <Menu onAction={key => alert(key)}>
-    <Item key="edit">Edit</Item>
-    <Item key="share">Share</Item>
-    <Item key="duplicate">Duplicate</Item>
+    <MenuItem id="edit">Edit</MenuItem>
+    <MenuItem id="share">Share</MenuItem>
+    <MenuItem id="duplicate">Duplicate</MenuItem>
   </Menu>
 </MenuTrigger>
 ```
@@ -281,7 +285,7 @@ return (
     <MenuTrigger>
       <ActionButton>Default</ActionButton>
       <Menu items={items} selectedKeys={[2, 4]} selectionMode="multiple">
-        {item => <Item>{item.name}</Item>}
+        {item => <MenuItem>{item.name}</MenuItem>}
       </Menu>
     </MenuTrigger>
     <MenuTrigger>
@@ -292,19 +296,19 @@ return (
         selectedKeys={[2, 4]}
         selectionMode="multiple"
       >
-        {item => <Item>{item.name}</Item>}
+        {item => <MenuItem>{item.name}</MenuItem>}
       </Menu>
     </MenuTrigger>
     <MenuTrigger>
       <ActionButton>First</ActionButton>
       <Menu items={items} autoFocus="first">
-        {item => <Item>{item.name}</Item>}
+        {item => <MenuItem>{item.name}</MenuItem>}
       </Menu>
     </MenuTrigger>
     <MenuTrigger>
       <ActionButton>Last</ActionButton>
       <Menu items={items} autoFocus="last">
-        {item => <Item>{item.name}</Item>}
+        {item => <MenuItem>{item.name}</MenuItem>}
       </Menu>
     </MenuTrigger>
   </Flex>
@@ -319,9 +323,9 @@ When the trigger element is disabled the menu cannot be invoked.
 <MenuTrigger>
   <ActionButton isDisabled>Actions</ActionButton>
   <Menu>
-    <Item key="edit">Edit</Item>
-    <Item key="share">Share</Item>
-    <Item key="duplicate">Duplicate</Item>
+    <MenuItem id="edit">Edit</MenuItem>
+    <MenuItem id="share">Share</MenuItem>
+    <MenuItem id="duplicate">Duplicate</MenuItem>
   </Menu>
 </MenuTrigger>
 ```
@@ -336,11 +340,11 @@ You can also provide `disabledKeys` to limit [selection](#selection).
     disabledKeys={['name', 'status']}
     defaultSelectedKeys={['name', 'category', 'status']}
   >
-    <Item key="name">Name</Item>
-    <Item key="createdAt">Created date</Item>
-    <Item key="category">Category</Item>
-    <Item key="priority">Priority</Item>
-    <Item key="status">Status</Item>
+    <MenuItem id="name">Name</MenuItem>
+    <MenuItem id="createdAt">Created date</MenuItem>
+    <MenuItem id="category">Category</MenuItem>
+    <MenuItem id="priority">Priority</MenuItem>
+    <MenuItem id="status">Status</MenuItem>
   </Menu>
 </MenuTrigger>
 ```
@@ -355,34 +359,35 @@ prop controls the direction the menu will render.
   <MenuTrigger align="start">
     <ActionButton>Start</ActionButton>
     <Menu>
-      <Item>Platypus</Item>
-      <Item>Red-bellied black snake</Item>
-      <Item>Saltwater crocodile</Item>
+      <MenuItem>Platypus</MenuItem>
+      <MenuItem>Red-bellied black snake</MenuItem>
+      <MenuItem>Saltwater crocodile</MenuItem>
     </Menu>
   </MenuTrigger>
   <MenuTrigger align="end" direction="top" shouldFlip={false}>
     <ActionButton>Top/End</ActionButton>
     <Menu>
-      <Item>Platypus</Item>
-      <Item>Red-bellied black snake</Item>
-      <Item>Saltwater crocodile</Item>
+      <MenuItem>Platypus</MenuItem>
+      <MenuItem>Red-bellied black snake</MenuItem>
+      <MenuItem>Saltwater crocodile</MenuItem>
     </Menu>
   </MenuTrigger>
   <MenuTrigger direction="start" align="start">
     <ActionButton>Start/Start</ActionButton>
     <Menu>
-      <Item>Platypus</Item>
-      <Item>Red-bellied black snake</Item>
-      <Item>Saltwater crocodile</Item>
+      <MenuItem>Platypus</MenuItem>
+      <MenuItem>Red-bellied black snake</MenuItem>
+      <MenuItem>Saltwater crocodile</MenuItem>
     </Menu>
   </MenuTrigger>
   <MenuTrigger direction="end" align="end">
     <ActionButton>End/End</ActionButton>
     <Menu>
-      <Item>Platypus</Item>
-      <Item>Red-bellied black snake</Item>
-      <Item>Saltwater crocodile</Item>
+      <MenuItem>Platypus</MenuItem>
+      <MenuItem>Red-bellied black snake</MenuItem>
+      <MenuItem>Saltwater crocodile</MenuItem>
     </Menu>
   </MenuTrigger>
 </Flex>
 ```
+

@@ -1,7 +1,5 @@
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { PressProps } from 'react-aria/usePress';
-import { Section } from 'react-stately/Section';
-import { Item } from 'react-stately/Item';
 import { gql } from '@ts-gql/tag/no-transform';
 import {
   ForwardedRef,
@@ -28,7 +26,15 @@ import { sunIcon } from '@keystar/ui/icon/icons/sunIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { userIcon } from '@keystar/ui/icon/icons/userIcon';
 import { Flex } from '@keystar/ui/layout';
-import { ActionMenu, Menu, MenuTrigger } from '@keystar/ui/menu';
+import {
+  ActionMenu,
+  Menu,
+  MenuCollection,
+  MenuHeader,
+  MenuItem as KeystarMenuItem,
+  MenuSection as KeystarMenuSection,
+  MenuTrigger,
+} from '@keystar/ui/menu';
 import { ClearSlots } from '@keystar/ui/slots';
 import { css, useMediaQuery } from '@keystar/ui/style';
 import { ColorScheme } from '@keystar/ui/types';
@@ -106,10 +112,10 @@ export function ThemeMenu() {
         selectionMode="single"
       >
         {item => (
-          <Item textValue={item.label}>
+          <KeystarMenuItem id={item.id} textValue={item.label}>
             <Icon src={item.icon} />
             <Text>{item.label}</Text>
-          </Item>
+          </KeystarMenuItem>
         )}
       </Menu>
     </MenuTrigger>
@@ -235,8 +241,8 @@ export function UserMenu(user: {
           }}
         >
           {item => (
-            <Item
-              key={item.key}
+            <KeystarMenuItem
+              id={item.key}
               textValue={item.label}
               href={item.href}
               rel={item.rel}
@@ -244,7 +250,7 @@ export function UserMenu(user: {
             >
               <Icon src={item.icon} />
               <Text>{item.label}</Text>
-            </Item>
+            </KeystarMenuItem>
           )}
         </Menu>
       </>
@@ -448,20 +454,23 @@ export function GitMenu() {
         }}
       >
         {item => (
-          <Section key={item.key} items={item.children} aria-label={item.label}>
-            {item => (
-              <Item
-                key={item.key}
-                textValue={item.label}
-                href={item.href}
-                rel={item.rel}
-                target={item.target}
-              >
-                <Icon src={item.icon} />
-                <Text>{item.label}</Text>
-              </Item>
-            )}
-          </Section>
+          <KeystarMenuSection id={item.key}>
+            <MenuHeader>{item.label}</MenuHeader>
+            <MenuCollection items={item.children}>
+              {item => (
+                <KeystarMenuItem
+                  id={item.key}
+                  textValue={item.label}
+                  href={item.href}
+                  rel={item.rel}
+                  target={item.target}
+                >
+                  <Icon src={item.icon} />
+                  <Text>{item.label}</Text>
+                </KeystarMenuItem>
+              )}
+            </MenuCollection>
+          </KeystarMenuSection>
         )}
       </ActionMenu>
 

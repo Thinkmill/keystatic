@@ -1,30 +1,21 @@
-import { AriaToastRegionProps } from 'react-aria/useToast';
-import {
+import type {
   QueuedToast,
-  ToastOptions as SpectrumToastOptions,
-  ToastState,
-} from 'react-stately/useToastState';
-import { ReactNode } from 'react';
+  ToastOptions as AriaToastOptions,
+  ToastRegionProps,
+} from 'react-aria-components/Toast';
+import type { ReactNode } from 'react';
 
-export type ToasterProps = AriaToastRegionProps & {
-  /**
-   * The placement of the toast container.
-   * @default 'end'
-   */
+export type ToasterProps = Omit<
+  ToastRegionProps<ToastValue>,
+  'children' | 'className' | 'queue' | 'style'
+> & {
   placement?: 'start' | 'end' | 'center';
-  /**
-   * The position of the toast container.
-   * @default 'bottom'
-   */
   position?: 'top' | 'bottom';
 };
 
-export type ToastOptions = Omit<SpectrumToastOptions, 'priority'> & {
-  /** A label for the action button within the toast. */
+export type ToastOptions = Omit<AriaToastOptions, 'priority'> & {
   actionLabel?: ReactNode;
-  /** Handler that is called when the action button is pressed. */
   onAction?: () => void;
-  /** Whether the toast should automatically close when an action is performed. */
   shouldCloseOnAction?: boolean;
 };
 
@@ -38,10 +29,8 @@ export type ToastValue = {
 
 export type ToastProps = {
   toast: QueuedToast<ToastValue>;
-  state: ToastState<ToastValue>;
 };
 
 export type ToastContainerProps = ToasterProps & {
-  children: ReactNode;
-  state: ToastState<unknown>;
+  queue: ToastRegionProps<ToastValue>['queue'];
 };

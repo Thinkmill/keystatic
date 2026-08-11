@@ -1,12 +1,10 @@
 import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { useLink } from 'react-aria/useLink';
+import { Link as AriaLink } from 'react-aria-components/Link';
 import { DOMProps } from '@react-types/shared';
 import { forwardRef, ReactNode, useMemo } from 'react';
 
 import { SlotProvider } from '@keystar/ui/slots';
 import {
-  FocusRing,
   classNames,
   css,
   tokenSchema,
@@ -44,8 +42,6 @@ export const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
       ...otherProps
     } = props;
     const styles = useStyles();
-    const domRef = useObjectRef(forwardedRef);
-    const { linkProps } = useLink(props, domRef);
 
     const slots = useMemo(
       () => ({
@@ -56,13 +52,11 @@ export const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
 
     return (
       <li>
-        <FocusRing>
-          <a
-            ref={domRef}
+          <AriaLink
+            ref={forwardedRef}
             aria-current={ariaCurrent}
             href={href}
             className={classNames(styles.anchor)}
-            {...linkProps}
             {...filterDOMProps(otherProps)}
           >
             <div className={classNames(styles.content)}>
@@ -70,8 +64,7 @@ export const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
                 {isReactText(children) ? <Text>{children}</Text> : children}
               </SlotProvider>
             </div>
-          </a>
-        </FocusRing>
+          </AriaLink>
       </li>
     );
   }
@@ -141,7 +134,7 @@ function useStyles() {
         easing: 'easeOut',
       }),
     },
-    [`.${anchor}[data-focus=visible] &::after`]: {
+    [`.${anchor}[data-focus-visible] &::after`]: {
       boxShadow: `0 0 0 ${ringWidth} ${ringColor}`,
       margin: 0,
     },

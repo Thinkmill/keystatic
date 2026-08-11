@@ -1,22 +1,27 @@
-import { useRadioGroup } from 'react-aria/useRadioGroup';
-import { useRadioGroupState } from 'react-stately/useRadioGroupState';
-import React, {
-  ForwardRefExoticComponent,
-  ForwardedRef,
-  forwardRef,
-} from 'react';
+import {
+  RadioGroup as AriaRadioGroup,
+  type RadioGroupProps as AriaRadioGroupProps,
+} from 'react-aria-components/RadioGroup';
+import { ForwardRefExoticComponent, ForwardedRef, forwardRef } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
-import { FieldPrimitive, validateFieldProps } from '@keystar/ui/field';
+import { validateFieldProps } from '@keystar/ui/field';
 import {
   classNames,
   css,
+  filterStyleProps,
   toDataAttributes,
   tokenSchema,
+  useStyleProps,
 } from '@keystar/ui/style';
 
-import { RadioContext } from './context';
 import { RadioGroupProps } from './types';
+import {
+  FieldDescriptionElement,
+  FieldErrorElement,
+  FieldLabelElement,
+  fieldRootClassName,
+} from '../field/FieldElements';
 
 /**
  * Radio groups allow users to select a single option from a list of mutually
@@ -29,23 +34,36 @@ export const RadioGroup: ForwardRefExoticComponent<RadioGroupProps> =
   ) {
     props = useProviderProps(props);
     props = validateFieldProps(props);
-    let { validationState, children, orientation = 'vertical' } = props;
-
-    let state = useRadioGroupState(props);
-    let { radioGroupProps, labelProps, descriptionProps, errorMessageProps } =
-      useRadioGroup(props, state);
+    let {
+      children,
+      contextualHelp,
+      description,
+      errorMessage,
+      isRequired,
+      label,
+      orientation = 'vertical',
+      validationState,
+      ...otherProps
+    } = props;
+    let styleProps = useStyleProps(props);
 
     return (
-      <FieldPrimitive
-        {...props}
+      <AriaRadioGroup
+        {...(filterStyleProps(otherProps) as AriaRadioGroupProps)}
         ref={forwardedRef}
-        labelProps={labelProps}
-        labelElementType="span"
-        descriptionProps={descriptionProps}
-        errorMessageProps={errorMessageProps}
+        isInvalid={validationState === 'invalid' || Boolean(errorMessage)}
+        isRequired={isRequired}
+        orientation={orientation}
+        className={classNames(fieldRootClassName, styleProps.className)}
+        style={styleProps.style}
       >
+        <FieldLabelElement
+          contextualHelp={contextualHelp}
+          isRequired={isRequired}
+          label={label}
+        />
+        <FieldDescriptionElement>{description}</FieldDescriptionElement>
         <div
-          {...radioGroupProps}
           {...toDataAttributes({ orientation })}
           className={classNames(
             css({
@@ -58,10 +76,9 @@ export const RadioGroup: ForwardRefExoticComponent<RadioGroupProps> =
             })
           )}
         >
-          <RadioContext.Provider value={{ validationState, state }}>
-            {children}
-          </RadioContext.Provider>
+          {children}
         </div>
-      </FieldPrimitive>
+        <FieldErrorElement>{errorMessage}</FieldErrorElement>
+      </AriaRadioGroup>
     );
   });

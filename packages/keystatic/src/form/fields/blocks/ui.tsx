@@ -6,7 +6,7 @@ import {
 } from '@keystar/ui/dialog';
 import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { VStack } from '@keystar/ui/layout';
-import { MenuTrigger, Menu, Item } from '@keystar/ui/menu';
+import { MenuTrigger, Menu, MenuItem } from '@keystar/ui/menu';
 import { Content } from '@keystar/ui/slots';
 import { Heading } from '@keystar/ui/typography';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
@@ -107,7 +107,7 @@ export function BlocksFieldInput(
             });
           }}
         >
-          {item => <Item key={item.value.toString()}>{item.label}</Item>}
+          {item => <MenuItem id={item.value.toString()}>{item.label}</MenuItem>}
         </Menu>
       </MenuTrigger>
       <ArrayFieldListView

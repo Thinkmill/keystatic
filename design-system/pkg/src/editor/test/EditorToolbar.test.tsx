@@ -53,11 +53,13 @@ describe('editor/EditorToolbar', () => {
     );
     expect(getAllByRole('radiogroup')).toHaveLength(1);
 
-    let checkboxes = getAllByRole('checkbox');
-    expect(checkboxes).toHaveLength(3);
-    expect(checkboxes[2]).toBeDisabled();
-    expect(checkboxes[0]).toBeChecked();
-    expect(checkboxes[1]).toBeChecked();
+    let bold = getByRole('button', { name: 'bold' });
+    let italic = getByRole('button', { name: 'italic' });
+    let strikethrough = getByRole('button', { name: 'strikethrough' });
+    expect(bold).toHaveAttribute('aria-pressed', 'true');
+    expect(italic).toHaveAttribute('aria-pressed', 'true');
+    expect(strikethrough).toHaveAttribute('aria-pressed', 'false');
+    expect(strikethrough).toBeDisabled();
 
     let radios = getAllByRole('radio');
     expect(radios).toHaveLength(2);

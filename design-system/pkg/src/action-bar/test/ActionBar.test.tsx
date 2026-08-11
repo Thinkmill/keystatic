@@ -48,7 +48,7 @@ describe('action-bar/ActionBar', () => {
     expect(toolbar).toHaveAttribute('aria-label', 'Actions');
 
     let buttons = within(toolbar).getAllByRole('button');
-    expect(buttons).toHaveLength(3);
+    expect(buttons).toHaveLength(4);
 
     expect(tree.getByText('1 selected')).toBeInTheDocument();
 

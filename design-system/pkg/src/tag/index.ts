@@ -1,9 +1,7 @@
 'use client';
 
-export { Item } from 'react-stately/Item';
-
 export { Tag } from './Tag';
-export { TagGroup } from './TagGroup';
+export { TagGroup, TagList } from './TagGroup';
 
 export type { TagProps } from './Tag';
-export type { TagGroupProps } from './TagGroup';
+export type { TagGroupProps, TagListProps } from './TagGroup';

@@ -1,47 +1,43 @@
-import { useSearchField } from 'react-aria/useSearchField';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { useSearchFieldState } from 'react-stately/useSearchFieldState';
-import { forwardRef } from 'react';
+import {
+  SearchField as AriaSearchField,
+  type SearchFieldProps as AriaSearchFieldProps,
+} from 'react-aria-components/SearchField';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 import { ClearButton } from '@keystar/ui/button';
 import { searchIcon } from '@keystar/ui/icon/icons/searchIcon';
 import { Icon } from '@keystar/ui/icon';
 import { Flex } from '@keystar/ui/layout';
-import { css } from '@keystar/ui/style';
-import { TextFieldPrimitive } from '@keystar/ui/text-field';
+import {
+  classNames,
+  css,
+  filterStyleProps,
+  useStyleProps,
+} from '@keystar/ui/style';
+import { validateTextFieldProps } from '@keystar/ui/text-field';
 
 import { SearchFieldProps } from './types';
+import { TextFieldContent } from '../text-field/TextFieldBase';
+import { fieldRootClassName } from '../field/FieldElements';
 
 /** Search fields are text fields, specifically designed for search behaviour. */
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
   function SearchField(props, forwardedRef) {
+    props = validateTextFieldProps(props);
     const {
-      autoFocus,
+      contextualHelp,
       description,
       errorMessage,
-      id,
       isDisabled,
-      isReadOnly,
       isRequired,
       label,
+      labelElementType: _labelElementType,
       showIcon = true,
-      ...styleProps
+      ...otherProps
     } = props;
-
-    let domRef = useObjectRef(forwardedRef);
-    let state = useSearchFieldState(props);
-    let {
-      labelProps,
-      inputProps,
-      clearButtonProps,
-      descriptionProps,
-      errorMessageProps,
-    } = useSearchField(props, state, domRef);
-
-    let clearButtonVisible = state.value !== '' && !props.isReadOnly;
-    let clearButton = (
-      <ClearButton {...clearButtonProps} preventFocus isDisabled={isDisabled} />
-    );
+    let inputRef = useRef<HTMLInputElement>(null);
+    useImperativeHandle(forwardedRef, () => inputRef.current!);
+    let styleProps = useStyleProps(props);
     let startElement = (
       <Flex
         alignItems="center"
@@ -62,37 +58,44 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
     );
 
     return (
-      <TextFieldPrimitive
-        ref={domRef}
-        {...styleProps}
-        isDisabled={isDisabled}
-        isReadOnly={isReadOnly}
+      <AriaSearchField
+        {...(filterStyleProps(otherProps) as AriaSearchFieldProps)}
+        isInvalid={Boolean(errorMessage)}
         isRequired={isRequired}
-        label={label}
-        labelProps={labelProps}
-        inputProps={inputProps}
-        inputWrapperProps={{
-          className: css({
-            input: {
-              '&[data-adornment="start"]': {
-                paddingInlineStart: 0,
+        className={classNames(fieldRootClassName, styleProps.className)}
+        style={styleProps.style}
+      >
+        {({ isEmpty }) => (
+          <TextFieldContent
+            contextualHelp={contextualHelp}
+            description={description}
+            endElement={
+              !isEmpty &&
+              !props.isReadOnly && (
+                <ClearButton preventFocus isDisabled={isDisabled} />
+              )
+            }
+            errorMessage={errorMessage}
+            inputRef={inputRef}
+            inputWrapperClassName={css({
+              input: {
+                '&[data-adornment="start"]': {
+                  paddingInlineStart: 0,
+                },
+                '&[data-adornment="end"]': {
+                  paddingInlineEnd: 0,
+                },
+                '&[data-adornment="both"]': {
+                  paddingInline: 0,
+                },
               },
-              '&[data-adornment="end"]': {
-                paddingInlineEnd: 0,
-              },
-              '&[data-adornment="both"]': {
-                paddingInline: 0,
-              },
-            },
-          }),
-        }}
-        description={description}
-        descriptionProps={descriptionProps}
-        errorMessage={errorMessage}
-        errorMessageProps={errorMessageProps}
-        startElement={showIcon && startElement}
-        endElement={clearButtonVisible && clearButton}
-      />
+            })}
+            isRequired={isRequired}
+            label={label}
+            startElement={showIcon ? startElement : undefined}
+          />
+        )}
+      </AriaSearchField>
     );
   }
 );

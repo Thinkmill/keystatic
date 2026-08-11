@@ -1,24 +1,22 @@
-import { useTooltip } from 'react-aria/useTooltipTrigger';
-import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { mergeProps } from 'react-aria/mergeProps';
-import { mergeRefs } from 'react-aria/mergeRefs';
-import { useObjectRef } from 'react-aria/useObjectRef';
 import {
+  OverlayArrow,
+  Tooltip as AriaTooltip,
+  type TooltipProps as AriaTooltipProps,
+} from 'react-aria-components/Tooltip';
+import {
+  createContext,
   ForwardedRef,
   forwardRef,
-  ForwardRefExoticComponent,
-  Ref,
   useContext,
   useMemo,
-  useRef,
 } from 'react';
 
-import { Axis, DirectionIndicator } from '@keystar/ui/overlays';
+import { DirectionIndicator } from '@keystar/ui/overlays';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
   classNames,
   css,
-  toDataAttributes,
+  filterStyleProps,
   tokenSchema,
   transition,
   useStyleProps,
@@ -26,45 +24,24 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
-import { TooltipContext } from './context';
 import { TooltipProps } from './types';
-import { useOverlayPosition } from 'react-aria/useOverlayPosition';
 
-/**
- * A floating text label that succinctly describes the function of an
- * interactive element, typically an icon-only button.
- *
- * Tooltips are invoked on hover and keyboard focus. They cannot include
- * interactive elements.
- */
-export const Tooltip: ForwardRefExoticComponent<
-  TooltipProps & { ref?: Ref<HTMLDivElement> }
-> = forwardRef(function Tooltip(
+export const TooltipTriggerContext = createContext<
+  Pick<TooltipProps, 'placement' | 'offset' | 'crossOffset' | 'shouldFlip'>
+>({});
+
+/** A short, non-interactive description shown on hover or keyboard focus. */
+export const Tooltip = forwardRef(function Tooltip(
   props: TooltipProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let {
-    state,
-    targetRef: triggerRef,
-    overlayRef: tooltipRef,
-    crossOffset,
-    offset,
-    ...contextualProps
-  } = useContext(TooltipContext);
-  props = mergeProps(props, contextualProps);
-
-  let { isOpen, tone, ...otherProps } = props;
-  let targetGapToken = tokenSchema.size.space.regular;
-
-  let { tooltipProps } = useTooltip(contextualProps, state);
+  let { children, tone = 'neutral', ...otherProps } = props;
+  let triggerProps = useContext(TooltipTriggerContext);
+  let placement = otherProps.placement ?? triggerProps.placement;
+  let offset = otherProps.offset ?? triggerProps.offset ?? 9;
+  let crossOffset = otherProps.crossOffset ?? triggerProps.crossOffset;
+  let shouldFlip = otherProps.shouldFlip ?? triggerProps.shouldFlip;
   let styleProps = useStyleProps(otherProps);
-
-  let ref = useRef<HTMLDivElement>(null);
-  let overlayRef = useObjectRef(
-    tooltipRef ? mergeRefs(tooltipRef, forwardedRef) : forwardedRef
-  ); // for testing etc. tooltips may be rendered w/o a trigger
-  let targetRef = triggerRef ?? ref; // for testing etc. tooltips may be rendered w/o a trigger
-
   let slots = useMemo(
     () =>
       ({
@@ -75,40 +52,25 @@ export const Tooltip: ForwardRefExoticComponent<
     []
   );
 
-  let preferredPlacement = contextualProps.placement || 'top';
-  let {
-    overlayProps,
-    arrowProps,
-    placement: resolvedPlacement,
-  } = useOverlayPosition({
-    ...contextualProps,
-    placement: preferredPlacement,
-    isOpen: state?.isOpen,
-    overlayRef,
-    targetRef,
-  });
-  let placement = (resolvedPlacement || preferredPlacement).split(' ')[0];
-
   return (
-    <div
-      {...mergeProps(overlayProps, tooltipProps)}
-      {...filterDOMProps(otherProps)}
-      {...toDataAttributes({
-        placement,
-        tone,
-        open: isOpen || undefined,
-      })}
-      ref={overlayRef}
+    <AriaTooltip
+      {...(filterStyleProps(otherProps) as AriaTooltipProps)}
+      placement={placement}
+      offset={offset}
+      crossOffset={crossOffset}
+      shouldFlip={shouldFlip}
+      ref={forwardedRef}
+      data-tone={tone}
       className={classNames(
         css({
           backgroundColor: tokenSchema.color.background.inverse,
-          color: tokenSchema.color.foreground.inverse,
           borderRadius: tokenSchema.size.radius.small,
+          color: tokenSchema.color.foreground.inverse,
           maxWidth: tokenSchema.size.alias.singleLineWidth,
           minHeight: tokenSchema.size.element.small,
+          opacity: 1,
           paddingBlock: tokenSchema.size.space.regular,
           paddingInline: tokenSchema.size.space.regular,
-          opacity: 0,
           pointerEvents: 'none',
           transition: transition(['opacity', 'transform']),
           userSelect: 'none',
@@ -125,39 +87,21 @@ export const Tooltip: ForwardRefExoticComponent<
             backgroundColor: tokenSchema.color.background.positiveEmphasis,
             color: tokenSchema.color.foreground.onEmphasis,
           },
-
-          // animate towards placement, away from the trigger
-          '&[data-placement="top"]': {
-            marginBottom: targetGapToken,
-            transform: `translateY(calc(${targetGapToken} * 0.5))`,
+          '&[data-entering], &[data-exiting]': {
+            opacity: 0,
           },
-          '&[data-placement="bottom"]': {
-            marginTop: targetGapToken,
-            transform: `translateY(calc(${targetGapToken} * -0.5))`,
-          },
-          '&[data-placement="left"], [dir=ltr] &[data-placement="start"], [dir=rtl] &[data-placement="end"]':
+          '&[data-placement="top"][data-entering], &[data-placement="top"][data-exiting]':
             {
-              marginRight: targetGapToken,
-              transform: `translateX(calc(${targetGapToken} * 0.5))`,
+              transform: `translateY(calc(${tokenSchema.size.space.regular} * 0.5))`,
             },
-          '&[data-placement="right"], [dir=ltr] &[data-placement="end"], [dir=rtl] &[data-placement="start"]':
+          '&[data-placement="bottom"][data-entering], &[data-placement="bottom"][data-exiting]':
             {
-              marginLeft: targetGapToken,
-              transform: `translateX(calc(${targetGapToken} * -0.5))`,
+              transform: `translateY(calc(${tokenSchema.size.space.regular} * -0.5))`,
             },
-
-          '&[data-open="true"]': {
-            opacity: 1,
-            transform: `translate(0)`,
-          },
         }),
         styleProps.className
       )}
-      style={{
-        ...overlayProps.style,
-        ...tooltipProps.style,
-        ...styleProps.style,
-      }}
+      style={styleProps.style}
     >
       <div
         className={css({
@@ -168,21 +112,19 @@ export const Tooltip: ForwardRefExoticComponent<
         })}
       >
         <SlotProvider slots={slots}>
-          {props.children &&
-            (isReactText(props.children) ? (
-              <Text>{props.children}</Text>
-            ) : (
-              props.children
-            ))}
+          {isReactText(children) ? <Text>{children}</Text> : children}
         </SlotProvider>
       </div>
-      <DirectionIndicator
-        {...arrowProps}
-        fill={toneToFill[tone ?? 'neutral']}
-        placement={placement as Axis}
-        size="xsmall"
-      />
-    </div>
+      <OverlayArrow>
+        {({ placement }) => (
+          <DirectionIndicator
+            fill={toneToFill[tone]}
+            placement={placement as 'top' | 'bottom' | 'left' | 'right'}
+            size="xsmall"
+          />
+        )}
+      </OverlayArrow>
+    </AriaTooltip>
   );
 });
 
@@ -191,4 +133,4 @@ const toneToFill = {
   critical: 'critical',
   neutral: 'inverse',
   positive: 'positive',
-};
+} as const;

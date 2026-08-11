@@ -1,47 +1,35 @@
-import React, { useMemo, useRef } from 'react';
-import { useFocusRing } from 'react-aria/useFocusRing';
-import { useHover } from 'react-aria/useHover';
-import { useLink } from 'react-aria/useLink';
-import { type AriaTagProps, useTag } from 'react-aria/useTagGroup';
-import { mergeProps } from 'react-aria/mergeProps';
-import type { ListState } from 'react-stately/useListState';
+import {
+  Tag as AriaTag,
+  type TagProps as AriaTagProps,
+  type TagRenderProps,
+} from 'react-aria-components/TagGroup';
+import { Button } from 'react-aria-components/Button';
+import { type ForwardedRef, type ReactNode, forwardRef, useMemo } from 'react';
 
-import { ClearButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { xIcon } from '@keystar/ui/icon/icons/xIcon';
 import { ClearSlots, SlotProvider } from '@keystar/ui/slots';
 import {
+  type BaseStyleProps,
   classNames,
   css,
-  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
+
 import { gapVar, heightVar } from './styles';
 
-export interface TagProps<T> extends AriaTagProps<T> {
-  state: ListState<T>;
-}
+export interface TagProps
+  extends Omit<AriaTagProps, 'className' | 'style'>,
+    BaseStyleProps {}
 
-/** @private Internal use only: rendered via `Item` by consumer. */
-export function Tag<T>(props: TagProps<T>) {
-  const { item, state, ...otherProps } = props;
-
-  let styleProps = useStyleProps(otherProps);
-  let { hoverProps, isHovered } = useHover({});
-  let { isFocused, isFocusVisible, focusProps } = useFocusRing({
-    within: true,
-  });
-  let domRef = useRef<HTMLDivElement>(null);
-  let linkRef = useRef<HTMLAnchorElement>(null);
-  let {
-    removeButtonProps,
-    gridCellProps,
-    rowProps,
-    allowsRemoving: isRemovable,
-  } = useTag(stripSyntheticLinkProps({ ...props, item }), state, domRef);
-  const slots = useMemo(
+function TagImpl(props: TagProps, forwardedRef: ForwardedRef<HTMLDivElement>) {
+  let { children, ...otherProps } = props;
+  let styleProps = useStyleProps(props);
+  let slots = useMemo(
     () =>
       ({
         avatar: {
@@ -70,32 +58,14 @@ export function Tag<T>(props: TagProps<T>) {
     []
   );
 
-  const isLink = 'href' in item.props;
-  const { linkProps } = useLink(item.props, linkRef);
-  const contents = isReactText(item.rendered) ? (
-    <Text>{item.rendered}</Text>
-  ) : (
-    item.rendered
-  );
-
   return (
-    <div
-      {...mergeProps(rowProps, hoverProps, focusProps)}
-      {...toDataAttributes(
-        {
-          isFocused,
-          isFocusVisible,
-          isHovered,
-          isLink,
-          isRemovable,
-        },
-        {
-          omitFalsyValues: true,
-          trimBooleanKeys: true,
-        }
-      )}
+    <AriaTag
+      {...otherProps}
+      {...styleProps}
+      ref={forwardedRef}
       className={classNames(
         css({
+          alignItems: 'center',
           backgroundColor: tokenSchema.color.alias.backgroundIdle,
           border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
           borderRadius: tokenSchema.size.radius.small,
@@ -112,16 +82,11 @@ export function Tag<T>(props: TagProps<T>) {
           }),
           userSelect: 'none',
 
-          '&[data-href]': {
-            cursor: 'pointer',
-
-            '&[data-hovered]': {
-              backgroundColor: tokenSchema.color.alias.backgroundHovered,
-              borderColor: tokenSchema.color.alias.borderHovered,
-              color: tokenSchema.color.alias.foregroundHovered,
-            },
+          '&[data-href][data-hovered]': {
+            backgroundColor: tokenSchema.color.alias.backgroundHovered,
+            borderColor: tokenSchema.color.alias.borderHovered,
+            color: tokenSchema.color.alias.foregroundHovered,
           },
-
           '&[data-focus-visible]': {
             outlineColor: tokenSchema.color.alias.focusRing,
             outlineWidth: tokenSchema.size.alias.focusRing,
@@ -130,68 +95,47 @@ export function Tag<T>(props: TagProps<T>) {
         }),
         styleProps.className
       )}
-      ref={domRef}
     >
-      <div
-        className={css({ alignItems: 'center', display: 'flex' })}
-        {...gridCellProps}
-      >
+      {states => (
         <SlotProvider slots={slots}>
-          {/* TODO: review accessibility */}
-          {isLink ? (
-            <a
-              {...linkProps}
-              tabIndex={-1}
-              ref={linkRef}
-              className={css({
-                color: 'inherit',
-                outline: 'none',
-                textDecoration: 'none',
-
-                '&::before': { content: '""', inset: 0, position: 'absolute' },
-              })}
-            >
-              {contents}
-            </a>
-          ) : (
-            contents
-          )}
-
+          {renderChildren(children, states)}
           <ClearSlots>
-            {isRemovable && (
-              <ClearButton
-                {...removeButtonProps}
-                UNSAFE_className={css({
+            {states.allowsRemoving && (
+              <Button
+                slot="remove"
+                aria-label="Remove"
+                className={css({
+                  alignItems: 'center',
+                  background: 'none',
+                  border: 0,
+                  color: 'inherit',
+                  display: 'inline-flex',
+                  justifyContent: 'center',
                   marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
+                  padding: 0,
                   height: heightVar,
                   width: heightVar,
                 })}
-              />
+              >
+                <Icon src={xIcon} size="small" />
+              </Button>
             )}
           </ClearSlots>
         </SlotProvider>
-      </div>
-    </div>
+      )}
+    </AriaTag>
   );
 }
 
-const SYNTHETIC_LINK_ATTRS = new Set([
-  'data-download',
-  'data-href',
-  'data-ping',
-  'data-referrer-policy',
-  'data-rel',
-  'data-target',
-]);
+export const Tag = forwardRef(TagImpl);
 
-/**
- * Circumvent react-aria synthetic link and implement real anchor, so users can
- * right-click and open in new tab, etc.
- */
-function stripSyntheticLinkProps<T>(props: any): AriaTagProps<T> {
-  const safeProps = { ...props };
-  for (const attr of SYNTHETIC_LINK_ATTRS) {
-    delete safeProps[attr];
-  }
-  return safeProps;
+function renderChildren(
+  children: AriaTagProps['children'],
+  states: TagRenderProps
+): ReactNode {
+  let content =
+    typeof children === 'function'
+      ? (children as (states: TagRenderProps) => ReactNode)(states)
+      : children;
+  return isReactText(content) ? <Text>{content}</Text> : content;
 }

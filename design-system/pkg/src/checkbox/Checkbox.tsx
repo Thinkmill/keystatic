@@ -1,14 +1,8 @@
-import { useCheckbox } from 'react-aria/useCheckbox';
-import { useCheckboxGroupItem } from 'react-aria/useCheckboxGroup';
-import { useToggleState } from 'react-stately/useToggleState';
 import {
-  HTMLAttributes,
-  InputHTMLAttributes,
-  RefObject,
-  useContext,
-  useMemo,
-  useRef,
-} from 'react';
+  Checkbox as AriaCheckbox,
+  type CheckboxProps as AriaCheckboxProps,
+} from 'react-aria-components/Checkbox';
+import { HTMLAttributes, useMemo } from 'react';
 
 import { Icon } from '@keystar/ui/icon';
 import { checkIcon } from '@keystar/ui/icon/icons/checkIcon';
@@ -16,9 +10,9 @@ import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
   ClassList,
-  FocusRing,
   classNames,
   css,
+  filterStyleProps,
   tokenSchema,
   transition,
   useStyleProps,
@@ -27,65 +21,11 @@ import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
 import { CheckboxProps } from './types';
-import { CheckboxGroupContext } from './context';
 
 const checkboxClassList = new ClassList('Checkbox', ['indicator']);
 
 export function Checkbox(props: CheckboxProps) {
-  let groupState = useContext(CheckboxGroupContext);
-  return groupState ? (
-    <CheckboxInGroup groupState={groupState} {...props} />
-  ) : (
-    <CheckboxAlone {...props} />
-  );
-}
-
-function CheckboxInGroup({
-  groupState,
-  ...props
-}: CheckboxProps & { groupState: CheckboxGroupContext }) {
-  let inputRef = useRef<HTMLInputElement>(null);
-  const { inputProps } = useCheckboxGroupItem(
-    {
-      ...props,
-      // Value is optional for standalone checkboxes, but required for
-      // CheckboxGroup items; it's passed explicitly here to avoid
-      // typescript error (requires ignore).
-      // @ts-ignore
-      value: props.value,
-    },
-    groupState.state,
-    inputRef
-  );
-  return (
-    <CheckboxInner inputRef={inputRef} inputProps={inputProps} {...props} />
-  );
-}
-
-function CheckboxAlone(props: CheckboxProps) {
-  let inputRef = useRef<HTMLInputElement>(null);
-  const { inputProps } = useCheckbox(props, useToggleState(props), inputRef);
-  return (
-    <CheckboxInner inputRef={inputRef} inputProps={inputProps} {...props} />
-  );
-}
-
-function CheckboxInner(
-  props: CheckboxProps & {
-    inputRef: RefObject<HTMLInputElement | null>;
-    inputProps: InputHTMLAttributes<HTMLInputElement>;
-  }
-) {
-  let {
-    autoFocus,
-    children,
-    inputProps,
-    inputRef,
-    isDisabled = false,
-    isIndeterminate = false,
-    prominence,
-    ...otherProps
-  } = props;
+  let { children, prominence, ...otherProps } = props;
 
   let styleProps = useStyleProps(otherProps);
 
@@ -108,35 +48,27 @@ function CheckboxInner(
   );
 
   return (
-    <label
-      data-disabled={isDisabled}
+    <AriaCheckbox
+      {...(filterStyleProps(otherProps) as AriaCheckboxProps)}
       className={classNames(styleProps.className, labelClassName)}
       style={styleProps.style}
     >
-      <FocusRing autoFocus={autoFocus}>
-        <input
-          {...inputProps}
-          ref={inputRef}
-          className={classNames(
-            css({
-              position: 'absolute',
-              zIndex: 1,
-              inset: 0,
-              insetInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
-              opacity: 0.0001,
-            })
-          )}
-        />
-      </FocusRing>
-      <Indicator isIndeterminate={isIndeterminate} prominence={prominence} />
-      <SlotProvider slots={slots}>
-        {children && (
-          <Content>
-            {isReactText(children) ? <Text>{children}</Text> : children}
-          </Content>
-        )}
-      </SlotProvider>
-    </label>
+      {({ isIndeterminate }) => (
+        <>
+          <CheckboxIndicator
+            isIndeterminate={isIndeterminate}
+            prominence={prominence}
+          />
+          <SlotProvider slots={slots}>
+            {children && (
+              <Content>
+                {isReactText(children) ? <Text>{children}</Text> : children}
+              </Content>
+            )}
+          </SlotProvider>
+        </>
+      )}
+    </AriaCheckbox>
   );
 }
 
@@ -146,7 +78,8 @@ function CheckboxInner(
 let sizeToken = tokenSchema.size.element.xsmall;
 type IndicatorProps = Pick<CheckboxProps, 'isIndeterminate' | 'prominence'>;
 
-const Indicator = (props: IndicatorProps) => {
+/** @private A presentational checkbox indicator for state-managed checkbox primitives. */
+export const CheckboxIndicator = (props: IndicatorProps) => {
   let { isIndeterminate, prominence } = props;
 
   return (
@@ -199,6 +132,10 @@ const Indicator = (props: IndicatorProps) => {
             boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
             margin: `calc(${tokenSchema.size.alias.focusRingGap} * -1)`,
           },
+          'label[data-focus-visible] &::after': {
+            boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
+            margin: `calc(${tokenSchema.size.alias.focusRingGap} * -1)`,
+          },
 
           // border / background
           '&::before': {
@@ -218,10 +155,23 @@ const Indicator = (props: IndicatorProps) => {
               borderColor: tokenSchema.color.alias.borderDisabled,
             },
           },
+          'label[data-disabled] &': {
+            color: tokenSchema.color.alias.foregroundDisabled,
+            '&::before': {
+              backgroundColor: tokenSchema.color.alias.borderDisabled,
+              borderColor: tokenSchema.color.alias.borderDisabled,
+            },
+          },
           'input[type="checkbox"]:enabled:hover + &::before': {
             borderColor: tokenSchema.color.scale.slate9,
           },
+          'label:not([data-disabled])[data-hovered] &::before': {
+            borderColor: tokenSchema.color.scale.slate9,
+          },
           'input[type="checkbox"]:enabled:active + &::before': {
+            borderColor: tokenSchema.color.scale.slate10,
+          },
+          'label:not([data-disabled])[data-pressed] &::before': {
             borderColor: tokenSchema.color.scale.slate10,
           },
 
@@ -237,7 +187,21 @@ const Indicator = (props: IndicatorProps) => {
                 transform: `scale(1)`,
               },
             },
+          'label[data-selected] &, label[data-indeterminate] &': {
+            '&::before': {
+              borderWidth: `calc(${sizeToken} / 2)`,
+            },
+
+            [checkboxClassList.selector('indicator')]: {
+              opacity: 1,
+              transform: `scale(1)`,
+            },
+          },
           'input[type="checkbox"]:enabled:checked + &::before, input[type="checkbox"]:enabled:indeterminate + &::before':
+            {
+              borderColor: 'var(--selected-idle-bg)',
+            },
+          'label:not([data-disabled])[data-selected] &::before, label:not([data-disabled])[data-indeterminate] &::before':
             {
               borderColor: 'var(--selected-idle-bg)',
             },
@@ -245,7 +209,15 @@ const Indicator = (props: IndicatorProps) => {
             {
               borderColor: 'var(--selected-hover-bg)',
             },
+          'label:not([data-disabled])[data-hovered][data-selected] &::before, label:not([data-disabled])[data-hovered][data-indeterminate] &::before':
+            {
+              borderColor: 'var(--selected-hover-bg)',
+            },
           'input[type="checkbox"]:enabled:checked:active + &::before, input[type="checkbox"]:enabled:indeterminate:active + &::before':
+            {
+              borderColor: 'var(--selected-pressed-bg)',
+            },
+          'label:not([data-disabled])[data-pressed][data-selected] &::before, label:not([data-disabled])[data-pressed][data-indeterminate] &::before':
             {
               borderColor: 'var(--selected-pressed-bg)',
             },
@@ -280,6 +252,12 @@ const Content = (props: HTMLAttributes<HTMLDivElement>) => {
           },
 
           'input[type="checkbox"]:disabled ~ &': {
+            color: tokenSchema.color.alias.foregroundDisabled,
+          },
+          'label[data-hovered] &': {
+            color: tokenSchema.color.alias.foregroundHovered,
+          },
+          'label[data-disabled] &': {
             color: tokenSchema.color.alias.foregroundDisabled,
           },
         })

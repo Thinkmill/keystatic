@@ -1,54 +1,40 @@
-import { AriaButtonProps } from 'react-aria/useButton';
-import {
-  CalendarPropsBase,
-  CalendarState,
-} from 'react-stately/useCalendarState';
-import { RangeCalendarState } from 'react-stately/useRangeCalendarState';
-import { DOMProps } from '@react-types/shared';
 import { useDateFormatter } from 'react-aria/useDateFormatter';
-import { useLocale } from 'react-aria/I18nProvider';
-import { VisuallyHidden } from 'react-aria/VisuallyHidden';
-import React, { HTMLAttributes, RefObject } from 'react';
+import { useLocale } from 'react-aria-components/I18nProvider';
+import {
+  Button as AriaButton,
+  CalendarCell,
+  CalendarGrid,
+  CalendarGridBody,
+  CalendarGridHeader,
+  CalendarHeaderCell,
+  type CalendarState,
+} from 'react-aria-components/Calendar';
+import type { RangeCalendarState } from 'react-aria-components/RangeCalendar';
 
-import { ActionButton } from '@keystar/ui/button';
+import { ActionButton, type ActionButtonProps } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
-import {
-  BaseStyleProps,
-  classNames,
-  css,
-  tokenSchema,
-  useStyleProps,
-} from '@keystar/ui/style';
-import { Heading } from '@keystar/ui/typography';
+import { css, tokenSchema } from '@keystar/ui/style';
+import { Heading, Text } from '@keystar/ui/typography';
 
-import { CalendarMonth } from './CalendarMonth';
+type CalendarBaseProps = {
+  state: CalendarState<'single'> | RangeCalendarState;
+  visibleMonths: number;
+};
 
-interface CalendarBaseProps<T extends CalendarState | RangeCalendarState>
-  extends CalendarPropsBase,
-    DOMProps,
-    BaseStyleProps {
-  state: T;
-  visibleMonths?: number;
-  calendarProps: HTMLAttributes<HTMLElement>;
-  nextButtonProps: AriaButtonProps;
-  prevButtonProps: AriaButtonProps;
-  calendarRef: RefObject<HTMLDivElement | null>;
-}
+export const calendarRootClassName = css({
+  boxSizing: 'border-box',
+  maxWidth: '100%',
+  overflow: 'auto',
+  padding: `calc(${tokenSchema.size.alias.focusRing} + ${tokenSchema.size.alias.focusRingGap})`,
+  '--calendar-cell-width': tokenSchema.size.element.regular,
+  '--calendar-cell-padding': tokenSchema.size.space.xsmall,
+  '--calendar-width':
+    'calc(var(--calendar-cell-width) * 7 + var(--calendar-cell-padding) * 12)',
+});
 
-export function CalendarBase<T extends CalendarState | RangeCalendarState>(
-  props: CalendarBaseProps<T>
-) {
-  let {
-    state,
-    calendarProps,
-    nextButtonProps,
-    prevButtonProps,
-    calendarRef: ref,
-    visibleMonths = 1,
-  } = props;
-  let styleProps = useCalendarStyles(props);
+export function CalendarBase({ state, visibleMonths }: CalendarBaseProps) {
   let { direction } = useLocale();
   let currentMonth = state.visibleRange.start;
   let monthDateFormatter = useDateFormatter({
@@ -63,142 +49,184 @@ export function CalendarBase<T extends CalendarState | RangeCalendarState>(
     timeZone: state.timeZone,
   });
 
-  let titles = [];
-  let calendars = [];
-  for (let i = 0; i < visibleMonths; i++) {
-    let d = currentMonth.add({ months: i });
-    titles.push(
-      <div key={i} {...styleProps.monthHeader}>
-        {i === 0 && (
-          <ActionButton
-            {...prevButtonProps}
-            prominence="low"
-            gridArea="prev"
-            justifySelf="start"
-            UNSAFE_style={{ padding: 0 }}
-          >
-            <Icon
-              src={direction === 'rtl' ? chevronRightIcon : chevronLeftIcon}
-              size="medium"
-            />
-          </ActionButton>
-        )}
-
-        <Heading
-          gridArea="title"
-          elementType="h2"
-          size="small"
-          align="center"
-          // We have a visually hidden heading describing the entire visible range,
-          // and the calendar itself describes the individual month
-          // so we don't need to repeat that here for screen reader users.
-          aria-hidden
-        >
-          {monthDateFormatter.format(d.toDate(state.timeZone))}
-        </Heading>
-
-        {i === visibleMonths - 1 && (
-          <ActionButton
-            {...nextButtonProps}
-            prominence="low"
-            gridArea="next"
-            justifySelf="end"
-            UNSAFE_style={{ padding: 0 }}
-          >
-            <Icon
-              src={direction === 'rtl' ? chevronLeftIcon : chevronRightIcon}
-              size="medium"
-            />
-          </ActionButton>
-        )}
-      </div>
-    );
-
-    calendars.push(
-      <CalendarMonth {...props} key={i} state={state} startDate={d} />
-    );
-  }
-
   return (
-    <div {...styleProps.root} {...calendarProps} ref={ref}>
-      {/* Add a screen reader only description of the entire visible range rather than
-       * a separate heading above each month grid. This is placed first in the DOM order
-       * so that it is the first thing a touch screen reader user encounters.
-       * In addition, VoiceOver on iOS does not announce the aria-label of the grid
-       * elements, so the aria-label of the Calendar is included here as well. */}
-      <VisuallyHidden elementType="h2">
-        {calendarProps['aria-label']}
-      </VisuallyHidden>
-
-      <div {...styleProps.titles}>{titles}</div>
-      <div {...styleProps.calendars}>{calendars}</div>
-
-      {/* For touch screen readers, add a visually hidden next button after the month grid
-       * so it's easy to navigate after reaching the end without going all the way
-       * back to the start of the month. */}
-      <VisuallyHidden>
-        <button
-          aria-label={nextButtonProps['aria-label']}
-          disabled={nextButtonProps.isDisabled}
-          onClick={() => state.focusNextPage()}
-          tabIndex={-1}
-        />
-      </VisuallyHidden>
-    </div>
+    <>
+      <div
+        className={css({
+          boxSizing: 'border-box',
+          display: 'grid',
+          gap: tokenSchema.size.space.large,
+          gridAutoColumns: '1fr',
+          gridAutoFlow: 'column',
+          paddingInline: 'var(--calendar-cell-padding)',
+          width: '100%',
+        })}
+      >
+        {Array.from({ length: visibleMonths }, (_, index) => {
+          let date = currentMonth.add({ months: index });
+          return (
+            <div
+              key={index}
+              className={css({
+                alignItems: 'center',
+                display: 'grid',
+                gridTemplateAreas: '"prev title next"',
+                gridTemplateColumns: 'minmax(auto, 1fr) auto minmax(auto, 1fr)',
+                width: 'var(--calendar-width)',
+              })}
+            >
+              {index === 0 && (
+                <CalendarButton slot="previous" gridArea="prev">
+                  <Icon
+                    src={
+                      direction === 'rtl' ? chevronRightIcon : chevronLeftIcon
+                    }
+                    size="medium"
+                  />
+                </CalendarButton>
+              )}
+              <Heading
+                aria-hidden
+                align="center"
+                elementType="h2"
+                gridArea="title"
+                size="small"
+              >
+                {monthDateFormatter.format(date.toDate(state.timeZone))}
+              </Heading>
+              {index === visibleMonths - 1 && (
+                <CalendarButton slot="next" gridArea="next">
+                  <Icon
+                    src={
+                      direction === 'rtl' ? chevronLeftIcon : chevronRightIcon
+                    }
+                    size="medium"
+                  />
+                </CalendarButton>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <div
+        className={css({
+          alignItems: 'start',
+          display: 'grid',
+          gap: tokenSchema.size.space.large,
+          gridAutoColumns: '1fr',
+          gridAutoFlow: 'column',
+        })}
+      >
+        {Array.from({ length: visibleMonths }, (_, index) => (
+          <CalendarGrid
+            key={index}
+            offset={{ months: index }}
+            className={css({
+              borderCollapse: 'collapse',
+              borderSpacing: 0,
+              tableLayout: 'fixed',
+              userSelect: 'none',
+              width: 'var(--calendar-width)',
+            })}
+          >
+            <CalendarGridHeader>
+              {day => (
+                <CalendarHeaderCell className={cellClassName}>
+                  <Text align="center" color="neutralTertiary" size="small">
+                    {day}
+                  </Text>
+                </CalendarHeaderCell>
+              )}
+            </CalendarGridHeader>
+            <CalendarGridBody>
+              {date => (
+                <CalendarCell date={date} className={dayClassName}>
+                  {({ formattedDate }) => (
+                    <Text
+                      align="center"
+                      color="inherit"
+                      trim={false}
+                      weight="inherit"
+                    >
+                      {formattedDate}
+                    </Text>
+                  )}
+                </CalendarCell>
+              )}
+            </CalendarGridBody>
+          </CalendarGrid>
+        ))}
+      </div>
+    </>
   );
 }
 
-function useCalendarStyles<T extends CalendarState | RangeCalendarState>(
-  props: CalendarBaseProps<T>
-) {
-  let styleProps = useStyleProps(props);
-
-  let root = {
-    ...styleProps,
-    className: classNames(
-      css({
-        boxSizing: 'border-box',
-        maxWidth: '100%',
-        overflow: 'auto',
-        // make space for the focus ring, so it doesn't get cropped
-        padding: `calc(${tokenSchema.size.alias.focusRing} + ${tokenSchema.size.alias.focusRingGap})`,
-        '--calendar-cell-width': tokenSchema.size.element.regular,
-        '--calendar-cell-padding': tokenSchema.size.space.xsmall,
-        '--calendar-width':
-          'calc(var(--calendar-cell-width) * 7 + var(--calendar-cell-padding) * 12)',
-      }),
-      styleProps.className
-    ),
-  };
-  let titles = {
-    className: css({
-      boxSizing: 'border-box',
-      display: 'grid',
-      gap: tokenSchema.size.space.large,
-      gridAutoColumns: '1fr',
-      gridAutoFlow: 'column',
-      paddingInline: 'var(--calendar-cell-padding)',
-      width: '100%',
-    }),
-  };
-  let calendars = {
-    className: css({
-      display: 'grid',
-      gridAutoColumns: '1fr',
-      gridAutoFlow: 'column',
-      alignItems: 'start',
-      gap: tokenSchema.size.space.large,
-    }),
-  };
-  let monthHeader = {
-    className: css({
-      alignItems: 'center',
-      display: 'grid',
-      gridTemplateAreas: `"prev title next"`,
-      gridTemplateColumns: 'minmax(auto, 1fr) auto minmax(auto, 1fr)',
-      width: 'var(--calendar-width)',
-    }),
-  };
-
-  return { calendars, monthHeader, root, titles };
+function CalendarButton({
+  children,
+  gridArea,
+  slot,
+}: Pick<ActionButtonProps, 'children' | 'gridArea'> & {
+  slot: 'next' | 'previous';
+}) {
+  return (
+    <AriaButton
+      slot={slot}
+      render={({ className: _, ...buttonProps }) => (
+        <ActionButton
+          {...(buttonProps as ActionButtonProps)}
+          gridArea={gridArea}
+          justifySelf={slot === 'previous' ? 'start' : 'end'}
+          prominence="low"
+          UNSAFE_style={{ padding: 0 }}
+        />
+      )}
+    >
+      {children}
+    </AriaButton>
+  );
 }
+
+const cellClassName = css({
+  boxSizing: 'content-box',
+  height: 'var(--calendar-cell-width)',
+  padding: 'var(--calendar-cell-padding)',
+  textAlign: 'center',
+  width: 'var(--calendar-cell-width)',
+});
+
+const dayClassName = css({
+  alignItems: 'center',
+  borderRadius: tokenSchema.size.radius.full,
+  color: tokenSchema.color.foreground.neutral,
+  cursor: 'default',
+  display: 'flex',
+  height: 'var(--calendar-cell-width)',
+  justifyContent: 'center',
+  outline: 0,
+  width: 'var(--calendar-cell-width)',
+
+  '&[data-hovered]': {
+    backgroundColor: tokenSchema.color.alias.backgroundHovered,
+  },
+  '&[data-pressed]': {
+    backgroundColor: tokenSchema.color.alias.backgroundPressed,
+  },
+  '&[data-selected]': {
+    backgroundColor: tokenSchema.color.background.accentEmphasis,
+    color: tokenSchema.color.foreground.onEmphasis,
+    fontWeight: tokenSchema.typography.fontWeight.semibold,
+  },
+  '&[data-focus-visible]': {
+    boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
+  },
+  '&[data-disabled], &[data-outside-month]': {
+    color: tokenSchema.color.alias.foregroundDisabled,
+  },
+  '&[data-unavailable]': {
+    color: tokenSchema.color.foreground.critical,
+    textDecoration: 'line-through',
+  },
+  '&[data-invalid][data-selected]': {
+    backgroundColor: tokenSchema.color.background.criticalEmphasis,
+  },
+});

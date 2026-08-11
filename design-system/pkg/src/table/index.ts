@@ -1,15 +1,29 @@
 'use client';
-import { Column } from 'react-stately/useTableState';
-import { ColumnProps } from './types';
 
-import type { JSX } from 'react';
+export {
+  Cell,
+  Column,
+  Row,
+  TableBody,
+  TableDragCell,
+  TableDragColumn,
+  TableHeader,
+  TableLoadMoreItem,
+  TableSelectionCell,
+  TableSelectionColumn,
+  TableView,
+} from './TableView';
 
-export { TableView } from './TableView';
-
-// Override TS for Column to support Keystar UI specific props.
-const VoussoirColumn = Column as <T>(props: ColumnProps<T>) => JSX.Element;
-export { VoussoirColumn as Column };
-
-export { Cell, Row, TableBody, TableHeader } from 'react-stately/useTableState';
+export type {
+  CellProps,
+  ColumnProps,
+  RowProps,
+  TableBodyProps,
+  TableCosmeticConfig,
+  TableHeaderProps,
+  TableLoadMoreItemProps,
+  TableProps,
+} from './types';
 
 export type { SortDescriptor, SortDirection } from '@react-types/shared';
+export { Collection as TableCollection } from 'react-aria-components/Collection';

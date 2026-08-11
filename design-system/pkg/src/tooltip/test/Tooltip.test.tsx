@@ -6,11 +6,17 @@ import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { Icon } from '@keystar/ui/icon';
 import { createRef, ReactElement } from 'react';
 
-import { Tooltip } from '..';
+import { Tooltip, TooltipTrigger } from '..';
+import { Button } from '@keystar/ui/button';
 
 describe('tooltip/Tooltip', () => {
   it('renders', () => {
-    let { getByRole } = render(<Tooltip>This is a tooltip</Tooltip>);
+    let { getByRole } = renderWithProvider(
+      <TooltipTrigger defaultOpen>
+        <Button aria-label="trigger" />
+        <Tooltip>This is a tooltip</Tooltip>
+      </TooltipTrigger>
+    );
     let tooltip = getByRole('tooltip');
     expect(tooltip).toHaveAttribute('role', 'tooltip');
     expect(tooltip).toHaveTextContent('This is a tooltip');
@@ -18,9 +24,12 @@ describe('tooltip/Tooltip', () => {
 
   it('renders children', () => {
     const { getByRole } = renderWithProvider(
-      <Tooltip>
-        <Icon src={globeIcon} />
-      </Tooltip>
+      <TooltipTrigger defaultOpen>
+        <Button aria-label="trigger" />
+        <Tooltip>
+          <Icon src={globeIcon} />
+        </Tooltip>
+      </TooltipTrigger>
     );
 
     expect(getByRole('img', { hidden: true })).toBeTruthy();
@@ -28,16 +37,24 @@ describe('tooltip/Tooltip', () => {
 
   it('supports a ref', () => {
     let ref = createRef<HTMLDivElement>();
-    let { getByRole } = render(<Tooltip ref={ref}>This is a tooltip</Tooltip>);
+    let { getByRole } = renderWithProvider(
+      <TooltipTrigger defaultOpen>
+        <Button aria-label="trigger" />
+        <Tooltip ref={ref}>This is a tooltip</Tooltip>
+      </TooltipTrigger>
+    );
     let tooltip = getByRole('tooltip');
     expect(ref.current).toBe(tooltip);
   });
 
   it('accepts dom props', () => {
     const { getByTestId } = renderWithProvider(
-      <Tooltip data-testid="foo" id="bar">
-        Test
-      </Tooltip>
+      <TooltipTrigger defaultOpen>
+        <Button aria-label="trigger" />
+        <Tooltip data-testid="foo" id="bar">
+          Test
+        </Tooltip>
+      </TooltipTrigger>
     );
 
     expect(getByTestId('foo')).toHaveAttribute('id', 'bar');

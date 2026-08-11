@@ -1,5 +1,6 @@
-import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
-import { Key, memo } from 'react';
+import { BreadcrumbItem, Breadcrumbs } from '@keystar/ui/breadcrumbs';
+import type { Key } from '@react-types/shared';
+import { memo } from 'react';
 
 type HeaderBreadcrumbsProps = {
   /** The breadcrumb items. */
@@ -9,9 +10,9 @@ type HeaderBreadcrumbsProps = {
 export const HeaderBreadcrumbs = memo((props: HeaderBreadcrumbsProps) => (
   <Breadcrumbs flex size="medium" minWidth="alias.singleLineWidth">
     {props.items.map(item => (
-      <Item key={item.key} href={item.href}>
+      <BreadcrumbItem key={item.key} id={item.key} href={item.href}>
         {item.label}
-      </Item>
+      </BreadcrumbItem>
     ))}
   </Breadcrumbs>
 ));

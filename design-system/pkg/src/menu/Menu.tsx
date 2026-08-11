@@ -1,64 +1,54 @@
-import { useMenu } from 'react-aria/useMenu';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { useSyncRef } from 'react-aria/private/utils/useSyncRef';
-import { useTreeState } from 'react-stately/useTreeState';
-import React, { RefObject, ReactElement, useContext } from 'react';
+import {
+  Menu as AriaMenu,
+  RootMenuTriggerStateContext,
+  type MenuProps as AriaMenuProps,
+} from 'react-aria-components/Menu';
+import React, {
+  type ForwardedRef,
+  type KeyboardEvent,
+  type ReactElement,
+  useContext,
+} from 'react';
 
 import { listStyles } from '@keystar/ui/listbox';
-import { classNames, useStyleProps } from '@keystar/ui/style';
+import {
+  type BaseStyleProps,
+  classNames,
+  filterStyleProps,
+  useStyleProps,
+} from '@keystar/ui/style';
 
-import { MenuContext } from './context';
-import { MenuItem } from './MenuItem';
-import { MenuSection } from './MenuSection';
-import { MenuProps } from './types';
+export interface MenuProps<T>
+  extends Omit<AriaMenuProps<T>, 'className' | 'style'>,
+    BaseStyleProps {}
 
 function Menu<T extends object>(
   props: MenuProps<T>,
-  forwardedRef: RefObject<HTMLDivElement | null>
+  forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let contextProps = useContext(MenuContext);
-  let completeProps = {
-    ...mergeProps(contextProps, props),
+  let styleProps = useStyleProps(props);
+  let triggerState = useContext(RootMenuTriggerStateContext);
+  let onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Tab' && !event.defaultPrevented) {
+      triggerState?.close();
+    }
   };
 
-  let domRef = useObjectRef(forwardedRef);
-  let state = useTreeState(completeProps);
-  let { menuProps } = useMenu(completeProps, state, domRef);
-  let styleProps = useStyleProps(completeProps);
-  useSyncRef(contextProps, domRef);
-
   return (
-    <div
-      {...menuProps}
-      {...styleProps}
-      ref={domRef}
+    <AriaMenu
+      {...(filterStyleProps(props) as AriaMenuProps<T>)}
+      ref={forwardedRef}
+      shouldCloseOnSelect={
+        props.shouldCloseOnSelect ?? props.selectionMode !== 'multiple'
+      }
+      {...({ onKeyDown } as Record<string, unknown>)}
       className={classNames(listStyles, styleProps.className)}
-      data-selection={state.selectionManager.selectionMode}
-    >
-      {[...state.collection].map(item => {
-        if (item.type === 'section') {
-          return <MenuSection key={item.key} item={item} state={state} />;
-        }
-
-        let menuItem = <MenuItem key={item.key} item={item} state={state} />;
-
-        if (item.wrapper) {
-          menuItem = item.wrapper(menuItem);
-        }
-
-        return menuItem;
-      })}
-    </div>
+      style={styleProps.style}
+    />
   );
 }
 
-/**
- * Menus display a list of actions or options that a user can choose.
- */
-// forwardRef doesn't support generic parameters, so cast the result to the correct type
-// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
-const _Menu: <T>(
-  props: MenuProps<T> & { ref?: RefObject<HTMLDivElement | null> }
-) => ReactElement = React.forwardRef(Menu as any) as any;
+const _Menu = React.forwardRef(Menu) as <T extends object>(
+  props: MenuProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
+) => ReactElement;
 export { _Menu as Menu };

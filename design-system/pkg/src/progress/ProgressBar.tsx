@@ -1,25 +1,37 @@
-import { useProgressBar } from 'react-aria/useProgressBar';
+import {
+  ProgressBar as AriaProgressBar,
+  type ProgressBarProps as AriaProgressBarProps,
+} from 'react-aria-components/ProgressBar';
 import { ForwardedRef, forwardRef } from 'react';
 
-import { BarBase } from './BarBase';
+import { filterStyleProps } from '@keystar/ui/style';
+
+import { BarBase, useBarStyles } from './BarBase';
 import { ProgressBarProps } from './types';
 
 /**
- * ProgressBars show the progression of a system operation: downloading, uploading, processing, etc., in a visual way.
- * They can represent either determinate or indeterminate progress.
+ * ProgressBars show the progression of a system operation: downloading,
+ * uploading, processing, etc. They may be determinate or indeterminate.
  */
 export const ProgressBar = forwardRef(function ProgressBar(
   props: ProgressBarProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  const { progressBarProps, labelProps } = useProgressBar(props);
+  let styleProps = useBarStyles(props);
 
   return (
-    <BarBase
-      {...props}
+    <AriaProgressBar
+      {...(filterStyleProps(props, [
+        'label',
+        'showValueLabel',
+        'valueLabel',
+      ]) as AriaProgressBarProps)}
+      {...styleProps}
       ref={forwardedRef}
-      barProps={progressBarProps}
-      labelProps={labelProps}
-    />
+    >
+      {({ percentage, valueText }) => (
+        <BarBase {...props} percentage={percentage} valueText={valueText} />
+      )}
+    </AriaProgressBar>
   );
 });

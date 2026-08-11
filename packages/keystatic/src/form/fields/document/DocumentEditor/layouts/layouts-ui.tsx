@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Editor, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
-import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionGroup, ActionGroupItem } from '@keystar/ui/action-group';
 import { ActionButton } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { columnsIcon } from '@keystar/ui/icon/icons/columnsIcon';
@@ -71,7 +71,9 @@ export const LayoutContainer = ({
               }
             >
               {layoutOptions.map((layoutOption, i) => (
-                <Item key={i}>{makeLayoutIcon(layoutOption)}</Item>
+                <ActionGroupItem id={i.toString()}>
+                  {makeLayoutIcon(layoutOption)}
+                </ActionGroupItem>
               ))}
             </ActionGroup>
             <ToolbarSeparator />

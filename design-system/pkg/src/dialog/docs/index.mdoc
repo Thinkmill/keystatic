@@ -86,9 +86,9 @@ return (
   <>
     <ActionGroup onAction={key => setSize(old => (old ? null : key))}>
       {['small', 'medium', 'large'].map(key => (
-        <Item key={key}>
+        <ActionGroupItem id={key}>
           <Text casing="capitalize">{key}</Text>
-        </Item>
+        </ActionGroupItem>
       ))}
     </ActionGroup>
     <DialogContainer onDismiss={() => setSize(null)} isDismissable>

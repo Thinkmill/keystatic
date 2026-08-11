@@ -1,4 +1,4 @@
-import { Picker, Item } from '@keystar/ui/picker';
+import { Picker, PickerItem } from '@keystar/ui/picker';
 import { useFieldSpan } from '../context';
 
 export function SelectFieldInput<Value extends string>(props: {
@@ -28,7 +28,7 @@ export function SelectFieldInput<Value extends string>(props: {
         tablet: fieldSpan === 12 ? 'alias.singleLineWidth' : 'auto',
       }}
     >
-      {item => <Item key={item.value}>{item.label}</Item>}
+      {item => <PickerItem id={item.value}>{item.label}</PickerItem>}
     </Picker>
   );
 }

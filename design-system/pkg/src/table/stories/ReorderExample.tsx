@@ -1,5 +1,5 @@
 import { action } from '@keystar/ui-storybook';
-import { useListData } from 'react-stately/useListData';
+import { useListData } from 'react-aria-components';
 import { ItemDropTarget, Key } from '@react-types/shared';
 
 import React from 'react';
@@ -194,7 +194,7 @@ export function ReorderExample(props: any) {
         {column => (
           <Column
             minWidth={column.minWidth}
-            width={column.width}
+            width={typeof column.width === 'number' ? column.width : undefined}
             isRowHeader={column.isRowHeader}
           >
             {column.name}

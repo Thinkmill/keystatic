@@ -1,64 +1,48 @@
-import { useMenuSection } from 'react-aria/useMenu';
-import { useSeparator } from 'react-aria/useSeparator';
-import { getChildNodes } from 'react-stately/private/collections/getChildNodes';
-import { TreeState } from 'react-stately/useTreeState';
-import { Node } from '@react-types/shared';
-import { Fragment } from 'react';
+import {
+  Header,
+  MenuSection as AriaMenuSection,
+  type MenuSectionProps as AriaMenuSectionProps,
+} from 'react-aria-components/Menu';
+import {
+  type ForwardedRef,
+  type ReactElement,
+  type ReactNode,
+  forwardRef,
+} from 'react';
 
-import { Divider } from '@keystar/ui/layout';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
-import { MenuItem } from './MenuItem';
+export interface MenuSectionProps<T = object>
+  extends Omit<AriaMenuSectionProps<T>, 'className' | 'style'> {}
 
-interface MenuSectionProps<T> {
-  item: Node<T>;
-  state: TreeState<T>;
+function MenuSection<T extends object>(
+  props: MenuSectionProps<T>,
+  forwardedRef: ForwardedRef<HTMLElement>
+) {
+  return <AriaMenuSection {...props} ref={forwardedRef} />;
 }
 
-/** @private */
-export function MenuSection<T>(props: MenuSectionProps<T>) {
-  let { item, state } = props;
-  let { itemProps, headingProps, groupProps } = useMenuSection({
-    heading: item.rendered,
-    'aria-label': item['aria-label'],
-  });
+const _MenuSection = forwardRef(MenuSection) as <T extends object = object>(
+  props: MenuSectionProps<T> & { ref?: ForwardedRef<HTMLElement> }
+) => ReactElement;
+export { _MenuSection as MenuSection };
 
-  let { separatorProps } = useSeparator({});
-
+export function MenuHeader({ children }: { children: ReactNode }) {
   return (
-    <Fragment>
-      {item.key !== state.collection.getFirstKey() && (
-        <Divider {...separatorProps} marginY="small" />
-      )}
-      <div {...itemProps}>
-        {item.rendered && (
-          <Text
-            casing="uppercase"
-            size="small"
-            color="neutralSecondary"
-            weight="medium"
-            UNSAFE_className={css({
-              paddingBlock: tokenSchema.size.space.regular,
-              paddingInline: tokenSchema.size.space.medium,
-            })}
-            {...headingProps}
-          >
-            {item.rendered}
-          </Text>
-        )}
-        <div {...groupProps}>
-          {[...getChildNodes(item, state.collection)].map(node => {
-            let item = <MenuItem key={node.key} item={node} state={state} />;
-
-            if (node.wrapper) {
-              item = node.wrapper(item);
-            }
-
-            return item;
-          })}
-        </div>
-      </div>
-    </Fragment>
+    <Header>
+      <Text
+        casing="uppercase"
+        size="small"
+        color="neutralSecondary"
+        weight="medium"
+        UNSAFE_className={css({
+          paddingBlock: tokenSchema.size.space.regular,
+          paddingInline: tokenSchema.size.space.medium,
+        })}
+      >
+        {children}
+      </Text>
+    </Header>
   );
 }

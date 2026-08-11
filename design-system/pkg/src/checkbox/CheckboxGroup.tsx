@@ -1,17 +1,26 @@
-import { useCheckboxGroup } from 'react-aria/useCheckboxGroup';
-import { useCheckboxGroupState } from 'react-stately/useCheckboxGroupState';
-import React, {
-  ForwardedRef,
-  ForwardRefExoticComponent,
-  forwardRef,
-} from 'react';
+import {
+  CheckboxGroup as AriaCheckboxGroup,
+  type CheckboxGroupProps as AriaCheckboxGroupProps,
+} from 'react-aria-components/CheckboxGroup';
+import { ForwardedRef, ForwardRefExoticComponent, forwardRef } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
-import { FieldPrimitive, validateFieldProps } from '@keystar/ui/field';
-import { classNames, css, toDataAttributes } from '@keystar/ui/style';
+import { validateFieldProps } from '@keystar/ui/field';
+import {
+  classNames,
+  css,
+  filterStyleProps,
+  toDataAttributes,
+  useStyleProps,
+} from '@keystar/ui/style';
 
-import { CheckboxGroupContext } from './context';
 import { CheckboxGroupProps } from './types';
+import {
+  FieldDescriptionElement,
+  FieldErrorElement,
+  FieldLabelElement,
+  fieldRootClassName,
+} from '../field/FieldElements';
 
 /**
  * A checkbox group allows users to select one or more items from a list of
@@ -24,23 +33,36 @@ export const CheckboxGroup: ForwardRefExoticComponent<CheckboxGroupProps> =
   ) {
     props = useProviderProps(props);
     props = validateFieldProps(props);
-    let { children, orientation = 'vertical', validationState } = props;
-    let state = useCheckboxGroupState(props);
-    let { labelProps, groupProps, descriptionProps, errorMessageProps } =
-      useCheckboxGroup(props, state);
+    let {
+      children,
+      contextualHelp,
+      description,
+      errorMessage,
+      isRequired,
+      label,
+      orientation = 'vertical',
+      validationState,
+      ...otherProps
+    } = props;
+    let styleProps = useStyleProps(props);
 
     return (
-      <FieldPrimitive
-        {...props}
+      <AriaCheckboxGroup
+        {...(filterStyleProps(otherProps) as AriaCheckboxGroupProps)}
         ref={forwardedRef}
-        labelElementType="span"
-        labelProps={labelProps}
-        descriptionProps={descriptionProps}
-        errorMessageProps={errorMessageProps}
-        supplementRequiredState
+        isInvalid={validationState === 'invalid' || Boolean(errorMessage)}
+        isRequired={isRequired}
+        className={classNames(fieldRootClassName, styleProps.className)}
+        style={styleProps.style}
       >
+        <FieldLabelElement
+          contextualHelp={contextualHelp}
+          isRequired={isRequired}
+          label={label}
+          supplementRequiredState
+        />
+        <FieldDescriptionElement>{description}</FieldDescriptionElement>
         <div
-          {...groupProps}
           {...toDataAttributes({ orientation })}
           className={classNames(
             css({
@@ -52,10 +74,9 @@ export const CheckboxGroup: ForwardRefExoticComponent<CheckboxGroupProps> =
             })
           )}
         >
-          <CheckboxGroupContext.Provider value={{ validationState, state }}>
-            {children}
-          </CheckboxGroupContext.Provider>
+          {children}
         </div>
-      </FieldPrimitive>
+        <FieldErrorElement>{errorMessage}</FieldErrorElement>
+      </AriaCheckboxGroup>
     );
   });

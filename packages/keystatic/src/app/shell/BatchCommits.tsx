@@ -17,7 +17,12 @@ import { dotSquareIcon } from '@keystar/ui/icon/icons/dotSquareIcon';
 import { undoIcon } from '@keystar/ui/icon/icons/undoIcon';
 import { HStack, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
-import { ListView, Item } from '@keystar/ui/list-view';
+import {
+  ListView,
+  ListViewCollection,
+  ListViewItem,
+  ListViewLoadMoreItem,
+} from '@keystar/ui/list-view';
 import { Content, Header } from '@keystar/ui/slots';
 import {
   breakpointQueries,
@@ -143,11 +148,9 @@ function BatchCommitsDialog() {
         <ListView
           aria-label={`Changes to "${currentBranch}" branch.`}
           density="compact"
-          items={items}
           selectionMode="multiple"
           selectedKeys={selection.keys}
           onSelectionChange={selection.setKeys}
-          loadingState={loadingState}
           renderEmptyState={() => (
             <VStack
               gap="medium"
@@ -174,31 +177,37 @@ function BatchCommitsDialog() {
           }}
           flex={items.length > 0}
         >
-          {item => (
-            <Item key={item.slug} textValue={`${item.slug}, ${item.type}`}>
-              <HStack
-                gridArea="content"
-                alignItems="center"
-                minWidth={0}
-                gap="regular"
+          <ListViewCollection items={items}>
+            {item => (
+              <ListViewItem
+                id={item.slug}
+                textValue={`${item.slug}, ${item.type}`}
               >
-                {item.type === 'removed' ? (
-                  <Text color="color.alias.foregroundDisabled">
-                    {item.slug}
-                  </Text>
-                ) : (
-                  <TextLink href={item.href}>{item.slug}</TextLink>
-                )}
-                <ChangeTypeIndicator type={item.type} />
-              </HStack>
-              <TooltipTrigger>
-                <ActionButton aria-label="Revert." marginStart="regular">
-                  <Icon src={undoIcon} />
-                </ActionButton>
-                <Tooltip>Revert changes to item</Tooltip>
-              </TooltipTrigger>
-            </Item>
-          )}
+                <HStack
+                  gridArea="content"
+                  alignItems="center"
+                  minWidth={0}
+                  gap="regular"
+                >
+                  {item.type === 'removed' ? (
+                    <Text color="color.alias.foregroundDisabled">
+                      {item.slug}
+                    </Text>
+                  ) : (
+                    <TextLink href={item.href}>{item.slug}</TextLink>
+                  )}
+                  <ChangeTypeIndicator type={item.type} />
+                </HStack>
+                <TooltipTrigger>
+                  <ActionButton aria-label="Revert." marginStart="regular">
+                    <Icon src={undoIcon} />
+                  </ActionButton>
+                  <Tooltip>Revert changes to item</Tooltip>
+                </TooltipTrigger>
+              </ListViewItem>
+            )}
+          </ListViewCollection>
+          {loadingState !== 'idle' && <ListViewLoadMoreItem isLoading />}
         </ListView>
       </Content>
       <ButtonGroup>

@@ -1,6 +1,5 @@
 import { action } from '@keystar/ui-storybook';
-import { useAsyncList } from 'react-stately/useAsyncList';
-import { useListData } from 'react-stately/useListData';
+import { useAsyncList , useListData } from 'react-aria-components';
 import { ItemDropTarget, Key } from '@react-types/shared';
 
 import React from 'react';
@@ -16,7 +15,12 @@ import { Flex } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
 import { Text } from '@keystar/ui/typography';
 
-import { Item, ListView } from '..';
+import {
+  ListView,
+  ListViewCollection,
+  ListViewItem,
+  ListViewLoadMoreItem,
+} from '..';
 
 let getAllowedDropOperationsAction = action('getAllowedDropOperationsAction');
 
@@ -54,10 +58,10 @@ export const Default = (args: any) => (
     aria-label="list view example"
     {...args}
   >
-    <Item>Design Systems</Item>
-    <Item>Product Development</Item>
-    <Item>Team Augmentation</Item>
-    <Item>API Platforms</Item>
+    <ListViewItem>Design Systems</ListViewItem>
+    <ListViewItem>Product Development</ListViewItem>
+    <ListViewItem>Team Augmentation</ListViewItem>
+    <ListViewItem>API Platforms</ListViewItem>
   </ListView>
 );
 
@@ -72,10 +76,10 @@ export const Actions = (args: any) => (
     onAction={action('onAction')}
     {...args}
   >
-    <Item key="design-systems">Design Systems</Item>
-    <Item key="product-development">Product Development</Item>
-    <Item key="team-augmentation">Team Augmentation</Item>
-    <Item key="api-platforms">API Platforms</Item>
+    <ListViewItem id="design-systems">Design Systems</ListViewItem>
+    <ListViewItem id="product-development">Product Development</ListViewItem>
+    <ListViewItem id="team-augmentation">Team Augmentation</ListViewItem>
+    <ListViewItem id="api-platforms">API Platforms</ListViewItem>
   </ListView>
 );
 
@@ -93,22 +97,22 @@ export const DynamicItems = (args: any) => (
     {...args}
   >
     {(item: any) => (
-      <Item key={item.key} textValue={item.name}>
+      <ListViewItem id={item.key} textValue={item.name}>
         <Text>{item.name}</Text>
         <ActionGroup
           buttonLabelBehavior="hide"
           onAction={action(`actionGroup/${item.key}`)}
         >
-          <Item key="duplicate">
+          <ListViewItem id="duplicate">
             <Icon src={copyIcon} />
             <Text>Duplicate</Text>
-          </Item>
-          <Item key="delete">
+          </ListViewItem>
+          <ListViewItem id="delete">
             <Icon src={trash2Icon} />
             <Text>Delete</Text>
-          </Item>
+          </ListViewItem>
         </ActionGroup>
-      </Item>
+      </ListViewItem>
     )}
   </ListView>
 );
@@ -138,10 +142,9 @@ export const Loading = (args: any) => (
     aria-label="loading ListView"
     width="container.xsmall"
     height="alias.singleLineWidth"
-    loadingState="loading"
     {...args}
   >
-    {[]}
+    <ListViewLoadMoreItem isLoading />
   </ListView>
 );
 
@@ -154,13 +157,13 @@ export const LoadingMore = (args: any) => (
     aria-label="loading more ListView"
     width="alias.singleLineWidth"
     height="alias.singleLineWidth"
-    loadingState="loadingMore"
     {...args}
   >
-    <Item>Design Systems</Item>
-    <Item>Product Development</Item>
-    <Item>Team Augmentation</Item>
-    <Item>API Platforms</Item>
+    <ListViewItem>Design Systems</ListViewItem>
+    <ListViewItem>Product Development</ListViewItem>
+    <ListViewItem>Team Augmentation</ListViewItem>
+    <ListViewItem>API Platforms</ListViewItem>
+    <ListViewLoadMoreItem isLoading />
   </ListView>
 );
 
@@ -182,12 +185,12 @@ export const Thumbnails = (args: any) => (
     {...args}
   >
     {(item: any) => (
-      <Item textValue={item.title}>
+      <ListViewItem textValue={item.title}>
         {item.url && <Image aspectRatio="1" src={item.url} alt="" />}
         {item.illustration}
         <Text>{item.title}</Text>
         {item.url && <Text slot="description">JPG</Text>}
-      </Item>
+      </ListViewItem>
     )}
   </ListView>
 );
@@ -198,21 +201,21 @@ Thumbnails.story = {
 
 export const LongText = (args: any) => (
   <ListView width="alias.singleLineWidth" {...args}>
-    <Item>Safe hands for your bold product plans</Item>
-    <Item textValue="Expertise & Capabilities">
+    <ListViewItem>Safe hands for your bold product plans</ListViewItem>
+    <ListViewItem textValue="Expertise & Capabilities">
       <Text>Expertise & Capabilities</Text>
       <Text slot="description">
         Functional products and cross-functional teams form the basis of how we
         make compelling software.
       </Text>
-    </Item>
-    <Item textValue="How we engage">
+    </ListViewItem>
+    <ListViewItem textValue="How we engage">
       <Text>How we engage</Text>
       <Text slot="description">
         Simple and nimble engagement structures. We can work with your team, or
         be your team.
       </Text>
-    </Item>
+    </ListViewItem>
   </ListView>
 );
 
@@ -324,17 +327,17 @@ const thumbnailItems = [
 ];
 
 let simpleItems = [
-  { id: '1', type: 'item', textValue: 'Item One' },
+  { id: '1', type: 'item', textValue: 'ListViewItem One' },
   {
     id: '2',
     type: 'item',
-    textValue: 'Item Two',
+    textValue: 'ListViewItem Two',
     description: 'Description text',
   },
-  { id: '3', type: 'item', textValue: 'Item Three' },
-  { id: '4', type: 'item', textValue: 'Item Four' },
-  { id: '5', type: 'item', textValue: 'Item Five' },
-  { id: '6', type: 'item', textValue: 'Item Six' },
+  { id: '3', type: 'item', textValue: 'ListViewItem Three' },
+  { id: '4', type: 'item', textValue: 'ListViewItem Four' },
+  { id: '5', type: 'item', textValue: 'ListViewItem Five' },
+  { id: '6', type: 'item', textValue: 'ListViewItem Six' },
 ];
 
 // Utils
@@ -392,18 +395,19 @@ function AsyncList(props: any) {
       aria-label="example async loading list"
       width="alias.singleLineWidth"
       height="alias.singleLineWidth"
-      items={list.items}
-      loadingState={list.loadingState}
-      onLoadMore={list.loadMore}
       {...props}
     >
-      {(item: any) => {
-        return (
-          <Item key={item.name} textValue={item.name}>
+      <ListViewCollection items={list.items}>
+        {(item: any) => (
+          <ListViewItem id={item.name} textValue={item.name}>
             {item.name}
-          </Item>
-        );
-      }}
+          </ListViewItem>
+        )}
+      </ListViewCollection>
+      <ListViewLoadMoreItem
+        isLoading={list.loadingState !== 'idle'}
+        onLoadMore={list.loadMore}
+      />
     </ListView>
   );
 }
@@ -493,12 +497,12 @@ function ReorderExample(props: any) {
       {...otherprops}
     >
       {(item: any) => (
-        <Item>
+        <ListViewItem>
           <Text>{item.textValue}</Text>
           {item.description && (
             <Text slot="description">{item.description}</Text>
           )}
-        </Item>
+        </ListViewItem>
       )}
     </ListView>
   );

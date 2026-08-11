@@ -1,14 +1,16 @@
-import { useButton } from 'react-aria/useButton';
-import { useHover } from 'react-aria/useHover';
-import { useLink } from 'react-aria/useLink';
-import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
+import {
+  Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
+} from 'react-aria-components/Button';
+import {
+  Link as AriaLink,
+  type LinkProps as AriaLinkProps,
+} from 'react-aria-components/Link';
 import { ForwardedRef, forwardRef, useMemo } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
 import { SlotProvider, SlotContextType, useSlotProps } from '@keystar/ui/slots';
-import { FocusRing } from '@keystar/ui/style';
+import { filterStyleProps } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
@@ -32,25 +34,28 @@ export const ActionButton = forwardRef(function ActionButton(
   props: ActionButtonProps,
   forwardedRef: ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
 ) {
-  const domRef = useObjectRef(forwardedRef);
+  props = useProviderProps(props);
+  props = useSlotProps(props, 'button');
   const children = useActionButtonChildren(props);
 
   if ('href' in props && props.href) {
     return (
-      <FocusRing autoFocus={props.autoFocus}>
-        <LinkButton ref={domRef as ForwardedRef<HTMLAnchorElement>} {...props}>
-          {children}
-        </LinkButton>
-      </FocusRing>
+      <LinkButton
+        ref={forwardedRef as ForwardedRef<HTMLAnchorElement>}
+        {...props}
+      >
+        {children}
+      </LinkButton>
     );
   }
 
   return (
-    <FocusRing autoFocus={props.autoFocus}>
-      <BaseButton ref={domRef as ForwardedRef<HTMLButtonElement>} {...props}>
-        {children}
-      </BaseButton>
-    </FocusRing>
+    <BaseButton
+      ref={forwardedRef as ForwardedRef<HTMLButtonElement>}
+      {...props}
+    >
+      {children}
+    </BaseButton>
   );
 });
 
@@ -62,25 +67,17 @@ const LinkButton = forwardRef(function LinkActionButton(
   props: ActionLinkElementProps,
   forwardedRef: ForwardedRef<HTMLAnchorElement>
 ) {
-  const { children, isDisabled, ...otherProps } = props;
-
-  const domRef = useObjectRef(forwardedRef);
-  const { buttonProps, isPressed } = useButton(
-    { elementType: 'a', ...props },
-    domRef
-  );
-  const { linkProps } = useLink(props, domRef);
-  const { hoverProps, isHovered } = useHover({ isDisabled });
-  const styleProps = useActionButtonStyles(props, { isHovered, isPressed });
+  const { children } = props;
+  const styleProps = useActionButtonStyles(props);
 
   return (
-    <a
-      {...filterDOMProps(otherProps)}
-      {...mergeProps(buttonProps, linkProps, hoverProps, styleProps)}
-      ref={domRef}
+    <AriaLink
+      {...(filterStyleProps(props, ['prominence', 'static']) as AriaLinkProps)}
+      {...styleProps}
+      ref={forwardedRef}
     >
       {children}
-    </a>
+    </AriaLink>
   );
 });
 
@@ -89,24 +86,21 @@ const BaseButton = forwardRef(function BaseActionButton(
   props: ActionButtonElementProps,
   forwardedRef: ForwardedRef<HTMLButtonElement>
 ) {
-  props = useProviderProps(props);
-  props = useSlotProps(props, 'button');
-
-  const { children, isDisabled, ...otherProps } = props;
-  const domRef = useObjectRef(forwardedRef);
-  const { buttonProps, isPressed } = useButton(props, domRef);
-  const { hoverProps, isHovered } = useHover({ isDisabled });
-  const styleProps = useActionButtonStyles(props, { isHovered, isPressed });
+  const { children } = props;
+  const styleProps = useActionButtonStyles(props);
 
   return (
-    <button
-      ref={domRef}
+    <AriaButton
+      {...(filterStyleProps(props, [
+        'isSelected',
+        'prominence',
+        'static',
+      ]) as AriaButtonProps)}
       {...styleProps}
-      {...filterDOMProps(otherProps, { propNames: new Set(['form']) })}
-      {...mergeProps(buttonProps, hoverProps)}
+      ref={forwardedRef}
     >
       {children}
-    </button>
+    </AriaButton>
   );
 });
 

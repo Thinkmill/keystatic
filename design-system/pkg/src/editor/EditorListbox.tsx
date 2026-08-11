@@ -1,97 +1,20 @@
-import { ListKeyboardDelegate } from 'react-aria/ListKeyboardDelegate';
-import { useSelectableCollection } from 'react-aria/private/selection/useSelectableCollection';
-import { chain } from 'react-aria/chain';
-import { useListState } from 'react-stately/useListState';
-import {
-  AriaLabelingProps,
-  CollectionBase,
-  MultipleSelection,
-} from '@react-types/shared';
-import { Key, RefObject, useEffect, useMemo, useRef } from 'react';
+import type { Key } from '@react-types/shared';
 
-import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
-import { BaseStyleProps } from '@keystar/ui/style';
+import { ListBox, type ListBoxProps } from '@keystar/ui/listbox';
 
-export type EditorListboxProps<T> = {
-  listenerRef: RefObject<HTMLElement | null>;
-  scrollRef?: RefObject<HTMLElement | null>;
+export interface EditorListboxProps<T>
+  extends Omit<ListBoxProps<T>, 'onAction'> {
   onAction?: (key: Key) => void;
-  onEscape?: () => void;
-} & CollectionBase<T> &
-  AriaLabelingProps &
-  MultipleSelection &
-  Pick<
-    BaseStyleProps,
-    | 'height'
-    | 'width'
-    | 'maxHeight'
-    | 'maxWidth'
-    | 'minHeight'
-    | 'minWidth'
-    | 'UNSAFE_className'
-    | 'UNSAFE_style'
-  >;
+}
 
 export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
-  let { listenerRef, onEscape, scrollRef, ...otherProps } = props;
-  let state = useListState(props);
-  let layout = useListBoxLayout();
-  let listboxRef = useRef<HTMLDivElement>(null);
-  let delegate = useMemo(
-    () =>
-      new ListKeyboardDelegate({
-        collection: state.collection,
-        ref: listboxRef,
-        layoutDelegate: layout,
-      }),
-    [layout, state.collection]
-  );
-
-  // keyboard and selection management
-  let { collectionProps } = useSelectableCollection({
-    keyboardDelegate: delegate,
-    ref: listenerRef,
-    scrollRef: scrollRef ?? listboxRef,
-    selectionManager: state.selectionManager,
-    disallowEmptySelection: true,
-    disallowTypeAhead: true,
-    isVirtualized: true,
-    shouldFocusWrap: true,
-  });
-
-  let onKeyDown = (e: KeyboardEvent) => {
-    switch (e.key) {
-      case 'Enter':
-        if (state.selectionManager.focusedKey) {
-          state.selectionManager.select(state.selectionManager.focusedKey);
-          props.onAction?.(state.selectionManager.focusedKey);
-        }
-        break;
-      case 'Escape':
-        onEscape?.();
-        break;
-    }
-  };
-
-  let keydownListener = chain(onKeyDown, collectionProps.onKeyDown);
-
-  useEffect(() => {
-    let domNode = listenerRef.current;
-    domNode?.addEventListener('keydown', keydownListener);
-    return () => domNode?.removeEventListener('keydown', keydownListener);
-  }, [keydownListener, listenerRef]);
-
+  let { onAction, ...listBoxProps } = props;
   return (
-    <ListBoxBase
-      ref={listboxRef}
-      layout={layout}
-      state={state}
-      autoFocus="first"
-      // focusOnPointerEnter
-      shouldUseVirtualFocus
-      shouldFocusWrap
-      UNSAFE_className={listStyles}
-      {...otherProps}
+    <ListBox
+      {...listBoxProps}
+      disallowEmptySelection
+      selectionMode="single"
+      onAction={onAction}
     />
   );
 }

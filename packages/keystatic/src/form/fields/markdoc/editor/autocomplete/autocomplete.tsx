@@ -1,37 +1,15 @@
-import { useMemo } from 'react';
-
 import { EditorPopover } from '@keystar/ui/editor';
 
-import { useEditorViewRef } from '../editor-view';
-import { useEditorKeydownListener } from '../keydown';
 import { useEditorReferenceElement } from '../popovers/reference';
-import { EditorListboxProps, useEditorListbox } from './EditorListbox';
+import { EditorListbox, EditorListboxProps } from './EditorListbox';
 
 export function EditorAutocomplete<Item extends object>(
-  props: Omit<EditorListboxProps<Item>, 'listenerRef'> & {
+  props: EditorListboxProps<Item> & {
     from: number;
     to: number;
   }
 ) {
-  const viewRef = useEditorViewRef();
   const referenceElement = useEditorReferenceElement(props.from, props.to);
-  const listenerRef = useMemo(() => {
-    return {
-      get current() {
-        return viewRef.current?.dom ?? null;
-      },
-    };
-  }, [viewRef]);
-  const { keydownListener, listbox } = useEditorListbox({
-    listenerRef,
-    ...props,
-    UNSAFE_style: { width: 320, ...props.UNSAFE_style },
-  });
-  useEditorKeydownListener(event => {
-    keydownListener(event);
-    return event.defaultPrevented;
-  });
-
   return (
     referenceElement && (
       <EditorPopover
@@ -41,7 +19,10 @@ export function EditorAutocomplete<Item extends object>(
         placement="bottom-start"
         reference={referenceElement}
       >
-        {listbox}
+        <EditorListbox
+          {...props}
+          UNSAFE_style={{ width: 320, ...props.UNSAFE_style }}
+        />
       </EditorPopover>
     )
   );

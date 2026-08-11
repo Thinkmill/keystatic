@@ -1,6 +1,4 @@
-import { useRef } from 'react';
-import { useOverlayTrigger } from 'react-aria/useOverlayTrigger';
-import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
+import { useRef, useState } from 'react';
 import { ArgTypes } from '@keystar/ui-storybook';
 
 import { ActionButton } from '@keystar/ui/button';
@@ -15,19 +13,11 @@ export default {
 
 export const Default = () => {
   let triggerRef = useRef<HTMLButtonElement>(null);
-  let state = useOverlayTriggerState({ isOpen: true });
-  let { triggerProps, overlayProps } = useOverlayTrigger(
-    { type: 'dialog' },
-    state,
-    triggerRef
-  );
 
   return (
     <>
-      <ActionButton {...triggerProps} ref={triggerRef}>
-        Always open
-      </ActionButton>
-      <Popover {...overlayProps} triggerRef={triggerRef} state={state}>
+      <ActionButton ref={triggerRef}>Always open</ActionButton>
+      <Popover isOpen triggerRef={triggerRef}>
         <Box padding="xlarge" maxWidth="100%" UNSAFE_style={{ width: 320 }}>
           <Text>
             Popovers are small overlays that open on demand. They let users
@@ -48,24 +38,19 @@ export const Placement = (args: ArgTypes) => {
   let targetRef = useRef<HTMLButtonElement>(null);
   let overlayRef = useRef<HTMLDivElement>(null);
 
-  let state = useOverlayTriggerState({ defaultOpen: false });
-  let { triggerProps, overlayProps } = useOverlayTrigger(
-    { type: 'dialog' },
-    state,
-    targetRef
-  );
+  let [isOpen, setOpen] = useState(false);
 
   return (
     <Flex direction="column" gap="regular">
-      <ActionButton {...triggerProps} ref={targetRef}>
+      <ActionButton onPress={() => setOpen(open => !open)} ref={targetRef}>
         Toggle
       </ActionButton>
       <Popover
         triggerRef={targetRef}
-        state={state}
+        isOpen={isOpen}
+        onOpenChange={setOpen}
         ref={overlayRef}
         {...args}
-        {...overlayProps}
       >
         <Flex direction="column" padding="large" gap="regular">
           <Text weight="semibold" color="neutralEmphasis" casing="capitalize">

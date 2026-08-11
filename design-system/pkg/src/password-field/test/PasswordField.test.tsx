@@ -49,18 +49,18 @@ describe('password-field/PasswordField', () => {
     expect(queryByLabelText('Show Password')).toBeNull();
   });
   it('handles input change', async () => {
-    let { getByTestId } = renderPasswordField({ onChange: onChangeSpy });
+    let { getByLabelText } = renderPasswordField({ onChange: onChangeSpy });
 
-    let input = getByTestId(testId);
+    let input = getByLabelText('Password');
     await user.type(input, 'super secret');
 
     expect(onChangeSpy).toHaveBeenCalledWith('super secret');
   });
   it('toggles the input type on reveal button click', async () => {
-    let { getByLabelText, getByTestId } = renderPasswordField({
+    let { getByLabelText } = renderPasswordField({
       defaultValue: inputText,
     });
-    let field = getByTestId(testId);
+    let field = getByLabelText('Password');
     let revealButton = getByLabelText('Show Password');
 
     expect(field).toHaveAttribute('type', 'password');

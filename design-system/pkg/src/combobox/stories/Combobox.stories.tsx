@@ -9,7 +9,15 @@ import { Icon } from '@keystar/ui/icon';
 import { Flex } from '@keystar/ui/layout';
 import { Text } from '@keystar/ui/typography';
 
-import { Combobox, ComboboxProps, Item, Section } from '..';
+import {
+  Combobox,
+  ComboboxCollection,
+  ComboboxHeader,
+  ComboboxItem,
+  ComboboxLoadMoreItem,
+  ComboboxProps,
+  ComboboxSection,
+} from '..';
 
 let flatItems = [
   { id: '1', name: 'Echidna' },
@@ -48,10 +56,10 @@ let manySections: { name: string; children: { name: string }[] }[] = [];
 for (let i = 0; i < 50; i++) {
   let children = [];
   for (let j = 0; j < 50; j++) {
-    children.push({ name: `Section ${i}, Item ${j}` });
+    children.push({ name: `ComboboxSection ${i}, ComboboxItem ${j}` });
   }
 
-  manySections.push({ name: 'Section ' + i, children });
+  manySections.push({ name: 'ComboboxSection ' + i, children });
 }
 
 const defaultActions = {
@@ -73,9 +81,11 @@ export const DefaultWithControls = (args: ArgTypes) => (
     {...defaultActions}
     {...args}
   >
-    <Item key="One">One</Item>
-    <Item key="Two">Two</Item>
-    <Item key="Three">Three has a long label that will wrap</Item>
+    <ComboboxItem id="One">One</ComboboxItem>
+    <ComboboxItem id="Two">Two</ComboboxItem>
+    <ComboboxItem id="Three">
+      Three has a long label that will wrap
+    </ComboboxItem>
   </Combobox>
 );
 
@@ -103,31 +113,36 @@ DefaultWithControls.argTypes = {
 
 export const Sections = () => (
   <Combobox label="Combobox" {...defaultActions}>
-    <Section title="Marsupials" key="Marsupials">
-      <Item key="Bilby">Bilby</Item>
-      <Item key="Kangaroo">Kangaroo</Item>
-      <Item key="Quokka">Quokka</Item>
-    </Section>
-    <Section title="Other" key="Other">
-      <Item key="Echidna">Echidna</Item>
-      <Item key="Dingo">Dingo</Item>
-      <Item key="Cassowary">Cassowary</Item>
-    </Section>
+    <ComboboxSection id="Marsupials">
+      <ComboboxHeader>Marsupials</ComboboxHeader>
+      <ComboboxItem id="Bilby">Bilby</ComboboxItem>
+      <ComboboxItem id="Kangaroo">Kangaroo</ComboboxItem>
+      <ComboboxItem id="Quokka">Quokka</ComboboxItem>
+    </ComboboxSection>
+    <ComboboxSection id="Other">
+      <ComboboxHeader>Other</ComboboxHeader>
+      <ComboboxItem id="Echidna">Echidna</ComboboxItem>
+      <ComboboxItem id="Dingo">Dingo</ComboboxItem>
+      <ComboboxItem id="Cassowary">Cassowary</ComboboxItem>
+    </ComboboxSection>
   </Combobox>
 );
 
 export const Dynamic = () => (
   <Combobox label="Combobox" defaultItems={flatItems} {...defaultActions}>
-    {item => <Item key={item.id}>{item.name}</Item>}
+    {item => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
   </Combobox>
 );
 
 export const DynamicWithSections = () => (
   <Combobox label="Combobox" defaultItems={nestedItems} {...defaultActions}>
     {section => (
-      <Section items={section.children} title={section.name} key={section.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ComboboxSection id={section.name}>
+        <ComboboxHeader>{section.name}</ComboboxHeader>
+        <ComboboxCollection items={section.children}>
+          {item => <ComboboxItem id={item.name}>{item.name}</ComboboxItem>}
+        </ComboboxCollection>
+      </ComboboxSection>
     )}
   </Combobox>
 );
@@ -135,40 +150,45 @@ export const DynamicWithSections = () => (
 export const ManySections = () => (
   <Combobox label="Combobox" defaultItems={manySections}>
     {section => (
-      <Section items={section.children} title={section.name} key={section.name}>
-        {item => <Item key={item.name}>{item.name}</Item>}
-      </Section>
+      <ComboboxSection id={section.name}>
+        <ComboboxHeader>{section.name}</ComboboxHeader>
+        <ComboboxCollection items={section.children}>
+          {item => <ComboboxItem id={item.name}>{item.name}</ComboboxItem>}
+        </ComboboxCollection>
+      </ComboboxSection>
     )}
   </Combobox>
 );
 
 export const ComplexItems = () => (
   <Combobox label="Combobox" {...defaultActions}>
-    <Section title="Section 1">
-      <Item textValue="Bold">
+    <ComboboxSection>
+      <ComboboxHeader>ComboboxSection 1</ComboboxHeader>
+      <ComboboxItem textValue="Bold">
         <Icon src={boldIcon} />
         <Text>Bold</Text>
-      </Item>
-      <Item textValue="Italic">
+      </ComboboxItem>
+      <ComboboxItem textValue="Italic">
         <Icon src={italicIcon} />
         <Text>Italic</Text>
-      </Item>
-    </Section>
-    <Section title="Section 3">
-      <Item textValue="Left">
+      </ComboboxItem>
+    </ComboboxSection>
+    <ComboboxSection>
+      <ComboboxHeader>ComboboxSection 3</ComboboxHeader>
+      <ComboboxItem textValue="Left">
         <Icon src={alignStartVerticalIcon} />
         <Text>Left</Text>
         <Text slot="description">The description text for left is long</Text>
-      </Item>
-      <Item textValue="Center has a long label that wraps">
+      </ComboboxItem>
+      <ComboboxItem textValue="Center has a long label that wraps">
         <Icon src={alignCenterVerticalIcon} />
         <Text>Center has a long label that wraps</Text>
-      </Item>
-      <Item textValue="Right">
+      </ComboboxItem>
+      <ComboboxItem textValue="Right">
         <Icon src={alignEndVerticalIcon} />
         <Text>Right</Text>
-      </Item>
-    </Section>
+      </ComboboxItem>
+    </ComboboxSection>
   </Combobox>
 );
 
@@ -180,9 +200,12 @@ export const DisabledKeys = () => (
     {...defaultActions}
   >
     {section => (
-      <Section items={section.children} title={section.name}>
-        {item => <Item>{item.name}</Item>}
-      </Section>
+      <ComboboxSection id={section.name}>
+        <ComboboxHeader>{section.name}</ComboboxHeader>
+        <ComboboxCollection items={section.children}>
+          {item => <ComboboxItem id={item.id}>{item.name}</ComboboxItem>}
+        </ComboboxCollection>
+      </ComboboxSection>
     )}
   </Combobox>
 );
@@ -201,12 +224,9 @@ export const AutoFocus = () => render({ autoFocus: true });
 export const LoadingState = () => {
   return (
     <Flex gap="large" direction="column" UNSAFE_style={{ width: 240 }}>
-      {render({ label: 'Combobox (loading)', loadingState: 'loading' })}
-      {render({ label: 'Combobox (filtering)', loadingState: 'filtering' })}
-      {render({
-        label: 'Combobox (loading more)',
-        loadingState: 'loadingMore',
-      })}
+      {render({ label: 'Combobox (loading)', isLoading: true })}
+      {render({ label: 'Combobox (filtering)', isLoading: true })}
+      {render({ label: 'Combobox (loading more)', isLoading: true })}
     </Flex>
   );
 };
@@ -219,12 +239,18 @@ export const CustomMenuWidths = () => (
   </Flex>
 );
 
-function render<T>(props: Partial<ComboboxProps<T>>) {
+function render(
+  props: Partial<ComboboxProps<object>> & { isLoading?: boolean }
+) {
+  let { isLoading, ...comboboxProps } = props;
   return (
-    <Combobox label="Combobox" {...defaultActions} {...props}>
-      <Item key="One">One</Item>
-      <Item key="Two">Two</Item>
-      <Item key="Three">Three has a long label that will wrap</Item>
+    <Combobox label="Combobox" {...defaultActions} {...comboboxProps}>
+      <ComboboxItem id="One">One</ComboboxItem>
+      <ComboboxItem id="Two">Two</ComboboxItem>
+      <ComboboxItem id="Three">
+        Three has a long label that will wrap
+      </ComboboxItem>
+      {isLoading && <ComboboxLoadMoreItem isLoading />}
     </Combobox>
   );
 }

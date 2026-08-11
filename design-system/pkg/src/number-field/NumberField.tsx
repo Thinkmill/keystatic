@@ -1,26 +1,30 @@
-import { useLocale } from 'react-aria/I18nProvider';
-import { useNumberField } from 'react-aria/useNumberField';
-import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { useNumberFieldState } from 'react-stately/useNumberFieldState';
+import {
+  NumberField as AriaNumberField,
+  type NumberFieldProps as AriaNumberFieldProps,
+} from 'react-aria-components/NumberField';
 import {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
   Ref,
+  useImperativeHandle,
+  useRef,
 } from 'react';
 
 import { useProvider, useProviderProps } from '@keystar/ui/core';
 import {
   css,
-  onlyStyleProps,
+  classNames,
+  filterStyleProps,
   toDataAttributes,
   tokenSchema,
+  useStyleProps,
 } from '@keystar/ui/style';
-import { TextFieldPrimitive } from '@keystar/ui/text-field';
 
 import { StepButton } from './StepButton';
 import { NumberFieldProps } from './types';
+import { TextFieldContent } from '../text-field/TextFieldBase';
+import { fieldRootClassName } from '../field/FieldElements';
 
 /**
  * Number fields let users enter a numeric value and incrementally increase or
@@ -36,59 +40,46 @@ export const NumberField: ForwardRefExoticComponent<
   let {
     contextualHelp,
     description,
+    errorMessage,
     hideStepper,
-    isDisabled,
-    isReadOnly,
     isRequired,
     label,
+    labelElementType: _labelElementType,
+    validationState,
+    ...otherProps
   } = props;
-
-  let { locale } = useLocale();
-  let state = useNumberFieldState({ ...props, locale });
-  let inputRef = useObjectRef(forwardedRef);
-  let {
-    groupProps,
-    labelProps,
-    inputProps,
-    incrementButtonProps,
-    decrementButtonProps,
-    descriptionProps,
-    errorMessageProps,
-  } = useNumberField(props, state, inputRef);
+  let inputRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(forwardedRef, () => inputRef.current!);
   let inputWrapperStyleProps = useInputWrapperStyleProps();
+  let styleProps = useStyleProps({ width: 'alias.singleLineWidth', ...props });
 
   return (
-    <TextFieldPrimitive
-      ref={inputRef}
-      width="alias.singleLineWidth"
-      {...filterDOMProps(props)}
-      {...onlyStyleProps(props)}
-      label={label}
-      labelProps={labelProps}
-      contextualHelp={contextualHelp}
-      description={description}
-      descriptionProps={descriptionProps}
-      errorMessage={props.errorMessage}
-      errorMessageProps={errorMessageProps}
-      inputWrapperProps={{
-        ...groupProps,
-        ...inputWrapperStyleProps,
-      }}
-      inputProps={inputProps}
-      isDisabled={isDisabled}
-      isReadOnly={isReadOnly}
+    <AriaNumberField
+      {...(filterStyleProps(otherProps) as AriaNumberFieldProps)}
+      isInvalid={validationState === 'invalid' || Boolean(errorMessage)}
       isRequired={isRequired}
-      // NOTE: step buttons must be a sibling of the `<input/>` AND after it
-      // in the DOM, so we can respond to pseudo-classes.
-      endElement={
-        !hideStepper && (
-          <>
-            <StepButton direction="up" {...incrementButtonProps} />
-            <StepButton direction="down" {...decrementButtonProps} />
-          </>
-        )
-      }
-    />
+      className={classNames(fieldRootClassName, styleProps.className)}
+      style={styleProps.style}
+    >
+      <TextFieldContent
+        contextualHelp={contextualHelp}
+        description={description}
+        endElement={
+          !hideStepper && (
+            <>
+              <StepButton direction="up" />
+              <StepButton direction="down" />
+            </>
+          )
+        }
+        errorMessage={errorMessage}
+        inputRef={inputRef}
+        inputWrapperClassName={inputWrapperStyleProps.className}
+        inputWrapperElement="group"
+        isRequired={isRequired}
+        label={label}
+      />
+    </AriaNumberField>
   );
 });
 

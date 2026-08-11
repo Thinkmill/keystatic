@@ -37,6 +37,7 @@ function ActionMenu<T extends object>(
       </ActionButton>
       <Menu
         children={props.children}
+        dependencies={props.dependencies}
         items={props.items}
         disabledKeys={props.disabledKeys}
         onAction={props.onAction}

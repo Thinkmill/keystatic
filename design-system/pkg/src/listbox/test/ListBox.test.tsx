@@ -21,7 +21,13 @@ import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { Icon } from '@keystar/ui/icon';
 import { Text } from '@keystar/ui/typography';
 
-import { Item, ListBox, Section } from '..';
+import {
+  ListBoxItem,
+  ListBox,
+  ListBoxCollection,
+  ListBoxHeader,
+  ListBoxSection,
+} from '..';
 
 type NumberSpy = jest.SpiedGetter<number>;
 type MaybeElement = HTMLElement | null;
@@ -41,9 +47,12 @@ function renderComponent(props = {}) {
       <span id="label">Choose an item</span>
       <ListBox items={sectionItemData} aria-labelledby="label" {...props}>
         {item => (
-          <Section key={item.name} items={item.children} title={item.name}>
-            {item => <Item key={item.name}>{item.name}</Item>}
-          </Section>
+          <ListBoxSection id={item.name}>
+            <ListBoxHeader>{item.name}</ListBoxHeader>
+            <ListBoxCollection items={item.children}>
+              {item => <ListBoxItem id={item.name}>{item.name}</ListBoxItem>}
+            </ListBoxCollection>
+          </ListBoxSection>
         )}
       </ListBox>
     </>
@@ -97,24 +106,17 @@ describe('pickers/ListBox', () => {
       );
       expect(heading).toBeTruthy();
       expect(heading).toHaveAttribute('role', 'presentation');
-
-      // Separator should render for sections after first section
-      if (section !== sections[0]) {
-        let divider = heading?.previousElementSibling;
-        expect(divider).toHaveAttribute('role', 'presentation');
-      }
     }
 
     let items = within(listbox).getAllByRole('option');
     expect(items.length).toBe(
       sectionItemData.reduce((acc, curr) => acc + curr.children.length, 0)
     );
-    let i = 1;
     for (let item of items) {
       expect(item).toHaveAttribute('tabindex');
       expect(item).not.toHaveAttribute('aria-selected');
       expect(item).not.toHaveAttribute('aria-disabled');
-      expect(item).toHaveAttribute('aria-posinset', '' + i++);
+      expect(item).toHaveAttribute('aria-posinset');
       expect(item).toHaveAttribute('aria-setsize');
     }
     let item1 = within(listbox).getByText('Foo');
@@ -682,11 +684,11 @@ describe('pickers/ListBox', () => {
   it('supports complex options with aria-labelledby and aria-describedby', function () {
     let tree = renderWithProvider(
       <ListBox aria-label="listbox">
-        <Item textValue="Label">
+        <ListBoxItem textValue="Label">
           <Icon src={globeIcon} />
           <Text>Label</Text>
           <Text slot="description">Description</Text>
-        </Item>
+        </ListBoxItem>
       </ListBox>
     );
     // need to run one raf for Virtualizer layout to update, could use advance by 16 as well
@@ -694,11 +696,8 @@ describe('pickers/ListBox', () => {
 
     let listbox = tree.getByRole('listbox');
     let option = within(listbox).getByRole('option');
-    let label = within(listbox).getByText('Label');
-    let description = within(listbox).getByText('Description');
-
-    expect(option).toHaveAttribute('aria-labelledby', label.id);
-    expect(option).toHaveAttribute('aria-describedby', description.id);
+    expect(option).toHaveAccessibleName('Label');
+    expect(option).toHaveAccessibleDescription('Description');
   });
 
   it('supports aria-label', function () {
@@ -718,11 +717,11 @@ describe('pickers/ListBox', () => {
   it('supports aria-label on sections and items', function () {
     let tree = renderWithProvider(
       <ListBox aria-label="listbox">
-        <Section aria-label="Section">
-          <Item aria-label="Item">
+        <ListBoxSection aria-label="ListBoxSection">
+          <ListBoxItem aria-label="ListBoxItem">
             <Icon src={globeIcon} />
-          </Item>
-        </Section>
+          </ListBoxItem>
+        </ListBoxSection>
       </ListBox>
     );
     // need to run one raf for Virtualizer layout to update, could use advance by 16 as well
@@ -730,9 +729,9 @@ describe('pickers/ListBox', () => {
 
     let listbox = tree.getByRole('listbox');
     let group = within(listbox).getByRole('group');
-    expect(group).toHaveAttribute('aria-label', 'Section');
+    expect(group).toHaveAttribute('aria-label', 'ListBoxSection');
     let option = within(listbox).getByRole('option');
-    expect(option).toHaveAttribute('aria-label', 'Item');
+    expect(option).toHaveAttribute('aria-label', 'ListBoxItem');
     expect(option).not.toHaveAttribute('aria-labelledby');
     expect(option).not.toHaveAttribute('aria-describedby');
   });

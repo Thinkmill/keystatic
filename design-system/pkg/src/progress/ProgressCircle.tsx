@@ -1,11 +1,14 @@
-import { useProgressBar } from 'react-aria/useProgressBar';
-import { clamp } from 'react-stately/private/utils/number';
+import {
+  ProgressBar as AriaProgressBar,
+  type ProgressBarProps as AriaProgressBarProps,
+} from 'react-aria-components/ProgressBar';
 import { warning } from 'emery';
 import { ForwardedRef, forwardRef } from 'react';
 
 import {
   classNames,
   css,
+  filterStyleProps,
   keyframes,
   toDataAttributes,
   tokenSchema,
@@ -22,12 +25,9 @@ import { ProgressCircleProps } from './types';
  */
 export const ProgressCircle = forwardRef(function ProgressCircle(
   props: ProgressCircleProps,
-  forwardRef: ForwardedRef<HTMLDivElement>
+  forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let {
-    value = 0,
-    minValue = 0,
-    maxValue = 100,
     size = 'medium',
     isIndeterminate,
     'aria-label': ariaLabel,
@@ -35,8 +35,6 @@ export const ProgressCircle = forwardRef(function ProgressCircle(
     ...otherProps
   } = props;
 
-  value = clamp(value, minValue, maxValue);
-  let { progressBarProps } = useProgressBar({ ...props, value });
   let styleProps = useStyleProps(otherProps);
 
   warning(
@@ -45,10 +43,10 @@ export const ProgressCircle = forwardRef(function ProgressCircle(
   );
 
   return (
-    <div
+    <AriaProgressBar
+      {...(filterStyleProps(props, ['size']) as AriaProgressBarProps)}
       {...styleProps}
-      {...progressBarProps}
-      ref={forwardRef}
+      ref={forwardedRef}
       {...toDataAttributes({
         indeterminate: isIndeterminate ?? undefined,
         size: size === 'medium' ? undefined : size,
@@ -75,54 +73,54 @@ export const ProgressCircle = forwardRef(function ProgressCircle(
         }),
         styleProps.className
       )}
-      style={{
-        // @ts-ignore
-        '--percent': (value - minValue) / (maxValue - minValue),
-        ...styleProps.style,
-      }}
     >
-      <svg
-        {...toDataAttributes({ indeterminate: isIndeterminate ?? undefined })}
-        role="presentation"
-        tabIndex={-1}
-        className={css({
-          height: 'var(--diameter)',
-          width: 'var(--diameter)',
-          '&[data-indeterminate]': {
-            animation: `${rotateAnimation} ${tokenSchema.animation.duration.xlong} linear infinite`,
-          },
-        })}
-      >
-        {/* track */}
-        <circle
-          className={circle({
-            stroke: tokenSchema.color.border.muted,
-          })}
-        />
-
-        {/* fill */}
-        <circle
+      {({ percentage }) => (
+        <svg
           {...toDataAttributes({ indeterminate: isIndeterminate ?? undefined })}
-          className={circle({
-            stroke: tokenSchema.color.background.accentEmphasis,
-            strokeDasharray: 'var(--circumference)',
-            strokeLinecap: 'round',
-
-            '&:not([data-indeterminate])': {
-              strokeDashoffset: `calc(var(--circumference) - var(--percent) * var(--circumference))`,
-              transition: transition('stroke-dashoffset', {
-                duration: 'regular',
-              }),
-              transform: 'rotate(-90deg)',
-              transformOrigin: 'center',
-            },
+          role="presentation"
+          tabIndex={-1}
+          className={css({
+            height: 'var(--diameter)',
+            width: 'var(--diameter)',
             '&[data-indeterminate]': {
-              animation: `${dashAnimation} ${tokenSchema.animation.duration.xlong} ${tokenSchema.animation.easing.easeInOut} infinite`,
+              animation: `${rotateAnimation} ${tokenSchema.animation.duration.xlong} linear infinite`,
             },
           })}
-        />
-      </svg>
-    </div>
+          style={{
+            // @ts-ignore custom property
+            '--percent': (percentage ?? 0) / 100,
+          }}
+        >
+          <circle
+            className={circle({
+              stroke: tokenSchema.color.border.muted,
+            })}
+          />
+          <circle
+            {...toDataAttributes({
+              indeterminate: isIndeterminate ?? undefined,
+            })}
+            className={circle({
+              stroke: tokenSchema.color.background.accentEmphasis,
+              strokeDasharray: 'var(--circumference)',
+              strokeLinecap: 'round',
+
+              '&:not([data-indeterminate])': {
+                strokeDashoffset: `calc(var(--circumference) - var(--percent) * var(--circumference))`,
+                transition: transition('stroke-dashoffset', {
+                  duration: 'regular',
+                }),
+                transform: 'rotate(-90deg)',
+                transformOrigin: 'center',
+              },
+              '&[data-indeterminate]': {
+                animation: `${dashAnimation} ${tokenSchema.animation.duration.xlong} ${tokenSchema.animation.easing.easeInOut} infinite`,
+              },
+            })}
+          />
+        </svg>
+      )}
+    </AriaProgressBar>
   );
 });
 

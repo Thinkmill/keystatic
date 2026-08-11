@@ -1,12 +1,13 @@
-import { useHover } from 'react-aria/useHover';
-import { useSwitch, AriaSwitchProps } from 'react-aria/useSwitch';
-import { useToggleState } from 'react-stately/useToggleState';
+import {
+  Switch as AriaSwitch,
+  type SwitchProps as AriaSwitchComponentProps,
+} from 'react-aria-components/Switch';
 
 import {
   ForwardedRef,
   ForwardRefExoticComponent,
+  ReactNode,
   forwardRef,
-  useRef,
   useMemo,
 } from 'react';
 
@@ -14,9 +15,9 @@ import { useProviderProps } from '@keystar/ui/core';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
   BaseStyleProps,
-  FocusRing,
   classNames,
   css,
+  filterStyleProps,
   toDataAttributes,
   tokenSchema,
   transition,
@@ -25,8 +26,12 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
-export type SwitchProps = AriaSwitchProps &
+export type SwitchProps = Omit<
+  AriaSwitchComponentProps,
+  'children' | 'className' | 'style'
+> &
   BaseStyleProps & {
+    children?: ReactNode;
     /**
      * The prominence of the switch element.
      * @default 'default'
@@ -49,12 +54,8 @@ export const Switch: ForwardRefExoticComponent<SwitchProps> = forwardRef(
     forwardedRef: ForwardedRef<HTMLLabelElement>
   ) {
     props = useProviderProps(props);
-    let { autoFocus, children, ...otherProps } = props;
-
-    let inputRef = useRef<HTMLInputElement>(null);
-    let state = useToggleState(props);
-    let { inputProps } = useSwitch(props, state, inputRef);
-    let styleProps = useSwitchStyles(otherProps);
+    let { children } = props;
+    let styleProps = useSwitchStyles(props);
 
     const slots = useMemo(
       () =>
@@ -66,10 +67,14 @@ export const Switch: ForwardRefExoticComponent<SwitchProps> = forwardRef(
     );
 
     return (
-      <label {...styleProps.label} ref={forwardedRef}>
-        <FocusRing autoFocus={autoFocus}>
-          <input {...styleProps.input} {...inputProps} ref={inputRef} />
-        </FocusRing>
+      <AriaSwitch
+        {...(filterStyleProps(props, [
+          'prominence',
+          'size',
+        ]) as AriaSwitchComponentProps)}
+        {...styleProps.root}
+        ref={forwardedRef}
+      >
         <span {...styleProps.indicator} />
         {children && (
           <SlotProvider slots={slots}>
@@ -78,15 +83,14 @@ export const Switch: ForwardRefExoticComponent<SwitchProps> = forwardRef(
             </span>
           </SlotProvider>
         )}
-      </label>
+      </AriaSwitch>
     );
   }
 );
 
 function useSwitchStyles(props: SwitchProps) {
-  let { isDisabled = false, prominence, size, ...otherProps } = props;
-  let styleProps = useStyleProps(otherProps);
-  let { hoverProps, isHovered } = useHover({ isDisabled });
+  let { prominence, size } = props;
+  let styleProps = useStyleProps(props);
 
   let labelClassName = css({
     alignItems: 'flex-start',
@@ -107,25 +111,13 @@ function useSwitchStyles(props: SwitchProps) {
       '--track-background-color': tokenSchema.color.background.inverse,
     },
   });
-  let labelStyleProps = {
+  let rootStyleProps = {
     ...styleProps,
-    ...hoverProps,
     ...toDataAttributes({
-      disabled: isDisabled || undefined,
-      hovered: isHovered || undefined,
       prominence,
       size,
     }),
     className: classNames(labelClassName, styleProps.className),
-  };
-
-  let inputStyleProps = {
-    className: css({
-      position: 'absolute',
-      zIndex: 1,
-      inset: `calc(${tokenSchema.size.space.regular} * -1)`, // expand hit area
-      opacity: 0.0001,
-    }),
   };
 
   let contentStyleProps = {
@@ -135,11 +127,11 @@ function useSwitchStyles(props: SwitchProps) {
       paddingTop: `calc((var(--track-height) - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
       gap: tokenSchema.size.space.large,
 
-      [`.${inputStyleProps.className}:hover ~ &`]: {
+      'label[data-hovered] &': {
         color: tokenSchema.color.alias.foregroundHovered,
       },
 
-      [`.${inputStyleProps.className}:disabled ~ &`]: {
+      'label[data-disabled] &': {
         color: tokenSchema.color.alias.foregroundDisabled,
       },
     }),
@@ -169,7 +161,7 @@ function useSwitchStyles(props: SwitchProps) {
             easing: 'easeOut',
           }),
         },
-        [`.${inputStyleProps.className}[data-focus=visible] + &::after`]: {
+        'label[data-focus-visible] &::after': {
           boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
           margin: `calc(${tokenSchema.size.alias.focusRingGap} * -1)`,
         },
@@ -190,15 +182,15 @@ function useSwitchStyles(props: SwitchProps) {
           transition: transition(['border-color', 'transform']),
         },
 
-        [`.${inputStyleProps.className}:hover + &::before`]: {
+        'label[data-hovered] &::before': {
           borderColor: tokenSchema.color.alias.borderHovered,
         },
-        [`.${inputStyleProps.className}:active + &::before`]: {
+        'label[data-pressed] &::before': {
           borderColor: tokenSchema.color.alias.borderPressed,
         },
 
         // checked state
-        [`.${inputStyleProps.className}:checked + &`]: {
+        'label[data-selected] &': {
           backgroundColor: 'var(--track-background-color)',
           '&::before': {
             borderColor: 'var(--track-background-color)',
@@ -212,14 +204,14 @@ function useSwitchStyles(props: SwitchProps) {
         },
 
         // disabled state
-        [`.${inputStyleProps.className}:disabled + &`]: {
+        'label[data-disabled] &': {
           backgroundColor: tokenSchema.color.alias.backgroundDisabled,
           '&::before': {
             backgroundColor: tokenSchema.color.alias.borderIdle,
             borderColor: tokenSchema.color.alias.backgroundDisabled,
           },
         },
-        [`.${inputStyleProps.className}:disabled:checked + &`]: {
+        'label[data-disabled][data-selected] &': {
           backgroundColor: tokenSchema.color.alias.borderIdle,
           '&::before': {
             backgroundColor: tokenSchema.color.alias.backgroundDisabled,
@@ -233,7 +225,6 @@ function useSwitchStyles(props: SwitchProps) {
   return {
     content: contentStyleProps,
     indicator: indicatorStyleProps,
-    input: inputStyleProps,
-    label: labelStyleProps,
+    root: rootStyleProps,
   };
 }

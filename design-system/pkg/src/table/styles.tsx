@@ -115,6 +115,7 @@ export const bodyClassname = classNames(
     backgroundColor: tokenSchema.color.background.canvas,
     border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
     borderRadius: tokenSchema.size.radius.medium,
+    height: '100%',
     /* Fix scrollbars on iOS with sticky row headers */
     transform: 'translate3d(0, 0, 0)',
   })
@@ -192,26 +193,6 @@ export const rowClassname = css({
   display: 'flex',
   position: 'relative',
   outline: 0,
-
-  // separators
-  [`${tableViewClassList.selector('body')} &::after`]: {
-    content: '""',
-    boxShadow: `inset 0 -1px 0 0 ${tokenSchema.color.border.muted}`,
-    position: 'absolute',
-    inset: 0,
-    pointerEvents: 'none',
-    zIndex: 2,
-  },
-  '&[data-flush-with-container-bottom]::after': {
-    display: 'none',
-  },
-  // selection
-  '&[aria-selected="true"]::after': {
-    boxShadow: `inset 0 -1px 0 0 ${tokenSchema.color.alias.backgroundSelectedHovered}`,
-  },
-  '&[data-next-selected="true"]::after': {
-    boxShadow: `inset 0 -1px 0 0 ${tokenSchema.color.alias.backgroundSelectedHovered}`,
-  },
 
   // prominence
   [`${tableViewClassList.selector('root')}:not([data-prominence="low"]) &`]: {
@@ -354,6 +335,25 @@ export const cellClassname = classNames(
   commonCellStyles,
   css({
     color: tokenSchema.color.foreground.neutral,
+
+    // Render separators in each cell rather than on the virtualized row. RAC
+    // positions rows independently, so a row pseudo-element can be painted
+    // behind the following row.
+    [`${tableViewClassList.selector('row')} &`]: {
+      boxShadow: `inset 0 -1px 0 0 ${tokenSchema.color.border.muted}`,
+    },
+    [`${tableViewClassList.selector(
+      'row'
+    )}[data-flush-with-container-bottom] &`]: {
+      boxShadow: 'none',
+    },
+    [`${tableViewClassList.selector(
+      'row'
+    )}[aria-selected="true"] &, ${tableViewClassList.selector(
+      'row'
+    )}[data-next-selected="true"] &`]: {
+      boxShadow: `inset 0 -1px 0 0 ${tokenSchema.color.alias.backgroundSelectedHovered}`,
+    },
   })
 );
 // TODO: assess styles

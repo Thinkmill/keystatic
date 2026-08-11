@@ -1,11 +1,12 @@
 import { FocusScope } from 'react-aria/FocusScope';
 import { announce } from 'react-aria/private/live-announcer/LiveAnnouncer';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
-import { useKeyboard } from 'react-aria/useKeyboard';
 import { filterDOMProps } from 'react-aria/filterDOMProps';
 import { useObjectRef } from 'react-aria/useObjectRef';
+import { Toolbar } from 'react-aria-components/Toolbar';
 import React, {
   ForwardedRef,
+  KeyboardEvent,
   ReactElement,
   Ref,
   useEffect,
@@ -46,11 +47,11 @@ function ActionBar<T extends object>(
   );
 }
 
-interface ActionBarInnerProps<T> extends ActionBarProps<T> {
+interface ActionBarInnerProps<T extends object> extends ActionBarProps<T> {
   isOpen?: boolean;
 }
 
-function ActionBarInner<T>(
+function ActionBarInner<T extends object>(
   props: ActionBarInnerProps<T>,
   ref: Ref<HTMLDivElement>
 ) {
@@ -78,14 +79,12 @@ function ActionBarInner<T>(
     setLastCount(selectedItemCount);
   }
 
-  let { keyboardProps } = useKeyboard({
-    onKeyDown(e) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClearSelection();
-      }
-    },
-  });
+  let onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      onClearSelection();
+    }
+  };
 
   // Announce "actions available" on mount.
   let isInitial = useRef(true);
@@ -102,7 +101,7 @@ function ActionBarInner<T>(
       <div
         {...filterDOMProps(props)}
         {...styleProps}
-        {...keyboardProps}
+        onKeyDown={onKeyDown}
         data-open={isOpen}
         ref={ref}
         className={classNames(
@@ -124,7 +123,8 @@ function ActionBarInner<T>(
           styleProps.className
         )}
       >
-        <div
+        <Toolbar
+          aria-label={stringFormatter.format('actions')}
           data-open={isOpen}
           className={classNames(
             css({
@@ -155,10 +155,11 @@ function ActionBarInner<T>(
           )}
         >
           <ActionGroup
+            role="group"
             items={items}
             aria-label={stringFormatter.format('actions')}
             prominence="low"
-            overflowMode="collapse"
+            overflowMode={items ? 'collapse' : 'wrap'}
             buttonLabelBehavior={buttonLabelBehavior}
             onAction={onAction}
             gridArea="actiongroup"
@@ -183,13 +184,15 @@ function ActionBarInner<T>(
               stringFormatter.format('selected', { count: lastCount })
             */}
           </Text>
-        </div>
+        </Toolbar>
       </div>
     </FocusScope>
   );
 }
 
-const ActionBarInnerWithRef = React.forwardRef(ActionBarInner) as <T>(
+const ActionBarInnerWithRef = React.forwardRef(ActionBarInner) as <
+  T extends object,
+>(
   props: ActionBarInnerProps<T> & { ref?: Ref<HTMLDivElement> }
 ) => ReactElement;
 
@@ -197,7 +200,7 @@ const ActionBarInnerWithRef = React.forwardRef(ActionBarInner) as <T>(
  * Action bars are used for single and bulk selection patterns when a user needs
  * to perform actions on one or more items at the same time.
  */
-const _ActionBar: <T>(
+const _ActionBar: <T extends object>(
   props: ActionBarProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
 ) => ReactElement = React.forwardRef(ActionBar as any) as any;
 

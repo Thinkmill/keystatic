@@ -1,7 +1,6 @@
 import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { useId } from 'react-aria/useId';
 import { DOMProps } from '@react-types/shared';
-import { ReactNode } from 'react';
+import { ReactNode, useId } from 'react';
 
 import { Box } from '@keystar/ui/layout';
 import { classNames, css, tokenSchema } from '@keystar/ui/style';
@@ -25,7 +24,8 @@ export type NavGroupProps = {
 /** Render a group of navigation links. */
 export function NavGroup(props: NavGroupProps) {
   const { children, id, title, ...otherProps } = props;
-  const headingId = useId(id);
+  const generatedId = useId();
+  const headingId = id ?? generatedId;
   const groupStyles = useGroupStyles();
   const headingStyles = useHeadingStyles();
 

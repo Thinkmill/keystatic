@@ -33,7 +33,7 @@ import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIco
 import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
 import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
-import { Picker, Item } from '@keystar/ui/picker';
+import { Picker, PickerItem } from '@keystar/ui/picker';
 import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
@@ -49,7 +49,7 @@ import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
 import { EditorSchema } from './schema';
 import { ImageToolbarButton } from './images';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
-import { itemRenderer } from './autocomplete/insert-menu';
+import { toolbarItemRenderer } from './autocomplete/insert-menu';
 import { LinkDialog } from './popovers/link-toolbar';
 import { DialogContainer } from '@keystar/ui/dialog';
 import { linkIcon } from '@keystar/ui/icon/icons/linkIcon';
@@ -449,7 +449,7 @@ const HeadingMenu = (props: { headingType: NodeType }) => {
           }
         }}
       >
-        {item => <Item key={item.id}>{item.name}</Item>}
+        {item => <PickerItem id={item.id}>{item.name}</PickerItem>}
       </Picker>
     ),
     [items, menuState, nodes.paragraph, props.headingType, runCommand]
@@ -498,7 +498,7 @@ function InsertBlockMenu() {
         }}
         items={items}
       >
-        {itemRenderer}
+        {toolbarItemRenderer}
       </Menu>
     </MenuTrigger>
   );

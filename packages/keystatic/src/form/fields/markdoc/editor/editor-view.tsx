@@ -16,6 +16,10 @@ import React, {
 import { useEventCallback } from './utils';
 import { EditorView } from 'prosemirror-view';
 import { useConfig } from '../../../../app/shell/context';
+import {
+  EditorAutocomplete,
+  useEditorAutocompleteInputProps,
+} from '@keystar/ui/editor';
 
 const EditorStateContext = React.createContext<EditorState | null>(null);
 
@@ -114,7 +118,22 @@ export function useEditorView(
  */
 export function ProseMirrorEditable(props: HTMLAttributes<HTMLElement>) {
   const { mount } = useStableEditorContext();
-  return <div {...props} ref={mount} />;
+  const { onKeyDown, ...autocompleteAriaProps } =
+    useEditorAutocompleteInputProps();
+  return (
+    <div
+      {...props}
+      {...autocompleteAriaProps}
+      ref={mount}
+      onKeyDownCapture={event => {
+        onKeyDown(event);
+        if (!event.defaultPrevented) props.onKeyDownCapture?.(event);
+      }}
+      onKeyDown={event => {
+        if (!event.defaultPrevented) props.onKeyDown?.(event);
+      }}
+    />
+  );
 }
 
 type StableContext = {
@@ -169,9 +188,11 @@ export const ProseMirrorEditor = forwardRef(function ProseMirrorEditorView(
 
   return (
     <StableEditorContext.Provider value={stableContext}>
-      <EditorStateContext.Provider value={props.value}>
-        {props.children}
-      </EditorStateContext.Provider>
+      <EditorAutocomplete>
+        <EditorStateContext.Provider value={props.value}>
+          {props.children}
+        </EditorStateContext.Provider>
+      </EditorAutocomplete>
     </StableEditorContext.Provider>
   );
 });

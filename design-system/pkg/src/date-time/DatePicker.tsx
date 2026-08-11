@@ -1,33 +1,39 @@
-import { useDatePicker } from 'react-aria/useDatePicker';
-import { useFocusRing } from 'react-aria/useFocusRing';
-import { useHover } from 'react-aria/useHover';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useDatePickerState } from 'react-stately/useDatePickerState';
-import { DateValue } from 'react-stately/useCalendarState';
-import React, { ReactElement, Ref, useRef } from 'react';
+import {
+  DatePicker as AriaDatePicker,
+  type DatePickerProps as AriaDatePickerProps,
+  type DateValue,
+} from 'react-aria-components/DatePicker';
+import { Dialog } from 'react-aria-components/Dialog';
+import { Group } from 'react-aria-components/Group';
+import React, { ReactElement, Ref } from 'react';
 
 import { FieldButton } from '@keystar/ui/button';
 import { Calendar } from '@keystar/ui/calendar';
 import { useProviderProps } from '@keystar/ui/core';
-import { FieldPrimitive } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
+import { Popover } from '@keystar/ui/overlays';
 import { calendarDaysIcon } from '@keystar/ui/icon/icons/calendarDaysIcon';
 import {
+  classNames,
   css,
-  toDataAttributes,
+  filterStyleProps,
   tokenSchema,
-  transition,
+  useStyleProps,
 } from '@keystar/ui/style';
 
-import { DatePickerField } from './DatePickerField';
-import { DatePickerPopover } from './DatePickerPopover';
-import { Input } from './Input';
 import { DatePickerProps } from './types';
+import { SegmentedDateInput } from './SegmentedDateInput';
 import {
   useFocusManagerRef,
   useFormatHelpText,
   useVisibleMonths,
 } from './utils';
+import {
+  FieldDescriptionElement,
+  FieldErrorElement,
+  FieldLabelElement,
+  fieldRootClassName,
+} from '../field/FieldElements';
 
 function DatePicker<T extends DateValue>(
   props: DatePickerProps<T>,
@@ -35,193 +41,122 @@ function DatePicker<T extends DateValue>(
 ) {
   props = useProviderProps(props);
   let {
-    autoFocus,
-    isDisabled,
-    isReadOnly,
+    contextualHelp,
+    errorMessage,
+    isRequired,
+    label,
+    labelElementType: _labelElementType,
     maxVisibleMonths = 1,
     pageBehavior,
+    shouldFlip,
+    ...otherProps
   } = props;
-  let { hoverProps, isHovered } = useHover({ isDisabled });
-
-  let triggerRef = useRef<HTMLDivElement>(null);
-  let domRef = useFocusManagerRef(forwardedRef);
-  let state = useDatePickerState(props);
-  if (props.errorMessage) {
-    state = {
-      ...state,
-      validationState: 'invalid',
-    };
-  }
-  let {
-    buttonProps,
-    calendarProps,
-    descriptionProps,
-    dialogProps,
-    errorMessageProps,
-    fieldProps,
-    groupProps,
-    labelProps,
-  } = useDatePicker(props, state, triggerRef);
-
-  let { isFocused, focusProps } = useFocusRing({
-    within: true,
-    isTextInput: true,
-    autoFocus,
-  });
-
-  let { isFocused: isFocusedButton, focusProps: focusPropsButton } =
-    useFocusRing({
-      within: false,
-      isTextInput: false,
-      autoFocus,
-    });
-
-  // Note: this description is intentionally not passed to useDatePicker.
-  // The format help text is unnecessary for screen reader users because each segment already has a label.
   let description = useFormatHelpText(props);
-  if (description && !props.description) {
-    const { id, ..._descriptionProps } = descriptionProps;
-    descriptionProps = _descriptionProps;
-  }
-
   let visibleMonths = useVisibleMonths(maxVisibleMonths);
-
-  let styleProps = usePickerStyles({
-    isHovered,
-    isFocused,
-    // prefer focusring appearance, regardless of input modality. otherwise it looks like a read-only field
-    isFocusVisible: isFocused && !isFocusedButton,
-    isDisabled,
-    isReadOnly,
-    isInvalid: state.isInvalid,
-  });
+  let domRef = useFocusManagerRef(forwardedRef);
+  let styleProps = useStyleProps(props);
 
   return (
-    <FieldPrimitive
-      {...props}
+    <AriaDatePicker
+      {...(filterStyleProps(otherProps) as AriaDatePickerProps<T>)}
       ref={domRef}
-      description={description}
-      labelElementType="span"
-      labelProps={labelProps}
-      descriptionProps={descriptionProps}
-      errorMessageProps={errorMessageProps}
-      // validationState={state.validationState}
+      isInvalid={Boolean(errorMessage)}
+      isRequired={isRequired}
+      className={classNames(
+        fieldRootClassName,
+        pickerRootClassName,
+        styleProps.className
+      )}
+      style={styleProps.style}
     >
-      <div
-        {...mergeProps(groupProps, hoverProps, focusProps)}
-        {...styleProps.root}
-        ref={triggerRef}
-      >
-        <Input
-          isDisabled={isDisabled}
-          isInvalid={state.isInvalid}
-          disableFocusRing
-          {...styleProps.input}
-        >
-          {/* @ts-expect-error can't reconcile changes to react-aria errorMessage fn type */}
-          <DatePickerField {...fieldProps} data-testid="date-field" />
-        </Input>
+      <FieldLabelElement
+        contextualHelp={contextualHelp}
+        isRequired={isRequired}
+        label={label}
+      />
+      <FieldDescriptionElement>{description}</FieldDescriptionElement>
+      <Group className={pickerGroupClassName}>
+        <SegmentedDateInput className={pickerInputClassName} />
         <FieldButton
-          {...mergeProps(buttonProps, focusPropsButton)}
-          {...styleProps.button}
-          isInvalid={state.isInvalid}
-          isDisabled={isDisabled || isReadOnly}
+          UNSAFE_className={pickerButtonClassName}
+          aria-label="Open calendar"
         >
           <Icon src={calendarDaysIcon} />
         </FieldButton>
-        <DatePickerPopover
-          dialogProps={dialogProps}
-          shouldFlip={props.shouldFlip}
-          state={state}
-          triggerRef={triggerRef}
-        >
-          <Calendar
-            {...calendarProps}
-            visibleMonths={visibleMonths}
-            pageBehavior={pageBehavior}
-          />
-        </DatePickerPopover>
-      </div>
-    </FieldPrimitive>
+      </Group>
+      <Popover
+        placement="bottom start"
+        shouldFlip={shouldFlip}
+        hideArrow
+        UNSAFE_className={pickerPopoverClassName}
+      >
+        <Dialog className={pickerDialogClassName}>
+          <div className={pickerCalendarContainerClassName}>
+            <Calendar
+              visibleMonths={visibleMonths}
+              pageBehavior={pageBehavior}
+            />
+          </div>
+        </Dialog>
+      </Popover>
+      <FieldErrorElement>{errorMessage}</FieldErrorElement>
+    </AriaDatePicker>
   );
 }
 
-// forwardRef doesn't support generic parameters, so cast the result to the correct type
-// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
-
-/**
- * DatePickers combine a DateField and a Calendar popover to allow users to
- * enter or select a date and time value.
- */
+/** Date pickers combine segmented input with a calendar popover. */
 const _DatePicker: <T extends DateValue>(
   props: DatePickerProps<T> & { ref?: Ref<HTMLDivElement> }
 ) => ReactElement = React.forwardRef(DatePicker as any) as any;
 export { _DatePicker as DatePicker };
 
-export function usePickerStyles(state: {
-  isHovered: boolean;
-  isFocused: boolean;
-  isFocusVisible: boolean;
-  isDisabled?: boolean;
-  isReadOnly?: boolean;
-  isInvalid?: boolean;
-}) {
-  let root = {
-    ...toDataAttributes(state, {
-      omitFalsyValues: true,
-      trimBooleanKeys: true,
-    }),
-    className: css({
-      borderRadius: tokenSchema.size.radius.regular,
-      display: 'flex',
-      position: 'relative',
+export const pickerGroupClassName = css({
+  borderRadius: tokenSchema.size.radius.regular,
+  display: 'flex',
+  position: 'relative',
+});
 
-      '&::after': {
-        borderRadius: `inherit`,
-        content: '""',
-        inset: tokenSchema.size.border.regular,
-        margin: 0,
-        pointerEvents: 'none',
-        position: 'absolute' as const,
-        transition: transition(['box-shadow', 'margin'], {
-          easing: 'easeOut',
-        }),
-      },
-      '&[data-focus-visible]::after': {
-        boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
-      },
-    }),
-  };
-  let input = {
-    className: css({
-      borderStartEndRadius: 0,
-      borderEndEndRadius: 0,
-      borderInlineEndWidth: 0,
+export const pickerRootClassName = css({
+  [`&[data-focus-within] .${pickerGroupClassName}`]: {
+    borderColor: tokenSchema.color.alias.borderFocused,
+  },
+});
 
-      [`.${root.className}[data-focused] &`]: {
-        borderColor: tokenSchema.color.alias.borderFocused,
-      },
-    }),
-  };
-  let button = {
-    UNSAFE_className: css({
-      borderStartStartRadius: 0,
-      borderEndStartRadius: 0,
+export const pickerInputClassName = css({
+  borderEndEndRadius: 0,
+  borderInlineEndWidth: 0,
+  borderStartEndRadius: 0,
+});
 
-      [`.${root.className}[data-read-only] &`]: {
-        borderColor: tokenSchema.color.alias.borderIdle,
-      },
-      [`.${root.className}[data-invalid] &`]: {
-        borderColor: tokenSchema.color.alias.borderInvalid,
-      },
-      [`.${root.className}[data-focused] &`]: {
-        borderColor: tokenSchema.color.alias.borderFocused,
-      },
-      [`.${root.className}[data-disabled] &`]: {
-        borderColor: 'transparent',
-      },
-    }),
-  };
+export const pickerButtonClassName = css({
+  borderEndStartRadius: 0,
+  borderStartStartRadius: 0,
+});
 
-  return { button, input, root };
-}
+export const pickerPopoverClassName = css({
+  backgroundColor: tokenSchema.color.background.surface,
+  border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.emphasis}`,
+  borderRadius: tokenSchema.size.radius.medium,
+  boxSizing: 'content-box',
+  filter: `drop-shadow(0 1px 4px ${tokenSchema.color.shadow.regular})`,
+  outline: 0,
+});
+
+export const pickerDialogClassName = css({
+  display: 'flex',
+  justifyContent: 'center',
+  maxHeight: 'inherit',
+  outline: 0,
+  overflowY: 'auto',
+  WebkitOverflowScrolling: 'touch',
+});
+
+export const pickerCalendarContainerClassName = css({
+  paddingInline: tokenSchema.size.space.medium,
+  paddingTop: tokenSchema.size.space.medium,
+  '&::after': {
+    content: '""',
+    display: 'block',
+    height: tokenSchema.size.space.medium,
+  },
+});

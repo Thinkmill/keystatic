@@ -1,4 +1,3 @@
-import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 import { ClipboardEvent, useEffect, useState } from 'react';
 import { useSelected, useSlateStatic } from 'slate-react';
 import * as s from 'superstruct';
@@ -501,17 +500,16 @@ function Placeholder(props: {
   onRemove: () => void;
   selected: boolean;
 }) {
-  const state = useOverlayTriggerState({ defaultOpen: false });
+  const [isOpen, setOpen] = useState(false);
 
-  const { open } = state;
   useEffect(() => {
     if (props.selected) {
-      open();
+      setOpen(true);
     }
-  }, [props.selected, open]);
+  }, [props.selected]);
 
   const closeAndCleanup = () => {
-    state.close();
+    setOpen(false);
     props.onRemove();
   };
 
@@ -524,17 +522,17 @@ function Placeholder(props: {
         gap="regular"
         height="element.large"
         paddingX="large"
-        onClick={() => state.open()}
+        onClick={() => setOpen(true)}
       >
         <Icon src={imageIcon} />
-        <Text>Cloud image{state.isOpen ? '' : '(click to configure)'}</Text>
+        <Text>Cloud image{isOpen ? '' : '(click to configure)'}</Text>
       </Flex>
       <DialogContainer onDismiss={closeAndCleanup}>
-        {state.isOpen && (
+        {isOpen && (
           <ImageDialog
             onChange={props.onChange}
             onCancel={closeAndCleanup}
-            onClose={state.close}
+            onClose={() => setOpen(false)}
           />
         )}
       </DialogContainer>

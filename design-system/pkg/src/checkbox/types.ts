@@ -1,9 +1,10 @@
-import { AriaCheckboxGroupProps } from 'react-aria/useCheckboxGroup';
+import type { CheckboxGroupProps as AriaCheckboxGroupProps } from 'react-aria-components/CheckboxGroup';
 import {
   DOMProps,
   InputBase,
   FocusableProps,
   Orientation,
+  ValidationState,
 } from '@react-types/shared';
 
 import { ReactNode } from 'react';
@@ -56,7 +57,10 @@ export type CheckboxProps = {
   BaseStyleProps &
   DOMProps;
 
-export type CheckboxGroupProps = AriaCheckboxGroupProps &
+export type CheckboxGroupProps = Omit<
+  AriaCheckboxGroupProps,
+  'children' | 'className' | 'style'
+> &
   FieldProps &
   BaseStyleProps & {
     /** The checkboxes contained within the group. */
@@ -66,4 +70,6 @@ export type CheckboxGroupProps = AriaCheckboxGroupProps &
      * @default 'vertical'
      */
     orientation?: Orientation;
+    /** Whether the group is valid or invalid. */
+    validationState?: ValidationState;
   };

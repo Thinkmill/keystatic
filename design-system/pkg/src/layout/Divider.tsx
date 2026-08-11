@@ -1,11 +1,14 @@
-import { useSeparator } from 'react-aria/useSeparator';
-import { filterDOMProps } from 'react-aria/filterDOMProps';
+import {
+  Separator as AriaSeparator,
+  type SeparatorProps as AriaSeparatorProps,
+} from 'react-aria-components/Separator';
 
 import { useSlotProps } from '@keystar/ui/slots';
 import {
   ClassList,
   classNames,
   css,
+  filterStyleProps,
   toDataAttributes,
   tokenSchema,
   useStyleProps,
@@ -14,7 +17,6 @@ import { DividerProps } from '@keystar/ui/types';
 import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
 export const dividerClassList = new ClassList('Divider');
-const filterOptions = { propNames: new Set(['role']) };
 
 /**
  * Dividers bring clarity to a layout by grouping and dividing content in close proximity.
@@ -32,20 +34,14 @@ export const Divider = forwardRefWithAs<DividerProps, 'div'>(
 
     const styleProps = useStyleProps(otherProps);
 
-    let { separatorProps } = useSeparator({
-      ...props,
-      // FIXME: `forwardRefWithAs` yields `React.ElementType<any>` which is
-      // incompatible with react-aria's expectations for `elementType`.
-      elementType: Element as string,
-    });
-
     return (
-      <Element
+      <AriaSeparator
+        {...(filterStyleProps(otherProps, ['size']) as AriaSeparatorProps)}
         {...styleProps}
-        {...separatorProps}
         {...toDataAttributes({ orientation, size })}
-        {...filterDOMProps(otherProps, filterOptions)}
-        ref={forwardedRef}
+        elementType={Element as 'div' | 'hr'}
+        orientation={orientation}
+        ref={forwardedRef as never}
         className={classNames(
           dividerClassList.element('root'),
           css({

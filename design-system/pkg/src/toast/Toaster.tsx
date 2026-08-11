@@ -1,27 +1,19 @@
-import { ToastQueue, useToastQueue } from 'react-stately/useToastState';
-import React, {
-  ReactNode,
-  useEffect,
-  useRef,
-  useSyncExternalStore,
-} from 'react';
+import { UNSTABLE_ToastQueue as AriaToastQueue } from 'react-aria-components/Toast';
+import { type ReactNode, useEffect, useRef, useSyncExternalStore } from 'react';
 import { warning } from 'emery';
 
-import { Toast } from './Toast';
 import { ToastContainer } from './ToastContainer';
 import { ToasterProps, ToastOptions, ToastValue } from './types';
 
 type CloseFunction = () => void;
 
-// There is a single global toast queue instance for the whole app, initialized lazily.
-let globalToastQueue: ToastQueue<ToastValue> | null = null;
-function getGlobalToastQueue() {
-  if (!globalToastQueue) {
-    globalToastQueue = new ToastQueue({
-      maxVisibleToasts: 1,
-    });
-  }
+function createToastQueue() {
+  return new AriaToastQueue<ToastValue>({ maxVisibleToasts: 1 });
+}
 
+let globalToastQueue: ReturnType<typeof createToastQueue> | null = null;
+function getGlobalToastQueue() {
+  globalToastQueue ??= createToastQueue();
   return globalToastQueue;
 }
 
@@ -30,59 +22,36 @@ export function clearToastQueue() {
   globalToastQueue = null;
 }
 
-let toastProviders = new Set();
+let toastProviders = new Set<object>();
 let subscriptions = new Set<() => void>();
 function subscribe(fn: () => void) {
   subscriptions.add(fn);
   return () => subscriptions.delete(fn);
 }
-
 function getActiveToaster() {
   return toastProviders.values().next().value;
 }
 
-function useActiveToaster() {
-  return useSyncExternalStore(subscribe, getActiveToaster, getActiveToaster);
-}
-
-/**
- * A Toaster renders the queued toasts in an application. It should be
- * placed at the root of the app.
- */
+/** Renders the global RAC toast region. Only the first mounted instance is active. */
 export function Toaster(props: ToasterProps) {
-  // Track all toast provider instances in a set.
-  // Only the first one will actually render.
-  // We use a ref to do this, since it will have a stable identity
-  // over the lifetime of the component.
   let ref = useRef(null);
   toastProviders.add(ref);
+  let activeToaster = useSyncExternalStore(
+    subscribe,
+    getActiveToaster,
+    getActiveToaster
+  );
 
   useEffect(() => {
     return () => {
-      // Remove this toast provider, and call subscriptions.
-      // This will cause all other instances to re-render,
-      // and the first one to become the new active toast provider.
       toastProviders.delete(ref);
-      for (let fn of subscriptions) {
-        fn();
-      }
+      for (let fn of subscriptions) fn();
     };
   }, []);
 
-  // Only render if this is the active toast provider instance, and there are visible toasts.
-  let activeToaster = useActiveToaster();
-  let state = useToastQueue(getGlobalToastQueue());
-  if (ref === activeToaster && state.visibleToasts.length > 0) {
-    return (
-      <ToastContainer state={state} {...props}>
-        {state.visibleToasts.map(toast => (
-          <Toast key={toast.key} toast={toast} state={state} />
-        ))}
-      </ToastContainer>
-    );
-  }
-
-  return null;
+  return ref === activeToaster ? (
+    <ToastContainer queue={getGlobalToastQueue()} {...props} />
+  ) : null;
 }
 
 function addToast(
@@ -90,60 +59,41 @@ function addToast(
   tone: ToastValue['tone'],
   options: ToastOptions = {}
 ): CloseFunction {
-  // Dispatch a custom event so that toasts can be intercepted and re-targeted, e.g. when inside an iframe.
   if (typeof CustomEvent !== 'undefined' && typeof window !== 'undefined') {
     let event = new CustomEvent('keystar-ui-toast', {
       cancelable: true,
       bubbles: true,
-      detail: {
-        children,
-        tone,
-        options,
-      },
+      detail: { children, tone, options },
     });
-
-    let shouldContinue = window.dispatchEvent(event);
-    if (!shouldContinue) {
-      return () => {};
-    }
+    if (!window.dispatchEvent(event)) return () => {};
   }
 
-  let value = {
-    children,
-    tone,
-    actionLabel: options.actionLabel,
-    onAction: options.onAction,
-    shouldCloseOnAction: options.shouldCloseOnAction,
-  };
-
   warning(
-    typeof options.timeout === 'number' && options.timeout >= 5000,
+    options.timeout === undefined || options.timeout >= 5000,
     'Timeouts must be at least 5000ms, for accessibility.'
   );
   let timeout = options.timeout ? Math.max(options.timeout, 5000) : undefined;
   let queue = getGlobalToastQueue();
-  let key = queue.add(value, {
-    timeout,
-    onClose: options.onClose,
-  });
+  let key = queue.add(
+    {
+      children,
+      tone,
+      actionLabel: options.actionLabel,
+      onAction: options.onAction,
+      shouldCloseOnAction: options.shouldCloseOnAction,
+    },
+    { timeout, onClose: options.onClose }
+  );
   return () => queue.close(key);
 }
 
 export const toastQueue = {
-  /** Queues a neutral toast. */
-  neutral(children: ReactNode, options: ToastOptions = {}): CloseFunction {
-    return addToast(children, 'neutral', options);
-  },
-  /** Queues a positive toast. */
-  positive(children: ReactNode, options: ToastOptions = {}): CloseFunction {
-    return addToast(children, 'positive', options);
-  },
-  /** Queues a critical toast. */
-  critical(children: ReactNode, options: ToastOptions = {}): CloseFunction {
-    return addToast(children, 'critical', options);
-  },
-  /** Queues an informational toast. */
-  info(children: ReactNode, options: ToastOptions = {}): CloseFunction {
-    return addToast(children, 'info', options);
-  },
+  neutral: (children: ReactNode, options?: ToastOptions) =>
+    addToast(children, 'neutral', options),
+  positive: (children: ReactNode, options?: ToastOptions) =>
+    addToast(children, 'positive', options),
+  critical: (children: ReactNode, options?: ToastOptions) =>
+    addToast(children, 'critical', options),
+  info: (children: ReactNode, options?: ToastOptions) =>
+    addToast(children, 'info', options),
 };

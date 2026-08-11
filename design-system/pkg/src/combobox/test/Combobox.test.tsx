@@ -4,7 +4,7 @@ import { beforeAll, expect, jest, describe, it } from '@jest/globals';
 
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 
-import { Combobox, Item } from '..';
+import { Combobox, ComboboxItem } from '..';
 
 let onChange = jest.fn();
 let onOpenChange = jest.fn();
@@ -23,9 +23,9 @@ let defaultProps = {
 
 const ExampleCombobox = forwardRef((props = {}, ref: any) => (
   <Combobox ref={ref} {...defaultProps} {...props}>
-    <Item key="one">Item one</Item>
-    <Item key="two">Item two</Item>
-    <Item key="three">Item three</Item>
+    <ComboboxItem id="one">ComboboxItem one</ComboboxItem>
+    <ComboboxItem id="two">ComboboxItem two</ComboboxItem>
+    <ComboboxItem id="three">ComboboxItem three</ComboboxItem>
   </Combobox>
 ));
 
@@ -138,5 +138,29 @@ describe('combobox/Combobox', () => {
     expect(queryByRole('listbox')).toBeNull();
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(onInputChange).not.toHaveBeenCalled();
+  });
+
+  it('keeps virtual listbox focus in sync with input keyboard navigation', function () {
+    let tree = renderCombobox();
+    let combobox = tree.getByRole('combobox');
+
+    act(() => {
+      combobox.focus();
+      fireEvent.keyDown(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
+      fireEvent.keyUp(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
+      jest.runAllTimers();
+    });
+
+    let options = tree.getAllByRole('option');
+    expect(options[0]).toHaveAttribute('data-focused', 'true');
+
+    act(() => {
+      fireEvent.keyDown(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
+      fireEvent.keyUp(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
+      jest.runAllTimers();
+    });
+
+    expect(options[0]).not.toHaveAttribute('data-focused');
+    expect(options[1]).toHaveAttribute('data-focused', 'true');
   });
 });

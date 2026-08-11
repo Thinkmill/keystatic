@@ -1,13 +1,15 @@
-import { useDialog } from 'react-aria/useDialog';
+import {
+  Dialog as AriaDialog,
+  type DialogProps as AriaDialogProps,
+} from 'react-aria-components/Dialog';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
 import {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
   Ref,
   useContext,
+  useId,
   useMemo,
   useRef,
 } from 'react';
@@ -22,6 +24,7 @@ import {
   breakpointQueries,
   classNames,
   css,
+  filterStyleProps,
   toDataAttributes,
   tokenSchema,
   useStyleProps,
@@ -57,17 +60,14 @@ export const Dialog: ForwardRefExoticComponent<
   let {
     children,
     isDismissable = contextProps.isDismissable,
-    onDismiss = contextProps.onClose,
+    onDismiss,
     size,
+    ...ariaProps
   } = props;
   let stringFormatter = useLocalizedStringFormatter(localizedMessages);
 
-  let domRef = useObjectRef(forwardedRef);
   let gridRef = useRef<HTMLDivElement>(null);
-  let { dialogProps, titleProps } = useDialog(
-    mergeProps(contextProps, props),
-    domRef
-  );
+  let headingId = useId();
 
   // analyse children to determine grid areas. need a unique identifier for each slot.
   // const headingSize = type === 'popover' ? 'small' : 'regular';
@@ -90,7 +90,7 @@ export const Dialog: ForwardRefExoticComponent<
         ),
         elementType: 'h2' as const,
         size: headingSize as typeof headingSize, // FIXME: declared as const—shouldn't need this weirdness.
-        ...titleProps,
+        id: headingId,
       },
       header: {
         // ...toDataAttributes({ hasHeading }),
@@ -128,7 +128,7 @@ export const Dialog: ForwardRefExoticComponent<
       hasHeader,
       hasHeading,
       headingSize,
-      titleProps,
+      headingId,
       type,
     ]
   );
@@ -144,28 +144,46 @@ export const Dialog: ForwardRefExoticComponent<
   });
 
   return (
-    <section {...dialogStyleProps} {...dialogProps} ref={domRef}>
-      <Grid ref={gridRef} {...gridStyleProps}>
-        <SlotProvider slots={slots}>{children}</SlotProvider>
-        {isDismissable && (
-          <ActionButton
-            prominence="low"
-            aria-label={stringFormatter.format('dismiss')}
-            onPress={onDismiss}
-            gridArea="closeButton"
-            UNSAFE_className={css({
-              placeSelf: 'flex-start end',
-              paddingInline: 0,
-              marginBlock: `calc((${tokenSchema.size.element.regular} - ${tokenSchema.typography.heading[headingSize].capheight}) / 2 * -1)`,
-              marginInlineEnd: `calc(${tokenSchema.size.space.medium} * -1)`,
-              marginInlineStart: tokenSchema.size.space.regular,
-            })}
-          >
-            <Icon src={xIcon} size="medium" />
-          </ActionButton>
-        )}
-      </Grid>
-    </section>
+    <AriaDialog
+      {...(filterStyleProps(ariaProps) as AriaDialogProps)}
+      {...dialogStyleProps}
+      ref={forwardedRef}
+      aria-labelledby={
+        props['aria-labelledby'] || (hasHeading ? headingId : undefined)
+      }
+    >
+      {({ close }) => (
+        <DialogContext.Provider
+          value={{
+            ...contextProps,
+            type,
+            isDismissable,
+            onClose: close,
+          }}
+        >
+          <Grid ref={gridRef} {...gridStyleProps}>
+            <SlotProvider slots={slots}>{children}</SlotProvider>
+            {isDismissable && (
+              <ActionButton
+                prominence="low"
+                aria-label={stringFormatter.format('dismiss')}
+                onPress={onDismiss || close}
+                gridArea="closeButton"
+                UNSAFE_className={css({
+                  placeSelf: 'flex-start end',
+                  paddingInline: 0,
+                  marginBlock: `calc((${tokenSchema.size.element.regular} - ${tokenSchema.typography.heading[headingSize].capheight}) / 2 * -1)`,
+                  marginInlineEnd: `calc(${tokenSchema.size.space.medium} * -1)`,
+                  marginInlineStart: tokenSchema.size.space.regular,
+                })}
+              >
+                <Icon src={xIcon} size="medium" />
+              </ActionButton>
+            )}
+          </Grid>
+        </DialogContext.Provider>
+      )}
+    </AriaDialog>
   );
 });
 

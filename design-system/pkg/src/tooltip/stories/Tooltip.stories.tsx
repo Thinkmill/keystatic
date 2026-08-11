@@ -1,8 +1,8 @@
 import { Flex } from '@keystar/ui/layout';
 import { Kbd, Numeral, Text } from '@keystar/ui/typography';
 
-import { Tooltip } from '..';
-import { TooltipContext } from '../context';
+import { Tooltip, TooltipTrigger } from '..';
+import { ActionButton } from '@keystar/ui/button';
 
 const placements = ['start', 'end', 'right', 'left', 'top', 'bottom'] as const;
 
@@ -19,9 +19,9 @@ Default.story = {
 export const Placement = () => (
   <Flex alignItems="start" gap="large" wrap>
     {placements.map(p => (
-      <TooltipContext.Provider value={{ placement: p }} key={p}>
-        <OpenTooltip>{p}</OpenTooltip>
-      </TooltipContext.Provider>
+      <OpenTooltip placement={p} key={p}>
+        {p}
+      </OpenTooltip>
     ))}
   </Flex>
 );
@@ -66,5 +66,10 @@ ComplexContent.story = {
 };
 
 function OpenTooltip(props: any) {
-  return <Tooltip isOpen UNSAFE_style={{ position: 'static' }} {...props} />;
+  return (
+    <TooltipTrigger defaultOpen>
+      <ActionButton>Trigger</ActionButton>
+      <Tooltip UNSAFE_style={{ position: 'static' }} {...props} />
+    </TooltipTrigger>
+  );
 }

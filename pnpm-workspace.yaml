@@ -17,8 +17,9 @@ allowBuilds:
   workerd: true
 
 catalog:
-  react-aria: 3.50.0
-  react-stately: 3.48.0
+  react-aria: 3.51.0
+  react-stately: 3.49.0
+  react-aria-components: 1.20.0
 
 # Ensure environment variables defined via NPM scripts work consistently for all operating systems.
 shellEmulator: true

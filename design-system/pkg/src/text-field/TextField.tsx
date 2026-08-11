@@ -1,8 +1,6 @@
-import { useTextField } from 'react-aria/useTextField';
-import { useObjectRef } from 'react-aria/useObjectRef';
 import { forwardRef, ForwardRefExoticComponent, Ref } from 'react';
 
-import { TextFieldPrimitive } from './TextFieldPrimitive';
+import { TextFieldBase } from './TextFieldBase';
 import { TextFieldProps } from './types';
 import { validateTextFieldProps } from './validateTextFieldProps';
 
@@ -12,19 +10,6 @@ export const TextField: ForwardRefExoticComponent<
 > = forwardRef<HTMLInputElement, TextFieldProps>(
   function TextField(props, forwardedRef) {
     props = validateTextFieldProps(props);
-    let domRef = useObjectRef(forwardedRef);
-    let { labelProps, inputProps, descriptionProps, errorMessageProps } =
-      useTextField(props, domRef);
-
-    return (
-      <TextFieldPrimitive
-        ref={domRef}
-        {...props}
-        labelProps={labelProps}
-        inputProps={inputProps}
-        descriptionProps={descriptionProps}
-        errorMessageProps={errorMessageProps}
-      />
-    );
+    return <TextFieldBase ref={forwardedRef} {...props} />;
   }
 );

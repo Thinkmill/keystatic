@@ -1,7 +1,6 @@
 'use client';
 
-export { Item } from 'react-stately/Item';
-
 export { Breadcrumbs } from './Breadcrumbs';
+export { BreadcrumbItem } from './BreadcrumbItem';
 
-export type { BreadcrumbsProps } from './types';
+export type { BreadcrumbItemProps, BreadcrumbsProps } from './types';

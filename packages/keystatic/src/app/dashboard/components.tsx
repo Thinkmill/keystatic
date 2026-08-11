@@ -1,7 +1,7 @@
-import { PropsWithChildren, ReactElement, useRef } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 
 import { Flex } from '@keystar/ui/layout';
-import { useLink } from '@keystar/ui/link';
+import { Link } from '@keystar/ui/link';
 import {
   classNames,
   containerQueries,
@@ -61,8 +61,6 @@ export const DashboardCard = (
     label: string;
   }>
 ) => {
-  const ref = useRef<HTMLAnchorElement>(null);
-  const { linkProps } = useLink(props, ref);
   return (
     <Flex
       alignItems="center"
@@ -73,10 +71,8 @@ export const DashboardCard = (
     >
       <Flex direction="column" gap="medium" flex>
         <Heading elementType="h3" size="small" truncate>
-          <a
-            ref={ref}
+          <Link
             href={props.href}
-            {...linkProps}
             className={classNames(
               css({
                 color: tokenSchema.color.foreground.neutral,
@@ -114,7 +110,7 @@ export const DashboardCard = (
             )}
           >
             {props.label}
-          </a>
+          </Link>
         </Heading>
         {props.children}
       </Flex>

@@ -1,10 +1,18 @@
-export { Item } from 'react-stately/Item';
-export { Section } from 'react-stately/Section';
-
 export { ListItem } from './ListItem';
-export { ListBox } from './ListBox';
-export { ListBoxBase, useListBoxLayout } from './ListBoxBase';
+export {
+  ListBox,
+  ListBoxHeader,
+  ListBoxItem,
+  ListBoxLoadMoreItem,
+  ListBoxSection,
+} from './ListBox';
 
 export { listStyles } from './styles';
+export { Collection as ListBoxCollection } from 'react-aria-components/Collection';
 
-export type { ListBoxProps } from './types';
+export type {
+  ListBoxItemProps,
+  ListBoxLoadMoreItemProps,
+  ListBoxProps,
+  ListBoxSectionProps,
+} from './ListBox';

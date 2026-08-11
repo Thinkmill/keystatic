@@ -1,6 +1,4 @@
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useLabels } from 'react-aria/private/utils/useLabels';
 import {
   ForwardRefExoticComponent,
   ForwardedRef,
@@ -29,14 +27,20 @@ export const ContextualHelp: ForwardRefExoticComponent<
   let { children, variant = 'help', ...otherProps } = props;
 
   let stringFormatter = useLocalizedStringFormatter(localizedMessages);
-  let labelProps = useLabels(otherProps, stringFormatter.format(variant));
+  let ariaLabel =
+    otherProps['aria-label'] ??
+    (otherProps['aria-labelledby']
+      ? undefined
+      : stringFormatter.format(variant));
 
   let icon = variant === 'info' ? infoIcon : helpCircleIcon;
 
   return (
     <DialogTrigger {...otherProps} type="popover">
       <ActionButton
-        {...mergeProps(otherProps, labelProps, { isDisabled: false })}
+        {...otherProps}
+        aria-label={ariaLabel}
+        isDisabled={false}
         ref={ref}
         UNSAFE_className={classNames(
           css({

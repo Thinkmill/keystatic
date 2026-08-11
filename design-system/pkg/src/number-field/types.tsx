@@ -1,11 +1,8 @@
-import {
-  FocusableProps,
-  RangeInputBase,
-  TextInputDOMEvents,
-  ValueBase,
-} from '@react-types/shared';
+import type { NumberFieldProps as AriaNumberFieldProps } from 'react-aria-components/NumberField';
+import { ValidationState } from '@react-types/shared';
 
 import { FieldProps } from '@keystar/ui/field';
+import { BaseStyleProps } from '@keystar/ui/style';
 
 export type NumberFieldProps = {
   /**
@@ -25,8 +22,8 @@ export type NumberFieldProps = {
   formatOptions?: Intl.NumberFormatOptions;
   /** Whether to hide the increment and decrement buttons. */
   hideStepper?: boolean;
-} & ValueBase<number> &
-  RangeInputBase<number> &
+  /** Whether the field is valid or invalid. */
+  validationState?: ValidationState;
+} & Omit<AriaNumberFieldProps, 'children' | 'className' | 'style'> &
   FieldProps &
-  FocusableProps &
-  TextInputDOMEvents;
+  BaseStyleProps;

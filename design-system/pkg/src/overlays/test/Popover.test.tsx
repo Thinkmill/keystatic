@@ -1,7 +1,3 @@
-import {
-  OverlayTriggerProps,
-  useOverlayTriggerState,
-} from 'react-stately/useOverlayTriggerState';
 import { expect, jest, describe, it } from '@jest/globals';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { TestProvider } from '@keystar/ui/core';
@@ -72,14 +68,11 @@ describe('overlays/Popover', () => {
   });
 });
 
-function TestPopover(
-  props: OverlayTriggerProps & Omit<PopoverProps, 'state' | 'triggerRef'>
-) {
+function TestPopover(props: Omit<PopoverProps, 'triggerRef'>) {
   let ref = useRef(null);
-  let state = useOverlayTriggerState(props);
   return (
     <TestProvider>
-      <Popover {...props} state={state} triggerRef={ref} />
+      <Popover {...props} triggerRef={ref} />
     </TestProvider>
   );
 }

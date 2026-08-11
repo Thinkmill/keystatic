@@ -2,7 +2,7 @@ import { Editor, Element, Node, Path, Transforms } from 'slate';
 
 import { isElementActive } from '../utils';
 import { getListTypeAbove, useToolbarState } from '../toolbar-state';
-import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionGroup, ActionGroupItem } from '@keystar/ui/action-group';
 import { Kbd, Text } from '@keystar/ui/typography';
 import { listIcon } from '@keystar/ui/icon/icons/listIcon';
 import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
@@ -80,18 +80,18 @@ export function ListButtons(props: {
       >
         {[
           props.lists.unordered && (
-            <Item key="unordered" textValue="Bullet List (- )">
+            <ActionGroupItem id="unordered" textValue="Bullet List (- )">
               <Icon src={listIcon} />
               <Text>Bullet List</Text>
               <Kbd>-⎵</Kbd>
-            </Item>
+            </ActionGroupItem>
           ),
           props.lists.ordered && (
-            <Item key="ordered" textValue="Numbered List (1.)">
+            <ActionGroupItem id="ordered" textValue="Numbered List (1.)">
               <Icon src={listOrderedIcon} />
               <Text>Numbered List</Text>
               <Kbd>1.⎵</Kbd>
-            </Item>
+            </ActionGroupItem>
           ),
         ].filter((x): x is Exclude<typeof x, false> => x !== false)}
       </ActionGroup>

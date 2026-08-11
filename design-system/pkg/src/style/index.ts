@@ -10,7 +10,6 @@ export {
   useResponsiveRange,
 } from './context';
 export { filterStyleProps, onlyStyleProps } from './filterStyleProps';
-export { FocusRing } from './FocusRing';
 export {
   maybeTokenByKey,
   resolveProp,

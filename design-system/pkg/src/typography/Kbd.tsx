@@ -1,5 +1,4 @@
 import { filterDOMProps } from 'react-aria/filterDOMProps';
-import { isMac as getIsMac } from 'react-aria/private/utils/platform';
 import {
   ForwardedRef,
   forwardRef,
@@ -19,6 +18,13 @@ import { useTextStyles } from './text';
 
 function noopSubscribe() {
   return () => {};
+}
+
+function getIsMac() {
+  return (
+    typeof navigator !== 'undefined' &&
+    /Mac|iPhone|iPad|iPod/.test(navigator.platform)
+  );
 }
 
 function useIsMac() {

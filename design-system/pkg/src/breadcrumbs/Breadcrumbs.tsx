@@ -1,265 +1,235 @@
-import { useBreadcrumbs } from 'react-aria/useBreadcrumbs';
+import { type Collection, type Key, type Node } from '@react-types/shared';
 import {
-  useLayoutEffect,
-  Children,
-  ForwardedRef,
-  Key,
-  ReactElement,
+  CollectionRendererContext,
+  type CollectionRenderer,
+} from 'react-aria-components/CollectionBuilder';
+import { Breadcrumbs as AriaBreadcrumbs } from 'react-aria-components/Breadcrumbs';
+import {
+  type ForwardedRef,
+  type ReactElement,
+  type RefObject,
+  Fragment,
+  createContext,
   forwardRef,
-  isValidElement,
   useCallback,
+  useContext,
+  useEffect,
+  useMemo,
   useRef,
   useState,
-  Ref,
 } from 'react';
 import { useObjectRef } from 'react-aria/useObjectRef';
-import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
-import { useValueEffect } from 'react-aria/private/utils/useValueEffect';
 
 import { ActionButton } from '@keystar/ui/button';
-import { useProviderProps } from '@keystar/ui/core';
 import { Icon } from '@keystar/ui/icon';
-import { folderClosedIcon } from '@keystar/ui/icon/icons/folderClosedIcon';
-import { folderOpenIcon } from '@keystar/ui/icon/icons/folderOpenIcon';
-import { Menu, MenuTrigger } from '@keystar/ui/menu';
-import { classNames, css, tokenSchema, useStyleProps } from '@keystar/ui/style';
+import { moreHorizontalIcon } from '@keystar/ui/icon/icons/moreHorizontalIcon';
+import { Menu, MenuItem, MenuTrigger } from '@keystar/ui/menu';
+import { classNames, css, useStyleProps } from '@keystar/ui/style';
 
-import { BreadcrumbItem, breadcrumbsClassList } from './BreadcrumbItem';
-import { BreadcrumbsProps } from './types';
-import { ItemProps } from '@react-types/shared';
+import { breadcrumbsClassList } from './BreadcrumbItem';
+import { BreadcrumbsStyleContext } from './context';
+import type { BreadcrumbsProps } from './types';
 
-const MIN_VISIBLE_ITEMS = 1;
 const MAX_VISIBLE_ITEMS = 4;
 
-function Breadcrumbs<T>(
+const CollapseContext = createContext<{
+  containerRef: RefObject<HTMLOListElement | null>;
+  onAction?: (key: Key) => void;
+  isDisabled?: boolean;
+} | null>(null);
+
+const CollapsingCollectionRenderer: CollectionRenderer = {
+  CollectionRoot({ collection }) {
+    return <CollapsingCollection collection={collection} />;
+  },
+  CollectionBranch({ collection }) {
+    return <CollapsingCollection collection={collection} />;
+  },
+};
+
+function Breadcrumbs<T extends object>(
   props: BreadcrumbsProps<T>,
-  ref: ForwardedRef<HTMLDivElement>
+  forwardedRef: ForwardedRef<HTMLOListElement>
 ) {
-  props = useProviderProps(props);
-  let {
-    children,
-    showRoot,
-    size = 'regular',
-    isDisabled,
-    onAction,
-    ...otherProps
-  } = props;
-
-  // Not using React.Children.toArray because it mutates the key prop.
-  let childArray: ReactElement<ItemProps<T>>[] = [];
-  Children.forEach(children, child => {
-    if (isValidElement(child)) {
-      childArray.push(child);
-    }
-  });
-
-  let domRef = useObjectRef(ref);
-  let listRef = useRef<HTMLUListElement>(null);
-  let [menuIsOpen, setMenuOpen] = useState(false);
-
-  let [visibleItems, setVisibleItems] = useValueEffect(childArray.length);
-
-  let { navProps } = useBreadcrumbs(props);
-  let styleProps = useStyleProps(otherProps);
-
-  let updateOverflow = useCallback(() => {
-    let computeVisibleItems = (visibleItems: number): number => {
-      // refs may be null at runtime
-      let currListRef: HTMLUListElement | null = listRef.current;
-      if (!currListRef) {
-        return visibleItems;
-      }
-
-      let listItems = Array.from(currListRef.children) as HTMLLIElement[];
-      if (listItems.length <= 0) {
-        return visibleItems;
-      }
-      let containerWidth = currListRef.offsetWidth;
-      let isShowingMenu = childArray.length > visibleItems;
-      let calculatedWidth = 0;
-      let newVisibleItems = 0;
-      let maxVisibleItems = MAX_VISIBLE_ITEMS;
-
-      if (showRoot) {
-        calculatedWidth += (listItems.shift() as HTMLLIElement).offsetWidth;
-        newVisibleItems++;
-      }
-
-      if (isShowingMenu) {
-        calculatedWidth += (listItems.shift() as HTMLLIElement).offsetWidth;
-        maxVisibleItems--;
-      }
-
-      if (showRoot && calculatedWidth >= containerWidth) {
-        newVisibleItems--;
-      }
-
-      if (listItems.length > 0) {
-        // Ensure the last breadcrumb isn't truncated when we measure it.
-        let last = listItems.pop() as HTMLLIElement;
-        last.style.overflow = 'visible';
-
-        calculatedWidth += last.offsetWidth;
-        if (calculatedWidth < containerWidth) {
-          newVisibleItems++;
-        }
-
-        last.style.overflow = '';
-      }
-
-      for (let breadcrumb of listItems.reverse()) {
-        calculatedWidth += breadcrumb.offsetWidth;
-        if (calculatedWidth < containerWidth) {
-          newVisibleItems++;
-        }
-      }
-
-      return Math.max(
-        MIN_VISIBLE_ITEMS,
-        Math.min(maxVisibleItems, newVisibleItems)
-      );
-    };
-
-    setVisibleItems(function* () {
-      // Update to show all items.
-      yield childArray.length;
-
-      // Measure, and update to show the items that fit.
-      let newVisibleItems = computeVisibleItems(childArray.length);
-      yield newVisibleItems;
-
-      // If the number of items is less than the number of children,
-      // then update again to ensure that the menu fits.
-      if (newVisibleItems < childArray.length && newVisibleItems > 1) {
-        yield computeVisibleItems(newVisibleItems);
-      }
-    });
-  }, [childArray.length, setVisibleItems, showRoot]);
-
-  useResizeObserver({ ref: domRef, onResize: updateOverflow });
-
-  let lastChildren = useRef<typeof children | null>(null);
-  useLayoutEffect(() => {
-    if (children !== lastChildren.current) {
-      lastChildren.current = children;
-      updateOverflow();
-    }
-  });
-
-  let contents = childArray;
-  if (childArray.length > visibleItems) {
-    let selectedItem = childArray[childArray.length - 1];
-    let selectedKey = selectedItem.key ?? childArray.length - 1;
-    let onMenuAction = (key: Key) => {
-      // Don't fire onAction when clicking on the last item
-      if (key !== selectedKey && onAction) {
-        onAction(key);
-      }
-    };
-
-    let menuItem = (
-      <BreadcrumbItem key="menu" isMenu>
-        <MenuTrigger onOpenChange={setMenuOpen}>
-          <ActionButton aria-label="…" prominence="low" isDisabled={isDisabled}>
-            <Icon src={menuIsOpen ? folderOpenIcon : folderClosedIcon} />
-          </ActionButton>
-          <Menu
-            selectionMode="single"
-            selectedKeys={[selectedKey]}
-            onAction={onMenuAction}
-          >
-            {childArray}
-          </Menu>
-        </MenuTrigger>
-      </BreadcrumbItem>
-    );
-
-    contents = [menuItem];
-    let breadcrumbs = [...childArray];
-    let endItems = visibleItems;
-    if (showRoot && visibleItems > 1) {
-      let rootItem = breadcrumbs.shift();
-      if (rootItem) {
-        contents.unshift(rootItem);
-      }
-      endItems--;
-    }
-    contents.push(...breadcrumbs.slice(-endItems));
-  }
-
-  let lastIndex = contents.length - 1;
-  let breadcrumbItems = contents.map((child, index) => {
-    let isCurrent = index === lastIndex;
-    let key = child.key ?? index;
-    let onPress = () => {
-      if (onAction) {
-        onAction(key);
-      }
-    };
-
-    return (
-      <li
-        key={index}
-        className={classNames(
-          breadcrumbsClassList.element('item'),
-          css({
-            alignItems: 'center',
-            display: 'inline-flex',
-            whiteSpace: 'nowrap',
-
-            '&:last-child': { overflow: 'hidden' },
-          })
-        )}
-      >
-        <BreadcrumbItem
-          {...child.props}
-          isCurrent={isCurrent}
-          isDisabled={isDisabled}
-          key={key}
-          onPress={onPress}
-          size={size}
-        >
-          {child.props.children}
-        </BreadcrumbItem>
-      </li>
-    );
-  });
+  let { size = 'regular', ...otherProps } = props;
+  let styleProps = useStyleProps(props);
+  let domRef = useObjectRef(forwardedRef);
 
   return (
-    <nav
-      {...navProps}
-      {...styleProps}
-      ref={domRef}
-      className={classNames(
-        breadcrumbsClassList.element('root'),
-        styleProps.className
-      )}
-    >
-      <ul
-        ref={listRef}
-        className={classNames(
-          breadcrumbsClassList.element('list'),
-          css({
-            display: 'flex',
-            height: tokenSchema.size.element.regular,
-            justifyContent: 'flex-start',
-          })
-        )}
+    <BreadcrumbsStyleContext.Provider value={{ size }}>
+      <CollapseContext.Provider
+        value={{
+          containerRef: domRef,
+          onAction: props.onAction,
+          isDisabled: props.isDisabled,
+        }}
       >
-        {breadcrumbItems}
-      </ul>
-    </nav>
+        <CollectionRendererContext.Provider
+          value={CollapsingCollectionRenderer}
+        >
+          <AriaBreadcrumbs
+            {...otherProps}
+            {...styleProps}
+            ref={domRef}
+            className={classNames(
+              breadcrumbsClassList.element('list'),
+              css({
+                alignItems: 'center',
+                display: 'flex',
+                listStyle: 'none',
+                margin: 0,
+                minWidth: 0,
+                padding: 0,
+              }),
+              styleProps.className
+            )}
+          />
+        </CollectionRendererContext.Provider>
+      </CollapseContext.Provider>
+    </BreadcrumbsStyleContext.Provider>
   );
 }
 
-// forwardRef doesn't support generic parameters, so cast the result to the correct type
-// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
+function CollapsingCollection({
+  collection,
+}: {
+  collection: Collection<Node<unknown>>;
+}) {
+  let context = useContext(CollapseContext);
+  let [visibleCount, setVisibleCount] = useState(collection.size);
+  let needsMeasure = useRef(true);
+  let menuRef = useRef<HTMLButtonElement>(null);
+  let items = useMemo(
+    () => Array.from(collection.getKeys(), key => collection.getItem(key)!),
+    [collection]
+  );
 
-/**
- * Breadcrumbs show hierarchy and navigational context for a user's location
- * within an application.
- */
-const _Breadcrumbs: <T>(
-  props: BreadcrumbsProps<T> & { ref?: Ref<HTMLDivElement> }
-) => ReactElement = forwardRef(Breadcrumbs) as any;
+  let updateOverflow = useCallback(() => {
+    let container = context?.containerRef.current;
+    if (!container || !container.offsetWidth) {
+      setVisibleCount(collection.size);
+      return;
+    }
+    if (!needsMeasure.current) return;
+
+    let items = Array.from(container.children).filter(
+      (element): element is HTMLLIElement =>
+        element instanceof HTMLLIElement && element.hasAttribute('data-rac')
+    );
+    if (items.length !== collection.size) return;
+
+    let itemWidths = items.map(item => item.offsetWidth);
+    let menuWidth = menuRef.current?.offsetWidth;
+    if (!menuWidth) return;
+
+    let gap = Number.parseFloat(getComputedStyle(container).gap) || 0;
+    let allWidth = itemWidths.reduce((sum, width) => sum + width, 0);
+    if (
+      collection.size <= MAX_VISIBLE_ITEMS &&
+      allWidth + gap * Math.max(0, collection.size - 1) <= container.offsetWidth
+    ) {
+      needsMeasure.current = false;
+      setVisibleCount(collection.size);
+      return;
+    }
+
+    let available = container.offsetWidth - itemWidths[0] - menuWidth - gap * 2;
+    // Count the visible trailing items. The first item and the overflow menu
+    // are accounted for separately when rendering below.
+    let count = 0;
+    for (let width of itemWidths.slice(1).reverse()) {
+      if (available < width) break;
+      available -= width + gap;
+      count++;
+      if (count >= MAX_VISIBLE_ITEMS - 2) break;
+    }
+    needsMeasure.current = false;
+    setVisibleCount(Math.max(1, count));
+  }, [collection.size, context]);
+
+  useEffect(() => {
+    needsMeasure.current = true;
+    setVisibleCount(collection.size);
+  }, [collection]);
+
+  useEffect(() => {
+    updateOverflow();
+    let container = context?.containerRef.current;
+    if (!container || typeof ResizeObserver === 'undefined') return;
+    let observer = new ResizeObserver(() => {
+      needsMeasure.current = true;
+      setVisibleCount(collection.size);
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [collection.size, context, updateOverflow, visibleCount]);
+
+  useEffect(() => {
+    document.fonts?.ready.then(() => {
+      needsMeasure.current = true;
+      updateOverflow();
+    });
+  }, [updateOverflow]);
+
+  let sliceIndex = collection.size - visibleCount;
+  let hasOverflow = visibleCount < collection.size && collection.size > 2;
+  let overflowItems = hasOverflow ? items.slice(1, sliceIndex) : [];
+
+  return (
+    <>
+      <li
+        aria-hidden="true"
+        className={css({
+          left: 0,
+          pointerEvents: 'none',
+          position: 'absolute',
+          top: 0,
+          visibility: 'hidden',
+        })}
+      >
+        <ActionButton ref={menuRef} aria-label="More breadcrumbs">
+          <Icon src={moreHorizontalIcon} />
+        </ActionButton>
+      </li>
+      {hasOverflow ? (
+        <>
+          {items[0]?.render?.(items[0])}
+          <li className={breadcrumbsClassList.element('item')}>
+            <MenuTrigger>
+              <ActionButton
+                aria-label="More breadcrumbs"
+                isDisabled={context?.isDisabled}
+                prominence="low"
+              >
+                <Icon src={moreHorizontalIcon} />
+              </ActionButton>
+              <Menu onAction={context?.onAction}>
+                {overflowItems.map(item => (
+                  <MenuItem
+                    id={item.key}
+                    key={item.key}
+                    textValue={item.textValue}
+                  >
+                    {item.rendered}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </MenuTrigger>
+          </li>
+          {items.slice(sliceIndex).map(item => (
+            <Fragment key={item.key}>{item.render?.(item)}</Fragment>
+          ))}
+        </>
+      ) : (
+        items.map(item => (
+          <Fragment key={item.key}>{item.render?.(item)}</Fragment>
+        ))
+      )}
+    </>
+  );
+}
+
+const _Breadcrumbs = forwardRef(Breadcrumbs) as <T extends object>(
+  props: BreadcrumbsProps<T> & { ref?: ForwardedRef<HTMLOListElement> }
+) => ReactElement;
 export { _Breadcrumbs as Breadcrumbs };

@@ -1,4 +1,3 @@
-import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 import React, { isValidElement, ReactElement, useState } from 'react';
 
 import { Modal } from '@keystar/ui/overlays';
@@ -33,18 +32,12 @@ export function DialogContainer(props: DialogContainerProps) {
     isDismissable,
   };
 
-  let state = useOverlayTriggerState({
-    isOpen: !!child,
-    onOpenChange: isOpen => {
-      if (!isOpen) {
-        onDismiss();
-      }
-    },
-  });
-
   return (
     <Modal
-      state={state}
+      isOpen={!!child}
+      onOpenChange={isOpen => {
+        if (!isOpen) onDismiss();
+      }}
       type={type}
       isDismissable={isDismissable}
       isKeyboardDismissDisabled={isKeyboardDismissDisabled}

@@ -9,7 +9,7 @@ import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { VStack } from '@keystar/ui/layout';
-import { Item, ListView } from '@keystar/ui/list-view';
+import { ListView, ListViewItem } from '@keystar/ui/list-view';
 import { Content } from '@keystar/ui/slots';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
@@ -395,7 +395,7 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
           props.schema.itemLabel?.(item) ||
           `Item ${props.elements.indexOf(item) + 1}`;
         return (
-          <Item key={item.key} textValue={label}>
+          <ListViewItem id={item.key} textValue={label}>
             <Text>{label}</Text>
             <TooltipTrigger placement="start">
               <ActionButton
@@ -407,7 +407,7 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
               </ActionButton>
               <Tooltip>{stringFormatter.format('delete')}</Tooltip>
             </TooltipTrigger>
-          </Item>
+          </ListViewItem>
         );
       }}
     </ListView>

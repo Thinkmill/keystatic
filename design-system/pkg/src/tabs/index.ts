@@ -1,7 +1,11 @@
 'use client';
 
-export { Item } from 'react-stately/Item';
+export { Tab, TabList, TabPanel, TabPanels, Tabs, tabsClassList } from './Tabs';
 
-export { TabList, TabPanels, Tabs, tabsClassList } from './Tabs';
-
-export type { TabsProps, TabListProps, TabPanelsProps } from './types';
+export type {
+  TabListProps,
+  TabPanelProps,
+  TabPanelsProps,
+  TabProps,
+  TabsProps,
+} from './types';

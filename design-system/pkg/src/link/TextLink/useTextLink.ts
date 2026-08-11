@@ -1,41 +1,17 @@
-import { useFocusRing } from 'react-aria/useFocusRing';
-import { useHover } from 'react-aria/useHover';
-import { mergeProps } from 'react-aria/mergeProps';
 import { Fragment } from 'react';
 
-import {
-  classNames,
-  css,
-  toDataAttributes,
-  tokenSchema,
-} from '@keystar/ui/style';
+import { classNames, css, tokenSchema } from '@keystar/ui/style';
 import {
   Text,
   useHeadingContext,
   useTextContext,
 } from '@keystar/ui/typography';
 
-import { TextLinkButtonProps } from './types';
-
-export function useTextLink({
-  autoFocus,
-  prominence = 'default',
-}: TextLinkButtonProps) {
+export function useTextLink() {
   const headingContext = useHeadingContext();
   const textContext = useTextContext();
 
-  const { focusProps, isFocusVisible } = useFocusRing({ autoFocus });
-  const { hoverProps, isHovered } = useHover({});
-
-  const dataOptions = {
-    prominence,
-    hover: isHovered ? 'true' : undefined,
-    focus: isFocusVisible ? 'visible' : undefined,
-  };
-
   return {
-    ...mergeProps(hoverProps, focusProps),
-    ...toDataAttributes(dataOptions),
     Wrapper: !textContext && !headingContext ? Text : Fragment,
     className: classNames(
       css({
@@ -47,11 +23,11 @@ export function useTextLink({
         textDecorationThickness: tokenSchema.size.border.regular,
         textUnderlineOffset: tokenSchema.size.border.medium,
 
-        '&[data-hover="true"], &[data-focus="visible"]': {
+        '&[data-hovered], &[data-focus-visible], &:hover, &:focus-visible': {
           color: tokenSchema.color.foreground.neutralEmphasis,
           textDecorationColor: tokenSchema.color.foreground.neutral,
         },
-        '&[data-focus="visible"]': {
+        '&[data-focus-visible], &:focus-visible': {
           textDecorationStyle: 'double',
         },
 
@@ -59,7 +35,7 @@ export function useTextLink({
           color: tokenSchema.color.foreground.accent,
           textDecorationColor: tokenSchema.color.border.accent,
 
-          '&[data-hover="true"], &[data-focus="visible"]': {
+          '&[data-hovered], &[data-focus-visible], &:hover, &:focus-visible': {
             textDecorationColor: tokenSchema.color.foreground.accent,
           },
         },

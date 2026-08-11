@@ -2,12 +2,17 @@ import { Icon } from '@keystar/ui/icon';
 import { copyIcon } from '@keystar/ui/icon/icons/copyIcon';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
-import { Item, ListView } from '@keystar/ui/list-view';
+import { ListViewItem, ListView } from '@keystar/ui/list-view';
 import { Text } from '@keystar/ui/typography';
 import { Selection } from '@react-types/shared';
 import React, { useState } from 'react';
 
-import { ActionBar, ActionBarContainer, ActionBarProps } from '../index';
+import {
+  ActionBar,
+  ActionBarContainer,
+  ActionBarItem,
+  ActionBarProps,
+} from '../index';
 
 export const ListExample = (props: Partial<ActionBarProps<any>>) => {
   let [selectedKeys, setSelectedKeys] = useState<Selection>(new Set());
@@ -22,9 +27,9 @@ export const ListExample = (props: Partial<ActionBarProps<any>>) => {
         selectedKeys={selectedKeys}
       >
         {(item: any) => (
-          <Item key={item.key} textValue={item.name}>
+          <ListViewItem id={item.key} textValue={item.name}>
             <Text>{item.name}</Text>
-          </Item>
+          </ListViewItem>
         )}
       </ListView>
       <ActionBar
@@ -32,18 +37,18 @@ export const ListExample = (props: Partial<ActionBarProps<any>>) => {
         onClearSelection={() => setSelectedKeys(new Set())}
         {...props}
       >
-        <Item key="edit" textValue="Edit">
+        <ActionBarItem id="edit" textValue="Edit">
           <Icon src={pencilIcon} />
           <Text>Edit</Text>
-        </Item>
-        <Item key="copy" textValue="Copy">
+        </ActionBarItem>
+        <ActionBarItem id="copy" textValue="Copy">
           <Icon src={copyIcon} />
           <Text>Copy</Text>
-        </Item>
-        <Item key="delete" textValue="Delete">
+        </ActionBarItem>
+        <ActionBarItem id="delete" textValue="Delete">
           <Icon src={trash2Icon} />
           <Text>Delete</Text>
-        </Item>
+        </ActionBarItem>
       </ActionBar>
     </ActionBarContainer>
   );

@@ -44,7 +44,7 @@ import { notFound } from './not-found';
 import { delDraft, getDraft, setDraft } from './persistence';
 import * as s from 'superstruct';
 import { LOADING, useData } from './useData';
-import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionGroup, ActionGroupItem } from '@keystar/ui/action-group';
 import { useMediaQuery, breakpointQueries } from '@keystar/ui/style';
 import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
@@ -250,8 +250,8 @@ function SingletonPageInner(
           }}
         >
           {item => (
-            <Item
-              key={item.key}
+            <ActionGroupItem
+              id={item.key}
               textValue={item.label}
               href={item.href}
               target={item.target}
@@ -259,7 +259,7 @@ function SingletonPageInner(
             >
               <Icon src={item.icon} />
               <Text>{item.label}</Text>
-            </Item>
+            </ActionGroupItem>
           )}
         </ActionGroup>
         <Button
