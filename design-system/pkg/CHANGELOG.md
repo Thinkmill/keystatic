@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.9.3
+
+### Patch Changes
+
+- [#1590](https://github.com/Thinkmill/keystatic/pull/1590) [`b130a08`](https://github.com/Thinkmill/keystatic/commit/b130a0864dbc094ee8afc32d70429318cff2e48a) Thanks [@emmatown](https://github.com/emmatown)! - Fix listboxes in popovers sometimes not scrolling properly
+
 ## 0.9.2
 
 ### Patch Changes

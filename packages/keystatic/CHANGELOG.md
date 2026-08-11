@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.6.5
+
+### Patch Changes
+
+- [#1577](https://github.com/Thinkmill/keystatic/pull/1577) [`bcc7105`](https://github.com/Thinkmill/keystatic/commit/bcc710561ed76701a7cb8896f8ff6e0a668eeee2) Thanks [@renatomprado](https://github.com/renatomprado)! - Fix pt-BR (Brazilian Portuguese) translations: `save` said "Guardar" (European Portuguese) and the git terms were mistranslated as unrelated words
+
+- Updated dependencies [[`b130a08`](https://github.com/Thinkmill/keystatic/commit/b130a0864dbc094ee8afc32d70429318cff2e48a)]:
+  - @keystar/ui@0.9.3
+
 ## 0.6.4
 
 ### Patch Changes

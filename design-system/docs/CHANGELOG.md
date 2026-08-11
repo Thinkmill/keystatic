@@ -1,5 +1,14 @@
 # @voussoir/docs
 
+## 0.0.77
+
+### Patch Changes
+
+- Updated dependencies [[`b130a08`](https://github.com/Thinkmill/keystatic/commit/b130a0864dbc094ee8afc32d70429318cff2e48a), [`bcc7105`](https://github.com/Thinkmill/keystatic/commit/bcc710561ed76701a7cb8896f8ff6e0a668eeee2)]:
+  - @keystar/ui@0.9.3
+  - @keystatic/core@0.6.5
+  - @keystatic/next@5.0.4
+
 ## 0.0.76
 
 ### Patch Changes
