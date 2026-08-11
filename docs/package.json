@@ -34,8 +34,7 @@
     "react-dom": "^19.2.8",
     "react-focus-lock": "^2.9.4",
     "shiki": "^0.14.2",
-    "typescript": "^5.5.3",
-    "vercel": "^33.6.3"
+    "typescript": "^5.5.3"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.2",
