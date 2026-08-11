@@ -51,6 +51,7 @@ export function Toast({ toast }: ToastProps) {
       toast={toast}
       data-tone={tone}
       className={css({
+        alignItems: 'center',
         borderRadius: tokenSchema.size.radius.regular,
         color: tokenSchema.color.foreground.onEmphasis,
         display: 'flex',
@@ -84,7 +85,6 @@ export function Toast({ toast }: ToastProps) {
               aria-label={iconLabel}
               src={icon}
               size="medium"
-              marginTop="small"
               marginEnd="regular"
             />
           )}

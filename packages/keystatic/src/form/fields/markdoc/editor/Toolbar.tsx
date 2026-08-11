@@ -49,7 +49,7 @@ import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
 import { EditorSchema } from './schema';
 import { ImageToolbarButton } from './images';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
-import { itemRenderer } from './autocomplete/insert-menu';
+import { toolbarItemRenderer } from './autocomplete/insert-menu';
 import { LinkDialog } from './popovers/link-toolbar';
 import { DialogContainer } from '@keystar/ui/dialog';
 import { linkIcon } from '@keystar/ui/icon/icons/linkIcon';
@@ -498,7 +498,7 @@ function InsertBlockMenu() {
         }}
         items={items}
       >
-        {itemRenderer}
+        {toolbarItemRenderer}
       </Menu>
     </MenuTrigger>
   );

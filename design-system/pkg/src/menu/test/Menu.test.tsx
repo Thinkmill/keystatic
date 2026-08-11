@@ -657,6 +657,25 @@ describe('menu/Menu', () => {
     expect(menuItem).toHaveAttribute('aria-describedby', description.id);
   });
 
+  it('removes native link styling from menu items', function () {
+    let tree = render(
+      <Menu aria-label="menu">
+        <MenuItem id="preview" href="/preview">
+          Preview
+        </MenuItem>
+      </Menu>
+    );
+
+    let menuItem = tree.getByRole('menuitem', { name: 'Preview' });
+    expect(menuItem).toHaveAttribute('href', '/preview');
+    expect(menuItem).toHaveStyle({
+      color: 'inherit',
+      display: 'block',
+      outline: '0',
+      textDecoration: 'none',
+    });
+  });
+
   it('supports `aria-label` on sections and items', function () {
     let tree = render(
       <Menu aria-label="menu">

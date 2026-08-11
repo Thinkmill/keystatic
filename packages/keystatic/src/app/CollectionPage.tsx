@@ -465,25 +465,25 @@ function CollectionTable(
       return [
         ...(hideStatusColumn
           ? []
-          : [{ name: 'Status', key: STATUS, minWidth: 32, width: 32 }]),
+          : [{ name: 'Status', id: STATUS, minWidth: 32, width: 32 }]),
         {
           name: 'Slug',
-          key: SLUG,
+          id: SLUG,
         },
         ...collection.columns.map(column => {
           const schema = collection.schema[column];
           return {
             name: ('label' in schema && schema.label) || column,
-            key: column,
+            id: column,
           };
         }),
       ];
     }
     return hideStatusColumn
-      ? [{ name: 'Name', key: SLUG }]
+      ? [{ name: 'Name', id: SLUG }]
       : [
-          { name: 'Status', key: STATUS, minWidth: 32, width: 32 },
-          { name: 'Name', key: SLUG },
+          { name: 'Status', id: STATUS, minWidth: 32, width: 32 },
+          { name: 'Name', id: SLUG },
         ];
   }, [collection, hideStatusColumn]);
 
@@ -523,13 +523,13 @@ function CollectionTable(
       })}
     >
       <TableHeader columns={columns}>
-        {({ name, key, ...options }) =>
-          key === STATUS ? (
-            <Column key={key} isRowHeader allowsSorting {...options}>
+        {({ name, id, ...options }) =>
+          id === STATUS ? (
+            <Column id={id} isRowHeader allowsSorting {...options}>
               <Icon aria-label="Status" src={diffIcon} />
             </Column>
           ) : (
-            <Column key={key} isRowHeader allowsSorting {...options}>
+            <Column id={id} isRowHeader allowsSorting {...options}>
               {name}
             </Column>
           )
@@ -562,7 +562,7 @@ function CollectionTable(
           );
           if (collection.columns?.length) {
             return (
-              <Row key={'key:' + item.name}>
+              <Row id={'key:' + item.name}>
                 {[
                   ...(hideStatusColumn ? [] : [statusCell]),
                   nameCell,
@@ -586,9 +586,9 @@ function CollectionTable(
             );
           }
           return hideStatusColumn ? (
-            <Row key={'key:' + item.name}>{nameCell}</Row>
+            <Row id={'key:' + item.name}>{nameCell}</Row>
           ) : (
-            <Row key={'key:' + item.name}>
+            <Row id={'key:' + item.name}>
               {statusCell}
               {nameCell}
             </Row>

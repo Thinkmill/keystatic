@@ -5,6 +5,7 @@ import {
 } from 'react-aria-components/Menu';
 import {
   Children,
+  type ComponentProps,
   type ForwardedRef,
   type ReactElement,
   type ReactNode,
@@ -14,7 +15,12 @@ import {
 import { Text as AriaText } from 'react-aria-components/Text';
 
 import { ListItem } from '@keystar/ui/listbox';
-import type { BaseStyleProps } from '@keystar/ui/style';
+import {
+  type BaseStyleProps,
+  classNames,
+  css,
+  useStyleProps,
+} from '@keystar/ui/style';
 import { Kbd, Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
@@ -27,10 +33,21 @@ function MenuItem<T extends object>(
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let { children, ...otherProps } = props;
+  let styleProps = useStyleProps(props);
   return (
     <AriaMenuItem
       {...otherProps}
+      {...styleProps}
       ref={forwardedRef}
+      className={classNames(
+        css({
+          color: 'inherit',
+          display: 'block',
+          outline: 0,
+          textDecoration: 'none',
+        }),
+        styleProps.className
+      )}
       textValue={
         otherProps.textValue ??
         (isReactText(children) ? String(children) : undefined)
@@ -53,8 +70,8 @@ function MenuItem<T extends object>(
   );
 }
 
-type TextChildProps = React.ComponentProps<typeof Text>;
-type KbdChildProps = React.ComponentProps<typeof Kbd>;
+type TextChildProps = ComponentProps<typeof Text>;
+type KbdChildProps = ComponentProps<typeof Kbd>;
 
 function wrapItemContent(children: ReactNode): ReactNode {
   if (isReactText(children)) return <Text>{children}</Text>;

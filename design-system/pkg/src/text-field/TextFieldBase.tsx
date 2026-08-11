@@ -119,7 +119,8 @@ export function TextFieldContent({
   label,
   startElement,
 }: TextFieldContentProps) {
-  let inputClassName = classNames(useTextFieldStyles(), inputClassNameProp);
+  let inputStyles = useTextFieldStyles();
+  let inputClassName = classNames(inputStyles, inputClassNameProp);
   let InputElement = isMultiline ? AriaTextArea : AriaInput;
   let WrapperElement = inputWrapperElement === 'group' ? AriaGroup : 'div';
   let adornment = getAdornmentType({ startElement, endElement });
@@ -157,7 +158,7 @@ export function TextFieldContent({
           ref={inputRef as never}
           rows={isMultiline ? 1 : undefined}
         />
-        <InputStateIndicator inputClassName={inputClassName} />
+        <InputStateIndicator inputClassName={inputStyles} />
         {endElement}
       </WrapperElement>
       <FieldErrorElement>{errorMessage}</FieldErrorElement>

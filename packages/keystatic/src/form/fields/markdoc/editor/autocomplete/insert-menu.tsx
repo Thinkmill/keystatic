@@ -1,4 +1,5 @@
 import { Icon } from '@keystar/ui/icon';
+import { MenuItem } from '@keystar/ui/menu';
 import { Text } from '@keystar/ui/typography';
 import { matchSorter } from 'match-sorter';
 import { NodeType } from 'prosemirror-model';
@@ -85,6 +86,16 @@ export function itemRenderer(item: InsertMenuItem) {
       {item.description && <Text slot="description">{item.description}</Text>}
       {item.icon && <Icon src={item.icon} />}
     </EditorListboxItem>
+  );
+}
+
+export function toolbarItemRenderer(item: InsertMenuItem) {
+  return (
+    <MenuItem id={item.id} textValue={item.label}>
+      <Text>{item.label}</Text>
+      {item.description && <Text slot="description">{item.description}</Text>}
+      {item.icon && <Icon src={item.icon} />}
+    </MenuItem>
   );
 }
 

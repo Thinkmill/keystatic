@@ -54,18 +54,18 @@ describe('table/TableView', () => {
       <TableView aria-label="Files" {...tableProps}>
         <TableHeader>
           {tableProps.selectionMode && <TableSelectionColumn />}
-          <Column key="name" isRowHeader allowsResizing={allowsResizing}>
+          <Column id="name" isRowHeader allowsResizing={allowsResizing}>
             Name
           </Column>
-          <Column key="size">Size</Column>
+          <Column id="size">Size</Column>
         </TableHeader>
         <TableBody>
-          <Row key="one">
+          <Row id="one">
             {tableProps.selectionMode && <TableSelectionCell />}
             <Cell>One</Cell>
             <Cell>1 KB</Cell>
           </Row>
-          <Row key="two">
+          <Row id="two">
             {tableProps.selectionMode && <TableSelectionCell />}
             <Cell>Two</Cell>
             <Cell>2 KB</Cell>
@@ -92,16 +92,17 @@ describe('table/TableView', () => {
       { id: 'one', name: 'One' },
       { id: 'two', name: 'Two' },
     ];
+    let onAction = jest.fn();
     let result = renderWithProvider(
-      <TableView aria-label="Dynamic files">
+      <TableView aria-label="Dynamic files" onAction={onAction}>
         <TableHeader>
-          <Column key="name" isRowHeader>
+          <Column id="name" isRowHeader>
             Name
           </Column>
         </TableHeader>
         <TableBody items={items}>
           {item => (
-            <Row key={item.id}>
+            <Row id={item.id}>
               <Cell>{item.name}</Cell>
             </Row>
           )}
@@ -111,6 +112,14 @@ describe('table/TableView', () => {
     act(() => jest.runAllTimers());
     expect(result.getAllByRole('row')).toHaveLength(3);
     expect(result.getByText('Two')).toBeVisible();
+    fireEvent.click(result.getByText('Two'));
+    expect(onAction).toHaveBeenCalledWith('two');
+  });
+
+  it('applies table typography to plain text content', () => {
+    let result = renderTable();
+    expect(result.getByText('Name').tagName).toBe('SPAN');
+    expect(result.getByText('One').tagName).toBe('SPAN');
   });
 
   it('retains checkbox selection', () => {
@@ -143,15 +152,15 @@ describe('table/TableView', () => {
     let result = renderWithProvider(
       <TableView aria-label="Actions" density="compact" overflowMode="wrap">
         <TableHeader>
-          <Column key="action" align="end" hideHeader showDivider>
+          <Column id="action" align="end" hideHeader showDivider>
             Actions
           </Column>
-          <Column key="name" isRowHeader>
+          <Column id="name" isRowHeader>
             Name
           </Column>
         </TableHeader>
         <TableBody>
-          <Row key="one">
+          <Row id="one">
             <Cell>Open</Cell>
             <Cell>One</Cell>
           </Row>
@@ -184,12 +193,12 @@ describe('table/TableView', () => {
         >
           <TableHeader>
             <TableDragColumn />
-            <Column key="name" isRowHeader>
+            <Column id="name" isRowHeader>
               Name
             </Column>
           </TableHeader>
           <TableBody>
-            <Row key="one">
+            <Row id="one">
               <TableDragCell />
               <Cell>One</Cell>
             </Row>

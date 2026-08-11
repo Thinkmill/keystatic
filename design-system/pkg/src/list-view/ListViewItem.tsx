@@ -177,14 +177,16 @@ function ListViewItem<T extends object>(
               {allowsDragging && !isDisabled && (
                 <AriaButton
                   slot="drag"
-                  className={css({
-                    alignItems: 'center',
-                    display: 'flex',
-                    gridArea: 'draghandle',
-                    justifyContent: 'center',
-                    outline: 0,
-                    width: tokenSchema.size.element.small,
-                  })}
+                  className={classNames(
+                    css({
+                      alignItems: 'center',
+                      display: 'flex',
+                      gridArea: 'draghandle',
+                      justifyContent: 'center',
+                      outline: 0,
+                      width: tokenSchema.size.element.small,
+                    })
+                  )}
                 >
                   <Icon src={gripVerticalIcon} color="neutral" />
                 </AriaButton>

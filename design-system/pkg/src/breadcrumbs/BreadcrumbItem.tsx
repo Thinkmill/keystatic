@@ -86,7 +86,7 @@ function BreadcrumbItemImpl(
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                 },
-                '[data-disabled] &': {
+                '[data-disabled]:not([data-current]) &': {
                   color: tokenSchema.color.alias.foregroundDisabled,
                 },
               })

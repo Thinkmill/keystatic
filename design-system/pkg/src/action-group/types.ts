@@ -14,11 +14,7 @@ export interface ActionGroupItemProps {
 }
 
 export interface ActionGroupProps<T = object> extends BaseStyleProps {
-  children:
-    | ReactElement<ActionGroupItemProps>
-    | null
-    | (ReactElement<ActionGroupItemProps> | null)[]
-    | ((item: T) => ReactElement<ActionGroupItemProps> | null);
+  children: ReactNode | ((item: T) => ReactNode);
   items?: Iterable<T>;
   density?: 'compact' | 'regular';
   isJustified?: boolean;

@@ -50,6 +50,15 @@ describe('text-field/TextField', () => {
     expect(ref.current).toBe(field);
   });
 
+  it('supports pointer focus', async () => {
+    let user = userEvent.setup();
+    const { getByRole } = renderTextField();
+    let field = getByRole('textbox');
+
+    await user.click(field);
+    expect(field).toHaveFocus();
+  });
+
   it('calls onChange when text changes', async () => {
     const { getByRole } = renderTextField({ onBlur, onChange, onFocus });
     const field = getByRole('textbox');

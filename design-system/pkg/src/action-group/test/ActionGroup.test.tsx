@@ -68,6 +68,9 @@ describe('action-group/ActionGroup', () => {
       unobserve() {}
     } as typeof ResizeObserver;
     let onAction = jest.fn();
+    let consoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
     try {
       let result = renderWithProvider(
         <ActionGroup
@@ -77,11 +80,7 @@ describe('action-group/ActionGroup', () => {
           overflowMode="collapse"
           onAction={onAction}
         >
-          {item => (
-            <ActionGroupItem id={item.id} key={item.id}>
-              Delete
-            </ActionGroupItem>
-          )}
+          {item => <ActionGroupItem id={item.id}>Delete</ActionGroupItem>}
         </ActionGroup>
       );
 
@@ -90,8 +89,20 @@ describe('action-group/ActionGroup', () => {
       expect(deleteAction).toHaveAttribute('aria-disabled', 'true');
       firePress(deleteAction);
       expect(onAction).not.toHaveBeenCalled();
+      expect(
+        consoleError.mock.calls.some(args =>
+          args.some(
+            arg =>
+              typeof arg === 'string' &&
+              arg.includes(
+                'Each child in a list should have a unique "key" prop'
+              )
+          )
+        )
+      ).toBe(false);
     } finally {
       bounds.mockRestore();
+      consoleError.mockRestore();
       global.ResizeObserver = originalResizeObserver;
     }
   });

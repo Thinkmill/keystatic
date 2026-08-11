@@ -34,12 +34,15 @@ import { CheckboxIndicator } from '@keystar/ui/checkbox';
 import { Icon } from '@keystar/ui/icon';
 import { gripVerticalIcon } from '@keystar/ui/icon/icons/gripVerticalIcon';
 import { ProgressCircle } from '@keystar/ui/progress';
+import { SlotProvider } from '@keystar/ui/slots';
 import {
   type BaseStyleProps,
   classNames,
   toDataAttributes,
   useStyleProps,
 } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
+import { isReactText } from '@keystar/ui/utils';
 
 import localizedMessages from './l10n';
 import {
@@ -68,6 +71,9 @@ import type {
 
 const DEFAULT_HEADER_HEIGHT = 36;
 const ROW_HEIGHTS = { compact: 28, regular: 36, spacious: 44 } as const;
+const HEADER_TEXT_SLOTS = {
+  text: { color: 'inherit', weight: 'medium', truncate: true },
+} as const;
 
 const TableViewContext = createContext({
   density: 'regular' as NonNullable<TableProps['density']>,
@@ -117,9 +123,8 @@ export function TableView(props: TableProps) {
         >
           <AriaTable
             {...otherProps}
-            className={bodyClassname}
             onRowAction={onAction ?? onRowAction}
-            style={{ height: '100%', overflow: 'auto', width: '100%' }}
+            style={{ width: '100%' }}
           />
         </Virtualizer>
       </ResizableTableContainer>
@@ -185,24 +190,27 @@ function ColumnImpl(
       ref={forwardedRef}
       className={classNames(headerCellClassname, styleProps.className)}
     >
-      {states => (
-        <>
-          {hideHeader ? (
-            <VisuallyHidden>
-              {resolveColumnChildren(children, states)}
-            </VisuallyHidden>
-          ) : (
-            resolveColumnChildren(children, states)
-          )}
-          {states.allowsSorting && <SortIndicator />}
-          {allowsResizing && (
-            <ColumnResizer
-              aria-label={stringFormatter.format('resizeColumn')}
-              className={columnResizerClassname}
-            />
-          )}
-        </>
-      )}
+      {states => {
+        let content = resolveColumnChildren(children, states);
+        return (
+          <>
+            {hideHeader ? (
+              <VisuallyHidden>{content}</VisuallyHidden>
+            ) : (
+              <SlotProvider slots={HEADER_TEXT_SLOTS}>
+                {isReactText(content) ? <Text>{content}</Text> : content}
+              </SlotProvider>
+            )}
+            {states.allowsSorting && <SortIndicator />}
+            {allowsResizing && (
+              <ColumnResizer
+                aria-label={stringFormatter.format('resizeColumn')}
+                className={columnResizerClassname}
+              />
+            )}
+          </>
+        );
+      }}
     </AriaColumn>
   );
 }
@@ -220,6 +228,7 @@ function TableBody<T>(
       {...otherProps}
       {...styleProps}
       ref={forwardedRef}
+      className={classNames(bodyClassname, styleProps.className)}
       renderEmptyState={
         renderEmptyState
           ? states => (
@@ -284,7 +293,16 @@ function CellImpl(
       className={classNames(cellClassname, styleProps.className)}
     >
       {states => (
-        <CellContents>{resolveCellChildren(children, states)}</CellContents>
+        <SlotProvider
+          slots={{
+            text: {
+              color: 'inherit',
+              truncate: overflowMode === 'truncate',
+            },
+          }}
+        >
+          <CellContents>{renderCellChildren(children, states)}</CellContents>
+        </SlotProvider>
       )}
     </AriaCell>
   );
@@ -375,11 +393,13 @@ function resolveColumnChildren(
     : children;
 }
 
-function resolveCellChildren(
+function renderCellChildren(
   children: CellProps['children'],
   states: CellRenderProps
 ) {
-  return typeof children === 'function'
-    ? (children as (states: CellRenderProps) => ReactNode)(states)
-    : children;
+  let content =
+    typeof children === 'function'
+      ? (children as (states: CellRenderProps) => ReactNode)(states)
+      : children;
+  return isReactText(content) ? <Text>{content}</Text> : content;
 }

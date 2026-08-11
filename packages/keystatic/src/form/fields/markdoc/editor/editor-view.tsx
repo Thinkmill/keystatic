@@ -125,8 +125,11 @@ export function ProseMirrorEditable(props: HTMLAttributes<HTMLElement>) {
       {...props}
       {...autocompleteAriaProps}
       ref={mount}
-      onKeyDown={event => {
+      onKeyDownCapture={event => {
         onKeyDown(event);
+        if (!event.defaultPrevented) props.onKeyDownCapture?.(event);
+      }}
+      onKeyDown={event => {
         if (!event.defaultPrevented) props.onKeyDown?.(event);
       }}
     />

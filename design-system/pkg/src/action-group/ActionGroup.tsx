@@ -1,16 +1,24 @@
 import {
-  Children,
+  Fragment,
   createContext,
   type ForwardedRef,
   type ReactElement,
   forwardRef,
-  isValidElement,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
-import type { Key } from '@react-types/shared';
+import type {
+  Collection as AriaCollection,
+  Key,
+  Node,
+} from '@react-types/shared';
+import { Collection } from 'react-aria-components/Collection';
+import {
+  CollectionBuilder,
+  createLeafComponent,
+} from 'react-aria-components/CollectionBuilder';
 import { Toolbar } from 'react-aria-components/Toolbar';
 import { useObjectRef } from 'react-aria/useObjectRef';
 
@@ -48,9 +56,30 @@ function ActionGroup<T extends object>(
   props: ActionGroupProps<T>,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
+  return (
+    <CollectionBuilder
+      content={<Collection items={props.items}>{props.children}</Collection>}
+    >
+      {collection => (
+        <ActionGroupInner
+          {...props}
+          collection={collection}
+          forwardedRef={forwardedRef}
+        />
+      )}
+    </CollectionBuilder>
+  );
+}
+
+function ActionGroupInner<T extends object>(
+  props: ActionGroupProps<T> & {
+    collection: AriaCollection<Node<T>>;
+    forwardedRef: ForwardedRef<HTMLDivElement>;
+  }
+) {
   let {
-    children,
-    items,
+    collection,
+    forwardedRef,
     density,
     isJustified,
     isDisabled = false,
@@ -69,18 +98,7 @@ function ActionGroup<T extends object>(
     role = selectionMode === 'none' ? 'toolbar' : 'group',
   } = props;
   let styleProps = useStyleProps(props);
-  if (
-    overflowMode === 'collapse' &&
-    (!items || typeof children !== 'function')
-  ) {
-    throw new Error(
-      'ActionGroup requires items and a render function when overflowMode is "collapse".'
-    );
-  }
-  let elements = useMemo(
-    () => materializeItems(items, children),
-    [children, items]
-  );
+  let items = useMemo(() => [...collection], [collection]);
   let [uncontrolledKeys, setUncontrolledKeys] = useState(
     () => new Set(defaultSelectedKeys)
   );
@@ -88,13 +106,13 @@ function ActionGroup<T extends object>(
     ? new Set(controlledSelectedKeys)
     : uncontrolledKeys;
   let disabledKeys = new Set(disabledKeysProp);
-  let [visibleCount, setVisibleCount] = useState(elements.length);
+  let [visibleCount, setVisibleCount] = useState(items.length);
   let groupRef = useObjectRef(forwardedRef);
 
   useEffect(() => {
     let element = groupRef.current;
     if (!element || overflowMode !== 'collapse') {
-      setVisibleCount(elements.length);
+      setVisibleCount(items.length);
       return;
     }
 
@@ -104,21 +122,21 @@ function ActionGroup<T extends object>(
       let overflowButtonWidth = 40;
       let used = 0;
       let count = 0;
-      for (let child of children.slice(0, elements.length)) {
+      for (let child of children.slice(0, items.length)) {
         let width = child.getBoundingClientRect().width;
         if (used + width + overflowButtonWidth > available) break;
         used += width;
         count++;
       }
-      if (selectionMode !== 'none' && count < elements.length) count = 0;
-      setVisibleCount(count < elements.length ? count : elements.length);
+      if (selectionMode !== 'none' && count < items.length) count = 0;
+      setVisibleCount(count < items.length ? count : items.length);
     };
 
     let observer = new ResizeObserver(update);
     observer.observe(element);
     update();
     return () => observer.disconnect();
-  }, [elements.length, overflowMode, selectionMode]);
+  }, [groupRef, items.length, overflowMode, selectionMode]);
 
   let toggle = (key: Key) => {
     if (isDisabled || disabledKeys.has(key)) return;
@@ -140,11 +158,13 @@ function ActionGroup<T extends object>(
     onAction?.(key);
   };
 
-  let visibleItems = elements.slice(0, visibleCount);
-  let overflowItems = elements.slice(visibleCount);
+  let visibleItems = items.slice(0, visibleCount);
+  let overflowItems = items.slice(visibleCount);
   let groupContents = (
     <>
-      {visibleItems}
+      {visibleItems.map(item => (
+        <Fragment key={item.key}>{item.render?.(item)}</Fragment>
+      ))}
       {overflowItems.length > 0 && (
         <MenuTrigger>
           <ActionButton aria-label="More actions" prominence={prominence}>
@@ -153,14 +173,14 @@ function ActionGroup<T extends object>(
           <Menu onAction={key => toggle(key)}>
             {overflowItems.map(item => (
               <MenuItem
-                id={item.props.id}
-                key={item.props.id}
+                id={item.key}
+                key={item.key}
                 isDisabled={
                   isDisabled ||
-                  disabledKeys.has(item.props.id) ||
+                  disabledKeys.has(item.key) ||
                   item.props.isDisabled
                 }
-                textValue={item.props.textValue}
+                textValue={item.textValue}
                 href={item.props.href}
                 target={item.props.target}
                 rel={item.props.rel}
@@ -264,68 +284,59 @@ const _ActionGroup = forwardRef(ActionGroup) as <T extends object>(
 ) => ReactElement;
 export { _ActionGroup as ActionGroup };
 
-export function ActionGroupItem(props: ActionGroupItemProps) {
-  let context = useContext(ActionGroupContext);
-  if (!context) return null;
-  let isDisabled =
-    context.isDisabled ||
-    context.disabledKeys.has(props.id) ||
-    props.isDisabled;
-  let isSelected = context.selectedKeys.has(props.id);
-  let sharedProps = {
-    'aria-label': context.hideButtonText ? props.textValue : undefined,
-    isDisabled,
-    prominence: context.prominence,
-    UNSAFE_className: context.hideButtonText
-      ? css({
-          [actionButtonClassList.selector('text', 'descendant')]: {
-            display: 'none',
-          },
-        })
-      : undefined,
-  } as const;
-  let button =
-    context.selectionMode === 'none' ? (
-      <ActionButton
-        {...sharedProps}
-        href={props.href}
-        target={props.target}
-        rel={props.rel}
-        onPress={() => context.toggle(props.id)}
-      >
-        {props.children}
-      </ActionButton>
+export const ActionGroupItem = createLeafComponent(
+  'actiongroupitem',
+  function ActionGroupItem(
+    props: ActionGroupItemProps,
+    _ref: ForwardedRef<Element>,
+    node: Node<unknown>
+  ) {
+    let context = useContext(ActionGroupContext);
+    if (!context) return null;
+    let id = node.key;
+    let textValue = node.textValue || undefined;
+    let isDisabled =
+      context.isDisabled || context.disabledKeys.has(id) || props.isDisabled;
+    let isSelected = context.selectedKeys.has(id);
+    let sharedProps = {
+      'aria-label': context.hideButtonText ? textValue : undefined,
+      isDisabled,
+      prominence: context.prominence,
+      UNSAFE_className: context.hideButtonText
+        ? css({
+            [actionButtonClassList.selector('text', 'descendant')]: {
+              display: 'none',
+            },
+          })
+        : undefined,
+    } as const;
+    let button =
+      context.selectionMode === 'none' ? (
+        <ActionButton
+          {...sharedProps}
+          href={props.href}
+          target={props.target}
+          rel={props.rel}
+          onPress={() => context.toggle(id)}
+        >
+          {props.children}
+        </ActionButton>
+      ) : (
+        <ToggleButton
+          {...sharedProps}
+          isSelected={isSelected}
+          onChange={() => context.toggle(id)}
+        >
+          {props.children}
+        </ToggleButton>
+      );
+    return context.hideButtonText && textValue ? (
+      <TooltipTrigger>
+        {button}
+        <Tooltip>{textValue}</Tooltip>
+      </TooltipTrigger>
     ) : (
-      <ToggleButton
-        {...sharedProps}
-        isSelected={isSelected}
-        onChange={() => context.toggle(props.id)}
-      >
-        {props.children}
-      </ToggleButton>
-    );
-  return context.hideButtonText && props.textValue ? (
-    <TooltipTrigger>
-      {button}
-      <Tooltip>{props.textValue}</Tooltip>
-    </TooltipTrigger>
-  ) : (
-    button
-  );
-}
-
-function materializeItems<T extends object>(
-  items: Iterable<T> | undefined,
-  children: ActionGroupProps<T>['children']
-): ReactElement<ActionGroupItemProps>[] {
-  if (items && typeof children === 'function') {
-    return Array.from(items, item => children(item)).filter(
-      (child): child is ReactElement<ActionGroupItemProps> => child !== null
+      button
     );
   }
-  if (typeof children === 'function') return [];
-  return Children.toArray(children).filter(
-    (child): child is ReactElement<ActionGroupItemProps> =>
-      isValidElement(child)
-  );
-}
+);
