@@ -227,15 +227,20 @@ export function useUpsertItem(args: {
             });
           let result = await runMutation(override?.sha ?? baseCommit);
           const gqlError = result.error?.graphQLErrors[0]?.originalError;
+          if (
+            gqlError &&
+            (('type' in gqlError &&
+              gqlError.type === 'BRANCH_PROTECTION_RULE_VIOLATION') ||
+              /repository rule violations/i.test(gqlError.message ?? ''))
+          ) {
+            setState({
+              kind: 'needs-new-branch',
+              reason:
+                'Changes must be made via pull request to this branch. Create a new branch to save changes.',
+            });
+            return false;
+          }
           if (gqlError && 'type' in gqlError) {
-            if (gqlError.type === 'BRANCH_PROTECTION_RULE_VIOLATION') {
-              setState({
-                kind: 'needs-new-branch',
-                reason:
-                  'Changes must be made via pull request to this branch. Create a new branch to save changes.',
-              });
-              return false;
-            }
             if (gqlError.type === 'STALE_DATA') {
               // we don't want this to go into the cache yet
               // so we create a new client just for this
