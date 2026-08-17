@@ -70,6 +70,7 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
   let { popoverProps, arrowProps, underlayProps, placement } = usePopover(
     {
       ...ariaProps,
+      isNonModal,
       containerPadding: 8,
       popoverRef,
     },
