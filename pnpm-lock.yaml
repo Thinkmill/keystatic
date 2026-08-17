@@ -911,8 +911,8 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       match-sorter:
-        specifier: ^6.3.1
-        version: 6.3.1
+        specifier: ^8.3.0
+        version: 8.3.0
       mdast-util-from-markdown:
         specifier: ^2.0.0
         version: 2.0.0(supports-color@10.2.2)
@@ -2552,6 +2552,10 @@ packages:
 
   '@babel/runtime@7.22.15':
     resolution: {integrity: sha512-T0O+aa+4w0u06iNmapipJXMV4HoUir03hpx3/YqXXhu9xim3w+dVphjFWl1OH8NbZHw5Lbm9k45drDkgq2VNNA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.29.7':
+    resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/standalone@7.22.15':
@@ -10713,8 +10717,8 @@ packages:
     peerDependencies:
       react: '>= 0.14.0'
 
-  match-sorter@6.3.1:
-    resolution: {integrity: sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==}
+  match-sorter@8.3.0:
+    resolution: {integrity: sha512-8Py1GbZi5zsclYSFcPAH4H5xfTbeD0bOREA7qP/t8bW4MbOSlPl8sbqHOedEV7O+Bxyvxm6xs/v6BXJGe+JDNA==}
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -12528,11 +12532,11 @@ packages:
   remark-rehype@10.1.0:
     resolution: {integrity: sha512-EFmR5zppdBp0WQeDVZ/b66CWJipB2q2VLNFMabzDSGR66Z2fQii83G5gTBbgGEnEEA0QRussvrFHxk1HWGJskw==}
 
-  remove-accents@0.4.2:
-    resolution: {integrity: sha512-7pXIJqJOq5tFgG1A2Zxti3Ht8jJF337m4sowbuHsW30ZnkQFnDzy9qBNhgzX8ZLW4+UBcXiiR7SwR6pokHsxiA==}
-
   remove-accents@0.4.4:
     resolution: {integrity: sha512-EpFcOa/ISetVHEXqu+VwI96KZBmq+a8LJnGkaeFw45epGlxIZz5dhEEnNZMsQXgORu3qaMoLX4qJCzOik6ytAg==}
+
+  remove-accents@0.5.0:
+    resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
 
   renderkid@3.0.0:
     resolution: {integrity: sha512-q/7VIQA8lmM1hF+jn+sFSPWGlMkSAeNYcPLmDQx2zzuiDfaLrOmumR8iaUKlenFgh0XRPIUeSPlH3A+AW3Z5pg==}
@@ -17403,6 +17407,8 @@ snapshots:
   '@babel/runtime@7.22.15':
     dependencies:
       regenerator-runtime: 0.14.0
+
+  '@babel/runtime@7.29.7': {}
 
   '@babel/standalone@7.22.15': {}
 
@@ -26939,10 +26945,10 @@ snapshots:
     dependencies:
       react: 19.2.8
 
-  match-sorter@6.3.1:
+  match-sorter@8.3.0:
     dependencies:
-      '@babel/runtime': 7.22.15
-      remove-accents: 0.4.2
+      '@babel/runtime': 7.29.7
+      remove-accents: 0.5.0
 
   math-intrinsics@1.1.0: {}
 
@@ -29411,9 +29417,9 @@ snapshots:
       mdast-util-to-hast: 12.3.0
       unified: 10.1.2
 
-  remove-accents@0.4.2: {}
-
   remove-accents@0.4.4: {}
+
+  remove-accents@0.5.0: {}
 
   renderkid@3.0.0:
     dependencies:
