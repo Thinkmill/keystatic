@@ -1,5 +1,18 @@
 # @keystatic/core
 
+## 0.6.6
+
+### Patch Changes
+
+- [#1601](https://github.com/Thinkmill/keystatic/pull/1601) [`4dca0ca`](https://github.com/Thinkmill/keystatic/commit/4dca0cac2269a05ad2bdc4906cbc7fb57a03d7c5) Thanks [@emmatown](https://github.com/emmatown)! - Support GitHub rulesets to automatically create a branch when pull requests are required
+
+- [#1602](https://github.com/Thinkmill/keystatic/pull/1602) [`3c34f58`](https://github.com/Thinkmill/keystatic/commit/3c34f589fe59d3faa83e5c35bad9c39b6713e362) Thanks [@emmatown](https://github.com/emmatown)! - Update to minimatch@10
+
+- [#1603](https://github.com/Thinkmill/keystatic/pull/1603) [`b4371f5`](https://github.com/Thinkmill/keystatic/commit/b4371f5649d320dc186c54137aee6284db3ab661) Thanks [@emmatown](https://github.com/emmatown)! - Update to match-sorter@8
+
+- Updated dependencies [[`16373ad`](https://github.com/Thinkmill/keystatic/commit/16373adea441970a69997c3a573cec16d6f7ebb7)]:
+  - @keystar/ui@0.9.4
+
 ## 0.6.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.9.4
+
+### Patch Changes
+
+- [#1599](https://github.com/Thinkmill/keystatic/pull/1599) [`16373ad`](https://github.com/Thinkmill/keystatic/commit/16373adea441970a69997c3a573cec16d6f7ebb7) Thanks [@emmatown](https://github.com/emmatown)! - Fix combobox inputs losing focus when typing
+
 ## 0.9.3
 
 ### Patch Changes
