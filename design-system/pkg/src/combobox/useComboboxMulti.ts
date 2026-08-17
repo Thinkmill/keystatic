@@ -142,9 +142,6 @@ export function useComboboxMulti<T extends object>(
         if (state.selectionManager.focusedKey) {
           state.selectionManager.select(state.selectionManager.focusedKey);
         }
-
-        // Clear the input value after selection but keep the menu open
-        state.setInputValue('');
         break;
       case 'Escape':
         // Propagate the event when closed, assume the intent is to dismiss a

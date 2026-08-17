@@ -4,7 +4,7 @@ import { beforeAll, expect, vi, describe, it } from 'vitest';
 
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 
-import { Combobox, Item } from '..';
+import { Combobox, ComboboxMulti, Item } from '..';
 
 let onChange = vi.fn();
 let onOpenChange = vi.fn();
@@ -142,5 +142,46 @@ describe('combobox/Combobox', () => {
     expect(queryByRole('listbox')).toBeNull();
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(onInputChange).not.toHaveBeenCalled();
+  });
+
+  it('clears a multi combobox input when an item is pressed', function () {
+    onInputChange.mockClear();
+    let { getByRole } = renderWithProvider(
+      <ComboboxMulti label="Test" onInputChange={onInputChange}>
+        <Item key="one">Item one</Item>
+        <Item key="two">Item two</Item>
+      </ComboboxMulti>
+    );
+
+    let combobox = getByRole('combobox') as HTMLInputElement;
+    fireEvent.change(combobox, { target: { value: 'Item' } });
+    act(() => vi.runAllTimers());
+    expect(combobox).toHaveValue('Item');
+
+    firePress(getByRole('option', { name: 'Item one' }));
+
+    expect(combobox).toHaveValue('');
+    expect(onInputChange).toHaveBeenLastCalledWith('');
+  });
+
+  it('clears a multi combobox input when an item is selected with Enter', function () {
+    onInputChange.mockClear();
+    let { getByRole } = renderWithProvider(
+      <ComboboxMulti label="Test" onInputChange={onInputChange}>
+        <Item key="one">Item one</Item>
+        <Item key="two">Item two</Item>
+      </ComboboxMulti>
+    );
+
+    let combobox = getByRole('combobox') as HTMLInputElement;
+    fireEvent.change(combobox, { target: { value: 'Item' } });
+    act(() => vi.runAllTimers());
+    expect(combobox).toHaveValue('Item');
+
+    fireEvent.keyDown(combobox, { key: 'ArrowDown' });
+    fireEvent.keyDown(combobox, { key: 'Enter' });
+
+    expect(combobox).toHaveValue('');
+    expect(onInputChange).toHaveBeenLastCalledWith('');
   });
 });
