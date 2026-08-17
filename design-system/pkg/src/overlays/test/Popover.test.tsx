@@ -36,6 +36,21 @@ describe('overlays/Popover', () => {
     expect(getByRole('dialog')).toBeVisible();
   });
 
+  it('does not lock page scrolling when non-modal', async () => {
+    let { getByRole } = render(
+      <TestPopover isOpen isNonModal>
+        <div role="dialog">contents</div>
+      </TestPopover>
+    );
+
+    // wait for animation
+    await waitFor(() => {
+      expect(getByRole('dialog')).toBeVisible();
+    });
+
+    expect(document.documentElement).not.toHaveStyle('overflow: hidden');
+  });
+
   it('hides the popover when pressing the escape key', async () => {
     let onOpenChange = vi.fn();
     let { getByRole } = render(
