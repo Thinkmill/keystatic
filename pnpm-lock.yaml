@@ -13,6 +13,8 @@ catalogs:
       specifier: 3.48.0
       version: 3.48.0
 
+pnpmfileChecksum: sha256-NxHo7uZEf+9dOxS7VqqhgOiE5l7VOcB+yVXSE0XAk+0=
+
 importers:
 
   .:
@@ -23026,7 +23028,7 @@ snapshots:
 
   babel-plugin-macros@3.1.0:
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.29.7
       cosmiconfig: 7.1.0
       resolve: 1.22.11
     optional: true
