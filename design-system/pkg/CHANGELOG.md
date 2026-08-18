@@ -1,5 +1,13 @@
 # @keystar/ui
 
+## 0.9.5
+
+### Patch Changes
+
+- [#1607](https://github.com/Thinkmill/keystatic/pull/1607) [`4688f77`](https://github.com/Thinkmill/keystatic/commit/4688f77b37755a1a4b8719feb7e11dfa82f392f0) Thanks [@emmatown](https://github.com/emmatown)! - Fix ComboboxMulti not clearing search when clicking on an item
+
+- [#1604](https://github.com/Thinkmill/keystatic/pull/1604) [`41aa38f`](https://github.com/Thinkmill/keystatic/commit/41aa38f035f6f5e5620d291e89d647aee05beac7) Thanks [@emmatown](https://github.com/emmatown)! - Reduce size of package.json
+
 ## 0.9.4
 
 ### Patch Changes

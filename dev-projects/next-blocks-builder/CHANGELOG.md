@@ -1,5 +1,13 @@
 # @example/next-block-builder
 
+## 0.1.59
+
+### Patch Changes
+
+- Updated dependencies [[`41aa38f`](https://github.com/Thinkmill/keystatic/commit/41aa38f035f6f5e5620d291e89d647aee05beac7)]:
+  - @keystatic/core@0.6.7
+  - @keystatic/next@5.0.5
+
 ## 0.1.58
 
 ### Patch Changes

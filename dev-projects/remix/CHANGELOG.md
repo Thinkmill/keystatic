@@ -1,5 +1,13 @@
 # @keystatic/remix-test-app
 
+## 0.1.57
+
+### Patch Changes
+
+- Updated dependencies [[`41aa38f`](https://github.com/Thinkmill/keystatic/commit/41aa38f035f6f5e5620d291e89d647aee05beac7)]:
+  - @keystatic/core@0.6.7
+  - @keystatic/remix@5.0.4
+
 ## 0.1.56
 
 ### Patch Changes
