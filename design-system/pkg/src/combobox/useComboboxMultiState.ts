@@ -58,9 +58,18 @@ export function useComboboxMultiState<T extends object>(
 ): ComboboxMultiState<T> {
   let { allowsEmptyCollection = false, menuTrigger = 'input' } = props;
   let [showAllItems, setShowAllItems] = useState(false);
+  let [inputValue, setInputValue] = useControlledState(
+    props.inputValue,
+    props.defaultInputValue ?? '',
+    props.onInputChange
+  );
   let listState = useListState({
     ...props,
     items: props.items ?? props.defaultItems,
+    onSelectionChange: selection => {
+      props.onSelectionChange?.(selection);
+      setInputValue('');
+    },
     selectionBehavior: 'toggle',
     selectionMode: 'multiple',
   });
@@ -70,11 +79,6 @@ export function useComboboxMultiState<T extends object>(
     isOpen: undefined,
     defaultOpen: undefined,
   });
-  let [inputValue, setInputValue] = useControlledState(
-    props.inputValue,
-    props.defaultInputValue ?? '',
-    props.onInputChange
-  );
   let lastInputValue = usePrevious(inputValue);
 
   // Preserve original collection so we can show all items on demand
