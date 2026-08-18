@@ -1,12 +1,10 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@3.0.2/schema.json",
+  "$schema": "../node_modules/@changesets/config/schema.json",
   "changelog": ["@changesets/changelog-github", { "repo": "Thinkmill/keystatic" }],
   "commit": false,
+  "privatePackages": false,
   "fixed": [],
   "linked": [],
   "access": "public",
-  "baseBranch": "main",
-  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
-    "onlyUpdatePeerDependentsWhenOutOfRange": true
-  }
+  "baseBranch": "main"
 }
