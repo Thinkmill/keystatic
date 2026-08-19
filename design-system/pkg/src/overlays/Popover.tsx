@@ -3,6 +3,7 @@ import { usePopover } from 'react-aria/usePopover';
 import { useObjectRef } from 'react-aria/useObjectRef';
 import { Axis } from 'react-aria/useOverlayPosition';
 import {
+  CSSProperties,
   forwardRef,
   ForwardedRef,
   ForwardRefExoticComponent,
@@ -92,7 +93,20 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
       <div
         {...styleProps}
         {...popoverProps}
-        style={{ ...styleProps.style, ...popoverProps.style }}
+        style={
+          {
+            ...styleProps.style,
+            ...popoverProps.style,
+            // `useOverlayPosition` temporarily sets max-height to the viewport
+            // while measuring. Keep descendants constrained to the last
+            // committed position so scroll containers do not grow and clamp
+            // their scroll position during that measurement.
+            '--popover-max-height':
+              typeof popoverProps.style?.maxHeight === 'number'
+                ? `${popoverProps.style.maxHeight}px`
+                : popoverProps.style?.maxHeight,
+          } as CSSProperties
+        }
         ref={popoverRef}
         role="presentation"
       >
