@@ -63,7 +63,7 @@ import { notFound } from './not-found';
 import { fetchBlob } from './useItemData';
 import { loadDataFile } from './required-files';
 import { parseProps } from '../form/parse-props';
-import { useData } from './useData';
+import { DataState, useData } from './useData';
 
 type CollectionPageProps = {
   collection: string;
@@ -218,6 +218,8 @@ function CollectionPageHeader(props: {
 type CollectionPageContentProps = CollectionPageProps & { searchTerm: string };
 function CollectionPageContent(props: CollectionPageContentProps) {
   const trees = useTree();
+  const collectionConfig = props.config.collections?.[props.collection];
+  const hasCustomReader = collectionConfig?.reader != undefined;
 
   const tree =
     trees.merged.kind === 'loaded'
@@ -253,7 +255,7 @@ function CollectionPageContent(props: CollectionPageContentProps) {
     );
   }
 
-  if (!tree) {
+  if (!tree && !hasCustomReader) {
     return (
       <EmptyState
         icon={listXIcon}
@@ -278,6 +280,66 @@ function CollectionPageContent(props: CollectionPageContentProps) {
   return <CollectionTable {...props} trees={trees.merged.data} />;
 }
 
+function CustomReaderEmptyState({
+  basePath,
+  collection,
+  readerEntries,
+}: {
+  basePath: string;
+  collection: string;
+  readerEntries: DataState<[]>;
+}) {
+  if (readerEntries.kind === 'loading') {
+    return (
+      <EmptyState>
+        <ProgressCircle
+          aria-label="Loading Entries"
+          isIndeterminate
+          size="large"
+        />
+      </EmptyState>
+    );
+  }
+
+  if (
+    readerEntries.kind === 'loaded' &&
+    readerEntries.data &&
+    readerEntries.data.length === 0
+  ) {
+    return (
+      <EmptyState
+        icon={listXIcon}
+        title="Empty collection"
+        message={
+          <>
+            There aren't any entries yet.{' '}
+            <TextLink
+              href={`${basePath}/collection/${encodeURIComponent(
+                collection
+              )}/create`}
+            >
+              Create the first entry
+            </TextLink>{' '}
+            to see it here.
+          </>
+        }
+      />
+    );
+  }
+
+  return (
+    <EmptyState
+      icon={alertCircleIcon}
+      title="Error loading entries"
+      message={
+        readerEntries.kind === 'error'
+          ? readerEntries.error?.message || 'Unknown error'
+          : 'Unknown error'
+      }
+    />
+  );
+}
+
 const SLUG = '@@slug';
 const STATUS = '@@status';
 
@@ -299,14 +361,41 @@ function CollectionTable(
     column: SLUG,
     direction: 'ascending',
   });
-  let hideStatusColumn =
-    isLocalMode || currentBranch === repoInfo?.defaultBranch;
-
-  const baseCommit = useBaseCommit();
 
   const collection = props.config.collections![props.collection]!;
 
+  let hideStatusColumn =
+    isLocalMode ||
+    currentBranch === repoInfo?.defaultBranch ||
+    !!collection.reader;
+
+  const baseCommit = useBaseCommit();
+
+  const readerEntries = useData(
+    useCallback(async () => {
+      if (!collection.reader)
+        return null;
+
+      let entriesSlug: string[] = [];
+      
+      try {
+        entriesSlug = await collection.reader.list();
+      } catch {
+        return null;
+      }
+      
+      return entriesSlug.map((slug: string) => ({
+        name: slug,
+        status: 'Unchanged' as const,
+        sha: '',
+      }));
+    }, [collection.reader])
+  );
+
   const entriesWithStatus = useMemo(() => {
+    if (readerEntries.kind === 'loaded' && readerEntries.data) {
+      return readerEntries.data;
+    }
     const defaultEntries = new Map(
       getEntriesInCollectionWithTreeKey(
         props.config,
@@ -329,10 +418,18 @@ function CollectionTable(
         sha: entry.sha,
       };
     });
-  }, [props.collection, props.config, props.trees]);
+  }, [props.collection, props.config, props.trees, readerEntries]);
 
   const mainFiles = useData(
     useCallback(async () => {
+      if (collection.reader) {
+        const entries = await collection.reader.all();
+        const parsedEntries = new Map<string, Record<string, unknown>>();
+        for (const item of entries) {
+          parsedEntries.set(item.slug, item.entry as Record<string, unknown>);
+        }
+        return parsedEntries;
+      }
       if (!collection.columns?.length) return undefined;
       const formatInfo = getCollectionFormat(props.config, props.collection);
       const entries = await Promise.all(
@@ -486,6 +583,17 @@ function CollectionTable(
           { name: 'Name', key: SLUG },
         ];
   }, [collection, hideStatusColumn]);
+
+  if (
+    collection.reader &&
+    (readerEntries.kind !== 'loaded' || readerEntries.data?.length === 0)
+  ) {
+    return CustomReaderEmptyState({
+      readerEntries: readerEntries as DataState<[]>,
+      basePath: props.basePath,
+      collection: props.collection,
+    });
+  }
 
   return (
     <TableView
