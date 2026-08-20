@@ -1,6 +1,8 @@
 import * as cookie from 'cookie';
 import * as s from 'superstruct';
 import { Config } from '..';
+import { base64Decode, base64Encode } from '../base64';
+import { createLfsPointer } from '../app/git-lfs';
 import {
   KeystaticResponse,
   KeystaticRequest,
@@ -10,6 +12,9 @@ import { handleGitHubAppCreation, localModeApiHandler } from '#api-handler';
 import { webcrypto } from '#webcrypto';
 import { bytesToHex } from '../hex';
 import { decryptValue, encryptValue } from './encryption';
+import { parseRepoConfig } from '../app/repo-config';
+
+const USER_AGENT = 'keystatic';
 
 export type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -155,9 +160,14 @@ export function makeGenericAPIRouteHandler(
     if (joined === 'github/repo-not-found') {
       return githubRepoNotFound(req, config);
     }
+    if (joined === 'github/lfs/upload') {
+      return githubLfsUpload(req, config.config);
+    }
+    if (joined === 'github/lfs/download') {
+      return githubLfsDownload(req, config.config);
+    }
     if (joined === 'github/logout') {
-      const cookies = cookie.parse(req.headers.get('cookie') ?? '');
-      const access_token = cookies['keystatic-gh-access-token'];
+      const access_token = getAccessToken(req);
       if (access_token) {
         await fetch(
           `https://api.github.com/applications/${config.clientId}/token`,
@@ -291,6 +301,11 @@ async function getTokenCookies(
   return headers;
 }
 
+function getAccessToken(req: KeystaticRequest): string | undefined {
+  const cookies = cookie.parse(req.headers.get('cookie') ?? '');
+  return cookies['keystatic-gh-access-token'] || undefined;
+}
+
 async function getRefreshToken(
   req: KeystaticRequest,
   config: InnerAPIRouteConfig
@@ -405,6 +420,229 @@ async function createdGithubApp(
     return { status: 400, body: 'App setup only allowed in development' };
   }
   return handleGitHubAppCreation(req, slugEnvVarName);
+}
+
+function getLfsConfig(
+  req: KeystaticRequest,
+  config: Config
+):
+  | { error: KeystaticResponse }
+  | { owner: string; repo: string; accessToken: string } {
+  if (config.storage.kind !== 'github') {
+    return {
+      error: { status: 400, body: 'LFS is only supported with GitHub storage' },
+    };
+  }
+  const accessToken = getAccessToken(req);
+  if (!accessToken) {
+    return { error: { status: 401, body: 'Unauthorized' } };
+  }
+  const { owner, name: repo } = parseRepoConfig(config.storage.repo);
+  return { owner, repo, accessToken };
+}
+
+async function lfsBatchRequest(
+  owner: string,
+  repo: string,
+  accessToken: string,
+  operation: 'upload' | 'download',
+  objects: Array<{ oid: string; size: number }>
+) {
+  const batchUrl = `https://github.com/${owner}/${repo}.git/info/lfs/objects/batch`;
+  return fetch(batchUrl, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/vnd.git-lfs+json',
+      'Content-Type': 'application/vnd.git-lfs+json',
+      Authorization: `Bearer ${accessToken}`,
+      'User-Agent': USER_AGENT,
+    },
+    body: JSON.stringify({
+      operation,
+      transfers: ['basic'],
+      objects,
+    }),
+  });
+}
+
+async function computeSha256(content: Uint8Array): Promise<string> {
+  const hashBuffer = await webcrypto.subtle.digest(
+    'SHA-256',
+    content as unknown as ArrayBuffer
+  );
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+
+type LfsBatchResponseObject = {
+  oid: string;
+  size: number;
+  actions?: {
+    upload?: { href: string; header?: Record<string, string> };
+    download?: { href: string; header?: Record<string, string> };
+    verify?: { href: string; header?: Record<string, string> };
+  };
+  error?: { code: number; message: string };
+};
+
+async function githubLfsUpload(
+  req: KeystaticRequest,
+  config: Config
+): Promise<KeystaticResponse> {
+  const lfs = getLfsConfig(req, config);
+  if ('error' in lfs) return lfs.error;
+
+  let payload: { objects: Array<{ content: string }> };
+  try {
+    payload = await req.json();
+  } catch {
+    return { status: 400, body: 'Invalid JSON body' };
+  }
+
+  const prepared = await Promise.all(
+    payload.objects.map(async obj => {
+      const bytes = base64Decode(obj.content);
+      const oid = await computeSha256(bytes);
+      return { oid, size: bytes.byteLength, bytes };
+    })
+  );
+
+  const batchRes = await lfsBatchRequest(
+    lfs.owner,
+    lfs.repo,
+    lfs.accessToken,
+    'upload',
+    prepared.map(p => ({ oid: p.oid, size: p.size }))
+  );
+  if (!batchRes.ok) {
+    return {
+      status: batchRes.status,
+      body: `LFS batch API error: ${await batchRes.text()}`,
+    };
+  }
+
+  const batch: { objects: LfsBatchResponseObject[] } = await batchRes.json();
+
+  for (const obj of batch.objects) {
+    if (obj.error) {
+      return {
+        status: 502,
+        body: `LFS error for ${obj.oid}: ${obj.error.message} (${obj.error.code})`,
+      };
+    }
+
+    const uploadAction = obj.actions?.upload;
+    if (!uploadAction) continue;
+
+    const item = prepared.find(p => p.oid === obj.oid);
+    if (!item) {
+      return { status: 500, body: `No content prepared for ${obj.oid}` };
+    }
+
+    const uploadRes = await fetch(uploadAction.href, {
+      method: 'PUT',
+      headers: { 'User-Agent': USER_AGENT, ...(uploadAction.header ?? {}) },
+      body: item.bytes as unknown as BodyInit,
+    });
+    if (!uploadRes.ok) {
+      return {
+        status: 502,
+        body: `LFS upload failed for ${obj.oid} (${uploadRes.status}): ${await uploadRes.text()}`,
+      };
+    }
+
+    if (obj.actions?.verify) {
+      const verifyRes = await fetch(obj.actions.verify.href, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/vnd.git-lfs+json',
+          'User-Agent': USER_AGENT,
+          ...(obj.actions.verify.header ?? {}),
+        },
+        body: JSON.stringify({ oid: obj.oid, size: obj.size }),
+      });
+      if (!verifyRes.ok) {
+        return {
+          status: 502,
+          body: `LFS verify failed for ${obj.oid} (${verifyRes.status}): ${await verifyRes.text()}`,
+        };
+      }
+    }
+  }
+
+  const pointers = prepared.map(p =>
+    base64Encode(
+      new TextEncoder().encode(createLfsPointer(p.oid, p.size))
+    )
+  );
+
+  return {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ objects: pointers.map(p => ({ pointer: p })) }),
+  };
+}
+
+async function githubLfsDownload(
+  req: KeystaticRequest,
+  config: Config
+): Promise<KeystaticResponse> {
+  const lfs = getLfsConfig(req, config);
+  if ('error' in lfs) return lfs.error;
+
+  let payload: { oid: string; size: number };
+  try {
+    payload = await req.json();
+  } catch {
+    return { status: 400, body: 'Invalid JSON body' };
+  }
+
+  const batchRes = await lfsBatchRequest(
+    lfs.owner,
+    lfs.repo,
+    lfs.accessToken,
+    'download',
+    [{ oid: payload.oid, size: payload.size }]
+  );
+  if (!batchRes.ok) {
+    return {
+      status: batchRes.status,
+      body: `LFS batch API error: ${await batchRes.text()}`,
+    };
+  }
+
+  const batch: { objects: LfsBatchResponseObject[] } = await batchRes.json();
+  const obj = batch.objects[0];
+
+  if (obj?.error) {
+    return {
+      status: 502,
+      body: `LFS error for ${obj.oid}: ${obj.error.message} (${obj.error.code})`,
+    };
+  }
+
+  const downloadAction = obj?.actions?.download;
+  if (!downloadAction) {
+    return { status: 404, body: 'LFS object not found' };
+  }
+
+  const res = await fetch(downloadAction.href, {
+    headers: { 'User-Agent': USER_AGENT, ...(downloadAction.header ?? {}) },
+  });
+  if (!res.ok) {
+    return {
+      status: 502,
+      body: `LFS download failed (${res.status}): ${await res.text()}`,
+    };
+  }
+
+  return {
+    status: 200,
+    headers: { 'Content-Type': 'application/octet-stream' },
+    body: new Uint8Array(await res.arrayBuffer()),
+  };
 }
 
 function immediatelyExpiringCookie(name: string) {
