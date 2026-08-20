@@ -25,6 +25,7 @@ import {
 } from './context';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { useContentPanelSize } from '../../../../app/shell/context';
+import { EditorFooter } from './editor-footer';
 import { yCursorPluginKey, ySyncPluginKey } from 'y-prosemirror';
 import * as Y from 'yjs';
 
@@ -119,16 +120,15 @@ export const Editor = forwardRef(function Editor(
           })}
         >
           <Toolbar id={getToolbarId(id)} data-keystatic-editor="toolbar" />
-          <div>
-            <ProseMirrorEditable
-              {...props}
-              {...styleProps}
-              role="textbox"
-              aria-multiline="true"
-              id={getContentId(id)}
-              data-keystatic-editor="content"
-            />
-          </div>
+          <ProseMirrorEditable
+            {...props}
+            {...styleProps}
+            role="textbox"
+            aria-multiline="true"
+            id={getContentId(id)}
+            data-keystatic-editor="content"
+          />
+          <EditorFooter />
         </Box>
         <NodeViews state={value} />
         <CellMenuPortal />
