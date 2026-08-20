@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.9.6
+
+### Patch Changes
+
+- [#1608](https://github.com/Thinkmill/keystatic/pull/1608) [`28c823f`](https://github.com/Thinkmill/keystatic/commit/28c823f0646efccd5f392961ae4f8d2a23a77f4a) Thanks [@emmatown](https://github.com/emmatown)! - Fix combobox scrolling with non-overlay scrollbars
+
 ## 0.9.5
 
 ### Patch Changes

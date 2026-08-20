@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.6.8
+
+### Patch Changes
+
+- [#1610](https://github.com/Thinkmill/keystatic/pull/1610) [`e16a55a`](https://github.com/Thinkmill/keystatic/commit/e16a55a157de23080e4e776d48576ca73736263e) Thanks [@emmatown](https://github.com/emmatown)! - `@keystar/ui` is now depended with a ~ instead of an exact version
+- Updated dependencies [[`28c823f`](https://github.com/Thinkmill/keystatic/commit/28c823f0646efccd5f392961ae4f8d2a23a77f4a)]:
+  - @keystar/ui@0.9.6
+
 ## 0.6.7
 
 ### Patch Changes
