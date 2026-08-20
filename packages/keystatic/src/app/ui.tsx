@@ -43,6 +43,7 @@ import {
 import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
 import { assertValidRepoConfig } from './repo-config';
+import { assertValidI18nConfig } from './path-utils';
 import { NotFoundBoundary, notFound } from './not-found';
 
 function parseParamsWithoutBranch(params: string[]) {
@@ -296,6 +297,7 @@ export function Keystatic(props: {
   if (props.config.storage.kind === 'github') {
     assertValidRepoConfig(props.config.storage.repo);
   }
+  assertValidI18nConfig(props.config);
 
   // The loopback redirect is only needed if the storage uses OAuth callbacks.
   const Wrapper =

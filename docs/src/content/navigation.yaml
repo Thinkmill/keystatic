@@ -45,6 +45,11 @@ navGroups:
           discriminant: page
           value: path-wildcard
         status: default
+      - label: Internationalization
+        link:
+          discriminant: page
+          value: i18n
+        status: new
       - label: Local mode
         link:
           discriminant: page

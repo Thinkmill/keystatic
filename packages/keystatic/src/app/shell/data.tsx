@@ -12,9 +12,9 @@ import {
   useState,
 } from 'react';
 import { CombinedError, useQuery, UseQueryState } from 'urql';
-import { getSingletonPath } from '../path-utils';
+import { useActiveLocale } from './content-locale';
+import { getSingletonPathsForTreeKey, getTreeKey } from '../tree-key';
 import {
-  getTreeNodeAtPath,
   treeEntriesToTreeNodes,
   TreeEntry,
   TreeNode,
@@ -74,6 +74,7 @@ export function LocalAppShellProvider(props: {
   config: LocalConfig;
   children: ReactNode;
 }) {
+  const locale = useActiveLocale();
   const [currentTreeSha, setCurrentTreeSha] = useState<string>('initial');
 
   const tree = useData(
@@ -106,8 +107,8 @@ export function LocalAppShellProvider(props: {
         singletons: new Set<string>(),
       };
     }
-    return getChangedData(props.config, allTreeData.scoped.merged.data);
-  }, [allTreeData, props.config]);
+    return getChangedData(props.config, allTreeData.scoped.merged.data, locale);
+  }, [allTreeData, props.config, locale]);
 
   return (
     <SetTreeShaContext.Provider value={setCurrentTreeSha}>
@@ -275,6 +276,7 @@ export function GitHubAppShellProvider(props: {
   children: ReactNode;
 }) {
   const router = useRouter();
+  const locale = useActiveLocale();
   const { data, error } = useContext(GitHubAppShellDataContext)!;
   let repo:
     | FragmentData<typeof Repo_ghDirect>
@@ -362,8 +364,8 @@ export function GitHubAppShellProvider(props: {
         singletons: new Set<string>(),
       };
     }
-    return getChangedData(props.config, allTreeData.scoped.merged.data);
-  }, [allTreeData, props.config]);
+    return getChangedData(props.config, allTreeData.scoped.merged.data, locale);
+  }, [allTreeData, props.config, locale]);
 
   useEffect(() => {
     if (error?.response?.status === 401) {
@@ -732,7 +734,8 @@ function useGitHubTreeData(sha: string | null, config: Config) {
 
 function getChangedData(
   config: Config,
-  trees: { current: TreeData; default: TreeData }
+  trees: { current: TreeData; default: TreeData },
+  locale?: string
 ) {
   return {
     collections: new Map(
@@ -741,14 +744,16 @@ function getChangedData(
           getEntriesInCollectionWithTreeKey(
             config,
             collection,
-            trees.current.tree
+            trees.current.tree,
+            locale
           ).map(x => [x.slug, x.key])
         );
         const defaultBranch = new Map(
           getEntriesInCollectionWithTreeKey(
             config,
             collection,
-            trees.default.tree
+            trees.default.tree,
+            locale
           ).map(x => [x.slug, x.key])
         );
 
@@ -775,10 +780,10 @@ function getChangedData(
     ),
     singletons: new Set(
       Object.keys(config.singletons ?? {}).filter(singleton => {
-        const singletonPath = getSingletonPath(config, singleton);
+        const paths = getSingletonPathsForTreeKey(config, singleton, locale);
         return (
-          getTreeNodeAtPath(trees.current.tree, singletonPath)?.entry.sha !==
-          getTreeNodeAtPath(trees.default.tree, singletonPath)?.entry.sha
+          getTreeKey(paths, trees.current.tree) !==
+          getTreeKey(paths, trees.default.tree)
         );
       })
     ),
