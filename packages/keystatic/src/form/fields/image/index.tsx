@@ -3,7 +3,7 @@ import { AssetFormField } from '../../api';
 import { FieldDataError } from '../error';
 import { RequiredValidation, assertRequired } from '../utils';
 import { getSrcPrefix } from './getSrcPrefix';
-import { ImageFieldInput } from '#field-ui/image';
+import { ImageFieldInput, ImageCell } from '#field-ui/image';
 
 export function image<IsRequired extends boolean | undefined>({
   label,
@@ -34,6 +34,7 @@ export function image<IsRequired extends boolean | undefined>({
     kind: 'form',
     formKind: 'asset',
     label,
+    Cell: ImageCell,
     Input(props) {
       return (
         <ImageFieldInput
