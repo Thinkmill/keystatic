@@ -99,7 +99,10 @@ export type GitHubConfig<
   singletons?: Singletons;
 } & CommonConfig<Collections, Singletons>;
 
-type LocalStorageConfig = { kind: 'local' };
+type LocalStorageConfig = {
+  kind: 'local';
+  pathPrefix?: string;
+};
 
 export type LocalConfig<
   Collections extends {
