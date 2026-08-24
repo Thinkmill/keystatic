@@ -189,8 +189,20 @@ export default function Provider({
   config: Config;
 }) {
   const themeContext = useTheme();
-  const { push: navigate } = useRouter();
-  const keystarRouter = useMemo(() => ({ navigate }), [navigate]);
+  const { push, replace } = useRouter();
+  const keystarRouter = useMemo(
+    () => ({
+      navigate(href: string, options?: { replace?: boolean }) {
+        return options?.replace ? replace(href) : push(href);
+      },
+      // These hooks are consumed lazily by @keystar/ui/router.
+      // eslint-disable-next-line react-compiler/react-compiler
+      usePathname: useKeystaticPathname,
+      // eslint-disable-next-line react-compiler/react-compiler
+      useSearch: useKeystaticSearch,
+    }),
+    [push, replace]
+  );
 
   return (
     <ThemeProvider value={themeContext}>
@@ -212,4 +224,12 @@ export default function Provider({
       </KeystarProvider>
     </ThemeProvider>
   );
+}
+
+function useKeystaticPathname() {
+  return useRouter().pathname;
+}
+
+function useKeystaticSearch() {
+  return useRouter().search;
 }

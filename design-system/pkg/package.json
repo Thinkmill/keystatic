@@ -40,6 +40,7 @@
     "./layout": "./dist/keystar-ui-layout.js",
     "./notice": "./dist/keystar-ui-notice.js",
     "./picker": "./dist/keystar-ui-picker.js",
+    "./router": "./dist/keystar-ui-router.js",
     "./switch": "./dist/keystar-ui-switch.js",
     "./listbox": "./dist/keystar-ui-listbox.js",
     "./tooltip": "./dist/keystar-ui-tooltip.js",
