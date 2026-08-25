@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.10.0
+
+### Minor Changes
+
+- [#1612](https://github.com/Thinkmill/keystatic/pull/1612) [`dbb0bb5`](https://github.com/Thinkmill/keystatic/commit/dbb0bb53d2c4d77ee4ed1f4cb7bea04266036592) Thanks [@emmatown](https://github.com/emmatown)! - Add generic `useNavigate`, `usePathname`, and `useSearch` router hooks with support for replacement navigation.
+
 ## 0.9.6
 
 ### Patch Changes
