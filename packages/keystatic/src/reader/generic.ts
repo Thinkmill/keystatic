@@ -261,6 +261,10 @@ export function collectionReader(
   config: Config,
   fsReader: MinimalFs
 ): CollectionReader<any, any> {
+  if (config.collections![collection].reader) {
+    return config.collections![collection].reader;
+  }
+
   const formatInfo = getCollectionFormat(config, collection);
   const collectionPath = getCollectionPath(config, collection);
   const collectionConfig = config.collections![collection];
@@ -405,6 +409,10 @@ export function singletonReader(
   config: Config,
   fsReader: MinimalFs
 ): SingletonReader<any> {
+  if (config.singletons![singleton].reader) {
+    return config.singletons![singleton].reader;
+  }
+  
   const formatInfo = getSingletonFormat(config, singleton);
   const singletonPath = getSingletonPath(config, singleton);
   const schema = fields.object(config.singletons![singleton].schema);

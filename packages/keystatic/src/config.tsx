@@ -4,6 +4,7 @@ import { ReactElement } from 'react';
 import { ComponentSchema, FormField, SlugFormField } from './form/api';
 import type { Locale } from './app/l10n/locales';
 import { RepoConfig } from './app/repo-config';
+import { CollectionReader, SingletonReader } from './reader/generic';
 
 // Common
 // ----------------------------------------------------------------------------
@@ -17,6 +18,46 @@ export type Format =
     };
 export type EntryLayout = 'content' | 'form';
 export type Glob = '*' | '**';
+
+export type UseUpsertItemArgs = {
+  state: unknown;
+  initialFiles: string[] | undefined;
+  schema: Record<string, ComponentSchema>;
+  config: Config;
+  format: FormatInfo;
+  currentLocalTreeKey: string | undefined;
+  basePath: string;
+  slug: { value: string; field: string } | undefined;
+};
+
+export type FormatInfo = {
+  data: DataFormat;
+  contentField?: {
+    path: string[];
+    contentExtension: string;
+  };
+};
+
+export type BeforeSaveCallbackArgs = {
+  item: Record<string, unknown>;
+  action: 'create' | 'update';
+  keystaticSave: () => Promise<boolean>;
+};
+
+export type BeforeDeleteCallbackArgs = {
+  basePath: string;
+  initialFiles: string[];
+  keystaticDelete: () => Promise<boolean>;
+};
+
+export type BeforeSaveCallback = (
+  args: BeforeSaveCallbackArgs
+) => Promise<boolean>;
+
+export type BeforeDeleteCallback = (
+  args: BeforeDeleteCallbackArgs
+) => Promise<boolean>;
+
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends string,
@@ -31,6 +72,9 @@ export type Collection<
   parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
   schema: Schema;
+  beforeSave?: BeforeSaveCallback;
+  beforeDelete?: BeforeDeleteCallback;
+  reader?: CollectionReader<Schema, SlugField>;
 };
 
 export type Singleton<Schema extends Record<string, ComponentSchema>> = {
@@ -40,6 +84,8 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   format?: Format;
   previewUrl?: string;
   schema: Schema;
+  beforeSave?: BeforeSaveCallback;
+  reader?: SingletonReader<Schema>;
 };
 
 type CommonConfig<Collections, Singletons> = {

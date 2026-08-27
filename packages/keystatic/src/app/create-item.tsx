@@ -289,6 +289,7 @@ function CreateItemLocal(props: {
     format: formatInfo,
     currentLocalTreeKey: undefined,
     slug: { field: collectionConfig.slugField, value: slug },
+    beforeSave: collectionConfig.beforeSave,
   });
   const createItem = useEventCallback(_createItem);
 
@@ -382,6 +383,7 @@ function CreateItemCollab(props: {
     format: formatInfo,
     currentLocalTreeKey: undefined,
     slug: { field: collectionConfig.slugField, value: slug },
+    beforeSave: collectionConfig.beforeSave,
   });
   const createItem = useEventCallback(_createItem);
 
