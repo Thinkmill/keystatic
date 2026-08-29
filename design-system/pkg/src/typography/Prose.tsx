@@ -117,10 +117,20 @@ export function useProseStyleProps(props: ProseProps) {
         a: {
           color: tokenSchema.color.foreground.accent,
         },
+        kbd: {
+          backgroundColor: tokenSchema.color.alias.backgroundIdle,
+          borderRadius: tokenSchema.size.radius.small,
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
+          color: tokenSchema.color.foreground.neutralEmphasis,
+          display: 'inline',
+          fontSize: '0.85em',
+          fontFamily: tokenSchema.typography.fontFamily.code,
+          padding: '.2em .4em',
+        },
 
         // code block
         pre: {
-          backgroundColor: tokenSchema.color.background.surface,
+          backgroundColor: tokenSchema.color.alias.backgroundIdle,
           borderRadius: tokenSchema.size.radius.medium,
           color: tokenSchema.color.foreground.neutralEmphasis,
           fontFamily: tokenSchema.typography.fontFamily.code,
@@ -137,13 +147,13 @@ export function useProseStyleProps(props: ProseProps) {
         },
         // inline code
         '& :not(pre) > code': {
-          backgroundColor: tokenSchema.color.background.accent,
+          backgroundColor: tokenSchema.color.alias.backgroundSelected,
           borderRadius: tokenSchema.size.radius.small,
           color: tokenSchema.color.foreground.neutralEmphasis,
-          display: 'inline-block',
+          display: 'inline',
           fontSize: '0.85em',
           fontFamily: tokenSchema.typography.fontFamily.code,
-          paddingInline: tokenSchema.size.space.small,
+          padding: '.2em .4em',
         },
 
         // Headings
@@ -183,6 +193,30 @@ export function useProseStyleProps(props: ProseProps) {
           fontWeight: tokenSchema.typography.fontWeight.semibold,
           letterSpacing: '0.0125em',
         },
+
+        // Tables
+        // ---------------------------------------------------------------------
+        table: {
+          borderCollapse: 'collapse',
+          borderSpacing: 0,
+          width: '100%',
+          // tableLayout: 'fixed',
+        },
+        th: {
+          fontWeight: tokenSchema.typography.fontWeight.semibold,
+          padding: '0.5rem',
+          textAlign: 'start',
+          verticalAlign: 'top',
+        },
+        ':where(th:first-child)': { paddingInlineStart: 0 },
+        ':where(th:last-child)': { paddingInlineEnd: 0 },
+        td: {
+          padding: '0.5rem',
+          verticalAlign: 'top',
+        },
+        ':where(td:first-child)': { paddingInlineStart: 0 },
+        ':where(td:last-child)': { paddingInlineEnd: 0 },
+
         ...getListStyles(),
       }),
       styleProps.className
