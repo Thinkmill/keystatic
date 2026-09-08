@@ -7,6 +7,7 @@ import { Config } from '../../config';
 import { isGitHubConfig, isLocalConfig } from '../utils';
 
 import { AppStateContext, ConfigContext } from './context';
+import { ContentLocaleProvider } from './content-locale';
 import {
   GitHubAppShellProvider,
   AppShellErrorContext,
@@ -65,19 +66,18 @@ export const AppShell = (props: {
   );
 
   const inner = (
-    <ConfigContext.Provider value={props.config}>
-      <AppStateContext.Provider value={{ basePath: props.basePath }}>
-        <SidebarProvider>
-          <MainPanelLayout>
-            <BranchNotFound>{content}</BranchNotFound>
-          </MainPanelLayout>
-        </SidebarProvider>
-      </AppStateContext.Provider>
-    </ConfigContext.Provider>
+    <AppStateContext.Provider value={{ basePath: props.basePath }}>
+      <SidebarProvider>
+        <MainPanelLayout>
+          <BranchNotFound>{content}</BranchNotFound>
+        </MainPanelLayout>
+      </SidebarProvider>
+    </AppStateContext.Provider>
   );
 
+  let withData: ReactNode;
   if (isGitHubConfig(props.config) || props.config.storage.kind === 'cloud') {
-    return (
+    withData = (
       <GitHubAppShellProvider
         currentBranch={props.currentBranch}
         config={props.config}
@@ -85,13 +85,19 @@ export const AppShell = (props: {
         {inner}
       </GitHubAppShellProvider>
     );
-  }
-  if (isLocalConfig(props.config)) {
-    return (
+  } else if (isLocalConfig(props.config)) {
+    withData = (
       <LocalAppShellProvider config={props.config}>
         {inner}
       </LocalAppShellProvider>
     );
+  } else {
+    return null;
   }
-  return null;
+
+  return (
+    <ConfigContext.Provider value={props.config}>
+      <ContentLocaleProvider>{withData}</ContentLocaleProvider>
+    </ConfigContext.Provider>
+  );
 };

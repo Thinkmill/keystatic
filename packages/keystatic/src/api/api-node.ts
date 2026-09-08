@@ -131,7 +131,9 @@ function getIsPathValid(config: Config) {
   return (filepath: string) =>
     !filepath.includes('\\') &&
     filepath.split('/').every(x => x !== '.' && x !== '..') &&
-    allowedDirectories.some(x => filepath.startsWith(x));
+    allowedDirectories.some(
+      x => filepath === x || filepath.startsWith(`${x}/`)
+    );
 }
 
 async function blob(

@@ -1,0 +1,224 @@
+---
+title: Internationalization
+summary: >-
+  Declare a collection or singleton once and author its content across multiple
+  languages, with a language switcher in the Admin UI.
+---
+When your site ships in more than one language, you'll want each collection or singleton to have a separate version of its content per language. Keystatic's `i18n` option lets you declare a collection or singleton **once** and mark it as `localized` — Keystatic then stores one copy per language and adds a language switcher at the top of the Admin UI.
+
+{% aside icon="☝️" %}
+This is about localizing your **content**. It's a different thing from the [`locale` option](/docs/configuration), which sets the language of the Keystatic Admin UI itself (buttons, labels, etc.).
+{% /aside %}
+
+Keystatic uses **document-level** localization: each language version is a separate file (or folder) on disk, and the Admin UI shows one language at a time. Pick a language from the switcher, and only that language's entries are shown below.
+
+## Example
+
+Add a top-level `i18n` option, mark a collection or singleton as `localized`, and put a `{locale}` token in its `path` where the language should go:
+
+```tsx
+// keystatic.config.ts
+import { config, collection, singleton, fields } from '@keystatic/core';
+
+export default config({
+  storage: { kind: 'local' },
+  i18n: {
+    locales: { en: 'English', pl: 'Polski', de: 'Deutsch' },
+    defaultLocale: 'en',
+  },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      localized: true,
+      path: 'content/posts/{locale}/*',
+      slugField: 'title',
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.markdoc({ label: 'Content' }),
+      },
+    }),
+  },
+  singletons: {
+    homepage: singleton({
+      label: 'Homepage',
+      localized: true,
+      path: 'content/homepage/{locale}',
+      schema: {
+        headline: fields.text({ label: 'Headline' }),
+      },
+    }),
+    // Not localized — shared across every language.
+    logos: singleton({
+      label: 'Logos',
+      path: 'content/logos',
+      schema: {
+        items: fields.array(fields.text({ label: 'Logo' })),
+      },
+    }),
+  },
+});
+```
+
+With three locales, this produces one directory per language on disk:
+
+```sh
+content
+├── posts
+│   ├── en
+│   │   └── my-post.mdoc
+│   ├── pl
+│   │   └── my-post.mdoc
+│   └── de
+│       └── my-post.mdoc
+├── homepage
+│   ├── en.yaml
+│   ├── pl.yaml
+│   └── de.yaml
+└── logos.yaml
+```
+
+Notice that `posts` and `homepage` each appear as a **single** entry in the Admin UI navigation — not one per language. The switcher decides which language you're editing. `logos` has no `{locale}` token and isn't `localized`, so it stays a single shared entry visible in every language.
+
+---
+
+## Options
+
+### i18n
+
+`i18n` — a top-level config option that turns on content localization.
+
+```tsx
+i18n: {
+  locales: { en: 'English', pl: 'Polski', de: 'Deutsch' },
+  defaultLocale: 'en',
+},
+```
+
+- `locales` — a map of locale code to the label shown in the language switcher. Each code becomes a directory name, so it has to be a single path segment.
+- `defaultLocale` — the language selected by default. Must be one of the keys in `locales`.
+- `prefixDefaultLocale` — whether the default language gets a directory of its own. Defaults to `true`.
+
+### localized
+
+`localized` — set to `true` on a [collection](/docs/collections) or [singleton](/docs/singletons) to give it a separate version of its content per language.
+
+A `localized` entry **must** include a `{locale}` token in its `path`, and `i18n` must be set on the config.
+
+### The `{locale}` path token
+
+`{locale}` — a placeholder in the `path` string that Keystatic replaces with the active language. It can appear anywhere in the path, so you're free to match whatever folder structure you already use:
+
+```tsx
+path: 'content/posts/{locale}/*'   // content/posts/en/my-post.mdoc
+path: 'i18n/{locale}/posts/*'      // i18n/en/posts/my-post.mdoc
+path: 'content/homepage/{locale}'  // content/homepage/en.yaml
+```
+
+A collection's [`template`](/docs/collections) resolves the token too, so new entries can start from a skeleton written in the language you're editing. Leave the token out and every language starts from the same one:
+
+```tsx
+template: 'content/posts/{locale}/_template'  // one skeleton per language
+template: 'content/_templates/post'           // shared
+```
+
+{% aside icon="⚡️" %}
+Everything up to the `path` [wildcard](/docs/path-wildcard) is a fixed prefix, so a `{locale}` token there is just an ordinary folder. That means you can adopt this feature on an **existing** multi-language project without moving any files — as long as your folders already sit where the token resolves to.
+{% /aside %}
+
+### prefixDefaultLocale
+
+By default every language resolves the `{locale}` token to a folder of its own, including the default one. With `prefixDefaultLocale: false` the token segment is instead **removed** for the default language, leaving its content at the root while the other languages keep their folders:
+
+```tsx
+i18n: {
+  locales: { en: 'English', pl: 'Polski', de: 'Deutsch' },
+  defaultLocale: 'en',
+  prefixDefaultLocale: false,
+},
+```
+
+This applies to **every localized entry — collections and singletons alike**. Wherever the `{locale}` token sits in a `path`, the default language simply doesn't get that segment:
+
+```sh
+content
+├── posts                    # collection: path: 'content/posts/{locale}/*'
+│   ├── my-post.mdoc         #   English, the default
+│   ├── pl
+│   │   └── my-post.mdoc
+│   └── de
+│       └── my-post.mdoc
+├── homepage.yaml            # singleton: path: 'content/homepage/{locale}'
+└── homepage                 #   English lands beside the other languages' folder
+    ├── pl.yaml
+    └── de.yaml
+```
+
+Note what that means for a singleton: the default language's file sits **next to** the folder holding the other languages, rather than inside it. A file and a folder can share a base name, so `homepage.yaml` and `homepage/` coexist quite happily.
+
+This is the shape Astro produces for [`prefixDefaultLocale: false`](https://docs.astro.build/en/guides/internationalization/#prefixdefaultlocale-false), where Markdown in `src/pages` is routed by file path, and the shape Starlight expects for a **root locale**. Pointing Keystatic at either means the default language has no folder of its own:
+
+```tsx
+path: 'src/content/docs/{locale}/**'  // src/content/docs/index.mdoc, src/content/docs/fr/index.mdoc
+path: 'src/pages/{locale}/*'          // src/pages/about.md, src/pages/fr/about.md
+```
+
+Because the segment is removed rather than replaced, the `{locale}` token has to be a whole path segment — `posts-{locale}` has nothing to remove — and it can't be the only one, since that would leave the default language with an empty path.
+
+{% aside icon="👀" %}
+Locale codes become **reserved** at the root of a localized collection. With `content/posts/{locale}/**`, a `pl` folder always holds Polish content, so an English entry can't take a slug starting with `pl/` — the Admin UI rejects it. Astro and Starlight reserve those names the same way. Collections using the `*` [wildcard](/docs/path-wildcard) are unaffected, because their slugs can't contain `/`.
+{% /aside %}
+
+---
+
+## The language switcher
+
+When `i18n` is set, a language switcher appears at the top of the Admin UI sidebar, above the collection and singleton list.
+
+- Picking a language re-points every `localized` collection and singleton to that language's content.
+- Shared (non-localized) entries stay visible in every language.
+- Your choice is remembered in the browser, so you land back on the same language next time.
+
+{% aside icon="👀" %}
+Switching language keeps you on the same entry `slug`. If that entry doesn't exist yet in the language you switch to, you'll see a "not found" state — create it to start that translation.
+{% /aside %}
+
+---
+
+## Reading localized content
+
+The [Reader API](/docs/reader-api) reads one language at a time. Pass a `locale` when you create the reader:
+
+```tsx
+import { createReader } from '@keystatic/core/reader';
+import config from '../keystatic.config';
+
+const reader = createReader(process.cwd(), config, { locale: 'en' });
+
+const posts = await reader.collections.posts.all();
+const homepage = await reader.singletons.homepage.read();
+```
+
+The GitHub reader takes the same option:
+
+```tsx
+import { createGitHubReader } from '@keystatic/core/reader/github';
+
+const reader = createGitHubReader(config, {
+  repo: 'my-org/my-repo',
+  token: process.env.GITHUB_TOKEN,
+  locale: 'en',
+});
+```
+
+To read every language, create one reader per locale — for example, loop over `Object.keys(config.i18n.locales)`. Shared collections and singletons ignore the `locale` and return the same content for every reader.
+
+---
+
+## Folder vs. file layout
+
+The `{locale}` token follows the same trailing-slash rule as any other `path`:
+
+- `path: 'content/homepage/{locale}'` — one **file** per language: `content/homepage/en.yaml`.
+- `path: 'content/homepage/{locale}/'` — one **folder** per language: `content/homepage/en/index.yaml`.
+
+See the [Path wildcard](/docs/path-wildcard) page for more on how paths map to files.

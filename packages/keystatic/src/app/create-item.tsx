@@ -31,6 +31,7 @@ import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
 import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
+import { useActiveLocale } from './shell/content-locale';
 import { useSlugFieldInfo } from './slugs';
 import { LOADING, useData } from './useData';
 import { serializeEntryToFiles, useUpsertItem } from './updating';
@@ -40,6 +41,7 @@ import { useYJsValue } from './useYJsValue';
 import {
   getCollectionFormat,
   getCollectionItemPath,
+  getCollectionTemplatePath,
   getSlugFromState,
   isGitHubConfig,
   useShowRestoredDraftMessage,
@@ -72,6 +74,7 @@ function CreateItemWrapper(props: {
 
   const collectionConfig = props.config.collections?.[props.collection];
   if (!collectionConfig) notFound();
+  const locale = useActiveLocale();
   const format = useMemo(
     () => getCollectionFormat(props.config, props.collection),
     [props.config, props.collection]
@@ -91,7 +94,8 @@ function CreateItemWrapper(props: {
           dirpath: getCollectionItemPath(
             props.config,
             props.collection,
-            stored.slug
+            stored.slug,
+            locale
           ),
           format,
           schema: collectionConfig.schema,
@@ -106,6 +110,7 @@ function CreateItemWrapper(props: {
       format,
       props.collection,
       props.config,
+      locale,
     ])
   );
 
@@ -120,15 +125,22 @@ function CreateItemWrapper(props: {
 
   const isFromTemplate = !!duplicateSlug || !!collectionConfig.template;
 
+  const templatePath = getCollectionTemplatePath(
+    props.config,
+    props.collection,
+    locale
+  );
+
   const itemData = useItemData({
     config: props.config,
     dirpath:
-      collectionConfig.template && !duplicateSlug
-        ? collectionConfig.template
+      templatePath && !duplicateSlug
+        ? templatePath
         : getCollectionItemPath(
             props.config,
             props.collection,
-            duplicateSlug ?? ''
+            duplicateSlug ?? '',
+            locale
           ),
     schema: collectionConfig.schema,
     format,
@@ -254,7 +266,10 @@ const storedValSchema = s.type({
   version: s.literal(1),
   savedAt: s.date(),
   slug: s.string(),
-  files: s.map(s.string(), s.instance(Uint8Array)),
+  files: s.map(
+    s.string(),
+    s.define<Uint8Array>('Uint8Array', v => v instanceof Uint8Array)
+  ),
 });
 
 function CreateItemLocal(props: {
@@ -279,7 +294,13 @@ function CreateItemLocal(props: {
 
   const formatInfo = getCollectionFormat(props.config, props.collection);
 
-  const basePath = getCollectionItemPath(props.config, props.collection, slug);
+  const locale = useActiveLocale();
+  const basePath = getCollectionItemPath(
+    props.config,
+    props.collection,
+    slug,
+    locale
+  );
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
     state,
     basePath,
@@ -372,7 +393,13 @@ function CreateItemCollab(props: {
 
   const formatInfo = getCollectionFormat(props.config, props.collection);
 
-  const basePath = getCollectionItemPath(props.config, props.collection, slug);
+  const locale = useActiveLocale();
+  const basePath = getCollectionItemPath(
+    props.config,
+    props.collection,
+    slug,
+    locale
+  );
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
     state,
     basePath,

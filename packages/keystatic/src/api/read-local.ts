@@ -2,8 +2,11 @@ import fs from 'fs/promises';
 import path from 'path';
 import {
   getCollectionPath,
+  getCollectionTemplatePath,
+  getContentLocales,
   getSingletonFormat,
   getSingletonPath,
+  isLocalized,
 } from '../app/path-utils';
 import { updateTreeWithChanges, blobSha } from '../app/trees';
 import { Config } from '../config';
@@ -109,32 +112,43 @@ export async function readToDirEntries(baseDir: string) {
 
 export function getAllowedDirectories(config: Config) {
   const allowedDirectories: string[] = [];
+  const contentLocales = getContentLocales(config);
+  const localesFor = (entry: {
+    localized?: boolean;
+  }): (string | undefined)[] =>
+    isLocalized(entry) && contentLocales.length ? contentLocales : [undefined];
+
   for (const [collection, collectionConfig] of Object.entries(
     config.collections ?? {}
   )) {
-    allowedDirectories.push(
-      ...getDirectoriesForTreeKey(
-        fields.object(collectionConfig.schema),
-        getCollectionPath(config, collection),
-        undefined,
-        { data: 'yaml', contentField: undefined, dataLocation: 'index' }
-      )
-    );
-    if (collectionConfig.template) {
-      allowedDirectories.push(collectionConfig.template);
+    for (const locale of localesFor(collectionConfig)) {
+      allowedDirectories.push(
+        ...getDirectoriesForTreeKey(
+          fields.object(collectionConfig.schema),
+          getCollectionPath(config, collection, locale),
+          undefined,
+          { data: 'yaml', contentField: undefined, dataLocation: 'index' }
+        )
+      );
+      const template = getCollectionTemplatePath(config, collection, locale);
+      if (template !== undefined) {
+        allowedDirectories.push(template);
+      }
     }
   }
   for (const [singleton, singletonConfig] of Object.entries(
     config.singletons ?? {}
   )) {
-    allowedDirectories.push(
-      ...getDirectoriesForTreeKey(
-        fields.object(singletonConfig.schema),
-        getSingletonPath(config, singleton),
-        undefined,
-        getSingletonFormat(config, singleton)
-      )
-    );
+    for (const locale of localesFor(singletonConfig)) {
+      allowedDirectories.push(
+        ...getDirectoriesForTreeKey(
+          fields.object(singletonConfig.schema),
+          getSingletonPath(config, singleton, locale),
+          undefined,
+          getSingletonFormat(config, singleton)
+        )
+      );
+    }
   }
   return [...new Set(allowedDirectories)];
 }

@@ -11,7 +11,7 @@ import {
   treeEntriesToTreeNodes,
 } from '../app/trees';
 import { cache } from '#react-cache-in-react-server';
-import { fixPath } from '../app/path-utils';
+import { assertValidI18nConfig, fixPath } from '../app/path-utils';
 
 export type { Entry, EntryWithResolvedLinkedFiles } from './generic';
 
@@ -38,8 +38,11 @@ export function createGitHubReader<
     pathPrefix?: string;
     ref?: string;
     token?: string;
+    locale?: string;
   }
 ): Reader<Collections, Singletons> {
+  assertValidI18nConfig(config as Config);
+  const locale = opts.locale;
   const ref = opts.ref ?? 'HEAD';
   const pathPrefix = opts.pathPrefix ? fixPath(opts.pathPrefix) + '/' : '';
   const getTree = cache(async function loadTree() {
@@ -96,13 +99,13 @@ export function createGitHubReader<
     collections: Object.fromEntries(
       Object.keys(config.collections || {}).map(key => [
         key,
-        collectionReader(key, config as Config, fs),
+        collectionReader(key, config as Config, fs, locale),
       ])
     ) as any,
     singletons: Object.fromEntries(
       Object.keys(config.singletons || {}).map(key => [
         key,
-        singletonReader(key, config as Config, fs),
+        singletonReader(key, config as Config, fs, locale),
       ])
     ) as any,
     config,
