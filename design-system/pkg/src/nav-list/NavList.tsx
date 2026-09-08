@@ -1,10 +1,6 @@
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import {
-  filterDOMProps,
   useLayoutEffect,
-  useObjectRef,
-} from '@react-aria/utils';
-import { AriaLabelingProps, DOMProps } from '@react-types/shared';
-import {
   ForwardedRef,
   ReactNode,
   RefObject,
@@ -15,6 +11,8 @@ import {
   ForwardRefExoticComponent,
   Ref,
 } from 'react';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 
 import { Flex } from '@keystar/ui/layout';
 import { SlotProvider } from '@keystar/ui/slots';

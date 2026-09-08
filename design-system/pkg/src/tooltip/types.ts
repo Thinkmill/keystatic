@@ -2,8 +2,8 @@ import { ReactElement, ReactNode } from 'react';
 import {
   AriaTooltipProps,
   TooltipTriggerProps as AriaTooltipTriggerProps,
-} from '@react-aria/tooltip';
-import { PositionProps } from '@react-types/overlays';
+} from 'react-aria/useTooltipTrigger';
+import { PositionProps } from 'react-aria/useOverlayPosition';
 import { DOMProps } from '@react-types/shared';
 
 import { BaseStyleProps } from '@keystar/ui/style';

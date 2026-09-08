@@ -1,16 +1,15 @@
 'use client';
 
-import { DropOptions, useClipboard, useDrop } from '@react-aria/dnd';
-import { useFocusRing } from '@react-aria/focus';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import {
-  filterDOMProps,
-  mergeProps,
-  useLabels,
-  useObjectRef,
-  useSlotId,
-} from '@react-aria/utils';
-import { VisuallyHidden } from '@react-aria/visually-hidden';
+import { DropOptions, useDrop } from 'react-aria/useDrop';
+import { useClipboard } from 'react-aria/useClipboard';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useLabels } from 'react-aria/private/utils/useLabels';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useSlotId } from 'react-aria/private/utils/useId';
+import { VisuallyHidden } from 'react-aria/VisuallyHidden';
 import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 import { useMemo, useRef } from 'react';
 

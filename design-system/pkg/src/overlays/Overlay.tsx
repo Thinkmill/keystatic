@@ -1,12 +1,12 @@
 import { ForwardedRef, forwardRef, ReactElement } from 'react';
-import { Overlay as ReactAriaOverlay } from '@react-aria/overlays';
-import { OverlayProps } from '@react-types/overlays';
+import { Overlay as ReactAriaOverlay } from 'react-aria/Overlay';
 
 import { KeystarProvider } from '@keystar/ui/core';
 
 import { cloneValidElement } from '../utils';
 
 import { useTransition } from './Transition';
+import { OverlayProps } from './types';
 
 /** * Utility component for implementing overlay transitions. */
 export const Overlay = forwardRef(function Overlay(

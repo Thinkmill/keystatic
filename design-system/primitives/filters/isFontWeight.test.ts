@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { isFontWeight } from './isFontWeight';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { isFontWeight } from './isFontWeight.ts';
 
 describe('Filter: isFontWeight', () => {
   it('returns true if $type property is `fontWeight`', () => {

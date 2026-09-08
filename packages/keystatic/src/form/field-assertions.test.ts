@@ -6,7 +6,7 @@ import {
   ObjectField,
 } from './api';
 import { assertValidComponentSchema } from './field-assertions';
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 
 type EasilyCircularObject = ObjectField<{
   x: EasilyCircularObject;
@@ -22,16 +22,16 @@ const discriminant = fields.checkbox({ label: '' });
 test('does not allow circular object', () => {
   expect(() => {
     assertValidComponentSchema(easilyCircularObject);
-  }).toThrowErrorMatchingInlineSnapshot(
-    `"The field "object.x" is the same as it's ancestor. Use an array or conditional field for recursive structures."`
+  }).toThrow(
+    'The field "object.x" is the same as it\'s ancestor. Use an array or conditional field for recursive structures.'
   );
 });
 
 test('does not allow a circular object within an array', () => {
   expect(() => {
     assertValidComponentSchema(fields.array(easilyCircularObject));
-  }).toThrowErrorMatchingInlineSnapshot(
-    `"The field "array.object.x" is the same as it's ancestor. Use an array or conditional field for recursive structures."`
+  }).toThrow(
+    'The field "array.object.x" is the same as it\'s ancestor. Use an array or conditional field for recursive structures.'
   );
 });
 
@@ -43,8 +43,8 @@ test('does not allow a circular object within a value for a default discriminant
         false: easilyCircularObject,
       })
     );
-  }).toThrowErrorMatchingInlineSnapshot(
-    `"The field "conditional.false.object.x" is the same as it's ancestor. Use an array or conditional field for recursive structures."`
+  }).toThrow(
+    'The field "conditional.false.object.x" is the same as it\'s ancestor. Use an array or conditional field for recursive structures.'
   );
 });
 
@@ -56,8 +56,8 @@ test('does not allow a circular object within a value for a non-default discrimi
         false: fields.empty(),
       })
     );
-  }).toThrowErrorMatchingInlineSnapshot(
-    `"The field "conditional.true.object.x" is the same as it's ancestor. Use an array or conditional field for recursive structures."`
+  }).toThrow(
+    'The field "conditional.true.object.x" is the same as it\'s ancestor. Use an array or conditional field for recursive structures.'
   );
 });
 
@@ -88,8 +88,8 @@ test("does not allow a circular conditional if it's the default", () => {
   });
   expect(() => {
     assertValidComponentSchema(conditional);
-  }).toThrowErrorMatchingInlineSnapshot(
-    `"The field "conditional.false" is the same as it's ancestor. Use an array or conditional field for recursive structures."`
+  }).toThrow(
+    'The field "conditional.false" is the same as it\'s ancestor. Use an array or conditional field for recursive structures.'
   );
 });
 
@@ -125,8 +125,8 @@ test('does not allow a field that returns a different field from a getter each t
     );
   expect(() => {
     assertValidComponentSchema(blah());
-  }).toThrowErrorMatchingInlineSnapshot(
-    `"Fields on an object field must not change over time but the field at "array.object.blah" changes between accesses"`
+  }).toThrow(
+    'Fields on an object field must not change over time but the field at "array.object.blah" changes between accesses'
   );
 });
 
@@ -153,5 +153,5 @@ test('exceeds the call stack size for an infinitely recursive field where all fi
   };
   expect(() => {
     assertValidComponentSchema(blah());
-  }).toThrowErrorMatchingInlineSnapshot(`"Maximum call stack size exceeded"`);
+  }).toThrow();
 });

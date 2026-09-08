@@ -1,4 +1,4 @@
-import { useAsyncList } from '@react-stately/data';
+import { useAsyncList } from 'react-stately/useAsyncList';
 import { Meta, action } from '@keystar/ui-storybook';
 import { alignCenterVerticalIcon } from '@keystar/ui/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@keystar/ui/icon/icons/alignStartVerticalIcon';

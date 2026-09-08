@@ -1,7 +1,6 @@
 import { HTMLAttributes } from 'react';
 import { warning } from 'emery';
-import { css } from '@emotion/css';
-import { CSSObject, CSSInterpolation } from '@emotion/css/create-instance';
+import { css } from './emotion';
 
 import { defaultStyleProps } from './resolvers';
 import {
@@ -11,6 +10,7 @@ import {
 } from './responsive';
 import { BaseStyleProps, BoxStyleProps, StyleResolverMap } from './types';
 import { classNames } from './classNames';
+import type { CSSInterpolation, CSSObject } from '@emotion/serialize';
 
 // Convert
 // ----------------------------------------------------------------------------

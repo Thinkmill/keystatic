@@ -1,5 +1,28 @@
 # @keystatic/astro
 
+## 6.0.0
+
+### Major Changes
+
+- [#1606](https://github.com/Thinkmill/keystatic/pull/1606) [`02706ae`](https://github.com/Thinkmill/keystatic/commit/02706ae79417fc8df9c39677b54a598533d94ac6) Thanks [@emmatown](https://github.com/emmatown)! - `@keystatic/astro` now requires Astro 5 or above
+
+### Patch Changes
+
+- [#1606](https://github.com/Thinkmill/keystatic/pull/1606) [`02706ae`](https://github.com/Thinkmill/keystatic/commit/02706ae79417fc8df9c39677b54a598533d94ac6) Thanks [@emmatown](https://github.com/emmatown)! - Fix getting environment variables with newer versions of the Cloudflare Astro adapter
+
+- [#1604](https://github.com/Thinkmill/keystatic/pull/1604) [`41aa38f`](https://github.com/Thinkmill/keystatic/commit/41aa38f035f6f5e5620d291e89d647aee05beac7) Thanks [@emmatown](https://github.com/emmatown)! - Reduce size of package.json
+
+## 5.2.0
+
+### Minor Changes
+
+- [#1552](https://github.com/Thinkmill/keystatic/pull/1552) [`480fd87`](https://github.com/Thinkmill/keystatic/commit/480fd8752e3d01400f31b9810619db9d044dd2f6) Thanks [@AlexMPLeite](https://github.com/AlexMPLeite)! - Add support for Astro 7 in `peerDependencies`
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.5.51
+
 ## 5.1.0
 
 ### Minor Changes

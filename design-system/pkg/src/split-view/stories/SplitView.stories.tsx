@@ -1,7 +1,7 @@
 import { ActionButton } from '@keystar/ui/button';
 import { Text } from '@keystar/ui/typography';
 import { action } from '@keystar/ui-storybook';
-import { chain } from '@react-aria/utils';
+import { chain } from 'react-aria/chain';
 import { useState } from 'react';
 
 import { SplitView, SplitPanePrimary, SplitPaneSecondary } from '../index';

@@ -1,6 +1,7 @@
-import { useDialog } from '@react-aria/dialog';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
+import { useDialog } from 'react-aria/useDialog';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import {
   ForwardedRef,
   forwardRef,

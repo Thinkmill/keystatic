@@ -2,26 +2,31 @@ import {
   DraggableCollectionOptions,
   DraggableItemProps,
   DraggableItemResult,
-  DragPreview,
+} from 'react-aria/useDraggableCollection';
+import { DragPreview } from 'react-aria/useDrag';
+import {
   DropIndicatorAria,
   DropIndicatorProps,
   DroppableCollectionOptions,
   DroppableCollectionResult,
   DroppableItemOptions,
   DroppableItemResult,
-} from '@react-aria/dnd';
+} from 'react-aria/useDroppableCollection';
 import {
   DraggableCollectionState,
   DraggableCollectionStateOptions,
+} from 'react-stately/useDraggableCollectionState';
+import {
   DroppableCollectionState,
   DroppableCollectionStateOptions,
-} from '@react-stately/dnd';
+} from 'react-stately/useDroppableCollectionState';
 import {
   DraggableCollectionProps,
-  DragItem,
   DroppableCollectionProps,
   Key,
+  DragItem,
 } from '@react-types/shared';
+
 import { RefObject, type JSX } from 'react';
 
 interface DraggableCollectionStateOpts

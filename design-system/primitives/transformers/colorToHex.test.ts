@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { colorToHex } from './colorToHex';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { colorToHex } from './colorToHex.ts';
 
 describe('Transformer: colorToHex', () => {
   it('transforms `hex3`, `hex6`, and `hex8` tokens to hex value', () => {

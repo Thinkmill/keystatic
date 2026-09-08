@@ -1,5 +1,5 @@
-import { useListState } from '@react-stately/list';
-import { useObjectRef } from '@react-aria/utils';
+import { useListState } from 'react-stately/useListState';
+import { useObjectRef } from 'react-aria/useObjectRef';
 
 import { forwardRef, ReactElement, RefObject } from 'react';
 

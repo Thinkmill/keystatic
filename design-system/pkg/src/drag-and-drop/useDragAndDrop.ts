@@ -1,21 +1,25 @@
 /* eslint-disable react-compiler/react-compiler */
+import { DragPreview } from 'react-aria/useDrag';
 import {
-  DragPreview,
   DroppableCollectionOptions,
-  isVirtualDragging,
-  useDraggableCollection,
-  useDraggableItem,
   useDropIndicator,
   useDroppableCollection,
   useDroppableItem,
-} from '@react-aria/dnd';
+} from 'react-aria/useDroppableCollection';
+import { isVirtualDragging } from 'react-aria/private/dnd/DragManager';
+import {
+  useDraggableCollection,
+  useDraggableItem,
+} from 'react-aria/useDraggableCollection';
 import {
   DraggableCollectionStateOptions,
+  useDraggableCollectionState,
+} from 'react-stately/useDraggableCollectionState';
+import {
   DroppableCollectionState,
   DroppableCollectionStateOptions,
-  useDraggableCollectionState,
   useDroppableCollectionState,
-} from '@react-stately/dnd';
+} from 'react-stately/useDroppableCollectionState';
 import type { Key } from '@react-types/shared';
 import { RefObject, useMemo, type JSX } from 'react';
 

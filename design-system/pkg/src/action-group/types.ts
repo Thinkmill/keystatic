@@ -1,4 +1,4 @@
-import { AriaActionGroupProps } from '@react-types/actiongroup';
+import { AriaActionGroupProps } from 'react-aria/private/actiongroup/useActionGroup';
 import { ReactElement } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';

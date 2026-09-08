@@ -1,4 +1,4 @@
-import { useVisuallyHidden } from '@react-aria/visually-hidden';
+import { useVisuallyHidden } from 'react-aria/VisuallyHidden';
 import { assert } from 'emery';
 import { useRef } from 'react';
 

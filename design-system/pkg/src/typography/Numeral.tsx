@@ -1,4 +1,4 @@
-import { useNumberFormatter } from '@react-aria/i18n';
+import { useNumberFormatter } from 'react-aria/useNumberFormatter';
 import { assert, isInteger } from 'emery';
 import { ForwardedRef, forwardRef } from 'react';
 

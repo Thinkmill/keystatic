@@ -1,6 +1,7 @@
-import { useButton } from '@react-aria/button';
-import { DragPreview, useDrag, useDrop } from '@react-aria/dnd';
-import { mergeProps } from '@react-aria/utils';
+import { useButton } from 'react-aria/useButton';
+import { DragPreview, useDrag } from 'react-aria/useDrag';
+import { useDrop } from 'react-aria/useDrop';
+import { mergeProps } from 'react-aria/mergeProps';
 import React, { useRef } from 'react';
 
 export function Draggable(props: any) {

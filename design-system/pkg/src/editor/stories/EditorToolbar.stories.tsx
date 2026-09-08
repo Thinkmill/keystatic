@@ -11,7 +11,8 @@ import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
 import { Flex } from '@keystar/ui/layout';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Kbd, Text } from '@keystar/ui/typography';
-import { Key, useState } from 'react';
+import { Key } from '@react-types/shared';
+import { useState } from 'react';
 
 import {
   EditorToolbar,

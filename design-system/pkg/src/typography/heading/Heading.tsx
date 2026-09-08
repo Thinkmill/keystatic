@@ -8,7 +8,7 @@ import { HeadingContext } from './context';
 import { useHeadingStyles } from './useHeadingStyles';
 import { Truncate } from '../Truncate';
 import { useVisuallyHiddenRange } from '../useVisuallyHiddenRange';
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 
 const sizeToElement = { small: 'h4', regular: 'h3', medium: 'h2', large: 'h1' };
 const filterOptions = { propNames: new Set(['aria-hidden']) };

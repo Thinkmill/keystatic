@@ -1,5 +1,77 @@
 # @keystatic/templates-remix
 
+## 0.0.60
+
+### Patch Changes
+
+- Updated dependencies [[`41aa38f`](https://github.com/Thinkmill/keystatic/commit/41aa38f035f6f5e5620d291e89d647aee05beac7)]:
+  - @keystatic/core@0.6.7
+  - @keystatic/remix@5.0.4
+
+## 0.0.59
+
+### Patch Changes
+
+- Updated dependencies [[`4dca0ca`](https://github.com/Thinkmill/keystatic/commit/4dca0cac2269a05ad2bdc4906cbc7fb57a03d7c5), [`3c34f58`](https://github.com/Thinkmill/keystatic/commit/3c34f589fe59d3faa83e5c35bad9c39b6713e362), [`b4371f5`](https://github.com/Thinkmill/keystatic/commit/b4371f5649d320dc186c54137aee6284db3ab661)]:
+  - @keystatic/core@0.6.6
+  - @keystatic/remix@5.0.3
+
+## 0.0.58
+
+### Patch Changes
+
+- Updated dependencies [[`bcc7105`](https://github.com/Thinkmill/keystatic/commit/bcc710561ed76701a7cb8896f8ff6e0a668eeee2)]:
+  - @keystatic/core@0.6.5
+  - @keystatic/remix@5.0.3
+
+## 0.0.57
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.4
+  - @keystatic/remix@5.0.3
+
+## 0.0.56
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.3
+  - @keystatic/remix@5.0.3
+
+## 0.0.55
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.2
+  - @keystatic/remix@5.0.3
+
+## 0.0.54
+
+### Patch Changes
+
+- Updated dependencies [[`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9)]:
+  - @keystatic/core@0.6.1
+  - @keystatic/remix@5.0.3
+
+## 0.0.53
+
+### Patch Changes
+
+- Updated dependencies [[`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a)]:
+  - @keystatic/core@0.6.0
+  - @keystatic/remix@5.0.3
+
+## 0.0.52
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.5.51
+  - @keystatic/remix@5.0.3
+
 ## 0.0.51
 
 ### Patch Changes

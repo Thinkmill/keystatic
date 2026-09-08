@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { isDimension } from './isDimension';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { isDimension } from './isDimension.ts';
 
 describe('Filter: isDimension', () => {
   it('returns true if $type property is `dimension`', () => {

@@ -1,20 +1,21 @@
+import type { DraggableItemResult } from 'react-aria/useDraggableCollection';
 import type {
-  DraggableItemResult,
   DropIndicatorAria,
   DroppableItemResult,
-} from '@react-aria/dnd';
+} from 'react-aria/useDroppableCollection';
 
-import { useButton } from '@react-aria/button';
-import { useFocusRing } from '@react-aria/focus';
-import { useHover } from '@react-aria/interactions';
+import { useButton } from 'react-aria/useButton';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { useHover } from 'react-aria/useHover';
 import {
   useGridListItem,
   useGridListSelectionCheckbox,
-} from '@react-aria/gridlist';
-import { useLocale } from '@react-aria/i18n';
-import { mergeProps } from '@react-aria/utils';
-import { useVisuallyHidden } from '@react-aria/visually-hidden';
+} from 'react-aria/useGridList';
+import { useLocale } from 'react-aria/I18nProvider';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useVisuallyHidden } from 'react-aria/VisuallyHidden';
 import { DropTarget, Node } from '@react-types/shared';
+
 import { assert } from 'emery';
 import React, { HTMLAttributes, useRef } from 'react';
 

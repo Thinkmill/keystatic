@@ -1,7 +1,7 @@
 'use client';
 
 // re-export from @react-aria for convenience
-export { useLink } from '@react-aria/link';
+export { useLink } from 'react-aria/useLink';
 
 export { TextLink } from './TextLink';
 

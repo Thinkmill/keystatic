@@ -1,11 +1,16 @@
-const withPreconstruct = require('@preconstruct/next');
+const { initOpenNextCloudflareForDev } = require('@opennextjs/cloudflare');
+
+initOpenNextCloudflareForDev();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: { ignoreDuringBuilds: true },
   typescript: {
     ignoreBuildErrors: true,
     tsconfigPath: './tsconfig-for-next/tsconfig.json',
+  },
+  experimental: {
+    externalDir: true,
+    prefetchInlining: false,
   },
   async redirects() {
     return [
@@ -18,4 +23,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withPreconstruct(nextConfig);
+module.exports = nextConfig;

@@ -57,7 +57,7 @@ for (let i = 0; i < 50; i++) {
 const defaultActions = {
   onOpenChange: action('onOpenChange'),
   onInputChange: action('onInputChange'),
-  onSelectionChange: action('onSelectionChange'),
+  onChange: action('onChange'),
   onBlur: action('onBlur'),
   onFocus: action('onFocus'),
 };
@@ -187,14 +187,12 @@ export const DisabledKeys = () => (
   </Combobox>
 );
 
-export const IsDisabled = () =>
-  render({ isDisabled: true, selectedKey: 'One' });
+export const IsDisabled = () => render({ isDisabled: true, value: 'One' });
 
-export const IsReadOnly = () =>
-  render({ isReadOnly: true, selectedKey: 'One' });
+export const IsReadOnly = () => render({ isReadOnly: true, value: 'One' });
 
 export const IsRequired = () =>
-  render({ isRequired: true, defaultSelectedKey: 'One' });
+  render({ isRequired: true, defaultValue: 'One' });
 
 export const AllowsCustomValue = () => render({ allowsCustomValue: true });
 

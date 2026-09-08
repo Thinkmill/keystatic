@@ -1,12 +1,16 @@
-import { useFilter } from '@react-aria/i18n';
-import { getChildNodes } from '@react-stately/collections';
+import { useFilter } from 'react-aria/useFilter';
+import { getChildNodes } from 'react-stately/private/collections/getChildNodes';
 import {
   FormValidationState,
   useFormValidationState,
-} from '@react-stately/form';
-import { ListCollection, ListState, useListState } from '@react-stately/list';
-import { MenuTriggerState, useMenuTriggerState } from '@react-stately/menu';
-import { useControlledState } from '@react-stately/utils';
+} from 'react-stately/private/form/useFormValidationState';
+import { ListCollection } from 'react-stately/private/list/ListCollection';
+import { ListState, useListState } from 'react-stately/useListState';
+import {
+  MenuTriggerState,
+  useMenuTriggerState,
+} from 'react-stately/useMenuTriggerState';
+import { useControlledState } from 'react-stately/useControlledState';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Collection,
@@ -54,9 +58,18 @@ export function useComboboxMultiState<T extends object>(
 ): ComboboxMultiState<T> {
   let { allowsEmptyCollection = false, menuTrigger = 'input' } = props;
   let [showAllItems, setShowAllItems] = useState(false);
+  let [inputValue, setInputValue] = useControlledState(
+    props.inputValue,
+    props.defaultInputValue ?? '',
+    props.onInputChange
+  );
   let listState = useListState({
     ...props,
     items: props.items ?? props.defaultItems,
+    onSelectionChange: selection => {
+      props.onSelectionChange?.(selection);
+      setInputValue('');
+    },
     selectionBehavior: 'toggle',
     selectionMode: 'multiple',
   });
@@ -66,11 +79,6 @@ export function useComboboxMultiState<T extends object>(
     isOpen: undefined,
     defaultOpen: undefined,
   });
-  let [inputValue, setInputValue] = useControlledState(
-    props.inputValue,
-    props.defaultInputValue ?? '',
-    props.onInputChange
-  );
   let lastInputValue = usePrevious(inputValue);
 
   // Preserve original collection so we can show all items on demand

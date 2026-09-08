@@ -278,8 +278,11 @@ const HeadingMenu = ({
         aria-label="Text block"
         items={items}
         isDisabled={isDisabled}
-        selectedKey={selected}
-        onSelectionChange={selected => {
+        value={selected}
+        onChange={selected => {
+          if (selected === null) {
+            return;
+          }
           let key = headingMenuVals.get(selected);
           if (key === 'normal') {
             Editor.withoutNormalizing(editor, () => {

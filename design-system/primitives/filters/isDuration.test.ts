@@ -1,7 +1,7 @@
 import StyleDictionary from 'style-dictionary';
-import { expect, it, describe } from '@jest/globals';
+import { expect, it, describe } from 'vitest';
 
-import { isDuration } from './isDuration';
+import { isDuration } from './isDuration.ts';
 
 describe('Filter: isDuration', () => {
   const items = [

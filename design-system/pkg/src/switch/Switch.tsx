@@ -1,7 +1,7 @@
-import { useHover } from '@react-aria/interactions';
-import { useSwitch } from '@react-aria/switch';
-import { useToggleState } from '@react-stately/toggle';
-import { AriaSwitchProps } from '@react-types/switch';
+import { useHover } from 'react-aria/useHover';
+import { useSwitch, AriaSwitchProps } from 'react-aria/useSwitch';
+import { useToggleState } from 'react-stately/useToggleState';
+
 import {
   ForwardedRef,
   ForwardRefExoticComponent,

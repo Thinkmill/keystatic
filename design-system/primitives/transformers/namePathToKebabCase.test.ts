@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { namePathToKebabCase } from './namePathToKebabCase';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { namePathToKebabCase } from './namePathToKebabCase.ts';
 
 describe('Transformer: namePathToKebabCase', () => {
   it('converts path elements to dot.notation and ignores name proprty', () => {

@@ -5,12 +5,13 @@ import {
   isSameMonth,
   isToday,
 } from '@internationalized/date';
-import { AriaCalendarCellProps, useCalendarCell } from '@react-aria/calendar';
-import { useFocusRing } from '@react-aria/focus';
-import { useLocale } from '@react-aria/i18n';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps } from '@react-aria/utils';
-import { CalendarState, RangeCalendarState } from '@react-stately/calendar';
+import { AriaCalendarCellProps, useCalendarCell } from 'react-aria/useCalendar';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useHover } from 'react-aria/useHover';
+import { mergeProps } from 'react-aria/mergeProps';
+import { CalendarState } from 'react-stately/useCalendarState';
+import { RangeCalendarState } from 'react-stately/useRangeCalendarState';
 import React, { useRef } from 'react';
 
 import { css, toDataAttributes, tokenSchema } from '@keystar/ui/style';

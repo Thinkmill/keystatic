@@ -1,5 +1,6 @@
-import { filterDOMProps, useObjectRef } from '@react-aria/utils';
-import { useLink } from '@react-aria/link';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useLink } from 'react-aria/useLink';
 import { DOMProps } from '@react-types/shared';
 import { forwardRef, ReactNode, useMemo } from 'react';
 

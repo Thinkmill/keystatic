@@ -1,7 +1,9 @@
-import { useButton } from '@react-aria/button';
-import { useHover } from '@react-aria/interactions';
-import { useLink } from '@react-aria/link';
-import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
+import { useButton } from 'react-aria/useButton';
+import { useHover } from 'react-aria/useHover';
+import { useLink } from 'react-aria/useLink';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import { ForwardedRef, forwardRef, useMemo } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';

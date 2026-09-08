@@ -1,10 +1,10 @@
 import React, { useMemo, useRef } from 'react';
-import { useFocusRing } from '@react-aria/focus';
-import { useHover } from '@react-aria/interactions';
-import { useLink } from '@react-aria/link';
-import { type AriaTagProps, useTag } from '@react-aria/tag';
-import { mergeProps } from '@react-aria/utils';
-import type { ListState } from '@react-stately/list';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { useHover } from 'react-aria/useHover';
+import { useLink } from 'react-aria/useLink';
+import { type AriaTagProps, useTag } from 'react-aria/useTagGroup';
+import { mergeProps } from 'react-aria/mergeProps';
+import type { ListState } from 'react-stately/useListState';
 
 import { ClearButton } from '@keystar/ui/button';
 import { ClearSlots, SlotProvider } from '@keystar/ui/slots';

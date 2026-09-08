@@ -1,6 +1,7 @@
 import { action } from '@keystar/ui-storybook';
-import { useListData } from '@react-stately/data';
+import { useListData } from 'react-stately/useListData';
 import { ItemDropTarget, Key } from '@react-types/shared';
+
 import React from 'react';
 
 import { useDragAndDrop } from '@keystar/ui/drag-and-drop';

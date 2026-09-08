@@ -1,4 +1,4 @@
-import { RadioGroupState } from '@react-stately/radio';
+import { RadioGroupState } from 'react-stately/useRadioGroupState';
 import { ValidationState } from '@react-types/shared';
 import React from 'react';
 

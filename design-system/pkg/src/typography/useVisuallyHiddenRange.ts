@@ -1,7 +1,7 @@
 import {
   useVisuallyHidden,
   VisuallyHiddenProps,
-} from '@react-aria/visually-hidden';
+} from 'react-aria/VisuallyHidden';
 
 import { BreakpointRange, useResponsiveRange } from '@keystar/ui/style';
 

@@ -82,16 +82,56 @@ application or framework’s client-side router.
 
 ```jsx
 import { KeystarProvider } from '@keystar/ui/core';
-import { useNavigate } from 'react-router-dom';
+import {
+  useLocation as useRouterLocation,
+  useNavigate,
+} from 'react-router-dom';
+
+function usePathname() {
+  return useRouterLocation().pathname;
+}
+
+function useSearch() {
+  return useRouterLocation().search;
+}
 
 export function App() {
   let navigate = useNavigate();
-  let router = useMemo(() => ({ navigate }), [navigate]);
+  let router = useMemo(
+    () => ({ navigate, usePathname, useSearch }),
+    [navigate]
+  );
 
   return (
     <KeystarProvider router={router}>
       {/* ... */}
     </KeystarProvider>
+  );
+}
+```
+
+Providing stable pathname and search hooks enables the framework-independent
+router hooks exported from `@keystar/ui/router`. The hooks are only called by
+components that consume the corresponding value.
+
+```tsx
+import { useNavigate, usePathname, useSearch } from '@keystar/ui/router';
+
+function Pagination() {
+  const navigate = useNavigate();
+  const pathname = usePathname();
+  const search = useSearch();
+  const searchParams = new URLSearchParams(search);
+
+  return (
+    <button
+      onClick={() => {
+        searchParams.set('page', '2');
+        navigate(`${pathname}?${searchParams}`, { replace: true });
+      }}
+    >
+      Next page
+    </button>
   );
 }
 ```

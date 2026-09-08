@@ -1,19 +1,12 @@
-import { useHover, usePress } from '@react-aria/interactions';
-import { useLocale } from '@react-aria/i18n';
-import { useTab, useTabList, useTabPanel } from '@react-aria/tabs';
-import {
-  filterDOMProps,
-  mergeProps,
-  useId,
-  useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-} from '@react-aria/utils';
-import { ListCollection } from '@react-stately/list';
-import { useCollection } from '@react-stately/collections';
-import { TabListState, useTabListState } from '@react-stately/tabs';
-import { DOMProps, Node, Orientation } from '@react-types/shared';
+import { useHover } from 'react-aria/useHover';
+import { usePress } from 'react-aria/usePress';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useTab, useTabList, useTabPanel } from 'react-aria/useTabList';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useId } from 'react-aria/useId';
 import React, {
+  useLayoutEffect,
   CSSProperties,
   ForwardedRef,
   Key,
@@ -25,6 +18,12 @@ import React, {
   useState,
   ElementType,
 } from 'react';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { ListCollection } from 'react-stately/private/list/ListCollection';
+import { useCollection } from 'react-stately/private/collections/useCollection';
+import { TabListState, useTabListState } from 'react-stately/useTabListState';
+import { DOMProps, Node, Orientation } from '@react-types/shared';
 
 import { useProvider, useProviderProps } from '@keystar/ui/core';
 import { Item, Picker, PickerProps } from '@keystar/ui/picker';
@@ -472,7 +471,10 @@ export function TabList<T extends object>(props: TabListProps<T>) {
   const { selectedTab, collapsed, setTabListState } = tabState;
   const { tablistRef, wrapperRef } = refs;
   // Pass original Tab props but override children to create the collection.
-  const state = useTabListState({ ...tabProps, children: props.children });
+  const state = useTabListState({
+    ...tabProps,
+    children: props.children,
+  });
 
   let styleProps = useStyleProps(props);
   const { tabListProps } = useTabList(
@@ -573,7 +575,6 @@ export function TabList<T extends object>(props: TabListProps<T>) {
           styleProps.className
         )}
       >
-        {/* @ts-expect-error FIXME */}
         <TabPicker
           {...props}
           {...tabProps}
@@ -694,9 +695,9 @@ function TabPicker<T>(props: TabPickerProps<T>) {
         id={id}
         items={items}
         isDisabled={!visible || isDisabled}
-        selectedKey={state.selectedKey}
+        value={state.selectedKey}
         disabledKeys={state.disabledKeys}
-        onSelectionChange={state.setSelectedKey}
+        onChange={state.setSelectedKey}
         marginBottom="xsmall"
         UNSAFE_className={tabsClassList.element('picker')}
       >

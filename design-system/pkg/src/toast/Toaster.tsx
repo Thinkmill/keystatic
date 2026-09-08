@@ -1,4 +1,4 @@
-import { ToastQueue, useToastQueue } from '@react-stately/toast';
+import { ToastQueue, useToastQueue } from 'react-stately/useToastState';
 import React, {
   ReactNode,
   useEffect,

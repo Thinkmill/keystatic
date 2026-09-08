@@ -15,5 +15,5 @@ jobs:
         run: pnpm build:packages
 
       - run:
-          pnpm dlx pkg-pr-new publish --comment=off './packages/*'
+          pnpm dlx pkg-pr-new publish --comment=off --pnpm './packages/*'
           './templates/*' './design-system/pkg'

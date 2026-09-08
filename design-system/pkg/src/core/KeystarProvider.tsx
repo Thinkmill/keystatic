@@ -1,8 +1,13 @@
 import { HTMLAttributes, useContext } from 'react';
-import { I18nProvider, useLocale } from '@react-aria/i18n';
-import { ModalProvider, useModalProvider } from '@react-aria/overlays';
-import { RouterProvider, filterDOMProps } from '@react-aria/utils';
+import { I18nProvider, useLocale } from 'react-aria/I18nProvider';
+import {
+  ModalProvider,
+  useModalProvider,
+} from 'react-aria/private/overlays/useModal';
+import { RouterProvider } from 'react-aria/private/utils/openLink';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 
+import { RouterContextProvider } from '../router/context';
 import {
   BreakpointProvider,
   useMatchedBreakpoints,
@@ -82,7 +87,11 @@ export const KeystarProvider = forwardRefWithAs<KeystarProviderProps, 'div'>(
     }
 
     if (router) {
-      contents = <RouterProvider {...router}>{contents}</RouterProvider>;
+      contents = (
+        <RouterContextProvider router={router}>
+          <RouterProvider {...router}>{contents}</RouterProvider>
+        </RouterContextProvider>
+      );
     }
 
     return (

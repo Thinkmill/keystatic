@@ -1,15 +1,15 @@
 import { glob } from 'fs/promises';
 import type StyleDictionary from 'style-dictionary';
 
-import { KeystarStyleDictionary } from '../KeystarStyleDictionary';
-import { css, javascript } from '../platforms';
+import { KeystarStyleDictionary } from '../KeystarStyleDictionary.ts';
+import { css, javascript } from '../platforms/index.ts';
 import type {
   ConfigGeneratorOptions,
   StyleDictionaryConfigGenerator,
-} from '../types';
+} from '../types.ts';
 
-import { themes } from './themes.config';
-// import { buildFigma } from './buildFigma';
+import { themes } from './themes.config.ts';
+// import { buildFigma } from './buildFigma.ts';
 
 /**
  * getStyleDictionaryConfig

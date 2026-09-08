@@ -1,4 +1,4 @@
-import { clamp } from '@react-aria/utils';
+import { clamp } from 'react-stately/private/utils/number';
 import { warning } from 'emery';
 import { CSSProperties, ForwardedRef, forwardRef, HTMLAttributes } from 'react';
 

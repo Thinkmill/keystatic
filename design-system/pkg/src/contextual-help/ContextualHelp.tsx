@@ -1,5 +1,6 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { mergeProps, useLabels } from '@react-aria/utils';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useLabels } from 'react-aria/private/utils/useLabels';
 import {
   ForwardRefExoticComponent,
   ForwardedRef,

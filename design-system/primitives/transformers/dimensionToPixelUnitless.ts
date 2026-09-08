@@ -1,6 +1,6 @@
 import type StyleDictionary from 'style-dictionary';
 
-import { isDimension } from '../filters';
+import { isDimension } from '../filters/index.ts';
 
 /**
  * @description base font size from options or 16

@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { isBorder } from './isBorder';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { isBorder } from './isBorder.ts';
 
 describe('Filter: isBorder', () => {
   it('returns true if $type property is `border`', () => {

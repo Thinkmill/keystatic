@@ -1,4 +1,4 @@
-import { upperCaseFirstCharacter } from './upperCaseFirstCharacter';
+import { upperCaseFirstCharacter } from './upperCaseFirstCharacter.ts';
 
 export const toCamelCase = (string: string | string[]) => {
   if (!Array.isArray(string)) {

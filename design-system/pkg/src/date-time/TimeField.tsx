@@ -1,9 +1,8 @@
-import { useTimeField } from '@react-aria/datepicker';
-import { useLocale } from '@react-aria/i18n';
+import { useTimeField } from 'react-aria/useTimeField';
+import { useLocale } from 'react-aria/I18nProvider';
 import React, { ReactElement, Ref, useRef } from 'react';
 
-import { TimeValue } from '@react-types/datepicker';
-import { useTimeFieldState } from '@react-stately/datepicker';
+import { TimeValue, useTimeFieldState } from 'react-stately/useTimeFieldState';
 
 import { useProviderProps } from '@keystar/ui/core';
 import { FieldPrimitive } from '@keystar/ui/field';
@@ -18,7 +17,7 @@ function TimeField<T extends TimeValue>(
   ref: Ref<HTMLDivElement>
 ) {
   props = useProviderProps(props);
-  let { autoFocus, isDisabled, isReadOnly, isRequired } = props;
+  let { autoFocus, isDisabled } = props;
 
   let domRef = useFocusManagerRef(ref);
   let { locale } = useLocale();
@@ -52,14 +51,7 @@ function TimeField<T extends TimeValue>(
         isInvalid={state.isInvalid}
       >
         {state.segments.map((segment, i) => (
-          <InputSegment
-            key={i}
-            segment={segment}
-            state={state}
-            isDisabled={isDisabled}
-            isReadOnly={isReadOnly}
-            isRequired={isRequired}
-          />
+          <InputSegment key={i} segment={segment} state={state} />
         ))}
       </Input>
     </FieldPrimitive>

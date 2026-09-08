@@ -1,4 +1,5 @@
-import { filterDOMProps, isMac as getIsMac } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { isMac as getIsMac } from 'react-aria/private/utils/platform';
 import {
   ForwardedRef,
   forwardRef,

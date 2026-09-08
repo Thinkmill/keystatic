@@ -1,4 +1,4 @@
-import { AriaButtonProps } from '@react-types/button';
+import { AriaButtonProps } from 'react-aria/useButton';
 import {
   DOMAttributes,
   FocusableProps,

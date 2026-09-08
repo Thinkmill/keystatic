@@ -1,7 +1,7 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import StyleDictionary from 'style-dictionary';
 
-import { isCubicBezier } from './isCubicBezier';
+import { isCubicBezier } from './isCubicBezier.ts';
 
 describe('Filter: isCubicBezier', () => {
   const items = [

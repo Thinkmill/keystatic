@@ -1,6 +1,6 @@
 import { toastQueue } from '@keystar/ui/toast';
 import { Text } from '@keystar/ui/typography';
-import { useLocale } from '@react-aria/i18n';
+import { useLocale } from 'react-aria/I18nProvider';
 import { UseStore, clear, createStore, del, get, set } from 'idb-keyval';
 import { useState, useMemo } from 'react';
 

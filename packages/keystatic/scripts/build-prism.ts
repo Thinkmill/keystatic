@@ -48,7 +48,7 @@ const languages = [
       languages.map(lang =>
         fs.readFile(
           fileURLToPath(
-            import.meta.resolve(`prismjs/components/prism-${lang}`)
+            import.meta.resolve(`prismjs/components/prism-${lang}.js`)
           ),
           'utf8'
         )

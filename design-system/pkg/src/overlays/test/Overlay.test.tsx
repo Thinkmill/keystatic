@@ -1,4 +1,4 @@
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it } from 'vitest';
 import { createRef, ForwardedRef, forwardRef, useRef } from 'react';
 
 import { renderWithProvider } from '#test-utils';

@@ -1,5 +1,5 @@
 import { breakpoints } from '@keystar/ui/style';
-import { useResizeObserver } from '@react-aria/utils';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
 import { RefObject, createContext, useContext, useState } from 'react';
 
 import { Config } from '../../config';

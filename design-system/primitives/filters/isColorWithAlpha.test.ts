@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { isColorWithAlpha } from './isColorWithAlpha';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { isColorWithAlpha } from './isColorWithAlpha.ts';
 
 describe('Filter: isColorWithAlpha', () => {
   it('returns true if $type property is `color` and `alpha` is number', () => {

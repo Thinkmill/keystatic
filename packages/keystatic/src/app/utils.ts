@@ -17,7 +17,7 @@ import pkgJson from '../../package.json';
 import { object } from '../form/fields/object';
 import { useEffect } from 'react';
 import { showDraftRestoredToast } from './persistence';
-import { useEffectEvent } from '@react-aria/utils';
+import { useEffectEvent } from 'react-aria/private/utils/useEffectEvent';
 
 export * from './path-utils';
 

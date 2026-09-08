@@ -3,9 +3,10 @@ import {
   CollectionChildren,
   DOMProps,
   Key,
-  Orientation,
   SingleSelection,
+  Orientation,
 } from '@react-types/shared';
+
 import { ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
@@ -38,8 +39,10 @@ export type TabsProps<T> = {
    */
   orientation?: Orientation;
 } & AriaLabelingProps &
-  SingleSelection &
-  DOMProps &
+  Omit<SingleSelection, 'selectedKey' | 'defaultSelectedKey'> & {
+    selectedKey?: Key;
+    defaultSelectedKey?: Key;
+  } & DOMProps &
   BaseStyleProps;
 
 export type TabListProps<T> = {

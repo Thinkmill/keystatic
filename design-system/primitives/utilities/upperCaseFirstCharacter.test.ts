@@ -1,5 +1,5 @@
-import { expect, describe, it } from '@jest/globals';
-import { upperCaseFirstCharacter } from './upperCaseFirstCharacter';
+import { expect, describe, it } from 'vitest';
+import { upperCaseFirstCharacter } from './upperCaseFirstCharacter.ts';
 
 describe('Utilities: upperCaseFirstCharacter', () => {
   it('it transforms all lowercase word', () => {

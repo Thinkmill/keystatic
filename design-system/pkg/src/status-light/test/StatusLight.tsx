@@ -1,4 +1,4 @@
-import { expect, it, describe } from '@jest/globals';
+import { expect, it, describe } from 'vitest';
 
 import { renderWithProvider } from '#test-utils';
 

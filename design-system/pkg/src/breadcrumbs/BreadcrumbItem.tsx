@@ -1,7 +1,7 @@
-import { useBreadcrumbItem } from '@react-aria/breadcrumbs';
-import { useLocale } from '@react-aria/i18n';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps } from '@react-aria/utils';
+import { useBreadcrumbItem } from 'react-aria/useBreadcrumbs';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useHover } from 'react-aria/useHover';
+import { mergeProps } from 'react-aria/mergeProps';
 import React, { Fragment, useMemo, useRef, ElementType } from 'react';
 
 import { Icon } from '@keystar/ui/icon';
@@ -32,12 +32,17 @@ export const breadcrumbsClassList = new ClassList('Breadcrumbs', [
 
 export function BreadcrumbItem(props: BreadcrumbItemProps) {
   let { children, isCurrent, isDisabled, isMenu, size = 'regular' } = props;
+  let { href, ...propsWithoutHref } = props;
 
   let { direction } = useLocale();
   let ref = useRef(null);
-  let ElementType: ElementType = props.href ? 'a' : 'span';
+  let ElementType: ElementType = href ? 'a' : 'span';
   let { itemProps } = useBreadcrumbItem(
-    { ...props, elementType: ElementType },
+    {
+      ...propsWithoutHref,
+      ...(href ? { href } : {}),
+      elementType: ElementType,
+    },
     ref
   );
   let { hoverProps, isHovered } = useHover(props);

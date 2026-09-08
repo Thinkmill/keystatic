@@ -1,10 +1,11 @@
-import { AriaCheckboxGroupProps } from '@react-aria/checkbox';
+import { AriaCheckboxGroupProps } from 'react-aria/useCheckboxGroup';
 import {
   DOMProps,
   InputBase,
   FocusableProps,
   Orientation,
 } from '@react-types/shared';
+
 import { ReactNode } from 'react';
 
 import { FieldProps } from '@keystar/ui/field';

@@ -1,5 +1,6 @@
 import { action } from '@keystar/ui-storybook';
-import { Key, ReactElement, useEffect, useRef } from 'react';
+import { Key } from '@react-types/shared';
+import { ReactElement, useEffect, useRef } from 'react';
 
 import { Icon } from '@keystar/ui/icon';
 import { fileCodeIcon } from '@keystar/ui/icon/icons/fileCodeIcon';

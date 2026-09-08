@@ -1,4 +1,4 @@
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import { DOMProps } from '@react-types/shared';
 import { warning } from 'emery';
 import { ReactEventHandler, ReactNode } from 'react';

@@ -1,4 +1,4 @@
-import { AriaComboBoxProps } from '@react-types/combobox';
+import type { AriaComboBoxProps } from 'react-aria/useComboBox';
 import {
   AsyncLoadable,
   CollectionBase,
@@ -49,8 +49,10 @@ type CommonProps = {
   shouldFlip?: boolean;
 };
 
-export type ComboboxProps<T> = TextInputBase &
-  Omit<AriaComboBoxProps<T>, 'menuTrigger'> &
+export type ComboboxProps<T> = Omit<
+  AriaComboBoxProps<T>,
+  'menuTrigger' | keyof FieldProps
+> &
   FieldProps &
   BaseStyleProps &
   Omit<AsyncLoadable, 'isLoading'> &

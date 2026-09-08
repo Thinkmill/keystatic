@@ -1,14 +1,14 @@
 import StyleDictionary from 'style-dictionary';
 
-import type { PlatformInitializer } from '../types';
+import type { PlatformInitializer } from '../types.ts';
 import {
   SELECTOR_AUTO,
   SELECTOR_DARK,
   SELECTOR_LIGHT,
   TOKEN_PREFIX,
-} from '../constants';
-import { isSource } from '../filters';
-import { filenameFromPath } from '../utilities';
+} from '../constants.ts';
+import { isSource } from '../filters/index.ts';
+import { filenameFromPath } from '../utilities/index.ts';
 
 const getCssSelectors = (
   outputFile: string

@@ -1,10 +1,8 @@
-import { useFocusRing } from '@react-aria/focus';
-import {
-  isFocusVisible as getFocusVisible,
-  useHover,
-} from '@react-aria/interactions';
-import { useOption } from '@react-aria/listbox';
-import { mergeProps } from '@react-aria/utils';
+import { useFocusRing } from 'react-aria/useFocusRing';
+import { isFocusVisible as getFocusVisible } from 'react-aria/private/interactions/useFocusVisible';
+import { useHover } from 'react-aria/useHover';
+import { useOption } from 'react-aria/useListBox';
+import { mergeProps } from 'react-aria/mergeProps';
 import { Node } from '@react-types/shared';
 import { useRef } from 'react';
 

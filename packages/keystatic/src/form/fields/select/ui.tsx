@@ -16,9 +16,11 @@ export function SelectFieldInput<Value extends string>(props: {
       label={props.label}
       description={props.description}
       items={props.options}
-      selectedKey={props.value}
-      onSelectionChange={key => {
-        props.onChange(key as Value);
+      value={props.value}
+      onChange={key => {
+        if (key !== null) {
+          props.onChange(key as Value);
+        }
       }}
       autoFocus={props.autoFocus}
       width={{

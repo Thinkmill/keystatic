@@ -1,6 +1,6 @@
 import type StyleDictionary from 'style-dictionary';
 
-import { upperCaseFirstCharacter } from '../utilities';
+import { upperCaseFirstCharacter } from '../utilities/index.ts';
 
 /**
  * camelCase

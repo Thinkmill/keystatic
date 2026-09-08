@@ -1,7 +1,8 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@2.2.0/schema.json",
+  "$schema": "../node_modules/@changesets/config/schema.json",
   "changelog": ["@changesets/changelog-github", { "repo": "Thinkmill/keystatic" }],
   "commit": false,
+  "privatePackages": false,
   "fixed": [],
   "linked": [],
   "access": "public",

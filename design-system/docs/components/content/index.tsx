@@ -1,5 +1,5 @@
 'use client';
-import { useLocale } from '@react-aria/i18n';
+import { useLocale } from 'react-aria/I18nProvider';
 import {
   AnchorHTMLAttributes,
   HTMLAttributes,

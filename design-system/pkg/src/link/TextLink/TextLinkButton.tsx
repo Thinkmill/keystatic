@@ -1,5 +1,6 @@
-import { useButton } from '@react-aria/button';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
+import { useButton } from 'react-aria/useButton';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import { forwardRef } from 'react';
 
 import { TextLinkButtonProps } from './types';

@@ -1,25 +1,25 @@
 import React, {
   type ForwardedRef,
   type ReactElement,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
 
-import { FocusScope } from '@react-aria/focus';
-import { useLocale, useLocalizedStringFormatter } from '@react-aria/i18n';
-import { ListKeyboardDelegate } from '@react-aria/selection';
-import { AriaTagGroupProps, useTagGroup } from '@react-aria/tag';
-import {
-  useId,
-  useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-  useValueEffect,
-} from '@react-aria/utils';
-import { ListCollection, useListState } from '@react-stately/list';
+import { FocusScope } from 'react-aria/FocusScope';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { ListKeyboardDelegate } from 'react-aria/ListKeyboardDelegate';
+import { AriaTagGroupProps, useTagGroup } from 'react-aria/useTagGroup';
+import { useId } from 'react-aria/useId';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useEffectEvent } from 'react-aria/private/utils/useEffectEvent';
+import { useLayoutEffect } from 'react-aria/private/utils/useLayoutEffect';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { useValueEffect } from 'react-aria/private/utils/useValueEffect';
+import { ListCollection } from 'react-stately/private/list/ListCollection';
+import { useListState } from 'react-stately/useListState';
 import type { Collection, Node } from '@react-types/shared';
 
 import {
@@ -69,7 +69,6 @@ function TagGroup<T extends object>(
   // props = useFormProps(props);
   let {
     maxRows,
-    children,
     actionLabel,
     onAction,
     renderEmptyState: renderEmptyStateProp,
@@ -124,7 +123,7 @@ function TagGroup<T extends object>(
   const actionsId = useId();
   const actionsRef = useRef<HTMLDivElement>(null);
 
-  let updateVisibleTagCount = useCallback(() => {
+  let updateVisibleTagCount = () => {
     if (maxRows && maxRows > 0) {
       let computeVisibleTagCount = () => {
         const containerEl = containerRef.current;
@@ -205,18 +204,21 @@ function TagGroup<T extends object>(
         yield computeVisibleTagCount();
       });
     }
-  }, [maxRows, setTagState, direction, state.collection.size]);
+  };
+
+  let updateVisibleTagCountEffect = useEffectEvent(updateVisibleTagCount);
 
   useResizeObserver({ ref: containerRef, onResize: updateVisibleTagCount });
 
-  // we only want this effect to run when children change
-  // eslint-disable-next-line react-compiler/react-compiler
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(updateVisibleTagCount, [children]);
+  useLayoutEffect(() => {
+    if (state.collection.size > 0 && maxRows != null && maxRows > 0) {
+      queueMicrotask(updateVisibleTagCountEffect);
+    }
+  }, [state.collection.size, maxRows, updateVisibleTagCountEffect]);
 
   useEffect(() => {
     // Recalculate visible tags when fonts are loaded.
-    document.fonts?.ready.then(() => updateVisibleTagCount());
+    document.fonts?.ready.then(() => updateVisibleTagCountEffect());
 
     // we strictly want this effect to only run once
     // eslint-disable-next-line react-compiler/react-compiler

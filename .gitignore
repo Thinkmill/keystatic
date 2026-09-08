@@ -21,6 +21,7 @@ node_modules/
 
 # Optional npm cache directory
 .npm
+.pnpm-store
 
 # Optional eslint cache
 .eslintcache
@@ -37,6 +38,8 @@ node_modules/
 
 # Next.js build output
 .next
+.open-next
+.wrangler
 .vercel
 
 # Preconstruct build output

@@ -1,5 +1,99 @@
 # @keystatic/core
 
+## 0.6.9
+
+### Patch Changes
+
+- Updated dependencies [[`dbb0bb5`](https://github.com/Thinkmill/keystatic/commit/dbb0bb53d2c4d77ee4ed1f4cb7bea04266036592)]:
+  - @keystar/ui@0.10.0
+
+## 0.6.8
+
+### Patch Changes
+
+- [#1610](https://github.com/Thinkmill/keystatic/pull/1610) [`e16a55a`](https://github.com/Thinkmill/keystatic/commit/e16a55a157de23080e4e776d48576ca73736263e) Thanks [@emmatown](https://github.com/emmatown)! - `@keystar/ui` is now depended with a ~ instead of an exact version
+- Updated dependencies [[`28c823f`](https://github.com/Thinkmill/keystatic/commit/28c823f0646efccd5f392961ae4f8d2a23a77f4a)]:
+  - @keystar/ui@0.9.6
+
+## 0.6.7
+
+### Patch Changes
+
+- [#1604](https://github.com/Thinkmill/keystatic/pull/1604) [`41aa38f`](https://github.com/Thinkmill/keystatic/commit/41aa38f035f6f5e5620d291e89d647aee05beac7) Thanks [@emmatown](https://github.com/emmatown)! - Reduce size of package.json
+
+- Updated dependencies [[`4688f77`](https://github.com/Thinkmill/keystatic/commit/4688f77b37755a1a4b8719feb7e11dfa82f392f0), [`41aa38f`](https://github.com/Thinkmill/keystatic/commit/41aa38f035f6f5e5620d291e89d647aee05beac7)]:
+  - @keystar/ui@0.9.5
+
+## 0.6.6
+
+### Patch Changes
+
+- [#1601](https://github.com/Thinkmill/keystatic/pull/1601) [`4dca0ca`](https://github.com/Thinkmill/keystatic/commit/4dca0cac2269a05ad2bdc4906cbc7fb57a03d7c5) Thanks [@emmatown](https://github.com/emmatown)! - Support GitHub rulesets to automatically create a branch when pull requests are required
+
+- [#1602](https://github.com/Thinkmill/keystatic/pull/1602) [`3c34f58`](https://github.com/Thinkmill/keystatic/commit/3c34f589fe59d3faa83e5c35bad9c39b6713e362) Thanks [@emmatown](https://github.com/emmatown)! - Update to minimatch@10
+
+- [#1603](https://github.com/Thinkmill/keystatic/pull/1603) [`b4371f5`](https://github.com/Thinkmill/keystatic/commit/b4371f5649d320dc186c54137aee6284db3ab661) Thanks [@emmatown](https://github.com/emmatown)! - Update to match-sorter@8
+
+- Updated dependencies [[`16373ad`](https://github.com/Thinkmill/keystatic/commit/16373adea441970a69997c3a573cec16d6f7ebb7)]:
+  - @keystar/ui@0.9.4
+
+## 0.6.5
+
+### Patch Changes
+
+- [#1577](https://github.com/Thinkmill/keystatic/pull/1577) [`bcc7105`](https://github.com/Thinkmill/keystatic/commit/bcc710561ed76701a7cb8896f8ff6e0a668eeee2) Thanks [@renatomprado](https://github.com/renatomprado)! - Fix pt-BR (Brazilian Portuguese) translations: `save` said "Guardar" (European Portuguese) and the git terms were mistranslated as unrelated words
+
+- Updated dependencies [[`b130a08`](https://github.com/Thinkmill/keystatic/commit/b130a0864dbc094ee8afc32d70429318cff2e48a)]:
+  - @keystar/ui@0.9.3
+
+## 0.6.4
+
+### Patch Changes
+
+- Updated dependencies [[`4a17a65`](https://github.com/Thinkmill/keystatic/commit/4a17a65c7720a8cc08dad82a18d0de53d80374c4)]:
+  - @keystar/ui@0.9.2
+
+## 0.6.3
+
+### Patch Changes
+
+- Updated dependencies [[`43c049b`](https://github.com/Thinkmill/keystatic/commit/43c049b3b7738276f1262e975e32252cf2c19b90)]:
+  - @keystar/ui@0.9.1
+
+## 0.6.2
+
+### Patch Changes
+
+- Updated dependencies [[`3cd13ab`](https://github.com/Thinkmill/keystatic/commit/3cd13ab337cf86a61481dc09cccd4a0881468ed2)]:
+  - @keystar/ui@0.9.0
+
+## 0.6.1
+
+### Patch Changes
+
+- [#1564](https://github.com/Thinkmill/keystatic/pull/1564) [`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9) Thanks [@emmatown](https://github.com/emmatown)! - Make `react-aria`, `react-stately` and `@keystar/ui` non-optional peer dependencies + normal dependencies instead of optional peer dependencies + normal dependencies to fix installing with pnpm
+
+- Updated dependencies [[`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9)]:
+  - @keystar/ui@0.8.1
+
+## 0.6.0
+
+### Minor Changes
+
+- [#1557](https://github.com/Thinkmill/keystatic/pull/1557) [`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a) Thanks [@emmatown](https://github.com/emmatown)! - Updated to `@keystar/ui@0.8.0`, `react-aria@3.50.0` and `react-stately@3.48.0`. The versions of these are now pinned to exact versions and are declared as standard dependencies as well as optional peer dependencies. If you have explicit dependencies on `@keystar/ui`, `react-aria` or `react-stately`, you should ensure you have the same versions installed otherwise you will get a peer dependency error/warning. In future, `@keystatic/core` may bump these packages in patch versions so you should likely pin `@keystatic/core` to an exact version if you depend on these packages yourself.
+
+### Patch Changes
+
+- Updated dependencies [[`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a)]:
+  - @keystar/ui@0.8.0
+
+## 0.5.51
+
+### Patch Changes
+
+- Updated dependencies [[`c5c297a`](https://github.com/Thinkmill/keystatic/commit/c5c297a390d6c73d2773ddc7a8f88ba05c540d18)]:
+  - @keystar/ui@0.7.22
+
 ## 0.5.50
 
 ### Patch Changes

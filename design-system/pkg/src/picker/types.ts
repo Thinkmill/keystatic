@@ -1,4 +1,5 @@
-import { SpectrumPickerProps } from '@react-types/select';
+import type { AriaSelectProps } from 'react-aria/useSelect';
+import type { AsyncLoadable } from '@react-types/shared';
 import { ActionButtonProps } from '@keystar/ui/button';
 
 import { FieldProps } from '@keystar/ui/field';
@@ -28,7 +29,8 @@ export type PickerProps<T> = {
    * @default true
    */
   shouldFlip?: boolean;
-} & SpectrumPickerProps<T> &
+} & Omit<AriaSelectProps<T>, keyof FieldProps> &
+  AsyncLoadable &
   FieldProps &
   Pick<ActionButtonProps, 'prominence'> &
   BaseStyleProps;

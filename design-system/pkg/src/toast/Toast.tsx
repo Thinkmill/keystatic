@@ -1,6 +1,6 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useToast } from '@react-aria/toast';
-import { useObjectRef } from '@react-aria/utils';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { useToast } from 'react-aria/useToast';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import { ForwardedRef, forwardRef, useMemo } from 'react';
 
 import { Button, ClearButton } from '@keystar/ui/button';

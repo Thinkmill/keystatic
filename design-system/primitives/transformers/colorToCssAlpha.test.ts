@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { colorToCssAlpha } from './colorToCssAlpha';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { colorToCssAlpha } from './colorToCssAlpha.ts';
 
 describe('Transformer: colorToCssAlpha', () => {
   it('transforms values to css color-mix() strings', () => {

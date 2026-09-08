@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { useOverlayTrigger } from '@react-aria/overlays';
-import { useOverlayTriggerState } from '@react-stately/overlays';
+import { useOverlayTrigger } from 'react-aria/useOverlayTrigger';
+import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 import { ArgTypes } from '@keystar/ui-storybook';
 
 import { ActionButton } from '@keystar/ui/button';

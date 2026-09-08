@@ -1,8 +1,8 @@
 import { createCalendar } from '@internationalized/date';
-import { useDateField } from '@react-aria/datepicker';
-import { useLocale } from '@react-aria/i18n';
-import { useDateFieldState } from '@react-stately/datepicker';
-import { DateValue } from '@react-types/datepicker';
+import { useDateField } from 'react-aria/useDateField';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useDateFieldState } from 'react-stately/useDateFieldState';
+import { DateValue } from 'react-stately/useCalendarState';
 import React, { ReactElement, Ref, useRef } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
@@ -18,7 +18,7 @@ function DateField<T extends DateValue>(
   ref: Ref<HTMLDivElement>
 ) {
   props = useProviderProps(props);
-  let { autoFocus, isDisabled, isReadOnly, isRequired } = props;
+  let { autoFocus, isDisabled, isReadOnly } = props;
 
   let domRef = useFocusManagerRef(ref);
   let { locale } = useLocale();
@@ -72,14 +72,7 @@ function DateField<T extends DateValue>(
         isInvalid={state.isInvalid}
       >
         {state.segments.map((segment, i) => (
-          <InputSegment
-            key={i}
-            segment={segment}
-            state={state}
-            isDisabled={isDisabled}
-            isReadOnly={isReadOnly}
-            isRequired={isRequired}
-          />
+          <InputSegment key={i} segment={segment} state={state} />
         ))}
         <input {...inputProps} ref={inputRef} />
       </Input>

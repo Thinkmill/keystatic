@@ -1,4 +1,4 @@
-import { CheckboxGroupState } from '@react-stately/checkbox';
+import { CheckboxGroupState } from 'react-stately/useCheckboxGroupState';
 import { ValidationState } from '@react-types/shared';
 import React from 'react';
 

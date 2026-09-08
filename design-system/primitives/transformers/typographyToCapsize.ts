@@ -1,8 +1,9 @@
 import { getCapHeight, precomputeValues } from '@capsizecss/core';
-import fontMetrics from '@capsizecss/metrics/inter';
+// @ts-ignore
+import fontMetrics from '@capsizecss/metrics/inter.js';
 import StyleDictionary from 'style-dictionary';
 
-import { isCapsize } from '../filters';
+import { isCapsize } from '../filters/index.ts';
 
 export const typographyToCapsize: StyleDictionary.Transform = {
   type: 'value',

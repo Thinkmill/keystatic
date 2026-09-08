@@ -1,4 +1,4 @@
-import { LabelAria } from '@react-aria/label';
+import { LabelAria } from 'react-aria/useLabel';
 import { AriaLabelingProps, DOMProps, InputBase } from '@react-types/shared';
 import { HTMLAttributes, ReactElement, ReactNode } from 'react';
 

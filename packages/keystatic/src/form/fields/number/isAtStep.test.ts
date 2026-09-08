@@ -1,5 +1,5 @@
 import { isAtStep } from './validateNumber';
-import { test, expect } from '@jest/globals';
+import { test, expect } from 'vitest';
 
 for (const [value, step] of [
   [5, 1],

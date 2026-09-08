@@ -3,7 +3,7 @@ import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 
 import { OverlayTriggerProps, PositionProps } from '@keystar/ui/overlays';
 import { BaseStyleProps } from '@keystar/ui/style';
-import { OverlayTriggerState } from '@react-stately/overlays';
+import { OverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 
 export type DialogType = 'modal' | 'popover' | 'tray' | 'fullscreen';
 export type DialogSize = 'small' | 'medium' | 'large';

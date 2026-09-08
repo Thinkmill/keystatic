@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/jest-globals';
+import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 import {
   act,
@@ -16,8 +16,8 @@ import {
   afterEach,
   beforeAll,
   beforeEach,
-  jest,
-} from '@jest/globals';
+  vi,
+} from 'vitest';
 
 import { Button } from '@keystar/ui/button';
 import { TestProvider } from '@keystar/ui/core';
@@ -29,16 +29,19 @@ const LEAVE_TIMEOUT = 320;
 
 // NOTE: skipped tests have something to do with mouse events and timers...
 describe('tooltip/TooltipTrigger', () => {
-  let onOpenChange = jest.fn();
+  let onOpenChange = vi.fn();
   let user: ReturnType<typeof userEvent.setup>;
 
   beforeAll(() => {
-    user = userEvent.setup({ delay: null });
-    jest.useFakeTimers();
+    vi.useFakeTimers();
+    user = userEvent.setup({
+      delay: null,
+      advanceTimers: vi.advanceTimersByTimeAsync,
+    });
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(() => {
@@ -53,7 +56,7 @@ describe('tooltip/TooltipTrigger', () => {
     // there's global state, so we need to make sure to run out the cooldown for
     // every test
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
   });
 
@@ -82,7 +85,7 @@ describe('tooltip/TooltipTrigger', () => {
       expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(tooltip).not.toBeInTheDocument();
@@ -104,16 +107,16 @@ describe('tooltip/TooltipTrigger', () => {
       expect(tooltip).toBeVisible();
       await user.unhover(button);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).toBeVisible();
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(tooltip).not.toBeInTheDocument();
@@ -142,18 +145,18 @@ describe('tooltip/TooltipTrigger', () => {
       fireEvent.mouseMove(button);
       expect(onOpenChange).toHaveBeenCalledTimes(1);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(tooltip).toBeVisible();
 
       // remove hover
       fireEvent.mouseLeave(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(onOpenChange).toHaveBeenCalledTimes(2);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(tooltip).not.toBeInTheDocument();
 
@@ -164,7 +167,7 @@ describe('tooltip/TooltipTrigger', () => {
       expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).not.toBeInTheDocument();
     });
@@ -192,7 +195,7 @@ describe('tooltip/TooltipTrigger', () => {
       fireEvent.mouseMove(button);
       expect(onOpenChange).toHaveBeenCalledTimes(1);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(tooltip).toBeVisible();
 
@@ -202,7 +205,7 @@ describe('tooltip/TooltipTrigger', () => {
       });
       expect(onOpenChange).toHaveBeenCalledTimes(2);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(tooltip).not.toBeInTheDocument();
 
@@ -211,7 +214,7 @@ describe('tooltip/TooltipTrigger', () => {
       expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).not.toBeInTheDocument();
     });
@@ -237,14 +240,14 @@ describe('tooltip/TooltipTrigger', () => {
       fireEvent.keyUp(document.activeElement as Element, { key: 'Escape' });
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).not.toBeInTheDocument();
       act(() => {
         button.blur();
       });
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(queryByRole('tooltip')).toBeNull();
     });
@@ -278,7 +281,7 @@ describe('tooltip/TooltipTrigger', () => {
       fireEvent.keyUp(document.activeElement as Element, { key: 'Escape' });
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).not.toBeInTheDocument();
       act(() => {
@@ -286,7 +289,7 @@ describe('tooltip/TooltipTrigger', () => {
       });
       fireEvent.mouseLeave(button);
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(queryByRole('tooltip')).toBeNull();
     });
@@ -310,14 +313,14 @@ describe('tooltip/TooltipTrigger', () => {
       await user.click(button);
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).not.toBeInTheDocument();
       act(() => {
         button.blur();
       });
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(queryByRole('tooltip')).toBeNull();
     });
@@ -345,14 +348,14 @@ describe('tooltip/TooltipTrigger', () => {
     fireEvent.keyUp(button, { key: 'Enter' });
     expect(onOpenChange).toHaveBeenCalledWith(false);
     act(() => {
-      jest.advanceTimersByTime(LEAVE_TIMEOUT);
+      vi.advanceTimersByTime(LEAVE_TIMEOUT);
     });
     expect(tooltip).not.toBeInTheDocument();
     act(() => {
       button.blur();
     });
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
     expect(queryByRole('tooltip')).toBeNull();
   });
@@ -380,13 +383,13 @@ describe('tooltip/TooltipTrigger', () => {
       });
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).not.toBeInTheDocument();
     });
 
     // can't get this to work with timers
-    // eslint-disable-next-line jest/no-commented-out-tests
+    // eslint-disable-next-line @vitest/no-commented-out-tests
     // it('opens for hover', async () => {
     //   let { getByRole, getByLabelText } = renderWithProvider(
     //     <TooltipTrigger onOpenChange={onOpenChange}>
@@ -406,15 +409,15 @@ describe('tooltip/TooltipTrigger', () => {
     //   });
     //   fireEvent.mouseLeave(button);
     //   act(() => {
-    //     jest.advanceTimersByTime(LEAVE_TIMEOUT);
+    //     vi.advanceTimersByTime(LEAVE_TIMEOUT);
     //   });
     //   expect(tooltip).toBeVisible();
     //   act(() => {
-    //     jest.advanceTimersByTime(LEAVE_TIMEOUT);
+    //     vi.advanceTimersByTime(LEAVE_TIMEOUT);
     //   });
     //   expect(onOpenChange).toHaveBeenCalledWith(false);
     //   act(() => {
-    //     jest.advanceTimersByTime(LEAVE_TIMEOUT);
+    //     vi.advanceTimersByTime(LEAVE_TIMEOUT);
     //   });
     //   expect(tooltip).not.toBeInTheDocument();
     // });
@@ -434,14 +437,14 @@ describe('tooltip/TooltipTrigger', () => {
       expect(queryByRole('tooltip')).toBeNull();
       // run half way through the timers and see if it's appeared
       act(() => {
-        jest.advanceTimersByTime(MOUSE_REST_TIMEOUT / 2);
+        vi.advanceTimersByTime(MOUSE_REST_TIMEOUT / 2);
       });
       expect(onOpenChange).not.toHaveBeenCalled();
       expect(queryByRole('tooltip')).toBeNull();
       fireEvent.mouseLeave(button);
       expect(onOpenChange).not.toHaveBeenCalled();
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
       expect(queryByRole('tooltip')).toBeNull();
     });
@@ -460,7 +463,7 @@ describe('tooltip/TooltipTrigger', () => {
       expect(queryByRole('tooltip')).toBeNull();
       // run half way through the timers and see if it's appeared
       act(() => {
-        jest.advanceTimersByTime(MOUSE_REST_TIMEOUT / 2);
+        vi.advanceTimersByTime(MOUSE_REST_TIMEOUT / 2);
       });
       expect(queryByRole('tooltip')).toBeNull();
       // halfway through, now add a focus
@@ -477,7 +480,7 @@ describe('tooltip/TooltipTrigger', () => {
       });
       // finish the full amount of time started by hover
       act(() => {
-        jest.advanceTimersByTime(MOUSE_REST_TIMEOUT / 2);
+        vi.advanceTimersByTime(MOUSE_REST_TIMEOUT / 2);
       });
       expect(tooltip).toBeVisible();
       act(() => {
@@ -485,7 +488,7 @@ describe('tooltip/TooltipTrigger', () => {
       });
       fireEvent.mouseLeave(button);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).not.toBeInTheDocument();
     });
@@ -534,7 +537,7 @@ describe('tooltip/TooltipTrigger', () => {
       });
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).toBeVisible();
     });
@@ -560,7 +563,7 @@ describe('tooltip/TooltipTrigger', () => {
       });
       expect(onOpenChange).toHaveBeenCalledTimes(1);
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(queryByRole('tooltip')).toBeNull();
     });
@@ -586,7 +589,7 @@ describe('tooltip/TooltipTrigger', () => {
         button.blur();
       });
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
       expect(tooltip).not.toBeInTheDocument();
     });
@@ -640,7 +643,7 @@ describe('tooltip/TooltipTrigger', () => {
       let tooltip = getByRole('tooltip');
       expect(button).toHaveAttribute('aria-describedBy', tooltip.id);
       fireEvent.mouseLeave(button);
-      act(jest.runAllTimers);
+      act(vi.runAllTimers);
       expect(button).not.toHaveAttribute('aria-describedBy');
     });
   });
@@ -672,7 +675,7 @@ describe('tooltip/TooltipTrigger', () => {
         button.blur();
       });
       act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
+        vi.advanceTimersByTime(LEAVE_TIMEOUT);
       });
 
       expect(tooltip).not.toBeInTheDocument();

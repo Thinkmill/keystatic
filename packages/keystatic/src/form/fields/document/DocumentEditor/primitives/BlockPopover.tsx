@@ -1,15 +1,9 @@
+import { AriaPopoverProps, PopoverAria } from 'react-aria/usePopover';
+import { useOverlay } from 'react-aria/useOverlay';
+import { useOverlayPosition } from 'react-aria/useOverlayPosition';
+import { mergeProps } from 'react-aria/mergeProps';
 import {
-  AriaPopoverProps,
-  PopoverAria,
-  useOverlay,
-  useOverlayPosition,
-} from '@react-aria/overlays';
-import { mergeProps, useLayoutEffect } from '@react-aria/utils';
-import {
-  OverlayTriggerState,
-  useOverlayTriggerState,
-} from '@react-stately/overlays';
-import {
+  useLayoutEffect,
   cloneElement,
   createContext,
   ReactElement,
@@ -22,6 +16,10 @@ import {
   useRef,
   useState,
 } from 'react';
+import {
+  OverlayTriggerState,
+  useOverlayTriggerState,
+} from 'react-stately/useOverlayTriggerState';
 import { Element, Editor } from 'slate';
 
 import { Overlay, PopoverProps } from '@keystar/ui/overlays';
@@ -245,6 +243,7 @@ function useBlockPopover(
     overlayProps: positionProps,
     arrowProps,
     placement,
+    triggerAnchorPoint,
     updatePosition,
   } = useOverlayPosition({
     ...otherProps,
@@ -297,6 +296,7 @@ function useBlockPopover(
   return {
     arrowProps,
     placement,
+    triggerAnchorPoint,
     popoverProps: mergeProps(overlayProps, positionProps),
     underlayProps,
     updatePosition,

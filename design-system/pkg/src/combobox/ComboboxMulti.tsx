@@ -1,4 +1,4 @@
-import { useObjectRef } from '@react-aria/utils';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import React, { ForwardedRef, ReactElement, useRef } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
@@ -12,7 +12,6 @@ import {
   ComboboxEmptyState,
   ComboboxInput,
   usePopoverStyles,
-  useStatefulRef,
 } from './Combobox';
 import { MobileComboboxMulti } from './MobileComboboxMulti';
 import { ComboboxMultiProps } from './types';
@@ -56,7 +55,7 @@ const ComboboxMultiBase = React.forwardRef(function ComboboxMultiBase<
   let buttonRef = useRef<HTMLButtonElement>(null);
   let inputRef = useRef<HTMLInputElement>(null);
   let listBoxRef = useRef<HTMLDivElement>(null);
-  let [popoverRefLikeValue, popoverRef] = useStatefulRef<HTMLDivElement>();
+  let popoverRef = useRef<HTMLDivElement>(null);
   let fieldRef = useObjectRef(forwardedRef);
 
   let layoutDelegate = useListBoxLayout();
@@ -75,7 +74,7 @@ const ComboboxMultiBase = React.forwardRef(function ComboboxMultiBase<
       inputRef,
       layoutDelegate,
       listBoxRef,
-      popoverRef: popoverRefLikeValue,
+      popoverRef,
     },
     state
   );

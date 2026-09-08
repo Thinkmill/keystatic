@@ -1,5 +1,5 @@
-import { toCamelCase } from './toCamelCase';
-import { expect, it, describe } from '@jest/globals';
+import { toCamelCase } from './toCamelCase.ts';
+import { expect, it, describe } from 'vitest';
 
 describe('Utilities: toCamelCase', () => {
   it('it transforms all lowercase word', () => {

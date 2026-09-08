@@ -1,5 +1,5 @@
-import { useTextField } from '@react-aria/textfield';
-import { useObjectRef } from '@react-aria/utils';
+import { useTextField } from 'react-aria/useTextField';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import { forwardRef, ForwardRefExoticComponent, Ref } from 'react';
 
 import { TextFieldPrimitive } from './TextFieldPrimitive';

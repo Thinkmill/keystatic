@@ -1,7 +1,9 @@
-import { DismissButton, usePopover } from '@react-aria/overlays';
-import { useObjectRef } from '@react-aria/utils';
-import { Axis } from '@react-types/overlays';
+import { DismissButton } from 'react-aria/Overlay';
+import { usePopover } from 'react-aria/usePopover';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { Axis } from 'react-aria/useOverlayPosition';
 import {
+  CSSProperties,
   forwardRef,
   ForwardedRef,
   ForwardRefExoticComponent,
@@ -54,16 +56,24 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
   props: PopoverWrapperProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let { children, isOpen, hideArrow, isNonModal, state, wrapperRef } = props;
+  let {
+    children,
+    isOpen,
+    hideArrow,
+    isNonModal,
+    state,
+    wrapperRef,
+    maxHeight: _maxHeight,
+    ...ariaProps
+  } = props;
 
   let popoverRef = useObjectRef(forwardedRef);
   let { popoverProps, arrowProps, underlayProps, placement } = usePopover(
     {
-      ...props,
+      ...ariaProps,
+      isNonModal,
       containerPadding: 8,
       popoverRef,
-      // @ts-expect-error we need to override the default value, but `undefined` doesn't work.
-      maxHeight: null,
     },
     state
   );
@@ -83,7 +93,20 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
       <div
         {...styleProps}
         {...popoverProps}
-        style={{ ...styleProps.style, ...popoverProps.style }}
+        style={
+          {
+            ...styleProps.style,
+            ...popoverProps.style,
+            // `useOverlayPosition` temporarily sets max-height to the viewport
+            // while measuring. Keep descendants constrained to the last
+            // committed position so scroll containers do not grow and clamp
+            // their scroll position during that measurement.
+            '--popover-max-height':
+              typeof popoverProps.style?.maxHeight === 'number'
+                ? `${popoverProps.style.maxHeight}px`
+                : popoverProps.style?.maxHeight,
+          } as CSSProperties
+        }
         ref={popoverRef}
         role="presentation"
       >

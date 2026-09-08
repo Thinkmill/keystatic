@@ -1,4 +1,5 @@
-import { filterDOMProps, useSlotId } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useSlotId } from 'react-aria/private/utils/useId';
 import { DOMProps } from '@react-types/shared';
 import { ReactNode, useMemo, useRef } from 'react';
 

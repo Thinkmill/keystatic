@@ -6,9 +6,10 @@ import {
   useStyleProps,
 } from '@keystar/ui/style';
 import { useId, useIsMounted } from '@keystar/ui/utils';
-import { useLocale } from '@react-aria/i18n';
-import { filterDOMProps, useUpdateEffect } from '@react-aria/utils';
-import { clamp } from '@react-stately/utils';
+import { useLocale } from 'react-aria/I18nProvider';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useUpdateEffect } from 'react-aria/private/utils/useUpdateEffect';
+import { clamp } from 'react-stately/private/utils/number';
 import {
   ForwardedRef,
   ForwardRefExoticComponent,

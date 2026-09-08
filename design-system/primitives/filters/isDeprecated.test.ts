@@ -1,6 +1,6 @@
-import { describe, expect, it } from '@jest/globals';
-import { getMockToken } from '../test-utilities';
-import { isDeprecated } from './isDeprecated';
+import { describe, expect, it } from 'vitest';
+import { getMockToken } from '../test-utilities/index.ts';
+import { isDeprecated } from './isDeprecated.ts';
 
 describe('Filter: isDeprecated', () => {
   it('Returns true if depreacted property is true', () => {

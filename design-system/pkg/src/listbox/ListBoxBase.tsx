@@ -1,9 +1,10 @@
-import { FocusScope } from '@react-aria/focus';
-import { useListBox } from '@react-aria/listbox';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { mergeProps } from '@react-aria/utils';
-import { Virtualizer, VirtualizerItem } from '@react-aria/virtualizer';
-import { ReusableView } from '@react-stately/virtualizer';
+import { FocusScope } from 'react-aria/FocusScope';
+import { useListBox } from 'react-aria/useListBox';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { mergeProps } from 'react-aria/mergeProps';
+import { Virtualizer } from 'react-aria/private/virtualizer/Virtualizer';
+import { VirtualizerItem } from 'react-aria/private/virtualizer/VirtualizerItem';
+import { ReusableView } from 'react-stately/useVirtualizerState';
 import { Node } from '@react-types/shared';
 import { RefObject, forwardRef, ReactElement, ReactNode, useMemo } from 'react';
 

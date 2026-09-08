@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { isShadow } from './isShadow';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { isShadow } from './isShadow.ts';
 
 describe('Filter: isShadow', () => {
   it('returns true if $type property is `shadow`', () => {

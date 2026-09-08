@@ -9,12 +9,12 @@ export { InsertionIndicatorPrimitive } from './InsertionIndicatorPrimitive';
 export { useDragAndDrop } from './useDragAndDrop';
 export type { DragAndDropOptions, DragAndDropHooks } from './types';
 
+export { DIRECTORY_DRAG_TYPE } from 'react-aria/useDrag';
 export {
-  DIRECTORY_DRAG_TYPE,
   isTextDropItem,
   isFileDropItem,
   isDirectoryDropItem,
-} from '@react-aria/dnd';
+} from 'react-aria/useDrop';
 
 export type {
   DirectoryDropItem,

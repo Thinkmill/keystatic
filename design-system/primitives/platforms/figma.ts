@@ -1,8 +1,8 @@
 // credit: https://github.com/primer/primitives/blob/main/src/platforms/figma.ts
 import type StyleDictionary from 'style-dictionary';
 
-import { isSource } from '../filters';
-import type { PlatformInitializer } from '../types';
+import { isSource } from '../filters/index.ts';
+import type { PlatformInitializer } from '../types.ts';
 
 const validFigmaToken = (token: StyleDictionary.TransformedToken) => {
   const validTypes = ['color', 'dimension'];

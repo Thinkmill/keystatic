@@ -5,8 +5,9 @@ import {
   HTMLAttributes,
   Ref,
 } from 'react';
-import { useHover, usePress } from '@react-aria/interactions';
-import { useObjectRef } from '@react-aria/utils';
+import { useHover } from 'react-aria/useHover';
+import { usePress } from 'react-aria/usePress';
+import { useObjectRef } from 'react-aria/useObjectRef';
 
 import { FieldPrimitive } from '@keystar/ui/field';
 import {

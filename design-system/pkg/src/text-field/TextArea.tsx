@@ -1,11 +1,12 @@
-import { chain, useLayoutEffect, useObjectRef } from '@react-aria/utils';
-import { useControlledState } from '@react-stately/utils';
-import { forwardRef, useCallback } from 'react';
+import { chain } from 'react-aria/chain';
+import { useLayoutEffect, forwardRef, useCallback } from 'react';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useControlledState } from 'react-stately/useControlledState';
 
 import { TextFieldPrimitive } from './TextFieldPrimitive';
 import { TextAreaProps } from './types';
 import { validateTextFieldProps } from './validateTextFieldProps';
-import { useTextField } from '@react-aria/textfield';
+import { useTextField } from 'react-aria/useTextField';
 
 /** Text areas allow users to input multiple lines of text with a keyboard. */
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(

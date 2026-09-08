@@ -1,4 +1,4 @@
-export { getMockDictionary } from './getMockDictionary';
-export { getMockToken } from './getMockToken';
-export { getMockParserInput, parserOutput } from './getMockParserInput';
-export { getMockFormatterArguments } from './getMockFormatterArguments';
+export { getMockDictionary } from './getMockDictionary.ts';
+export { getMockToken } from './getMockToken.ts';
+export { getMockParserInput, parserOutput } from './getMockParserInput.ts';
+export { getMockFormatterArguments } from './getMockFormatterArguments.ts';

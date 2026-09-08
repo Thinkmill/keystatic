@@ -1,7 +1,8 @@
-import { useLocale } from '@react-aria/i18n';
-import { useNumberField } from '@react-aria/numberfield';
-import { filterDOMProps, useObjectRef } from '@react-aria/utils';
-import { useNumberFieldState } from '@react-stately/numberfield';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useNumberField } from 'react-aria/useNumberField';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useNumberFieldState } from 'react-stately/useNumberFieldState';
 import {
   ForwardedRef,
   forwardRef,

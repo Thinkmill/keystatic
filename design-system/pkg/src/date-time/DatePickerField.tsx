@@ -1,7 +1,7 @@
 import { DateValue, createCalendar } from '@internationalized/date';
-import { useDateField } from '@react-aria/datepicker';
-import { useLocale } from '@react-aria/i18n';
-import { useDateFieldState } from '@react-stately/datepicker';
+import { useDateField } from 'react-aria/useDateField';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useDateFieldState } from 'react-stately/useDateFieldState';
 import { useRef } from 'react';
 
 import { css, tokenSchema } from '@keystar/ui/style';
@@ -18,7 +18,7 @@ interface DatePickerFieldProps<T extends DateValue> extends DatePickerProps<T> {
 export function DatePickerField<T extends DateValue>(
   props: DatePickerFieldProps<T>
 ) {
-  let { isDisabled, isReadOnly, isRequired, rangeFieldType } = props;
+  let { rangeFieldType } = props;
 
   let fieldRef = useRef<HTMLDivElement>(null);
   let inputRef = useRef<HTMLInputElement>(null);
@@ -49,14 +49,7 @@ export function DatePickerField<T extends DateValue>(
       ref={fieldRef}
     >
       {state.segments.map((segment, i) => (
-        <InputSegment
-          key={i}
-          segment={segment}
-          state={state}
-          isDisabled={isDisabled}
-          isReadOnly={isReadOnly}
-          isRequired={isRequired}
-        />
+        <InputSegment key={i} segment={segment} state={state} />
       ))}
       <input {...inputProps} ref={inputRef} />
     </div>

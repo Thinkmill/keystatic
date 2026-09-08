@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { colorToHexAlpha } from './colorToHexAlpha';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { colorToHexAlpha } from './colorToHexAlpha.ts';
 
 describe('Transformer: colorToHexAlpha', () => {
   it('transforms hex3, hex6 `color` tokens with alpha value', () => {

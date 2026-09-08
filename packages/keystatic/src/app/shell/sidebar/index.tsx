@@ -1,10 +1,11 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { DismissButton, useModalOverlay } from '@react-aria/overlays';
-import { useUpdateEffect } from '@react-aria/utils';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
+import { DismissButton } from 'react-aria/Overlay';
+import { useModalOverlay } from 'react-aria/useModalOverlay';
+import { useUpdateEffect } from 'react-aria/private/utils/useUpdateEffect';
 import {
   OverlayTriggerState,
   useOverlayTriggerState,
-} from '@react-stately/overlays';
+} from 'react-stately/useOverlayTriggerState';
 import { typedKeys } from 'emery';
 import {
   ReactNode,

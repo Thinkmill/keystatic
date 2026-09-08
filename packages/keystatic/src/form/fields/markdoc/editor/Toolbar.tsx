@@ -432,8 +432,11 @@ const HeadingMenu = (props: { headingType: NodeType }) => {
         aria-label="Text block"
         items={items}
         isDisabled={menuState === 'disabled'}
-        selectedKey={menuState === 'disabled' ? 'normal' : menuState.toString()}
-        onSelectionChange={selected => {
+        value={menuState === 'disabled' ? 'normal' : menuState.toString()}
+        onChange={selected => {
+          if (selected === null) {
+            return;
+          }
           let key = headingMenuVals.get(selected);
           if (key === 'normal') {
             runCommand(setBlockType(nodes.paragraph));

@@ -1,10 +1,10 @@
 import fs from 'fs';
 
-import { KeystarStyleDictionary } from '../KeystarStyleDictionary';
+import { KeystarStyleDictionary } from '../KeystarStyleDictionary.ts';
 
-import { figma } from '../platforms';
-import type { ConfigGeneratorOptions } from '../types';
-import { themes } from './themes.config';
+import { figma } from '../platforms/index.ts';
+import type { ConfigGeneratorOptions } from '../types.ts';
+import { themes } from './themes.config.ts';
 
 /*
 Desired output

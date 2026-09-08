@@ -1,4 +1,4 @@
-import { useOverlayTriggerState } from '@react-stately/overlays';
+import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 import React, { isValidElement, ReactElement, useState } from 'react';
 
 import { Modal } from '@keystar/ui/overlays';

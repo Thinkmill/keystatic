@@ -1,5 +1,5 @@
-import { useSeparator } from '@react-aria/separator';
-import { filterDOMProps } from '@react-aria/utils';
+import { useSeparator } from 'react-aria/useSeparator';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 
 import { useSlotProps } from '@keystar/ui/slots';
 import {

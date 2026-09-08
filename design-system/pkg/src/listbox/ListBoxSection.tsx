@@ -1,11 +1,11 @@
-import { useLocale } from '@react-aria/i18n';
-import { useListBoxSection } from '@react-aria/listbox';
+import { useLocale } from 'react-aria/I18nProvider';
+import { useListBoxSection } from 'react-aria/useListBox';
 import {
   VirtualizerItemOptions,
-  layoutInfoToStyle,
   useVirtualizerItem,
-} from '@react-aria/virtualizer';
-import { LayoutInfo } from '@react-stately/virtualizer';
+} from 'react-aria/private/virtualizer/useVirtualizerItem';
+import { layoutInfoToStyle } from 'react-aria/private/virtualizer/VirtualizerItem';
+import { LayoutInfo } from 'react-stately/useVirtualizerState';
 import { Node } from '@react-types/shared';
 import { Fragment, ReactNode, useRef } from 'react';
 

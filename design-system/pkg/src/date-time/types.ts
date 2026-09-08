@@ -1,12 +1,8 @@
-import {
-  AriaDatePickerProps,
-  AriaDateRangePickerProps,
-  DateValue,
-  Granularity,
-  MappedDateValue,
-  MappedTimeValue,
-  TimeValue,
-} from '@react-types/datepicker';
+import { AriaDatePickerProps } from 'react-aria/useDatePicker';
+import { AriaDateRangePickerProps } from 'react-aria/useDateRangePicker';
+import { DateValue } from 'react-stately/useCalendarState';
+import { Granularity, MappedDateValue } from 'react-stately/useDateFieldState';
+import { MappedTimeValue, TimeValue } from 'react-stately/useTimeFieldState';
 import { FocusableProps, RangeValue, ValueBase } from '@react-types/shared';
 
 import { FieldProps } from '@keystar/ui/field';

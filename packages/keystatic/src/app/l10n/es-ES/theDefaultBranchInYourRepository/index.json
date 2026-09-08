@@ -1,6 +1,0 @@
-{
-  "key": "theDefaultBranchInYourRepository",
-  "value": "La rama predeterminada en tu repositorio. Elige esto para comenzar algo nuevo que no dependa de tu rama actual.",
-  "notes": "",
-  "type": "git-related"
-}

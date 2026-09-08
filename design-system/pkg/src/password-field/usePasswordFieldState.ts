@@ -1,4 +1,4 @@
-import { useControlledState } from '@react-stately/utils';
+import { useControlledState } from 'react-stately/useControlledState';
 import React from 'react';
 
 import { PasswordFieldProps, PasswordFieldState } from './types';

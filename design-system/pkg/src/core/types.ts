@@ -4,6 +4,8 @@ import { ReactNode } from 'react';
 import { RootStyleProps, VoussoirTheme } from '@keystar/ui/style';
 import { ColorScheme, Emphasis, ScaleScheme } from '@keystar/ui/types';
 
+import type { Router } from '../router/types';
+
 type VoussoirContextProps = {
   /** Whether descendants should be displayed with the emphasized style. */
   emphasis?: Emphasis;
@@ -15,10 +17,6 @@ type VoussoirContextProps = {
   isReadOnly?: boolean;
   // /** Whether descendants should be displayed with the validation state style. */
   // validationState?: ValidationState;
-};
-
-type Router = {
-  navigate: (path: string) => void;
 };
 
 export type KeystarProviderProps = {

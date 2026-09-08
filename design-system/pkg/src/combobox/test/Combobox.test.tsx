@@ -1,20 +1,20 @@
 import userEvent from '@testing-library/user-event';
 import { forwardRef } from 'react';
-import { beforeAll, expect, jest, describe, it } from '@jest/globals';
+import { beforeAll, expect, vi, describe, it } from 'vitest';
 
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 
-import { Combobox, Item } from '..';
+import { Combobox, ComboboxMulti, Item } from '..';
 
-let onSelectionChange = jest.fn();
-let onOpenChange = jest.fn();
-let onInputChange = jest.fn();
-let onFocus = jest.fn();
-let onBlur = jest.fn();
+let onChange = vi.fn();
+let onOpenChange = vi.fn();
+let onInputChange = vi.fn();
+let onFocus = vi.fn();
+let onBlur = vi.fn();
 
 let defaultProps = {
   label: 'Test',
-  onSelectionChange,
+  onChange,
   onOpenChange,
   onInputChange,
   onFocus,
@@ -35,15 +35,19 @@ function renderCombobox(props = {}) {
 
 describe('combobox/Combobox', () => {
   beforeAll(function () {
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientWidth', 'get')
-      .mockImplementation(() => 1000);
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientHeight', 'get')
-      .mockImplementation(() => 1000);
-    window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.spyOn(window.screen, 'width', 'get').mockImplementation(() => 1024);
-    jest.useFakeTimers();
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientWidth',
+      'get'
+    ).mockImplementation(() => 1000);
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientHeight',
+      'get'
+    ).mockImplementation(() => 1000);
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    vi.spyOn(window.screen, 'width', 'get').mockImplementation(() => 1024);
+    vi.useFakeTimers();
   });
 
   it('renders correctly', function () {
@@ -75,7 +79,7 @@ describe('combobox/Combobox', () => {
     let combobox = getByRole('combobox');
     user.type(combobox, 'One');
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
@@ -85,7 +89,7 @@ describe('combobox/Combobox', () => {
     act(() => {
       fireEvent.keyDown(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
       fireEvent.keyUp(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
@@ -94,7 +98,7 @@ describe('combobox/Combobox', () => {
     let button = getByRole('button');
     act(() => {
       firePress(button);
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
@@ -123,7 +127,7 @@ describe('combobox/Combobox', () => {
     fireEvent.keyDown(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
     fireEvent.keyUp(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
@@ -132,11 +136,52 @@ describe('combobox/Combobox', () => {
     let button = getByRole('button');
     act(() => {
       firePress(button);
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(onInputChange).not.toHaveBeenCalled();
+  });
+
+  it('clears a multi combobox input when an item is pressed', function () {
+    onInputChange.mockClear();
+    let { getByRole } = renderWithProvider(
+      <ComboboxMulti label="Test" onInputChange={onInputChange}>
+        <Item key="one">Item one</Item>
+        <Item key="two">Item two</Item>
+      </ComboboxMulti>
+    );
+
+    let combobox = getByRole('combobox') as HTMLInputElement;
+    fireEvent.change(combobox, { target: { value: 'Item' } });
+    act(() => vi.runAllTimers());
+    expect(combobox).toHaveValue('Item');
+
+    firePress(getByRole('option', { name: 'Item one' }));
+
+    expect(combobox).toHaveValue('');
+    expect(onInputChange).toHaveBeenLastCalledWith('');
+  });
+
+  it('clears a multi combobox input when an item is selected with Enter', function () {
+    onInputChange.mockClear();
+    let { getByRole } = renderWithProvider(
+      <ComboboxMulti label="Test" onInputChange={onInputChange}>
+        <Item key="one">Item one</Item>
+        <Item key="two">Item two</Item>
+      </ComboboxMulti>
+    );
+
+    let combobox = getByRole('combobox') as HTMLInputElement;
+    fireEvent.change(combobox, { target: { value: 'Item' } });
+    act(() => vi.runAllTimers());
+    expect(combobox).toHaveValue('Item');
+
+    fireEvent.keyDown(combobox, { key: 'ArrowDown' });
+    fireEvent.keyDown(combobox, { key: 'Enter' });
+
+    expect(combobox).toHaveValue('');
+    expect(onInputChange).toHaveBeenLastCalledWith('');
   });
 });

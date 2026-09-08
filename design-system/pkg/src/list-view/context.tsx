@@ -1,9 +1,7 @@
-import type {
-  DraggableCollectionState,
-  DroppableCollectionState,
-} from '@react-stately/dnd';
-import { ListLayout } from '@react-stately/layout';
-import { ListState } from '@react-stately/list';
+import type { DraggableCollectionState } from 'react-stately/useDraggableCollectionState';
+import type { DroppableCollectionState } from 'react-stately/useDroppableCollectionState';
+import { ListLayout } from 'react-stately/useVirtualizerState';
+import { ListState } from 'react-stately/useListState';
 import { LoadingState } from '@react-types/shared';
 import { Key, createContext, useContext } from 'react';
 

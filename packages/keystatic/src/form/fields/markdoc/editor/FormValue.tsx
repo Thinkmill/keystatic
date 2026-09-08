@@ -4,7 +4,7 @@ import { useDialogContainer } from '@keystar/ui/dialog';
 import { useId, useMemo, useState } from 'react';
 import { FormValueContentFromPreviewProps } from '../../../form-from-preview';
 import { Content } from '@keystar/ui/slots';
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { clientSideValidateProp } from '../../../errors';
 import { createGetPreviewProps } from '../../../preview-props';
 import l10nMessages from '../../../../app/l10n';

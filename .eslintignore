@@ -38,6 +38,7 @@ node_modules/
 
 # Next.js build output
 .next
+**/next-env.d.ts
 
 # Preconstruct build output
 dist
@@ -60,4 +61,3 @@ l10n.js
 l10n.d.ts
 packages/keystatic/src/app/l10n/index.js
 packages/keystatic/src/app/l10n/index.d.ts
-

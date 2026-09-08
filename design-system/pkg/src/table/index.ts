@@ -1,5 +1,5 @@
 'use client';
-import { Column } from '@react-stately/table';
+import { Column } from 'react-stately/useTableState';
 import { ColumnProps } from './types';
 
 import type { JSX } from 'react';
@@ -10,6 +10,6 @@ export { TableView } from './TableView';
 const VoussoirColumn = Column as <T>(props: ColumnProps<T>) => JSX.Element;
 export { VoussoirColumn as Column };
 
-export { Cell, Row, TableBody, TableHeader } from '@react-stately/table';
+export { Cell, Row, TableBody, TableHeader } from 'react-stately/useTableState';
 
 export type { SortDescriptor, SortDirection } from '@react-types/shared';

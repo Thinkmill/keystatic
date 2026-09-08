@@ -1,8 +1,13 @@
+const { initOpenNextCloudflareForDev } = require('@opennextjs/cloudflare');
+
+initOpenNextCloudflareForDev();
+
 /** @type {import('next').NextConfig} */
 module.exports = {
   typescript: { ignoreBuildErrors: true },
   experimental: {
     externalDir: true,
+    prefetchInlining: false,
   },
   async rewrites() {
     return [{ source: '/keystatic/:path*', destination: '/keystatic' }];
@@ -10,16 +15,10 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: '/:path*',
-        destination: 'https://keystatic.com/:path*',
+        source: '/',
+        destination: 'https://keystatic.com',
         permanent: false,
-        has: [{ type: 'host', value: 'keystatic.thinkmill.com.au' }],
-      },
-      {
-        source: '/:path*',
-        destination: 'https://keystatic.com/:path*',
-        permanent: false,
-        has: [{ type: 'host', value: 'keystatic.thinkmill.com' }],
+        has: [{ type: 'host', value: 'www.keystatic.com' }],
       },
       {
         source: '/:path*',

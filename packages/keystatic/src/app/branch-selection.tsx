@@ -1,4 +1,4 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { gql } from '@ts-gql/tag/no-transform';
 import { useMemo, useState } from 'react';
 import { CombinedError, useMutation } from 'urql';
@@ -69,8 +69,8 @@ export function BranchPicker() {
       aria-label={stringFormatter.format('currentBranch')}
       defaultItems={filteredBranches} // use `defaultItems` so the component handles filtering
       loadingState={filteredBranches.length === 0 ? 'loading' : undefined}
-      selectedKey={currentBranch}
-      onSelectionChange={key => {
+      value={currentBranch}
+      onChange={key => {
         if (typeof key === 'string') {
           router.push(
             router.href.replace(

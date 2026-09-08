@@ -1,4 +1,4 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Y from 'yjs';
 import * as s from 'superstruct';

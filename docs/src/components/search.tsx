@@ -58,6 +58,7 @@ export function Search() {
       if (typeof window.pagefind === 'undefined') {
         try {
           window.pagefind = await import(
+            /* turbopackIgnore: true */
             // See the `pagefind:local` npm script to "hack" the pagefind content for local dev.
             process.env.NODE_ENV === 'development'
               ? '/pagefind/pagefind.js'

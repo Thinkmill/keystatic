@@ -1,3 +1,3 @@
-export { css } from './css';
-export { figma } from './figma';
-export { javascript } from './javascript';
+export { css } from './css.ts';
+export { figma } from './figma.ts';
+export { javascript } from './javascript.ts';

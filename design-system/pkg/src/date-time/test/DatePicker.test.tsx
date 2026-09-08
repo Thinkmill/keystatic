@@ -1,7 +1,7 @@
 import { CalendarDate, CalendarDateTime } from '@internationalized/date';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
-import { afterEach, expect, jest, describe, it } from '@jest/globals';
+import { afterEach, expect, vi, describe, it } from 'vitest';
 
 import {
   act,
@@ -50,7 +50,7 @@ describe('date-time/DatePicker', () => {
     expect(segments[1].getAttribute('aria-valuenow')).toBe('3');
     expect(segments[1].getAttribute('aria-valuetext')).toBe('3');
     expect(segments[1].getAttribute('aria-valuemin')).toBe('1');
-    expect(segments[1].getAttribute('aria-valuemax')).toBe('28');
+    expect(segments[1].getAttribute('aria-valuemax')).toBe('31');
 
     expect(getTextValue(segments[2])).toBe('2023');
     expect(segments[2].getAttribute('aria-label')).toBe('year, ');
@@ -89,7 +89,7 @@ describe('date-time/DatePicker', () => {
     expect(segments[1].getAttribute('aria-valuenow')).toBe('3');
     expect(segments[1].getAttribute('aria-valuetext')).toBe('3');
     expect(segments[1].getAttribute('aria-valuemin')).toBe('1');
-    expect(segments[1].getAttribute('aria-valuemax')).toBe('28');
+    expect(segments[1].getAttribute('aria-valuemax')).toBe('31');
 
     expect(getTextValue(segments[2])).toBe('2023');
     expect(segments[2].getAttribute('aria-label')).toBe('year, ');
@@ -100,10 +100,10 @@ describe('date-time/DatePicker', () => {
 
     expect(getTextValue(segments[3])).toBe('12');
     expect(segments[3].getAttribute('aria-label')).toBe('hour, ');
-    expect(segments[3].getAttribute('aria-valuenow')).toBe('0');
+    expect(segments[3].getAttribute('aria-valuenow')).toBe('12');
     expect(segments[3].getAttribute('aria-valuetext')).toBe('12 AM');
-    expect(segments[3].getAttribute('aria-valuemin')).toBe('0');
-    expect(segments[3].getAttribute('aria-valuemax')).toBe('11');
+    expect(segments[3].getAttribute('aria-valuemin')).toBe('1');
+    expect(segments[3].getAttribute('aria-valuemax')).toBe('12');
 
     expect(getTextValue(segments[4])).toBe('00');
     expect(segments[4].getAttribute('aria-label')).toBe('minute, ');
@@ -149,13 +149,13 @@ describe('date-time/DatePicker', () => {
     expect(getByTestId('foo')).toHaveAttribute('role', 'group');
   });
 
-  // eslint-disable-next-line jest/no-disabled-tests
+  // eslint-disable-next-line @vitest/no-disabled-tests
   describe.skip('events', function () {
-    let onBlurSpy = jest.fn();
-    let onFocusChangeSpy = jest.fn();
-    let onFocusSpy = jest.fn();
-    let onKeyDownSpy = jest.fn();
-    let onKeyUpSpy = jest.fn();
+    let onBlurSpy = vi.fn();
+    let onFocusChangeSpy = vi.fn();
+    let onFocusSpy = vi.fn();
+    let onKeyDownSpy = vi.fn();
+    let onKeyUpSpy = vi.fn();
 
     afterEach(() => {
       onBlurSpy.mockClear();

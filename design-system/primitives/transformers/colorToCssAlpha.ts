@@ -1,6 +1,6 @@
 import type StyleDictionary from 'style-dictionary';
 
-import { isColorWithAlpha } from '../filters';
+import { isColorWithAlpha } from '../filters/index.ts';
 
 /**
  * @description replaces values with a `color-mix()` function using the token's `alpha` property.

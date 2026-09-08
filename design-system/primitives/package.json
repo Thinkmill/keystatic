@@ -4,16 +4,16 @@
   "private": true,
   "description": "Typography, size, and color primitives for the Keystar design system",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "build": "tsx ./scripts/buildTokens.ts && tsx ./scripts/build.ts",
-    "build:figma": "tsx ./scripts/buildFigma.ts",
-    "build:tokens": "tsx ./scripts/buildTokens.ts"
+    "build": "node ./scripts/buildTokens.ts && node ./scripts/build.ts",
+    "build:figma": "node ./scripts/buildFigma.ts",
+    "build:tokens": "node ./scripts/buildTokens.ts"
   },
   "devDependencies": {
     "@capsizecss/core": "^3.1.1",
     "@capsizecss/metrics": "^1.2.0",
-    "@jest/globals": "^29.7.0",
-    "@keystar/ui": "workspace:^",
+    "@keystar/ui": "workspace:*",
     "@types/lodash": "^4.14.191",
     "color2k": "^2.0.2",
     "emery": "^1.4.1",
@@ -21,8 +21,8 @@
     "lodash": "^4.17.21",
     "prettier": "^3.0.3",
     "style-dictionary": "^3.8.0",
-    "tsx": "^4.8.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "@prettier/sync": "^0.3.0"

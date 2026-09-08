@@ -1,9 +1,9 @@
-import { format } from '@prettier/sync';
+import prettier from '@prettier/sync';
 import StyleDictionary from 'style-dictionary';
 import type { FormatterArguments } from 'style-dictionary/types/Format';
 import type { LineFormatting } from 'style-dictionary/types/FormatHelpers';
 
-import { SELECTOR_DEFAULT } from '../constants';
+import { SELECTOR_DEFAULT } from '../constants.ts';
 
 const { fileHeader, formattedVariables } = StyleDictionary.formatHelpers;
 
@@ -56,5 +56,5 @@ export const cssThemed: StyleDictionary.Formatter = ({
   }
 
   // return prettified
-  return format(output.join('\n'), { parser: 'css', printWidth: 500 });
+  return prettier.format(output.join('\n'), { parser: 'css', printWidth: 500 });
 };

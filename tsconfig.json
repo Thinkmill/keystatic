@@ -2,6 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "downlevelIteration": true,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
@@ -14,7 +15,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "types": ["node", "jest"]
+    "types": ["node", "vitest"]
   },
   "include": ["**/*"],
   "exclude": ["**/dist/**/*", "**/node_modules/**/*"]

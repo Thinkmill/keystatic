@@ -1,5 +1,5 @@
-import { chain } from '@react-aria/utils';
-import { useOverlayTriggerState } from '@react-stately/overlays';
+import { chain } from 'react-aria/chain';
+import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 import { action } from '@keystar/ui-storybook';
 import { useRef, useState } from 'react';
 

@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { isFromFile } from './isFromFile';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { isFromFile } from './isFromFile.ts';
 
 describe('Filter: isFromFile', () => {
   it('returns true if token.filePath is in provided array of file paths', () => {

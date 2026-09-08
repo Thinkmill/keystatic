@@ -1,11 +1,6 @@
-import { useBreadcrumbs } from '@react-aria/breadcrumbs';
+import { useBreadcrumbs } from 'react-aria/useBreadcrumbs';
 import {
   useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-  useValueEffect,
-} from '@react-aria/utils';
-import {
   Children,
   ForwardedRef,
   Key,
@@ -17,6 +12,9 @@ import {
   useState,
   Ref,
 } from 'react';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useResizeObserver } from 'react-aria/private/utils/useResizeObserver';
+import { useValueEffect } from 'react-aria/private/utils/useValueEffect';
 
 import { ActionButton } from '@keystar/ui/button';
 import { useProviderProps } from '@keystar/ui/core';

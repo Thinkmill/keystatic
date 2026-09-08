@@ -1,6 +1,6 @@
 import React, { HTMLAttributes, RefObject } from 'react';
-import { TooltipTriggerState } from '@react-stately/tooltip';
-import { PositionProps } from '@react-types/overlays';
+import { TooltipTriggerState } from 'react-stately/useTooltipTriggerState';
+import { PositionProps } from 'react-aria/useOverlayPosition';
 
 import { RootStyleProps } from '@keystar/ui/style';
 

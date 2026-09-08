@@ -1,12 +1,13 @@
-import { useVisuallyHidden } from '@react-aria/visually-hidden';
+import { useVisuallyHidden } from 'react-aria/VisuallyHidden';
 import { FocusableElement, ItemDropTarget } from '@react-types/shared';
+
 import { assert } from 'emery';
 import React, { DOMAttributes, HTMLAttributes, useRef } from 'react';
 
 import { InsertionIndicatorPrimitive } from '@keystar/ui/drag-and-drop';
 
 import { useTableContext } from './context';
-import { Rect } from '@react-stately/virtualizer';
+import { Rect } from 'react-stately/useVirtualizerState';
 
 interface InsertionIndicatorProps {
   rowProps: HTMLAttributes<HTMLElement> & DOMAttributes<FocusableElement>;

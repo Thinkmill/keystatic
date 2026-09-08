@@ -1,4 +1,4 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 
 const intlMessages: Parameters<typeof useLocalizedStringFormatter>[0] = {
   'ar-AE': { show: vars => `أقل ${vars?.fieldLabel}` },

@@ -1,12 +1,15 @@
-import { FocusScope, createFocusManager } from '@react-aria/focus';
-import { useLocale } from '@react-aria/i18n';
-import { PressProps, PressResponder } from '@react-aria/interactions';
-import { filterDOMProps, isMac, mergeProps } from '@react-aria/utils';
-import { AriaLabelingProps, DOMAttributes } from '@react-types/shared';
+import { FocusScope } from 'react-aria/FocusScope';
+import { createFocusManager } from 'react-aria/private/focus/FocusScope';
+import { useLocale } from 'react-aria/I18nProvider';
+import { PressProps } from 'react-aria/usePress';
+import { PressResponder } from 'react-aria/private/interactions/PressResponder';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { isMac } from 'react-aria/private/utils/platform';
+import { mergeProps } from 'react-aria/mergeProps';
+import { AriaLabelingProps, DOMAttributes, Key } from '@react-types/shared';
 import { assert, assertNever } from 'emery';
 import {
   Dispatch,
-  Key,
   KeyboardEvent,
   PropsWithChildren,
   ReactNode,

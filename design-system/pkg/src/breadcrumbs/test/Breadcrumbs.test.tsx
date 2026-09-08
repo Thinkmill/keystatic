@@ -1,4 +1,4 @@
-import { beforeEach, expect, describe, it, jest } from '@jest/globals';
+import { beforeEach, expect, describe, it, vi } from 'vitest';
 
 import { Breadcrumbs, Item } from '..';
 import { firePress, renderWithProvider, within } from '#test-utils';
@@ -6,16 +6,16 @@ import { firePress, renderWithProvider, within } from '#test-utils';
 describe('breadcrumbs/Breadcrumbs', () => {
   beforeEach(() => {
     // avoid issues when measuring the width of the breadcrumbs
-    jest
-      .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
-      .mockImplementation(function () {
+    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(
+      function () {
         // @ts-expect-error
         if (this instanceof HTMLUListElement) {
           return 500;
         }
 
         return 100;
-      });
+      }
+    );
   });
 
   it('handles defaults', function () {
@@ -202,5 +202,15 @@ describe('breadcrumbs/Breadcrumbs', () => {
     expect(items).toHaveLength(5);
     expect(items[0].tagName).toBe('A');
     expect(items[0]).toHaveAttribute('href', 'https://example.com');
+  });
+
+  it('does not pass an empty href to the rendered element', function () {
+    let { getByText } = renderWithProvider(
+      <Breadcrumbs>
+        <Item href="">Folder 1</Item>
+      </Breadcrumbs>
+    );
+
+    expect(getByText('Folder 1')).not.toHaveAttribute('href');
   });
 });

@@ -1,5 +1,6 @@
-import { filterDOMProps, useObjectRef } from '@react-aria/utils';
-import { PressResponder } from '@react-aria/interactions';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { PressResponder } from 'react-aria/private/interactions/PressResponder';
 import React, { ForwardedRef, forwardRef, ReactNode } from 'react';
 
 export type FileTriggerProps = {

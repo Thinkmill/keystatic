@@ -1,6 +1,6 @@
-import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
-import { isColorWithMix } from './isColorWithMix';
+import { getMockToken } from '../test-utilities/index.ts';
+import { describe, expect, it } from 'vitest';
+import { isColorWithMix } from './isColorWithMix.ts';
 
 describe('Filter: isColorWithMix', () => {
   it('returns true if $type property is `color` and valid `mix` property exists', () => {

@@ -1,9 +1,9 @@
 import { toHex } from 'color2k';
 import type StyleDictionary from 'style-dictionary';
 
-import { isColorWithAlpha } from '../filters';
-import { alpha } from './utilities/alpha';
-import { getTokenValue } from './utilities/getTokenValue';
+import { isColorWithAlpha } from '../filters/index.ts';
+import { alpha } from './utilities/alpha.ts';
+import { getTokenValue } from './utilities/getTokenValue.ts';
 
 /**
  * @description replaces tokens value with `hex8` color using the tokens `alpha` property to specify the value used for alpha

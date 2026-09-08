@@ -6,8 +6,9 @@ import {
   Ref,
   useRef,
 } from 'react';
-import { useModalOverlay } from '@react-aria/overlays';
-import { useObjectRef, useViewportSize } from '@react-aria/utils';
+import { useModalOverlay } from 'react-aria/useModalOverlay';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { useViewportSize } from 'react-aria/private/utils/useViewportSize';
 
 import {
   breakpointQueries,

@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.5.50",
+  "version": "0.6.9",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -105,7 +105,7 @@
     "dist"
   ],
   "scripts": {
-    "setup": "ts-gql build && tsx scripts/l10n.ts && tsx scripts/build-prism.ts",
+    "setup": "ts-gql build && node scripts/l10n.ts && node scripts/build-prism.ts",
     "build": "pnpm run setup && next build",
     "dev": "next dev",
     "start": "next start"
@@ -115,22 +115,12 @@
     "@braintree/sanitize-url": "^6.0.2",
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
-    "@internationalized/string": "^3.2.6",
-    "@keystar/ui": "workspace:^",
+    "@internationalized/date": "^3.12.2",
+    "@internationalized/number": "^3.6.7",
+    "@internationalized/string": "^3.2.9",
+    "@keystar/ui": "workspace:~",
     "@markdoc/markdoc": "^0.4.0",
-    "@react-aria/focus": "^3.20.2",
-    "@react-aria/i18n": "^3.12.8",
-    "@react-aria/interactions": "^3.25.0",
-    "@react-aria/label": "^3.7.17",
-    "@react-aria/overlays": "^3.27.0",
-    "@react-aria/selection": "^3.24.0",
-    "@react-aria/utils": "^3.28.2",
-    "@react-aria/visually-hidden": "^3.8.22",
-    "@react-stately/collections": "^3.12.3",
-    "@react-stately/list": "^3.12.1",
-    "@react-stately/overlays": "^3.6.15",
-    "@react-stately/utils": "^3.10.6",
-    "@react-types/shared": "^3.29.0",
+    "@react-types/shared": "^3.36.0",
     "@sindresorhus/slugify": "^1.1.2",
     "@toeverything/y-indexeddb": "^0.10.0-canary.9",
     "@ts-gql/tag": "^0.7.3",
@@ -150,7 +140,7 @@
     "js-yaml": "^4.1.0",
     "lib0": "^0.2.88",
     "lru-cache": "^10.2.0",
-    "match-sorter": "^6.3.1",
+    "match-sorter": "^8.3.0",
     "mdast-util-from-markdown": "^2.0.0",
     "mdast-util-gfm-autolink-literal": "^2.0.0",
     "mdast-util-gfm-strikethrough": "^2.0.0",
@@ -161,7 +151,7 @@
     "micromark-extension-gfm-strikethrough": "^2.0.0",
     "micromark-extension-gfm-table": "^2.0.0",
     "micromark-extension-mdxjs": "^3.0.0",
-    "minimatch": "^9.0.3",
+    "minimatch": "^10.2.6",
     "partysocket": "^0.0.22",
     "prosemirror-commands": "^1.5.1",
     "prosemirror-history": "^1.3.0",
@@ -171,6 +161,8 @@
     "prosemirror-tables": "^1.3.4",
     "prosemirror-transform": "^1.7.1",
     "prosemirror-view": "^1.30.2",
+    "react-aria": "catalog:",
+    "react-stately": "catalog:",
     "scroll-into-view-if-needed": "^3.0.3",
     "slate": "^0.91.4",
     "slate-history": "^0.86.0",
@@ -184,8 +176,6 @@
   },
   "devDependencies": {
     "@internationalized/string-compiler": "^3.2.6",
-    "@jest/expect": "^29.7.0",
-    "@jest/globals": "^29.7.0",
     "@testing-library/user-event": "^14.6.1",
     "@ts-gql/compiler": "^0.16.7",
     "@ts-gql/eslint-plugin": "^0.9.1",
@@ -197,9 +187,9 @@
     "@types/prismjs": "^1.26.0",
     "@types/react-dom": "^19.0.3",
     "@types/signal-exit": "^3.0.1",
-    "@vitest/pretty-format": "^3.0.5",
+    "@vitest/pretty-format": "^4.1.10",
+    "@vitest/utils": "^4.1.10",
     "eslint": "^8.18.0",
-    "jest-diff": "^29.0.1",
     "outdent": "^0.8.0",
     "prismjs": "^1.29.0",
     "react": "^19.0.0",
@@ -208,12 +198,15 @@
     "resize-observer-polyfill": "^1.5.1",
     "signal-exit": "^3.0.7",
     "slate-hyperscript": "^0.77.0",
-    "tsx": "^4.8.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
+    "@keystar/ui": "workspace:~",
     "react": "^18.2.0 || ^19.0.0",
-    "react-dom": "^18.2.0 || ^19.0.0"
+    "react-aria": "catalog:",
+    "react-dom": "^18.2.0 || ^19.0.0",
+    "react-stately": "catalog:"
   },
   "preconstruct": {
     "entrypoints": [

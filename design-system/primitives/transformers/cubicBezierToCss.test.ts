@@ -1,7 +1,7 @@
 import StyleDictionary from 'style-dictionary';
-import { expect, it, describe } from '@jest/globals';
+import { expect, it, describe } from 'vitest';
 
-import { cubicBezierToCss } from './cubicBezierToCss';
+import { cubicBezierToCss } from './cubicBezierToCss.ts';
 
 describe('Transformer: cubicBezierToCss', () => {
   const items = [

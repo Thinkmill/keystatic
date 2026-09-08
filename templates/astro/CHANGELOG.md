@@ -1,5 +1,77 @@
 # @keystatic/templates-astro
 
+## 0.0.73
+
+### Patch Changes
+
+- Updated dependencies [[`02706ae`](https://github.com/Thinkmill/keystatic/commit/02706ae79417fc8df9c39677b54a598533d94ac6), [`02706ae`](https://github.com/Thinkmill/keystatic/commit/02706ae79417fc8df9c39677b54a598533d94ac6), [`41aa38f`](https://github.com/Thinkmill/keystatic/commit/41aa38f035f6f5e5620d291e89d647aee05beac7)]:
+  - @keystatic/astro@6.0.0
+  - @keystatic/core@0.6.7
+
+## 0.0.72
+
+### Patch Changes
+
+- Updated dependencies [[`4dca0ca`](https://github.com/Thinkmill/keystatic/commit/4dca0cac2269a05ad2bdc4906cbc7fb57a03d7c5), [`3c34f58`](https://github.com/Thinkmill/keystatic/commit/3c34f589fe59d3faa83e5c35bad9c39b6713e362), [`b4371f5`](https://github.com/Thinkmill/keystatic/commit/b4371f5649d320dc186c54137aee6284db3ab661)]:
+  - @keystatic/core@0.6.6
+  - @keystatic/astro@5.2.0
+
+## 0.0.71
+
+### Patch Changes
+
+- Updated dependencies [[`bcc7105`](https://github.com/Thinkmill/keystatic/commit/bcc710561ed76701a7cb8896f8ff6e0a668eeee2)]:
+  - @keystatic/core@0.6.5
+  - @keystatic/astro@5.2.0
+
+## 0.0.70
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.4
+  - @keystatic/astro@5.2.0
+
+## 0.0.69
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.3
+  - @keystatic/astro@5.2.0
+
+## 0.0.68
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @keystatic/core@0.6.2
+  - @keystatic/astro@5.2.0
+
+## 0.0.67
+
+### Patch Changes
+
+- Updated dependencies [[`a402530`](https://github.com/Thinkmill/keystatic/commit/a4025306634ba772a86927a78f5f341975db70c9)]:
+  - @keystatic/core@0.6.1
+  - @keystatic/astro@5.2.0
+
+## 0.0.66
+
+### Patch Changes
+
+- Updated dependencies [[`b885300`](https://github.com/Thinkmill/keystatic/commit/b88530000c03f1fb2616b29825360dc92143572a)]:
+  - @keystatic/core@0.6.0
+  - @keystatic/astro@5.2.0
+
+## 0.0.65
+
+### Patch Changes
+
+- Updated dependencies [[`480fd87`](https://github.com/Thinkmill/keystatic/commit/480fd8752e3d01400f31b9810619db9d044dd2f6)]:
+  - @keystatic/astro@5.2.0
+  - @keystatic/core@0.5.51
+
 ## 0.0.64
 
 ### Patch Changes

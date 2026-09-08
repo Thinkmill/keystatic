@@ -2,12 +2,10 @@ import {
   InvalidationContext,
   LayoutInfo,
   Rect,
-} from '@react-stately/virtualizer';
-import {
   LayoutNode,
-  ListLayout,
   ListLayoutOptions,
-} from '@react-stately/layout';
+  ListLayout,
+} from 'react-stately/useVirtualizerState';
 import { Node } from '@react-types/shared';
 
 export interface ListBoxLayoutOptions extends ListLayoutOptions {

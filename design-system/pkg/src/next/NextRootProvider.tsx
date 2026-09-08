@@ -2,7 +2,12 @@
 
 import { cache } from '@keystar/ui/style';
 import { KeystarProvider } from '@keystar/ui/core';
-import { useRouter, useServerInsertedHTML } from 'next/navigation';
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+  useServerInsertedHTML,
+} from 'next/navigation';
 import { ReactNode, useMemo, useRef } from 'react';
 
 import { ColorSchemeProvider, useRootColorScheme } from './useRootColorScheme';
@@ -57,10 +62,19 @@ function InnerProvider(props: NextRootProviderProps) {
     );
   });
 
-  const { push: navigate } = useRouter();
+  const { push, replace } = useRouter();
   const router = useMemo(() => {
-    return { navigate };
-  }, [navigate]);
+    return {
+      navigate(href: string, options?: { replace?: boolean }) {
+        return options?.replace ? replace(href) : push(href);
+      },
+      // These hooks are consumed lazily by @keystar/ui/router.
+      // eslint-disable-next-line react-compiler/react-compiler
+      usePathname,
+      // eslint-disable-next-line react-compiler/react-compiler
+      useSearch: useNextSearch,
+    };
+  }, [push, replace]);
 
   return (
     <KeystarProvider
@@ -71,4 +85,10 @@ function InnerProvider(props: NextRootProviderProps) {
       router={router}
     />
   );
+}
+
+function useNextSearch() {
+  const searchParams = useSearchParams();
+  const search = searchParams.toString();
+  return search ? `?${search}` : '';
 }

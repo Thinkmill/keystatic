@@ -1,8 +1,8 @@
 import {
   OverlayTriggerProps,
   useOverlayTriggerState,
-} from '@react-stately/overlays';
-import { expect, jest, describe, it } from '@jest/globals';
+} from 'react-stately/useOverlayTriggerState';
+import { expect, vi, describe, it } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { TestProvider } from '@keystar/ui/core';
 import { useRef } from 'react';
@@ -36,8 +36,23 @@ describe('overlays/Popover', () => {
     expect(getByRole('dialog')).toBeVisible();
   });
 
+  it('does not lock page scrolling when non-modal', async () => {
+    let { getByRole } = render(
+      <TestPopover isOpen isNonModal>
+        <div role="dialog">contents</div>
+      </TestPopover>
+    );
+
+    // wait for animation
+    await waitFor(() => {
+      expect(getByRole('dialog')).toBeVisible();
+    });
+
+    expect(document.documentElement).not.toHaveStyle('overflow: hidden');
+  });
+
   it('hides the popover when pressing the escape key', async () => {
-    let onOpenChange = jest.fn();
+    let onOpenChange = vi.fn();
     let { getByRole } = render(
       <TestPopover isOpen onOpenChange={onOpenChange}>
         <div role="dialog">contents</div>
@@ -54,7 +69,7 @@ describe('overlays/Popover', () => {
   });
 
   it('hides the popover when clicking outside', async () => {
-    let onOpenChange = jest.fn();
+    let onOpenChange = vi.fn();
     let { getByRole } = render(
       <TestPopover isOpen onOpenChange={onOpenChange}>
         <div role="dialog">contents</div>

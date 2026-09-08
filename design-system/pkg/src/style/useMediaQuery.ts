@@ -11,7 +11,7 @@
  */
 
 /* https://github.com/adobe/react-spectrum/blob/main/packages/%40react-spectrum/utils/src/useMediaQuery.ts */
-import { useIsSSR } from '@react-aria/ssr';
+import { useIsSSR } from 'react-aria/SSRProvider';
 import { useEffect, useState } from 'react';
 
 /**

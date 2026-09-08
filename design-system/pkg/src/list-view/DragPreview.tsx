@@ -1,4 +1,4 @@
-import { GridNode } from '@react-types/grid';
+import { GridNode } from 'react-stately/private/grid/GridCollection';
 
 import { Flex, Grid } from '@keystar/ui/layout';
 import { SlotProvider } from '@keystar/ui/slots';
