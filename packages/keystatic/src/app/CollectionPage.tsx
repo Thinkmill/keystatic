@@ -565,17 +565,42 @@ function CollectionTable(
                   ...(hideStatusColumn ? [] : [statusCell]),
                   nameCell,
                   ...collection.columns.map(column => {
-                    let val;
-                    val = item.data?.[column];
+                    const raw = item.data?.[column];
+                    const field = collection.schema[column];
+                    const FieldCell =
+                      field &&
+                      'kind' in field &&
+                      field.kind === 'form' &&
+                      'Cell' in field &&
+                      field.Cell;
 
-                    if (val == null) {
-                      val = undefined;
-                    } else {
-                      val = val + '';
+                    if (raw == null) {
+                      return (
+                        <Cell
+                          key={column + item.name}
+                          textValue=""
+                        >
+                          <Text weight="medium">{undefined}</Text>
+                        </Cell>
+                      );
                     }
+
+                    const strVal = raw + '';
+
+                    if (FieldCell) {
+                      return (
+                        <Cell
+                          key={column + item.name}
+                          textValue={strVal}
+                        >
+                          <FieldCell value={raw} />
+                        </Cell>
+                      );
+                    }
+
                     return (
-                      <Cell key={column + item.name} textValue={val}>
-                        <Text weight="medium">{val}</Text>
+                      <Cell key={column + item.name} textValue={strVal}>
+                        <Text weight="medium">{strVal}</Text>
                       </Cell>
                     );
                   }),
@@ -596,6 +621,7 @@ function CollectionTable(
     </TableView>
   );
 }
+
 
 function getItemPath(
   basePath: string,
