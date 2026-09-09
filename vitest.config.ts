@@ -18,6 +18,11 @@ export default defineConfig({
   oxc: { jsx: { runtime: 'automatic', development: false } },
   test: {
     reporters: ['verbose'],
+    // The default 5s budget includes each file's own import/transform cost,
+    // not just its test bodies — on a slower machine or a cold cache, the
+    // first test in a heavier file (e.g. the markdoc editor suites) can miss
+    // it even though every individual test runs in well under a second.
+    testTimeout: 20_000,
     fakeTimers: {
       shouldAdvanceTime: true,
       toFake: [
