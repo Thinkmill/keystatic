@@ -30,6 +30,19 @@ export type Collection<
   template?: string;
   parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
+  /**
+   * Computes the slug for a *new* item from its field values instead of
+   * reading it from `slugField`'s own input. Existing items are unaffected —
+   * this only runs once, when an item is first created.
+   *
+   * The returned string may contain `/` to nest the item under
+   * sub-directories (e.g. deriving `2026/09/my-post` from a date field), the
+   * same way a manually-typed nested slug already works for a collection
+   * whose `path` uses the `**` glob — the collection is still listed and
+   * read the normal way, no path-resolution changes are needed on top of
+   * this.
+   */
+  computeSlug?: (fields: Record<string, unknown>) => string;
   schema: Schema;
 };
 
