@@ -207,7 +207,7 @@ export type FormatInfo = {
 };
 
 export function getPathPrefix(storage: Config['storage']) {
-  if (storage.kind === 'local' || !storage.pathPrefix) {
+  if (!storage.pathPrefix) {
     return undefined;
   }
   return fixPath(storage.pathPrefix) + '/';
