@@ -56,6 +56,7 @@ import {
   getCollectionPath,
   getEntriesInCollectionWithTreeKey,
   getEntryDataFilepath,
+  getSlugFieldsForCollection,
   getSlugGlobForCollection,
   isLocalConfig,
 } from './utils';
@@ -357,11 +358,16 @@ function CollectionTable(
         })
       );
       const glob = getSlugGlobForCollection(props.config, props.collection);
+      const slugFields = getSlugFieldsForCollection(
+        props.config,
+        props.collection
+      );
       const rootSchema = { kind: 'object' as const, fields: collection.schema };
       const parsedEntries = new Map<string, Record<string, unknown>>();
       for (const [slug, dataFile] of entries) {
         try {
           const { loaded } = loadDataFile(dataFile, formatInfo);
+          const slugSegments = slug.split('/');
           const validated = parseProps(
             rootSchema,
             loaded,
@@ -378,14 +384,18 @@ function CollectionTable(
                 return;
               }
               if (path.length === 1 && slug !== undefined) {
-                if (path[0] === collection.slugField) {
+                const slugFieldIndex = slugFields.indexOf(path[0] as string);
+                if (slugFieldIndex !== -1) {
                   if (schema.formKind !== 'slug') {
                     throw new Error(
-                      `Slug field ${collection.slugField} is not a slug field`
+                      `Slug field ${path[0]} is not a slug field`
                     );
                   }
                   return schema.reader.parseWithSlug(value, {
-                    slug,
+                    slug:
+                      slugFields.length === 1
+                        ? slug
+                        : slugSegments[slugFieldIndex] ?? '',
                     glob,
                   });
                 }

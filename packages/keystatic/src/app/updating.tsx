@@ -58,12 +58,12 @@ export function serializeEntryToFiles(args: {
   schema: Record<string, ComponentSchema>;
   format: FormatInfo;
   state: unknown;
-  slug: { value: string; field: string } | undefined;
+  slug: { value: string; fields: readonly string[] } | undefined;
 }) {
   let { value: stateWithExtraFilesRemoved, extraFiles } = serializeProps(
     args.state,
     fields.object(args.schema),
-    args.slug?.field,
+    args.slug?.fields,
     args.slug?.value,
     true
   );
@@ -114,7 +114,7 @@ export function useUpsertItem(args: {
   format: FormatInfo;
   currentLocalTreeKey: string | undefined;
   basePath: string;
-  slug: { value: string; field: string } | undefined;
+  slug: { value: string; fields: readonly string[] } | undefined;
 }) {
   const [state, setState] = useState<
     | { kind: 'idle' }
