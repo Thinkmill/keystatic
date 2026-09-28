@@ -570,6 +570,12 @@ function CollectionTable(
 
                     if (val == null) {
                       val = undefined;
+                    } else if (
+                      collection.schema[column].kind === 'conditional' &&
+                      typeof val === 'object' &&
+                      'discriminant' in val
+                    ) {
+                      val = val.discriminant + '';
                     } else {
                       val = val + '';
                     }
