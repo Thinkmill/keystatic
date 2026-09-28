@@ -22,6 +22,8 @@ catalog:
 
 minimumReleaseAgeExclude:
   - '@preconstruct/cli@2.9.0'
+  - miniflare@5.20260926.0-alpha
+  - wrangler@4.142.0
 
 # Ensure environment variables defined via NPM scripts work consistently for all operating systems.
 shellEmulator: true
