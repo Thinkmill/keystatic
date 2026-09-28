@@ -6,6 +6,41 @@ export function fixPath(path: string) {
   return path.replace(/^\.?\/+/, '').replace(/\/*$/, '');
 }
 
+/**
+ * Resolve `..` and `.` segments in a POSIX-style path string in the browser.
+ *
+ * Used when constructing addition / deletion file paths from a base directory
+ * plus a relative reference written inside a content file (e.g. an image
+ * `../../assets/blog/x.png` referenced from a markdoc body). Without this,
+ * paths like `src/content/blog/{slug}/{field}/../../assets/blog/x.png` get
+ * sent to the update API verbatim and fail the `getIsPathValid` refinement
+ * because any `..` segment is rejected outright.
+ *
+ * Mirrors `path.posix.normalize` semantics: leading `..` segments that cannot
+ * be resolved against an existing parent are preserved (so the path validator
+ * will still catch genuinely-escaping paths); `.` segments are dropped;
+ * consecutive slashes collapse to one.
+ */
+export function normalizePosixPath(path: string): string {
+  const isAbsolute = path.startsWith('/');
+  const segments = path.split('/');
+  const result: string[] = [];
+  for (const seg of segments) {
+    if (seg === '' || seg === '.') continue;
+    if (seg === '..') {
+      if (result.length > 0 && result[result.length - 1] !== '..') {
+        result.pop();
+      } else if (!isAbsolute) {
+        result.push('..');
+      }
+      // for absolute paths, leading `..` at root is dropped (matches POSIX)
+      continue;
+    }
+    result.push(seg);
+  }
+  return (isAbsolute ? '/' : '') + result.join('/');
+}
+
 const collectionPath = /\/\*\*?(?:$|\/)/;
 
 function getConfiguredCollectionPath(config: Config, collection: string) {
