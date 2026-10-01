@@ -50,6 +50,8 @@ import {
 } from '../object-cache';
 import { CollabProvider } from './collab';
 import { EmptyRepo } from './empty-repo';
+import { parseGitAttributes } from '../git-lfs';
+import { fetchBlob } from '../useItemData';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -438,22 +440,64 @@ export function GitHubAppShellProvider(props: {
     repo?.owner.login,
   ]);
 
+  const baseCommitSha =
+    currentBranchRef?.target?.__typename === 'Commit'
+      ? currentBranchRef.target.oid
+      : '';
+
+  const lfsPatterns = useData(
+    useCallback(() => {
+      if (
+        props.config.storage.kind !== 'github' ||
+        !props.config.storage.lfs
+      ) {
+        return [] as string[];
+      }
+      if (currentBranchTree.kind !== 'loaded' || !repoInfo) return LOADING;
+      const node = getTreeNodeAtPath(
+        currentBranchTree.data.tree,
+        '.gitattributes'
+      );
+      if (!node) return [] as string[];
+      const blob = fetchBlob(
+        props.config,
+        node.entry.sha,
+        '.gitattributes',
+        baseCommitSha,
+        repoInfo
+      );
+      if (blob instanceof Uint8Array) {
+        return parseGitAttributes(new TextDecoder().decode(blob));
+      }
+      return blob.then(b => parseGitAttributes(new TextDecoder().decode(b)));
+    }, [
+      props.config,
+      currentBranchTree,
+      repoInfo,
+      baseCommitSha,
+    ])
+  );
+
   return (
     <AppShellErrorContext.Provider value={error}>
       <CurrentBranchContext.Provider value={props.currentBranch}>
         <BranchesContext.Provider value={branches}>
           <RepoInfoContext.Provider value={repoInfo}>
-            <ChangedContext.Provider value={changedData}>
-              <TreeContext.Provider value={allTreeData}>
-                {props.config.storage.kind === 'cloud' ? (
-                  <CollabProvider config={props.config}>
-                    {props.children}
-                  </CollabProvider>
-                ) : (
-                  props.children
-                )}
-              </TreeContext.Provider>
-            </ChangedContext.Provider>
+            <LfsPatternsContext.Provider
+              value={lfsPatterns.kind === 'loaded' ? lfsPatterns.data : []}
+            >
+              <ChangedContext.Provider value={changedData}>
+                <TreeContext.Provider value={allTreeData}>
+                  {props.config.storage.kind === 'cloud' ? (
+                    <CollabProvider config={props.config}>
+                      {props.children}
+                    </CollabProvider>
+                  ) : (
+                    props.children
+                  )}
+                </TreeContext.Provider>
+              </ChangedContext.Provider>
+            </LfsPatternsContext.Provider>
           </RepoInfoContext.Provider>
         </BranchesContext.Provider>
       </CurrentBranchContext.Provider>
@@ -469,6 +513,12 @@ const CurrentBranchContext = createContext<string>('');
 
 export function useCurrentBranch() {
   return useContext(CurrentBranchContext);
+}
+
+const LfsPatternsContext = createContext<string[]>([]);
+
+export function useLfsPatterns() {
+  return useContext(LfsPatternsContext);
 }
 
 type BranchInfo = {

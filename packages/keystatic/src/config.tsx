@@ -80,6 +80,7 @@ type Navigation<K> = K[] | { [section: string]: K[] };
 type GitHubStorageConfig = {
   kind: 'github';
   repo: RepoConfig;
+  lfs?: boolean;
 } & CommonRemoteStorageConfig;
 
 export type GitHubConfig<
