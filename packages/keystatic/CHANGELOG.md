@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.6.10
+
+### Patch Changes
+
+- [#1635](https://github.com/Thinkmill/keystatic/pull/1635) [`b8ec965`](https://github.com/Thinkmill/keystatic/commit/b8ec9650622c11e1d38e73fca3b64c17ec278d18) Thanks [@nanochen821](https://github.com/nanochen821)! - Fix incorrect zh-TW translations for branch-related strings and "save"
+
 ## 0.6.9
 
 ### Patch Changes
