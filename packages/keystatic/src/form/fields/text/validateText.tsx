@@ -5,7 +5,9 @@ export function validateText(
   min: number,
   max: number,
   fieldLabel: string,
-  slugInfo: { slugs: Set<string>; glob: Glob } | undefined,
+  slugInfo:
+    | { slugs: Set<string>; glob: Glob; reservedLocaleDirs?: Set<string> }
+    | undefined,
   pattern: { regex: RegExp; message?: string } | undefined
 ) {
   if (val.length < min) {
@@ -47,6 +49,10 @@ export function validateText(
     }
     if (/^\s|\s$/.test(val)) {
       return `${fieldLabel} must not start or end with spaces`;
+    }
+    const localeDir = val.split('/')[0];
+    if (slugInfo.reservedLocaleDirs?.has(localeDir)) {
+      return `${fieldLabel} must not start with "${localeDir}" because that's where another language's content is stored`;
     }
     if (slugInfo.slugs.has(val)) {
       return `${fieldLabel} must be unique`;

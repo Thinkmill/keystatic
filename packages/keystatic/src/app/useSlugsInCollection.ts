@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
 import { useConfig } from './shell/context';
+import { useActiveLocale } from './shell/content-locale';
 import { useTree } from './shell/data';
 import { getEntriesInCollectionWithTreeKey } from './utils';
 
 export function useSlugsInCollection(collection: string) {
   const config = useConfig();
+  const locale = useActiveLocale();
   const tree = useTree().current;
 
   return useMemo(() => {
@@ -12,7 +14,8 @@ export function useSlugsInCollection(collection: string) {
     return getEntriesInCollectionWithTreeKey(
       config,
       collection,
-      loadedTree
+      loadedTree,
+      locale
     ).map(x => x.slug);
-  }, [config, tree, collection]);
+  }, [config, tree, collection, locale]);
 }

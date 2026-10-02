@@ -1,9 +1,35 @@
-import { Config, DataFormat, Glob } from '../config';
+import { Config, DataFormat, Glob, I18nConfig } from '../config';
 import { ComponentSchema } from '../form/api';
 import { memoize } from './memoize';
 
 export function fixPath(path: string) {
   return path.replace(/^\.?\/+/, '').replace(/\/*$/, '');
+}
+
+export const LOCALE_TOKEN = '{locale}';
+
+export function substituteLocale(
+  path: string,
+  locale: string | undefined,
+  i18n?: I18nConfig
+) {
+  if (!path.includes(LOCALE_TOKEN)) {
+    return path;
+  }
+  if (locale === undefined) {
+    throw new Error(
+      `Path "${path}" contains the ${LOCALE_TOKEN} token but no locale was provided. Pass a locale (e.g. \`createReader(dir, config, { locale })\`) or set config.i18n.`
+    );
+  }
+  if (i18n?.prefixDefaultLocale === false && locale === i18n.defaultLocale) {
+    return fixPath(
+      path
+        .split('/')
+        .filter(x => x !== LOCALE_TOKEN)
+        .join('/')
+    );
+  }
+  return path.split(LOCALE_TOKEN).join(locale);
 }
 
 const collectionPath = /\/\*\*?(?:$|\/)/;
@@ -19,10 +45,14 @@ function getConfiguredCollectionPath(config: Config, collection: string) {
   return path;
 }
 
-export function getCollectionPath(config: Config, collection: string) {
+export function getCollectionPath(
+  config: Config,
+  collection: string,
+  locale?: string
+) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
   const path = fixPath(configuredPath.replace(/\*\*?.*$/, ''));
-  return path;
+  return substituteLocale(path, locale, config.i18n);
 }
 
 export function getCollectionFormat(config: Config, collection: string) {
@@ -36,10 +66,11 @@ export function getSingletonFormat(config: Config, singleton: string) {
 export function getCollectionItemPath(
   config: Config,
   collection: string,
-  slug: string
+  slug: string,
+  locale?: string
 ) {
-  const basePath = getCollectionPath(config, collection);
-  const suffix = getCollectionItemSlugSuffix(config, collection);
+  const basePath = getCollectionPath(config, collection, locale);
+  const suffix = getCollectionItemSlugSuffix(config, collection, locale);
   return `${basePath}/${slug}${suffix}`;
 }
 
@@ -59,14 +90,34 @@ export function getSlugGlobForCollection(
 
 export function getCollectionItemSlugSuffix(
   config: Config,
-  collection: string
+  collection: string,
+  locale?: string
 ) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
-  const path = fixPath(configuredPath.replace(/^[^*]+\*\*?/, ''));
+  const path = substituteLocale(
+    fixPath(configuredPath.replace(/^[^*]+\*\*?/, '')),
+    locale,
+    config.i18n
+  );
   return path ? `/${path}` : '';
 }
 
-export function getSingletonPath(config: Config, singleton: string) {
+export function getCollectionTemplatePath(
+  config: Config,
+  collection: string,
+  locale?: string
+) {
+  const template = config.collections![collection].template;
+  return template === undefined
+    ? undefined
+    : substituteLocale(template, locale, config.i18n);
+}
+
+export function getSingletonPath(
+  config: Config,
+  singleton: string,
+  locale?: string
+) {
   if (config.singletons![singleton].path?.includes('*')) {
     throw new Error(
       `Singleton paths cannot include * but ${singleton} has ${
@@ -74,7 +125,11 @@ export function getSingletonPath(config: Config, singleton: string) {
       }`
     );
   }
-  return fixPath(config.singletons![singleton].path ?? singleton);
+  return substituteLocale(
+    fixPath(config.singletons![singleton].path ?? singleton),
+    locale,
+    config.i18n
+  );
 }
 
 export function getDataFileExtension(formatInfo: FormatInfo) {
@@ -211,4 +266,174 @@ export function getPathPrefix(storage: Config['storage']) {
     return undefined;
   }
   return fixPath(storage.pathPrefix) + '/';
+}
+
+export function getContentLocales(config: Config): string[] {
+  return Object.keys(config.i18n?.locales ?? {});
+}
+
+export function isLocalized(
+  entryConfig: { localized?: boolean } | undefined
+): boolean {
+  return entryConfig?.localized === true;
+}
+
+export function singletonDirHoldsOtherLocales(
+  config: Config,
+  singleton: string,
+  locale: string | undefined
+): boolean {
+  const i18n = config.i18n;
+  if (
+    !i18n ||
+    i18n.prefixDefaultLocale !== false ||
+    locale !== i18n.defaultLocale ||
+    !isLocalized(config.singletons![singleton])
+  ) {
+    return false;
+  }
+  const defaultPath = getSingletonPath(config, singleton, i18n.defaultLocale);
+  return Object.keys(i18n.locales).some(
+    code =>
+      code !== i18n.defaultLocale &&
+      getSingletonPath(config, singleton, code).startsWith(`${defaultPath}/`)
+  );
+}
+
+export function getLocaleDirsToSkip(
+  config: Config,
+  collection: string,
+  locale: string | undefined
+): Set<string> {
+  const i18n = config.i18n;
+  const skip = new Set<string>();
+  if (
+    !i18n ||
+    i18n.prefixDefaultLocale !== false ||
+    locale !== i18n.defaultLocale ||
+    !isLocalized(config.collections![collection]) ||
+    getSlugGlobForCollection(config, collection) !== '**'
+  ) {
+    return skip;
+  }
+  const defaultPath = getCollectionPath(config, collection, i18n.defaultLocale);
+  for (const code of Object.keys(i18n.locales)) {
+    if (code === i18n.defaultLocale) continue;
+    const localePath = getCollectionPath(config, collection, code);
+    if (localePath.startsWith(`${defaultPath}/`)) {
+      skip.add(localePath.slice(defaultPath.length + 1).split('/')[0]);
+    }
+  }
+  return skip;
+}
+
+export function assertValidI18nConfig(config: Config): void {
+  const i18n = config.i18n;
+  if (i18n) {
+    const localeCodes = Object.keys(i18n.locales ?? {});
+    if (localeCodes.length === 0) {
+      throw new Error(`config.i18n.locales must contain at least one locale`);
+    }
+    if (!localeCodes.includes(i18n.defaultLocale)) {
+      throw new Error(
+        `config.i18n.defaultLocale "${
+          i18n.defaultLocale
+        }" is not one of config.i18n.locales (${localeCodes.join(', ')})`
+      );
+    }
+    for (const code of localeCodes) {
+      if (
+        code === '' ||
+        code === '.' ||
+        code === '..' ||
+        code.includes('/') ||
+        code.includes('\\')
+      ) {
+        throw new Error(
+          `config.i18n.locales contains the locale code "${code}" but locale codes must be a single path segment`
+        );
+      }
+    }
+  }
+
+  const checkEntry = (
+    type: 'Collection' | 'Singleton',
+    key: string,
+    entry: { path?: string; localized?: boolean }
+  ) => {
+    const hasToken = !!entry.path?.includes(LOCALE_TOKEN);
+    const localized = isLocalized(entry);
+    if (hasToken && !i18n) {
+      throw new Error(
+        `${type} "${key}" uses the ${LOCALE_TOKEN} token in its path but config.i18n is not set`
+      );
+    }
+    if (localized && !i18n) {
+      throw new Error(
+        `${type} "${key}" is marked localized but config.i18n is not set`
+      );
+    }
+    if (localized && !hasToken) {
+      throw new Error(
+        `${type} "${key}" is marked localized but its path does not contain the ${LOCALE_TOKEN} token`
+      );
+    }
+    if (hasToken && !localized) {
+      throw new Error(
+        `${type} "${key}" uses the ${LOCALE_TOKEN} token in its path but is not marked localized`
+      );
+    }
+    if (hasToken && i18n?.prefixDefaultLocale === false) {
+      const prefix =
+        type === 'Collection'
+          ? fixPath(entry.path!.replace(/\*\*?.*$/, ''))
+          : fixPath(entry.path!);
+      checkTokenIsWholeSegment(`${type} "${key}"`, prefix);
+    }
+  };
+
+  const checkTokenIsWholeSegment = (label: string, path: string) => {
+    const segments = path.split('/');
+    if (segments.some(x => x !== LOCALE_TOKEN && x.includes(LOCALE_TOKEN))) {
+      throw new Error(
+        `${label} uses the ${LOCALE_TOKEN} token inside a path segment, which cannot be removed when config.i18n.prefixDefaultLocale is false. The token must be a whole path segment.`
+      );
+    }
+    if (segments.every(x => x === LOCALE_TOKEN)) {
+      throw new Error(
+        `${label} would have an empty path for the default locale when config.i18n.prefixDefaultLocale is false. Put the ${LOCALE_TOKEN} token below a directory.`
+      );
+    }
+  };
+
+  const checkTemplate = (
+    key: string,
+    entry: { template?: string; localized?: boolean }
+  ) => {
+    if (!entry.template?.includes(LOCALE_TOKEN)) return;
+    if (!i18n) {
+      throw new Error(
+        `Collection "${key}" uses the ${LOCALE_TOKEN} token in its template but config.i18n is not set`
+      );
+    }
+    if (!isLocalized(entry)) {
+      throw new Error(
+        `Collection "${key}" uses the ${LOCALE_TOKEN} token in its template but is not marked localized`
+      );
+    }
+    if (i18n.prefixDefaultLocale === false) {
+      checkTokenIsWholeSegment(
+        `Collection "${key}" template`,
+        fixPath(entry.template)
+      );
+    }
+  };
+
+  for (const [key, collection] of Object.entries(config.collections ?? {})) {
+    checkEntry('Collection', key, collection);
+    checkTemplate(key, collection);
+  }
+  for (const [key, singleton] of Object.entries(config.singletons ?? {})) {
+    checkEntry('Singleton', key, singleton);
+  }
 }

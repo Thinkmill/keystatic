@@ -39,6 +39,7 @@ import { pluralize } from '../../pluralize';
 import { useBrand } from '../common';
 import { SIDE_PANEL_ID } from '../constants';
 import { GitMenu, ThemeMenu, UserActions } from './components';
+import { SidebarLocaleSwitcher } from './locale-switcher';
 import { BranchPicker } from '../../branch-selection';
 import { useAppState, useConfig } from '../context';
 
@@ -82,6 +83,7 @@ export function SidebarPanel() {
     <VStack backgroundColor="surface" height="100%">
       <SidebarHeader />
       <SidebarGitActions />
+      <SidebarLocaleSwitcher />
       <SidebarNav />
       <SidebarFooter />
     </VStack>
@@ -227,6 +229,7 @@ export function SidebarDialog() {
       >
         <SidebarHeader />
         <SidebarGitActions />
+        <SidebarLocaleSwitcher />
         <SidebarNav />
         <SidebarFooter />
         <DismissButton onDismiss={state.close} />

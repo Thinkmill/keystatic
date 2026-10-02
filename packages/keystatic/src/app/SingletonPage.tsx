@@ -33,6 +33,7 @@ import {
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
+import { useActiveLocale } from './shell/content-locale';
 import { useBaseCommit, useCurrentBranch, useRepoInfo } from './shell/data';
 import { useHasChanged } from './useHasChanged';
 import { parseEntry, useItemData } from './useItemData';
@@ -101,7 +102,8 @@ function SingletonPageInner(
   const isGitHub = isGitHubConfig(props.config) || isCloudConfig(props.config);
   const formatInfo = getSingletonFormat(props.config, props.singleton);
   const singletonExists = !!props.initialState;
-  const singletonPath = getSingletonPath(props.config, props.singleton);
+  const locale = useActiveLocale();
+  const singletonPath = getSingletonPath(props.config, props.singleton, locale);
 
   const viewHref =
     isGitHub && singletonExists && repoInfo
@@ -353,7 +355,8 @@ function LocalSingletonPage(
   const { singleton, initialFiles, initialState, localTreeKey, config, draft } =
     props;
   const { schema, singletonConfig } = useSingleton(props.singleton);
-  const singletonPath = getSingletonPath(config, singleton);
+  const locale = useActiveLocale();
+  const singletonPath = getSingletonPath(config, singleton, locale);
 
   const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState(
     () => ({
@@ -466,7 +469,8 @@ function CollabSingletonPage(
 ) {
   const { singleton, initialFiles, initialState, localTreeKey, config } = props;
   const { schema, singletonConfig } = useSingleton(props.singleton);
-  const singletonPath = getSingletonPath(config, singleton);
+  const locale = useActiveLocale();
+  const singletonPath = getSingletonPath(config, singleton, locale);
 
   const state = useYJsValue(schema, props.map) as Record<string, unknown>;
   const previewProps = usePreviewPropsFromY(
@@ -522,7 +526,10 @@ const storedValSchema = s.type({
   version: s.literal(1),
   savedAt: s.date(),
   beforeTreeKey: s.optional(s.string()),
-  files: s.map(s.string(), s.instance(Uint8Array)),
+  files: s.map(
+    s.string(),
+    s.define<Uint8Array>('Uint8Array', v => v instanceof Uint8Array)
+  ),
 });
 
 function SingletonPageWrapper(props: { singleton: string; config: Config }) {
@@ -540,7 +547,8 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     [props.config, props.singleton]
   );
 
-  const dirpath = getSingletonPath(props.config, props.singleton);
+  const locale = useActiveLocale();
+  const dirpath = getSingletonPath(props.config, props.singleton, locale);
 
   const draftData = useData(
     useCallback(async () => {
