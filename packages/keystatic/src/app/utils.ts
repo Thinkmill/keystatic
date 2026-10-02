@@ -92,6 +92,26 @@ export function getSlugFromState(
   return field.serializeWithSlug(value).slug;
 }
 
+/**
+ * The slug to use when creating a *new* item: `collectionConfig.computeSlug`
+ * when the collection defines one, falling back to the normal
+ * `slugField`-driven value otherwise. Existing items always keep reading
+ * their slug the normal way (via {@link getSlugFromState} directly) — this is
+ * only for the moment a new item's slug/path is decided.
+ */
+export function getSlugForNewItem(
+  collectionConfig: {
+    slugField: string;
+    schema: Record<string, ComponentSchema>;
+    computeSlug?: (fields: Record<string, unknown>) => string;
+  },
+  state: Record<string, unknown>
+) {
+  return collectionConfig.computeSlug
+    ? collectionConfig.computeSlug(state)
+    : getSlugFromState(collectionConfig, state);
+}
+
 export function getEntriesInCollectionWithTreeKey(
   config: Config,
   collection: string,
