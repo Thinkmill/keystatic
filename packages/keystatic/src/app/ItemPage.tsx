@@ -72,6 +72,7 @@ import {
 import { useHasChanged } from './useHasChanged';
 import { parseEntry, useItemData } from './useItemData';
 import {
+  collectionSlugFields,
   getBranchPrefix,
   getCollection,
   getCollectionFormat,
@@ -192,14 +193,14 @@ function ItemPageInner(
 
   const onCopy = useEventCallback(() => {
     copyEntryToClipboard(props.state, formatInfo, collectionConfig.schema, {
-      field: collectionConfig.slugField,
+      fields: collectionSlugFields(collectionConfig),
       value: getSlugFromState(collectionConfig, props.state),
     });
   });
 
   const onPaste = useEventCallback(async () => {
     const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
-      field: collectionConfig.slugField,
+      fields: collectionSlugFields(collectionConfig),
       slug: getSlugFromState(collectionConfig, props.state),
     });
     if (entry) {
@@ -417,7 +418,7 @@ function LocalItemPage(
     initialState,
     schema,
     state,
-    slugField: collectionConfig.slugField,
+    slugFields: collectionSlugFields(collectionConfig),
   });
 
   const slug = getSlugFromState(collectionConfig, state);
@@ -431,7 +432,7 @@ function LocalItemPage(
     basePath: futureBasePath,
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
-    slug: { field: collectionConfig.slugField, value: slug },
+    slug: { fields: collectionSlugFields(collectionConfig), value: slug },
   });
 
   useEffect(() => {
@@ -441,7 +442,10 @@ function LocalItemPage(
         basePath: futureBasePath,
         format: getCollectionFormat(config, collection),
         schema: collectionConfig.schema,
-        slug: { field: collectionConfig.slugField, value: slug },
+        slug: {
+          fields: collectionSlugFields(collectionConfig),
+          value: slug,
+        },
         state,
       });
       const files = new Map(serialized.map(x => [x.path, x.contents]));
@@ -502,7 +506,7 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
     initialState,
     schema,
     state,
-    slugField: collectionConfig.slugField,
+    slugFields: collectionSlugFields(collectionConfig),
   });
 
   const futureBasePath = getCollectionItemPath(config, collection, slug);
@@ -514,7 +518,7 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
     basePath: futureBasePath,
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
-    slug: { field: collectionConfig.slugField, value: slug },
+    slug: { fields: collectionSlugFields(collectionConfig), value: slug },
   });
 
   const update = useEventCallback(_update);
@@ -850,8 +854,11 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
   );
 
   const slugInfo = useMemo(() => {
-    return { slug: props.itemSlug, field: collectionConfig.slugField };
-  }, [collectionConfig.slugField, props.itemSlug]);
+    return {
+      slug: props.itemSlug,
+      fields: collectionSlugFields(collectionConfig),
+    };
+  }, [collectionConfig, props.itemSlug]);
 
   const draftData = useData(
     useCallback(async () => {
@@ -872,7 +879,10 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
             ),
             format: getCollectionFormat(props.config, props.collection),
             schema: collectionConfig.schema,
-            slug: { field: collectionConfig.slugField, slug: stored.slug },
+            slug: {
+              fields: collectionSlugFields(collectionConfig),
+              slug: stored.slug,
+            },
           },
           stored.files
         );

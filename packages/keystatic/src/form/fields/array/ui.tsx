@@ -158,7 +158,7 @@ function ArrayFieldAddItemModalContent(props: {
         getSlugFromState({ schema, slugField }, x as Record<string, unknown>)
       )
     );
-    return { slugs, field: slugField, glob: '*' as const };
+    return { slugs, field: slugField, fields: [slugField], glob: '*' as const };
   }, [props.previewProps]);
 
   const [value, setValue] = useState(() =>
@@ -254,7 +254,7 @@ function ArrayEditItemModalContent(props: {
           getSlugFromState({ schema, slugField }, x as Record<string, unknown>)
         )
     );
-    return { slugs, field: slugField, glob: '*' as const };
+    return { slugs, field: slugField, fields: [slugField], glob: '*' as const };
   }, [props.previewProps, props.modalStateIndex]);
 
   const { key, ...propsWithoutKey } =

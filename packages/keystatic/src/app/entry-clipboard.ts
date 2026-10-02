@@ -22,7 +22,7 @@ function parseEntryFromHtml(
   html: string,
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slugField: string | undefined
+  slugFields: readonly string[] | undefined
 ) {
   const parsedHtml = new DOMParser().parseFromString(html, 'text/html');
   const pre = parsedHtml.querySelector('pre');
@@ -38,8 +38,8 @@ function parseEntryFromHtml(
         dirpath: entryInfo.slug ?? 'entry',
         format,
         schema,
-        slug: slugField
-          ? { field: slugField, slug: entryInfo.slug ?? '' }
+        slug: slugFields
+          ? { fields: slugFields, slug: entryInfo.slug ?? '' }
           : undefined,
         requireFrontmatter: true,
       },
@@ -52,7 +52,7 @@ function parseEntryFromPlaintext(
   bytes: Uint8Array,
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slugInfo: { field: string; slug: string } | undefined
+  slugInfo: { fields: readonly string[]; slug: string } | undefined
 ) {
   try {
     const dirpath = slugInfo?.slug ?? 'entry';
@@ -66,7 +66,7 @@ function parseEntryFromPlaintext(
 export async function getPastedEntry(
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slugInfo: { field: string; slug: string } | undefined
+  slugInfo: { fields: readonly string[]; slug: string } | undefined
 ) {
   let clipboardItems: ClipboardItem[];
   try {
@@ -88,7 +88,7 @@ export async function getPastedEntry(
     if (item.types.includes('text/html')) {
       const html = await item.getType('text/html');
       const text = await html.text();
-      const entry = parseEntryFromHtml(text, format, schema, slugInfo?.field);
+      const entry = parseEntryFromHtml(text, format, schema, slugInfo?.fields);
       if (entry) {
         return entry;
       }
@@ -114,7 +114,7 @@ function serializeEntryForClipboard(
   state: Record<string, unknown>,
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slug: { field: string; value: string } | undefined
+  slug: { fields: readonly string[]; value: string } | undefined
 ) {
   const basePath = slug?.value ?? 'entry';
   const files = serializeEntryToFiles({
@@ -146,7 +146,7 @@ export function copyEntryToClipboard(
   state: Record<string, unknown>,
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slug: { field: string; value: string } | undefined
+  slug: { fields: readonly string[]; value: string } | undefined
 ) {
   const out = serializeEntryForClipboard(state, format, schema, slug);
   navigator.clipboard.write([
