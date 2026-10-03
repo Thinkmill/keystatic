@@ -17,6 +17,8 @@ import {
   getSingletonFormat,
   getSingletonPath,
   getSlugGlobForCollection,
+  getSlugSegmentCount,
+  slugHasSegmentCount,
 } from '../app/path-utils';
 import { parseProps } from '../form/parse-props';
 import { loadDataFile } from '../app/required-files';
@@ -266,6 +268,7 @@ export function collectionReader(
   const collectionConfig = config.collections![collection];
   const schema = fields.object(collectionConfig.schema);
   const glob = getSlugGlobForCollection(config, collection);
+  const segments = getSlugSegmentCount(config, collection);
   const extension = getDataFileExtension(formatInfo);
 
   const read: CollectionReader<any, any>['read'] = (slug, ...args) =>
@@ -278,11 +281,22 @@ export function collectionReader(
       fsReader,
       slug,
       collectionConfig.slugField,
-      glob
+      glob,
+      segments
     );
 
-  const list = () =>
-    listCollection(collectionPath, glob, formatInfo, extension, fsReader);
+  const list = async () => {
+    const slugs = await listCollection(
+      collectionPath,
+      glob,
+      formatInfo,
+      extension,
+      fsReader
+    );
+    return segments === undefined
+      ? slugs
+      : slugs.filter(slug => slugHasSegmentCount(slug, segments));
+  };
 
   return {
     read,
@@ -320,12 +334,20 @@ const readItem = cache(async function readItem(
   resolveLinkedFiles: boolean | undefined,
   debugReference: string,
   fsReader: MinimalFs,
-  ...slugInfo: [slug: undefined] | [slug: string, field: string, glob: Glob]
+  ...slugInfo:
+    | [slug: undefined]
+    | [slug: string, field: string, glob: Glob, segments: number | undefined]
 ) {
   if (typeof slugInfo[0] === 'string') {
     if (slugInfo[0].includes('\\')) return null;
     const split = slugInfo[0].split('/');
     if (slugInfo[2] === '*' && split.length !== 1) return null;
+    if (
+      slugInfo[3] !== undefined &&
+      !slugHasSegmentCount(slugInfo[0], slugInfo[3])
+    ) {
+      return null;
+    }
     if (split.includes('..') || split.includes('.')) return null;
   }
   const dataFile = await fsReader.readFile(

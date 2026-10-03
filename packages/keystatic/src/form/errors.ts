@@ -34,7 +34,11 @@ function validateValueWithSchema(
       try {
         if (slugField && path[path.length - 1] === slugField?.field) {
           schema.validate(value, {
-            slugField: { slugs: slugField.slugs, glob: slugField.glob },
+            slugField: {
+              slugs: slugField.slugs,
+              glob: slugField.glob,
+              segments: slugField.segments,
+            },
           });
           return;
         }
