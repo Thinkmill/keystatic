@@ -11,7 +11,7 @@ export default function CliVideo() {
             Keystatic CLI.
           </p>
           <p>
-            Edit content from an the Admin UI, or directly in your codebase
+            Edit content from the Admin UI, or directly in your codebase
             files.
           </p>
         </div>
