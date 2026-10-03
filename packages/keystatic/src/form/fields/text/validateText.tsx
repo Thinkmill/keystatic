@@ -1,11 +1,12 @@
 import { Glob } from '../../../config';
+import { slugHasSegmentCount } from '../../../app/path-utils';
 
 export function validateText(
   val: string,
   min: number,
   max: number,
   fieldLabel: string,
-  slugInfo: { slugs: Set<string>; glob: Glob } | undefined,
+  slugInfo: { slugs: Set<string>; glob: Glob; segments?: number } | undefined,
   pattern: { regex: RegExp; message?: string } | undefined
 ) {
   if (val.length < min) {
@@ -41,6 +42,12 @@ export function validateText(
       if (split.some(s => s === '.')) {
         return `${fieldLabel} must not be .`;
       }
+    }
+    if (
+      slugInfo.segments !== undefined &&
+      !slugHasSegmentCount(val, slugInfo.segments)
+    ) {
+      return `${fieldLabel} must have exactly ${slugInfo.segments} non-empty parts separated by slashes`;
     }
     if ((slugInfo.glob === '*' ? /[\\/]/ : /[\\]/).test(val)) {
       return `${fieldLabel} must not contain slashes`;

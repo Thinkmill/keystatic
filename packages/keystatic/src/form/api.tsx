@@ -72,7 +72,9 @@ export type SlugFormField<
   };
   validate(
     value: ParsedValue,
-    extra: { slugField: { slugs: Set<string>; glob: Glob } } | undefined
+    extra:
+      | { slugField: { slugs: Set<string>; glob: Glob; segments?: number } }
+      | undefined
   ): ValidatedValue;
   reader: {
     parse(value: FormFieldStoredValue): ReaderValue;
