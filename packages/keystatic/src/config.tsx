@@ -17,9 +17,23 @@ export type Format =
     };
 export type EntryLayout = 'content' | 'form';
 export type Glob = '*' | '**';
+
+type GlobSegmentsInPath<
+  Path extends string,
+  Segments extends readonly Glob[] = [],
+> = Path extends `${infer Segment}/${infer Rest}`
+  ? GlobSegmentsInPath<
+      Rest,
+      Segment extends Glob ? readonly [...Segments, Segment] : Segments
+    >
+  : Path extends Glob
+  ? readonly [...Segments, Path]
+  : Segments;
+
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends string,
+  SlugFields extends readonly string[] = readonly [SlugField],
 > = {
   label: string;
   path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
@@ -30,6 +44,14 @@ export type Collection<
   template?: string;
   parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
+  /**
+   * Multiple slug fields, mapped onto the `*` segments of `path` in order.
+   * The last entry must be the `slugField`. An entry's slug is the segment
+   * values joined with a slash, so with `slugFields: ['locale', 'title']` and
+   * two star segments in `path`, an entry with the locale `en` and the
+   * slug `my-post` is stored at `content/blog/en/my-post`.
+   */
+  slugFields?: SlugFields;
   schema: Schema;
 };
 
@@ -84,9 +106,9 @@ type GitHubStorageConfig = {
 
 export type GitHubConfig<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   } = {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -103,9 +125,9 @@ type LocalStorageConfig = { kind: 'local' };
 
 export type LocalConfig<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   } = {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -122,9 +144,9 @@ type CloudStorageConfig = { kind: 'cloud' } & CommonRemoteStorageConfig;
 
 export type CloudConfig<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   } = {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -140,9 +162,9 @@ export type CloudConfig<
 
 export type Config<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   } = {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -163,7 +185,7 @@ export type Config<
 
 export function config<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -179,8 +201,33 @@ export function collection<
       ? K
       : never;
   }[keyof Schema],
+  const Path extends Collection<Schema, SlugField & string>['path'] = undefined,
+  const SlugFields extends
+    | readonly [
+        {
+          [K in keyof Schema]: Schema[K] extends SlugFormField<
+            any,
+            any,
+            any,
+            any
+          >
+            ? K & string
+            : never;
+        }[keyof Schema],
+        ...{
+          [K in keyof Schema]: Schema[K] extends SlugFormField<
+            any,
+            any,
+            any,
+            any
+          >
+            ? K & string
+            : never;
+        }[keyof Schema][],
+      ]
+    | undefined = undefined,
 >(
-  collection: Collection<Schema, SlugField & string> & {
+  collection: Omit<Collection<Schema, SlugField & string>, 'slugFields'> & {
     columns?: {
       [K in keyof Schema]: Schema[K] extends
         | FormField<
@@ -192,9 +239,49 @@ export function collection<
         ? K & string
         : never;
     }[keyof Schema][];
+    path?: Path;
+    slugFields?: SlugFields &
+      (SlugFields extends readonly unknown[]
+        ? [Path] extends [undefined]
+          ? // without an explicit path, the collection path has a single * segment
+            SlugFields['length'] extends 1
+            ? unknown
+            : 'slugFields with multiple entries requires a path with one * segment per entry'
+          : string extends Path
+          ? unknown
+          : '**' extends GlobSegmentsInPath<Exclude<Path, undefined>>[number]
+          ? SlugFields['length'] extends 1
+            ? unknown
+            : 'slugFields with multiple entries cannot be used with a ** segment in path'
+          : GlobSegmentsInPath<
+              Exclude<Path, undefined>
+            >['length'] extends SlugFields['length']
+          ? unknown
+          : 'slugFields must contain exactly one entry per * segment in path'
+        : unknown) &
+      (SlugFields extends readonly [...(readonly unknown[]), infer Last]
+        ? Last extends SlugField
+          ? unknown
+          : 'the last entry of slugFields must be the slugField'
+        : unknown);
   }
-): Collection<Schema, SlugField & string> {
-  return collection;
+): Collection<
+  Schema,
+  SlugField & string,
+  [SlugFields] extends [readonly string[]]
+    ? SlugFields
+    : readonly [SlugField & string]
+> {
+  // the validation intersections on slugFields are opaque to the compiler,
+  // but they always resolve to either the tuple itself or an error message
+  // that rejects the call site
+  return collection as Collection<
+    Schema,
+    SlugField & string,
+    [SlugFields] extends [readonly string[]]
+      ? SlugFields
+      : readonly [SlugField & string]
+  >;
 }
 
 export function singleton<Schema extends Record<string, ComponentSchema>>(

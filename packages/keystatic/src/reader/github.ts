@@ -17,7 +17,7 @@ export type { Entry, EntryWithResolvedLinkedFiles } from './generic';
 
 export type Reader<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -26,7 +26,7 @@ export type Reader<
 
 export function createGitHubReader<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string, readonly string[]>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;

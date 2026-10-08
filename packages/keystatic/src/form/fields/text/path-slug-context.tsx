@@ -106,8 +106,15 @@ export function AddToPathProvider(props: {
 
 export type SlugFieldInfo = {
   field: string;
+  /** all slug fields of the collection, in path segment order; `field` is always the last entry */
+  fields: readonly string[];
   slugs: Set<string>;
   glob: Glob;
+  /**
+   * the composite slug of the other slug fields (e.g. `en` when the slug is
+   * `en/my-post`), used to scope the uniqueness check of the last slug field
+   */
+  prefix?: string;
 };
 
 export const SlugFieldContext = createContext<SlugFieldInfo | undefined>(

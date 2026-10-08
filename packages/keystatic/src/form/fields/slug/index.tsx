@@ -1,7 +1,6 @@
 import { FormFieldStoredValue, SlugFormField } from '../../api';
-import { validateText } from '../text/validateText';
+import { validateText, SlugValidationInfo } from '../text/validateText';
 import { SlugFieldInput, slugify } from '#field-ui/slug';
-import { Glob } from '../../..';
 import { FieldDataError } from '../error';
 
 function parseSlugFieldAsNormalField(value: FormFieldStoredValue) {
@@ -103,7 +102,7 @@ export function slug(_args: {
     {
       slugField,
     }: {
-      slugField: { slugs: Set<string>; glob: Glob } | undefined;
+      slugField: SlugValidationInfo | undefined;
     } = { slugField: undefined }
   ) {
     const nameMessage = validateText(

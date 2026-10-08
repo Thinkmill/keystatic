@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { getSlugGlobForCollection } from './path-utils';
+import {
+  getSlugFieldsForCollection,
+  getSlugGlobForCollection,
+} from './path-utils';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import { SlugFieldInfo } from '../form/fields/text/path-slug-context';
 import { useConfig } from './shell/context';
@@ -16,9 +19,10 @@ export function useSlugFieldInfo(
     if (slugToExclude) {
       slugs.delete(slugToExclude);
     }
-    const collectionConfig = config.collections![collection];
+    const slugFields = getSlugFieldsForCollection(config, collection);
     return {
-      field: collectionConfig.slugField,
+      field: slugFields[slugFields.length - 1],
+      fields: slugFields,
       slugs,
       glob: getSlugGlobForCollection(config, collection),
     };

@@ -9,7 +9,7 @@ import { useContext, useState } from 'react';
 
 import { FormFieldInputProps } from '../../api';
 import { SlugFieldContext, PathContext } from '../text/path-slug-context';
-import { validateText } from '../text/validateText';
+import { validateText, slugIsTaken } from '../text/validateText';
 
 const emptySet = new Set<string>();
 
@@ -25,8 +25,15 @@ export function SlugFieldInput(
   const slugContext = useContext(SlugFieldContext);
   const path = useContext(PathContext);
   const slugInfo =
-    path.length === 1 && path[0] === slugContext?.field
-      ? slugContext
+    path.length === 1 &&
+    typeof path[0] === 'string' &&
+    slugContext?.fields.includes(path[0])
+      ? // the last slug field is validated for uniqueness, the other slug
+        // fields only get format validation since their uniqueness is
+        // enforced via the composite slug
+        path[0] === slugContext.field
+        ? slugContext
+        : { slugs: emptySet, glob: slugContext.glob }
       : { slugs: emptySet, glob: '*' as const };
 
   const [blurredName, setBlurredName] = useState(false);
@@ -37,9 +44,9 @@ export function SlugFieldInput(
   );
   const generateSlug = (name: string) => {
     const generated = props.naiveGenerateSlug(name);
-    if (slugInfo.slugs.has(generated)) {
+    if (slugIsTaken(slugInfo, generated)) {
       let i = 1;
-      while (slugInfo.slugs.has(`${generated}-${i}`)) {
+      while (slugIsTaken(slugInfo, `${generated}-${i}`)) {
         i++;
       }
       return `${generated}-${i}`;

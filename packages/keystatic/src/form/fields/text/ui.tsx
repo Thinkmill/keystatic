@@ -4,6 +4,8 @@ import { TextArea, TextField } from '@keystar/ui/text-field';
 import { validateText } from './validateText';
 import { PathContext, SlugFieldContext } from './path-slug-context';
 
+const emptySet = new Set<string>();
+
 export function TextFieldInput(
   props: FormFieldInputProps<string> & {
     multiline: boolean;
@@ -18,6 +20,17 @@ export function TextFieldInput(
   const [blurred, setBlurred] = useState(false);
   const slugContext = useContext(SlugFieldContext);
   const path = useContext(PathContext);
+  const slugInfo =
+    path.length === 1 &&
+    typeof path[0] === 'string' &&
+    slugContext?.fields.includes(path[0])
+      ? // the last slug field is validated for uniqueness, the other slug
+        // fields only get format validation since their uniqueness is
+        // enforced via the composite slug
+        path[0] === slugContext.field
+        ? slugContext
+        : { slugs: emptySet, glob: slugContext.glob }
+      : undefined;
   return (
     <TextFieldComponent
       label={props.label}
@@ -34,9 +47,7 @@ export function TextFieldInput(
               props.min,
               props.max,
               props.label,
-              path.length === 1 && slugContext?.field === path[0]
-                ? slugContext
-                : undefined,
+              slugInfo,
               props.pattern
             )
           : undefined

@@ -1,9 +1,8 @@
-import { Glob } from '../../../config';
 import { FormFieldStoredValue } from '../../..';
 import { SlugFormField } from '../../api';
 import { FieldDataError } from '../error';
 import { TextFieldInput } from '#field-ui/text';
-import { validateText } from './validateText';
+import { validateText, SlugValidationInfo } from './validateText';
 
 function parseAsNormalField(value: FormFieldStoredValue) {
   if (value === undefined) {
@@ -45,10 +44,7 @@ export function text({
   multiline?: boolean;
 }): SlugFormField<string, string, string, null> {
   min = Math.max(isRequired ? 1 : 0, min);
-  function validate(
-    value: string,
-    slugField: { slugs: Set<string>; glob: Glob } | undefined
-  ) {
+  function validate(value: string, slugField: SlugValidationInfo | undefined) {
     const message = validateText(value, min, max, label, slugField, pattern);
     if (message !== undefined) {
       throw new FieldDataError(message);

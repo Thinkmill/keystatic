@@ -9,6 +9,7 @@ import {
   getCollectionItemSlugSuffix,
   getCollectionPath,
   getDataFileExtension,
+  getSlugFieldsForCollection,
   getSlugGlobForCollection,
 } from './path-utils';
 import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
@@ -77,19 +78,31 @@ export function getRepoUrl(config: { owner: string; name: string }) {
   return `https://github.com/${getRepoPath(config)}`;
 }
 
+export function collectionSlugFields(collectionConfig: {
+  slugField: string;
+  slugFields?: readonly string[];
+}): readonly string[] {
+  return collectionConfig.slugFields ?? [collectionConfig.slugField];
+}
+
 export function getSlugFromState(
   collectionConfig: {
     slugField: string;
+    slugFields?: readonly string[];
     schema: Record<string, ComponentSchema>;
   },
   state: Record<string, unknown>
 ) {
-  const value = state[collectionConfig.slugField];
-  const field = collectionConfig.schema[collectionConfig.slugField];
-  if (field.kind !== 'form' || field.formKind !== 'slug') {
-    throw new Error(`slugField is not a slug field`);
-  }
-  return field.serializeWithSlug(value).slug;
+  return collectionSlugFields(collectionConfig)
+    .map(slugField => {
+      const value = state[slugField];
+      const field = collectionConfig.schema[slugField];
+      if (field.kind !== 'form' || field.formKind !== 'slug') {
+        throw new Error(`slugField is not a slug field`);
+      }
+      return field.serializeWithSlug(value).slug;
+    })
+    .join('/');
 }
 
 export function getEntriesInCollectionWithTreeKey(
@@ -109,20 +122,25 @@ export function getEntriesInCollectionWithTreeKey(
   const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
   const suffix = getCollectionItemSlugSuffix(config, collection);
   const possibleEntries = new Map(directory);
-  if (glob === '**') {
-    const handleDirectory = (dir: Map<string, TreeNode>, prefix: string) => {
+  const slugFieldCount = getSlugFieldsForCollection(config, collection).length;
+  const maxDepth = glob === '**' ? Infinity : slugFieldCount;
+  if (maxDepth > 1) {
+    const handleDirectory = (
+      dir: Map<string, TreeNode>,
+      prefix: string,
+      depth: number
+    ) => {
       for (const [key, entry] of dir) {
-        if (entry.children) {
-          possibleEntries.set(`${prefix}${key}`, entry);
-          handleDirectory(entry.children, `${prefix}${key}/`);
-        } else {
-          possibleEntries.set(`${prefix}${key}`, entry);
+        possibleEntries.set(`${prefix}${key}`, entry);
+        if (entry.children && depth < maxDepth) {
+          handleDirectory(entry.children, `${prefix}${key}/`, depth + 1);
         }
       }
     };
-    handleDirectory(directory, '');
+    handleDirectory(directory, '', 1);
   }
   for (const [key, entry] of possibleEntries) {
+    if (glob === '*' && key.split('/').length !== slugFieldCount) continue;
     if (formatInfo.dataLocation === 'index') {
       const actualEntry = getTreeNodeAtPath(
         rootTree,
