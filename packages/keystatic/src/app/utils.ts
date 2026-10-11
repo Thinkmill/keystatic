@@ -15,8 +15,8 @@ import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 import pkgJson from '../../package.json';
 import { object } from '../form/fields/object';
-import { useEffect } from 'react';
-import { showDraftRestoredToast } from './persistence';
+import { useEffect, useRef, useState } from 'react';
+import { showDraftRestoredToast, showStaleDraftToast } from './persistence';
 import { useEffectEvent } from 'react-aria/private/utils/useEffectEvent';
 
 export * from './path-utils';
@@ -242,4 +242,56 @@ export function useShowRestoredDraftMessage(
       show();
     }
   }, [draft, show]);
+}
+
+type Draft = {
+  state: Record<string, unknown>;
+  savedAt: Date;
+  treeKey?: string | undefined;
+};
+
+// a draft is only restored automatically if the entry hasn't changed since
+// the draft was saved, otherwise saving it would overwrite those changes
+export function getAutomaticallyRestorableDraft<D extends Draft>(
+  draft: D | undefined,
+  localTreeKey: string | undefined
+): D | undefined {
+  return draft !== undefined && draft.treeKey === localTreeKey
+    ? draft
+    : undefined;
+}
+
+// offers to restore a draft that wasn't restored automatically. returns
+// whether the draft should be kept even though the state hasn't changed,
+// which is until the user restores it or makes changes of their own
+export function useStaleDraft(
+  draft: Draft | undefined,
+  localTreeKey: string | undefined,
+  hasChanged: boolean,
+  restore: (state: Record<string, unknown>) => void
+) {
+  const [staleDraft, setStaleDraft] = useState(() =>
+    draft !== undefined &&
+    getAutomaticallyRestorableDraft(draft, localTreeKey) === undefined
+      ? draft
+      : undefined
+  );
+  if (staleDraft !== undefined && hasChanged) {
+    setStaleDraft(undefined);
+  }
+  // effects run twice in strict mode so this stops the toast showing twice
+  const shownFor = useRef<Draft | undefined>(undefined);
+  const show = useEffectEvent(() => {
+    if (staleDraft && shownFor.current !== staleDraft) {
+      shownFor.current = staleDraft;
+      showStaleDraftToast(staleDraft.savedAt, () => {
+        setStaleDraft(undefined);
+        restore(staleDraft.state);
+      });
+    }
+  });
+  useEffect(() => {
+    show();
+  }, [show]);
+  return staleDraft !== undefined;
 }

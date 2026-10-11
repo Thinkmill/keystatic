@@ -29,6 +29,8 @@ import {
   isCloudConfig,
   isGitHubConfig,
   useShowRestoredDraftMessage,
+  getAutomaticallyRestorableDraft,
+  useStaleDraft,
 } from './utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
@@ -359,7 +361,7 @@ function LocalSingletonPage(
     () => ({
       localTreeKey: localTreeKey,
       state:
-        draft?.state ??
+        getAutomaticallyRestorableDraft(draft, localTreeKey)?.state ??
         (initialState === null ? getInitialPropsValue(schema) : initialState),
     })
   );
@@ -379,6 +381,18 @@ function LocalSingletonPage(
     useHasChanged({ initialState, state, schema, slugField: undefined }) ||
     isCreating;
 
+  const keepStaleDraft = useStaleDraft(
+    draft,
+    localTreeKey,
+    hasChanged,
+    draftState => {
+      setState(state => ({
+        localTreeKey: state.localTreeKey,
+        state: draftState,
+      }));
+    }
+  );
+
   useEffect(() => {
     const key = ['singleton', singleton] as const;
     if (hasChanged) {
@@ -397,11 +411,12 @@ function LocalSingletonPage(
         version: 1,
       };
       setDraft(key, data);
-    } else {
+    } else if (!keepStaleDraft) {
       delDraft(key);
     }
   }, [
     config,
+    keepStaleDraft,
     localTreeKey,
     state,
     hasChanged,
