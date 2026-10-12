@@ -200,7 +200,27 @@ async function update(
         deletions: s.array(s.object({ path: filepath })),
       })
     );
-  } catch {
+  } catch (err) {
+    if (err instanceof s.StructError) {
+      return {
+        status: 400,
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          error: 'Bad data',
+          path: err.path.join('.'),
+          type: err.type,
+          message: err.message,
+          failures: err
+            .failures()
+            .map(f => ({
+              path: f.path,
+              type: f.type,
+              message: f.message,
+              refinement: f.refinement,
+            })),
+        }),
+      };
+    }
     return { status: 400, body: 'Bad data' };
   }
   for (const addition of updates.additions) {
