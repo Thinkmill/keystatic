@@ -8,8 +8,9 @@ import {
   getCollectionItemPath,
   getCollectionItemSlugSuffix,
   getCollectionPath,
+  getCollectionPathInfo,
   getDataFileExtension,
-  getSlugGlobForCollection,
+  parseCollectionPath,
 } from './path-utils';
 import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
@@ -81,6 +82,7 @@ export function getSlugFromState(
   collectionConfig: {
     slugField: string;
     schema: Record<string, ComponentSchema>;
+    path?: string;
   },
   state: Record<string, unknown>
 ) {
@@ -89,7 +91,101 @@ export function getSlugFromState(
   if (field.kind !== 'form' || field.formKind !== 'slug') {
     throw new Error(`slugField is not a slug field`);
   }
-  return field.serializeWithSlug(value).slug;
+  const slug = field.serializeWithSlug(value).slug;
+  if (collectionConfig.path === undefined) {
+    return slug;
+  }
+  const { slugPattern } = parseCollectionPath(collectionConfig.path);
+  if (slugPattern.every(segment => segment.kind !== 'field')) {
+    return slug;
+  }
+  return slugPattern
+    .map(segment =>
+      segment.kind === 'glob'
+        ? slug
+        : segment.kind === 'static'
+        ? segment.value
+        : getFieldPathSegment(collectionConfig.schema, state, segment.name)
+    )
+    .join('/');
+}
+
+/**
+ * The value a `{field}` placeholder in a collection's path resolves to for a
+ * given entry's state.
+ */
+function getFieldPathSegment(
+  schema: Record<string, ComponentSchema>,
+  state: Record<string, unknown>,
+  name: string
+): string {
+  const field = schema[name];
+  if (!field) {
+    throw new Error(
+      `Collection path placeholder "{${name}}" does not match a field in the collection's schema`
+    );
+  }
+  if (field.kind === 'form' && field.formKind === 'slug') {
+    try {
+      return field.serializeWithSlug(state[name]).slug;
+    } catch {
+      return '';
+    }
+  }
+  if (field.kind !== 'form') {
+    throw new Error(
+      `Collection path placeholder "{${name}}" must be a form field`
+    );
+  }
+  let serialized: unknown;
+  try {
+    serialized = (field.serialize as (value: unknown) => { value: unknown })(
+      state[name]
+    ).value;
+  } catch {
+    return '';
+  }
+  if (serialized == null) {
+    return '';
+  }
+  if (typeof serialized === 'string') {
+    return serialized;
+  }
+  if (typeof serialized === 'number' || typeof serialized === 'boolean') {
+    return String(serialized);
+  }
+  throw new Error(
+    `Collection path placeholder "{${name}}" must be a field that serializes to a string, number or boolean`
+  );
+}
+
+/**
+ * The segments derived from `{field}` placeholders in a collection's path for
+ * a given entry's state, in path order. Returns `undefined` when the
+ * collection's path has no placeholders.
+ */
+export function getCollectionPathFieldSegments(
+  collectionConfig: {
+    schema: Record<string, ComponentSchema>;
+    path?: string;
+  },
+  state: Record<string, unknown>
+) {
+  if (collectionConfig.path === undefined) {
+    return undefined;
+  }
+  const { slugPattern } = parseCollectionPath(collectionConfig.path);
+  const fieldSegments = slugPattern.filter(
+    (segment): segment is { kind: 'field'; name: string } =>
+      segment.kind === 'field'
+  );
+  if (!fieldSegments.length) {
+    return undefined;
+  }
+  return fieldSegments.map(segment => ({
+    field: segment.name,
+    segment: getFieldPathSegment(collectionConfig.schema, state, segment.name),
+  }));
 }
 
 export function getEntriesInCollectionWithTreeKey(
@@ -101,27 +197,38 @@ export function getEntriesInCollectionWithTreeKey(
   const schema = object(collectionConfig.schema);
   const formatInfo = getCollectionFormat(config, collection);
   const extension = getDataFileExtension(formatInfo);
-  const glob = getSlugGlobForCollection(config, collection);
+  const pathInfo = getCollectionPathInfo(config, collection);
   const collectionPath = getCollectionPath(config, collection);
   const directory: Map<string, TreeNode> =
     getTreeNodeAtPath(rootTree, collectionPath)?.children ?? new Map();
   const entries: { key: string; slug: string; sha: string }[] = [];
   const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
   const suffix = getCollectionItemSlugSuffix(config, collection);
-  const possibleEntries = new Map(directory);
-  if (glob === '**') {
-    const handleDirectory = (dir: Map<string, TreeNode>, prefix: string) => {
-      for (const [key, entry] of dir) {
+  const possibleEntries = new Map<string, TreeNode>();
+  const collectEntries = (
+    dir: Map<string, TreeNode>,
+    prefix: string,
+    patternIndex: number
+  ) => {
+    const segment = pathInfo.slugPattern[patternIndex];
+    for (const [key, entry] of dir) {
+      const slug = `${prefix}${key}`;
+      if (segment.kind === 'glob' && segment.glob === '**') {
+        possibleEntries.set(slug, entry);
         if (entry.children) {
-          possibleEntries.set(`${prefix}${key}`, entry);
-          handleDirectory(entry.children, `${prefix}${key}/`);
-        } else {
-          possibleEntries.set(`${prefix}${key}`, entry);
+          collectEntries(entry.children, `${slug}/`, patternIndex);
         }
+        continue;
       }
-    };
-    handleDirectory(directory, '');
-  }
+      if (segment.kind === 'static' && segment.value !== key) continue;
+      if (patternIndex === pathInfo.slugPattern.length - 1) {
+        possibleEntries.set(slug, entry);
+      } else if (entry.children) {
+        collectEntries(entry.children, `${slug}/`, patternIndex + 1);
+      }
+    }
+  };
+  collectEntries(directory, '', 0);
   for (const [key, entry] of possibleEntries) {
     if (formatInfo.dataLocation === 'index') {
       const actualEntry = getTreeNodeAtPath(

@@ -11,12 +11,17 @@ export function useHasChanged(args: {
   state: unknown;
   schema: ObjectField<Record<string, ComponentSchema>>;
   slugField: string | undefined;
+  path?: string;
 }) {
   const serialize = useCallback(
     async (state: unknown) => {
       const slug = args.slugField
         ? getSlugFromState(
-            { schema: args.schema.fields, slugField: args.slugField },
+            {
+              schema: args.schema.fields,
+              slugField: args.slugField,
+              path: args.path,
+            },
             state as Record<string, unknown>
           )
         : undefined;
@@ -40,7 +45,7 @@ export function useHasChanged(args: {
         ),
       };
     },
-    [args.schema, args.slugField]
+    [args.schema, args.slugField, args.path]
   );
   const initialFilesForUpdate = useData(
     useCallback(

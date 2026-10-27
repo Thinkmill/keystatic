@@ -40,6 +40,7 @@ import { useYJsValue } from './useYJsValue';
 import {
   getCollectionFormat,
   getCollectionItemPath,
+  getCollectionPathInfo,
   getSlugFromState,
   isGitHubConfig,
   useShowRestoredDraftMessage,
@@ -96,6 +97,7 @@ function CreateItemWrapper(props: {
           format,
           schema: collectionConfig.schema,
           slug: { field: collectionConfig.slugField, slug: stored.slug },
+          pathInfo: getCollectionPathInfo(props.config, props.collection),
         },
         stored.files
       );
@@ -133,6 +135,7 @@ function CreateItemWrapper(props: {
     schema: collectionConfig.schema,
     format,
     slug,
+    pathInfo: getCollectionPathInfo(props.config, props.collection),
   });
 
   const duplicateInitalState =
@@ -297,6 +300,7 @@ function CreateItemLocal(props: {
     schema,
     state,
     slugField: collectionConfig.slugField,
+    path: collectionConfig.path,
   });
   const hasCreated =
     createResult.kind === 'updated' || createResult.kind === 'loading';
@@ -446,7 +450,7 @@ function CreateItemInner(props: {
     createResult.kind === 'updated' || createResult.kind === 'loading'
       ? props.slug
       : undefined;
-  const slugInfo = useSlugFieldInfo(props.collection, currentSlug);
+  const slugInfo = useSlugFieldInfo(props.collection, currentSlug, props.state);
 
   const onCreate = async () => {
     if (createResult.kind === 'loading') return;
@@ -469,10 +473,15 @@ function CreateItemInner(props: {
   };
 
   const onPaste = async () => {
-    const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
-      field: collectionConfig.slugField,
-      slug: getSlugFromState(collectionConfig, props.state),
-    });
+    const entry = await getPastedEntry(
+      formatInfo,
+      collectionConfig.schema,
+      {
+        field: collectionConfig.slugField,
+        slug: getSlugFromState(collectionConfig, props.state),
+      },
+      getCollectionPathInfo(config, props.collection)
+    );
     if (entry) {
       setValueToPreviewProps(entry, props.previewProps);
       toastQueue.positive('Entry pasted', {
