@@ -17,12 +17,22 @@ export type Format =
     };
 export type EntryLayout = 'content' | 'form';
 export type Glob = '*' | '**';
+export type CollectionPath<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  Schema extends Record<string, ComponentSchema> = Record<
+    string,
+    ComponentSchema
+  >,
+> =
+  | `${string}/${Glob}`
+  | `${string}/${Glob}/${string}`
+  | ((fields: any) => string);
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends string,
 > = {
   label: string;
-  path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
+  path?: CollectionPath<Schema>;
   entryLayout?: EntryLayout;
   format?: Format;
   previewUrl?: string;

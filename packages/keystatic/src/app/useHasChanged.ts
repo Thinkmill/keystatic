@@ -1,6 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { useCallback, useMemo, useState } from 'react';
 import { ComponentSchema, ObjectField } from '../form/api';
+import { CollectionPath } from '../config';
 import { getSlugFromState } from './utils';
 import { serializeProps } from '../form/serialize-props';
 import { useData } from './useData';
@@ -11,12 +12,17 @@ export function useHasChanged(args: {
   state: unknown;
   schema: ObjectField<Record<string, ComponentSchema>>;
   slugField: string | undefined;
+  path?: CollectionPath<any> | string;
 }) {
   const serialize = useCallback(
     async (state: unknown) => {
       const slug = args.slugField
         ? getSlugFromState(
-            { schema: args.schema.fields, slugField: args.slugField },
+            {
+              schema: args.schema.fields,
+              slugField: args.slugField,
+              path: args.path,
+            },
             state as Record<string, unknown>
           )
         : undefined;
@@ -40,7 +46,7 @@ export function useHasChanged(args: {
         ),
       };
     },
-    [args.schema, args.slugField]
+    [args.schema, args.slugField, args.path]
   );
   const initialFilesForUpdate = useData(
     useCallback(
