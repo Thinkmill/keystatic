@@ -1,11 +1,35 @@
 import { Glob } from '../../../config';
 
+function validatePathSegment(segment: string) {
+  if (segment === '') {
+    return 'must not be empty';
+  }
+  if (/[\\/]/.test(segment)) {
+    return 'must not contain slashes';
+  }
+  if (segment === '..') {
+    return 'must not be ..';
+  }
+  if (segment === '.') {
+    return 'must not be .';
+  }
+  if (/^\s|\s$/.test(segment)) {
+    return 'must not start or end with spaces';
+  }
+}
+
 export function validateText(
   val: string,
   min: number,
   max: number,
   fieldLabel: string,
-  slugInfo: { slugs: Set<string>; glob: Glob } | undefined,
+  slugInfo:
+    | {
+        slugs: Set<string>;
+        glob: Glob;
+        pathSegments?: { field: string; segment: string }[];
+      }
+    | undefined,
   pattern: { regex: RegExp; message?: string } | undefined
 ) {
   if (val.length < min) {
@@ -48,7 +72,18 @@ export function validateText(
     if (/^\s|\s$/.test(val)) {
       return `${fieldLabel} must not start or end with spaces`;
     }
-    if (slugInfo.slugs.has(val)) {
+    if (slugInfo.pathSegments) {
+      for (const { field, segment } of slugInfo.pathSegments) {
+        const segmentError = validatePathSegment(segment);
+        if (segmentError !== undefined) {
+          return `The "${field}" field is used in the collection's path, so it ${segmentError}`;
+        }
+      }
+    }
+    const fullSlug = slugInfo.pathSegments?.length
+      ? `${slugInfo.pathSegments.map(x => x.segment).join('/')}/${val}`
+      : val;
+    if (slugInfo.slugs.has(fullSlug)) {
       return `${fieldLabel} must be unique`;
     }
   }

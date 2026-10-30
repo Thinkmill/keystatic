@@ -108,6 +108,7 @@ export type SlugFieldInfo = {
   field: string;
   slugs: Set<string>;
   glob: Glob;
+  pathSegments?: { field: string; segment: string }[];
 };
 
 export const SlugFieldContext = createContext<SlugFieldInfo | undefined>(

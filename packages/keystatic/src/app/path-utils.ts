@@ -5,12 +5,123 @@ import { memoize } from './memoize';
 export function fixPath(path: string) {
   return path.replace(/^\.?\/+/, '').replace(/\/*$/, '');
 }
+export type CollectionPathSegment =
+  | { kind: 'static'; value: string }
+  | { kind: 'field'; name: string }
+  | { kind: 'glob'; glob: Glob };
+
+export type CollectionPathInfo = {
+  /** The static directory that all entries in the collection live under. */
+  prefix: string;
+  /**
+   * The segments an entry's slug is made up of, in order. `field` segments
+   * are filled in from the value of the named field in the collection's
+   * schema and the `glob` segment is filled in with the collection's slug
+   * field's slug.
+   */
+  slugPattern: CollectionPathSegment[];
+  glob: Glob;
+  /** The static path appended to the path of every entry (e.g. `data`). */
+  suffix: string;
+};
+
+const globSegment = /^\*\*?$/;
+const fieldSegment = /^\{([^{}]+)\}$/;
+
+export function createPathProxy(): Record<string, string> {
+  return new Proxy(
+    {},
+    {
+      get(_target, prop) {
+        if (typeof prop === 'symbol') {
+          return undefined;
+        }
+        return `{${prop}}`;
+      },
+    }
+  );
+}
+
+export const parseCollectionPath = memoize(_parseCollectionPath);
+
+function _parseCollectionPath(path: string): CollectionPathInfo {
+  const segments = fixPath(path)
+    .split('/')
+    .filter(segment => segment !== '');
+  let globIndex = -1;
+  let glob: Glob = '*';
+  for (const [i, segment] of segments.entries()) {
+    if (globSegment.test(segment)) {
+      if (globIndex !== -1) {
+        throw new Error(
+          `Collection paths can only contain a single * or ** segment but "${path}" contains more than one`
+        );
+      }
+      globIndex = i;
+      glob = segment as Glob;
+      continue;
+    }
+    if (segment.includes('{') || segment.includes('}')) {
+      if (!fieldSegment.test(segment)) {
+        throw new Error(
+          `Collection path "${path}" contains an invalid path segment "${segment}"`
+        );
+      }
+      if (globIndex !== -1) {
+        throw new Error(
+          `Field placeholders like "${segment}" cannot appear after the * or ** segment in collection path "${path}"`
+        );
+      }
+    }
+  }
+  if (globIndex === -1) {
+    throw new Error(
+      `Collection path must end with /* or /** or include /*/ or /**/ but got "${path}"`
+    );
+  }
+  const firstDynamicIndex = segments.findIndex(
+    segment => globSegment.test(segment) || fieldSegment.test(segment)
+  );
+  const slugPattern: CollectionPathSegment[] = segments
+    .slice(firstDynamicIndex, globIndex + 1)
+    .map(segment => {
+      if (globSegment.test(segment)) {
+        return { kind: 'glob', glob } as const;
+      }
+      const fieldMatch = fieldSegment.exec(segment);
+      if (fieldMatch) {
+        return { kind: 'field', name: fieldMatch[1] } as const;
+      }
+      return { kind: 'static', value: segment } as const;
+    });
+  return {
+    prefix: segments.slice(0, firstDynamicIndex).join('/'),
+    slugPattern,
+    glob,
+    suffix: segments.slice(globIndex + 1).join('/'),
+  };
+}
+
+export function getSlugFieldSlug(pathInfo: CollectionPathInfo, slug: string) {
+  const split = slug.split('/');
+  const globIndex = pathInfo.slugPattern.length - 1;
+  if (pathInfo.glob === '**') {
+    return split.slice(globIndex).join('/');
+  }
+  return split[globIndex] ?? slug;
+}
 
 const collectionPath = /\/\*\*?(?:$|\/)/;
 
-function getConfiguredCollectionPath(config: Config, collection: string) {
+function getConfiguredCollectionPath(
+  config: Config,
+  collection: string
+): string {
   const collectionConfig = config.collections![collection];
-  const path = collectionConfig.path ?? `${collection}/*/`;
+  const rawPath = collectionConfig.path;
+  const path =
+    (typeof rawPath === 'function' ? rawPath(createPathProxy()) : rawPath) ??
+    `${collection}/*/`;
   if (!collectionPath.test(path)) {
     throw new Error(
       `Collection path must end with /* or /** or include /*/ or /**/ but ${collection} has ${path}`
@@ -19,10 +130,35 @@ function getConfiguredCollectionPath(config: Config, collection: string) {
   return path;
 }
 
+export const getCollectionPathInfo = memoize(_getCollectionPathInfo);
+
+function _getCollectionPathInfo(
+  config: Config,
+  collection: string
+): CollectionPathInfo {
+  const collectionConfig = config.collections![collection];
+  const info = parseCollectionPath(
+    getConfiguredCollectionPath(config, collection)
+  );
+  for (const segment of info.slugPattern) {
+    if (segment.kind !== 'field') continue;
+    const field = collectionConfig.schema[segment.name];
+    if (!field) {
+      throw new Error(
+        `Collection path placeholder "{${segment.name}}" in ${collection} does not match a field in the collection's schema`
+      );
+    }
+    if (field.kind !== 'form') {
+      throw new Error(
+        `Collection path placeholder "{${segment.name}}" in ${collection} must be a form field`
+      );
+    }
+  }
+  return info;
+}
+
 export function getCollectionPath(config: Config, collection: string) {
-  const configuredPath = getConfiguredCollectionPath(config, collection);
-  const path = fixPath(configuredPath.replace(/\*\*?.*$/, ''));
-  return path;
+  return getCollectionPathInfo(config, collection).prefix;
 }
 
 export function getCollectionFormat(config: Config, collection: string) {
@@ -40,7 +176,7 @@ export function getCollectionItemPath(
 ) {
   const basePath = getCollectionPath(config, collection);
   const suffix = getCollectionItemSlugSuffix(config, collection);
-  return `${basePath}/${slug}${suffix}`;
+  return basePath ? `${basePath}/${slug}${suffix}` : `${slug}${suffix}`;
 }
 
 export function getEntryDataFilepath(dir: string, formatInfo: FormatInfo) {
@@ -53,19 +189,16 @@ export function getSlugGlobForCollection(
   config: Config,
   collection: string
 ): Glob {
-  const collectionPath = getConfiguredCollectionPath(config, collection);
-  return collectionPath.includes('**') ? '**' : '*';
+  return getCollectionPathInfo(config, collection).glob;
 }
 
 export function getCollectionItemSlugSuffix(
   config: Config,
   collection: string
 ) {
-  const configuredPath = getConfiguredCollectionPath(config, collection);
-  const path = fixPath(configuredPath.replace(/^[^*]+\*\*?/, ''));
-  return path ? `/${path}` : '';
+  const suffix = getCollectionPathInfo(config, collection).suffix;
+  return suffix ? `/${suffix}` : '';
 }
-
 export function getSingletonPath(config: Config, singleton: string) {
   if (config.singletons![singleton].path?.includes('*')) {
     throw new Error(
@@ -95,7 +228,7 @@ function _getFormatInfo(
   const path =
     type === 'collections'
       ? getConfiguredCollectionPath(config, key)
-      : collectionOrSingleton.path ?? `${key}/`;
+      : config.singletons![key].path ?? `${key}/`;
   const dataLocation = path.endsWith('/') ? 'index' : 'outer';
   const { schema, format = 'yaml' } = collectionOrSingleton;
   if (typeof format === 'string') {

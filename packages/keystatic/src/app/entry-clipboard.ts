@@ -3,7 +3,7 @@ import { toastQueue } from '@keystar/ui/toast';
 import { ComponentSchema } from '../form/api';
 import { serializeEntryToFiles } from './updating';
 import { parseEntry } from './useItemData';
-import { FormatInfo, getEntryDataFilepath } from './utils';
+import { CollectionPathInfo, FormatInfo, getEntryDataFilepath } from './utils';
 import * as s from 'superstruct';
 
 const keystaticEntryAttributeSchema = s.type({
@@ -22,7 +22,8 @@ function parseEntryFromHtml(
   html: string,
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slugField: string | undefined
+  slugField: string | undefined,
+  pathInfo: CollectionPathInfo | undefined
 ) {
   const parsedHtml = new DOMParser().parseFromString(html, 'text/html');
   const pre = parsedHtml.querySelector('pre');
@@ -42,6 +43,7 @@ function parseEntryFromHtml(
           ? { field: slugField, slug: entryInfo.slug ?? '' }
           : undefined,
         requireFrontmatter: true,
+        pathInfo,
       },
       files
     ).initialState;
@@ -52,12 +54,20 @@ function parseEntryFromPlaintext(
   bytes: Uint8Array,
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slugInfo: { field: string; slug: string } | undefined
+  slugInfo: { field: string; slug: string } | undefined,
+  pathInfo: CollectionPathInfo | undefined
 ) {
   try {
     const dirpath = slugInfo?.slug ?? 'entry';
     return parseEntry(
-      { dirpath, format, schema, slug: slugInfo, requireFrontmatter: true },
+      {
+        dirpath,
+        format,
+        schema,
+        slug: slugInfo,
+        requireFrontmatter: true,
+        pathInfo,
+      },
       new Map([[getEntryDataFilepath(dirpath, format), bytes]])
     ).initialState;
   } catch {}
@@ -66,7 +76,8 @@ function parseEntryFromPlaintext(
 export async function getPastedEntry(
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slugInfo: { field: string; slug: string } | undefined
+  slugInfo: { field: string; slug: string } | undefined,
+  pathInfo?: CollectionPathInfo
 ) {
   let clipboardItems: ClipboardItem[];
   try {
@@ -88,7 +99,13 @@ export async function getPastedEntry(
     if (item.types.includes('text/html')) {
       const html = await item.getType('text/html');
       const text = await html.text();
-      const entry = parseEntryFromHtml(text, format, schema, slugInfo?.field);
+      const entry = parseEntryFromHtml(
+        text,
+        format,
+        schema,
+        slugInfo?.field,
+        pathInfo
+      );
       if (entry) {
         return entry;
       }
@@ -100,7 +117,8 @@ export async function getPastedEntry(
         new Uint8Array(text),
         format,
         schema,
-        slugInfo
+        slugInfo,
+        pathInfo
       );
       if (entry) {
         return entry;
