@@ -79,6 +79,7 @@ import { Card } from '../components/Card'
 Remove the import from the MDX file. Instead, pass the components you want to import to the component responsible for rendering the MDX content:
 
 ```tsx
+import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Card } from '../components/Card'
 
 <MdxRenderer components={{ Card }} />
