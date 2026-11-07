@@ -243,3 +243,16 @@ export function useShowRestoredDraftMessage(
     }
   }, [draft, show]);
 }
+
+export function getSlugForNewItem(
+  collectionConfig: Collection<Record<string, ComponentSchema>, string> & {
+    computeSlug?: (args: { slug: string; value: Record<string, unknown> }) => string;
+  },
+  state: Record<string, unknown>
+): string {
+  const rawSlug = getSlugFromState(collectionConfig, state);
+  if (typeof collectionConfig.computeSlug === 'function') {
+    return collectionConfig.computeSlug({ slug: rawSlug, value: state });
+  }
+  return rawSlug;
+}
