@@ -41,6 +41,7 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getSlugFromState,
+  getSlugForNewItem,
   isGitHubConfig,
   useShowRestoredDraftMessage,
 } from './utils';
@@ -275,7 +276,7 @@ function CreateItemLocal(props: {
 
   useShowRestoredDraftMessage(props.draft, state, undefined);
 
-  const slug = getSlugFromState(collectionConfig, state);
+  const slug = getSlugForNewItem(collectionConfig, state);
 
   const formatInfo = getCollectionFormat(props.config, props.collection);
 
@@ -368,7 +369,7 @@ function CreateItemCollab(props: {
   const state = useYJsValue(schema, props.map) as Record<string, unknown>;
   const previewProps = usePreviewPropsFromY(schema, props.map, state);
 
-  const slug = getSlugFromState(collectionConfig, state);
+  const slug = getSlugForNewItem(collectionConfig, state);
 
   const formatInfo = getCollectionFormat(props.config, props.collection);
 
@@ -455,7 +456,7 @@ function CreateItemInner(props: {
       return;
     }
     if (await props.createItem()) {
-      const slug = getSlugFromState(collectionConfig, props.state);
+      const slug = getSlugForNewItem(collectionConfig, props.state);
       router.push(`${collectionPath}/item/${encodeURIComponent(slug)}`);
       toastQueue.positive('Entry created', { timeout: 5000 }); // TODO: l10n
     }
@@ -464,14 +465,14 @@ function CreateItemInner(props: {
   const onCopy = () => {
     copyEntryToClipboard(props.state, formatInfo, collectionConfig.schema, {
       field: collectionConfig.slugField,
-      value: getSlugFromState(collectionConfig, props.state),
+      value: getSlugForNewItem(collectionConfig, props.state),
     });
   };
 
   const onPaste = async () => {
     const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
       field: collectionConfig.slugField,
-      slug: getSlugFromState(collectionConfig, props.state),
+      slug: getSlugForNewItem(collectionConfig, props.state),
     });
     if (entry) {
       setValueToPreviewProps(entry, props.previewProps);
@@ -603,7 +604,7 @@ function CreateItemInner(props: {
               if (
                 await props.createItem({ branch: newBranch, sha: baseCommit })
               ) {
-                const slug = getSlugFromState(collectionConfig, props.state);
+                const slug = getSlugForNewItem(collectionConfig, props.state);
 
                 router.push(
                   `/keystatic/branch/${encodeURIComponent(
@@ -630,7 +631,7 @@ function CreateItemInner(props: {
           <ForkRepoDialog
             onCreate={async () => {
               if (await props.createItem()) {
-                const slug = getSlugFromState(collectionConfig, props.state);
+                const slug = getSlugForNewItem(collectionConfig, props.state);
                 router.push(
                   `${collectionPath}/item/${encodeURIComponent(slug)}`
                 );
