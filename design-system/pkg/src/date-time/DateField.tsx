@@ -45,12 +45,9 @@ function DateField<T extends DateValue>(
     let { id, ..._descriptionProps } = descriptionProps;
     descriptionProps = _descriptionProps;
   }
-  if (props.errorMessage) {
-    state = {
-      ...state,
-      validationState: 'invalid',
-    };
-  }
+  // Keep the state object identity intact: React Aria associates the segment
+  // metadata created by useDateField with this exact object.
+  let isInvalid = state.isInvalid || Boolean(props.errorMessage);
 
   return (
     <FieldPrimitive
@@ -69,7 +66,7 @@ function DateField<T extends DateValue>(
         fieldProps={fieldProps}
         isDisabled={isDisabled}
         autoFocus={autoFocus}
-        isInvalid={state.isInvalid}
+        isInvalid={isInvalid}
       >
         {state.segments.map((segment, i) => (
           <InputSegment key={i} segment={segment} state={state} />
