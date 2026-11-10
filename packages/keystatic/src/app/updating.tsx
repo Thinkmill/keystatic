@@ -1,3 +1,4 @@
+import { toastQueue } from '@keystar/ui/toast';
 import { gql } from '@ts-gql/tag/no-transform';
 import { assert } from 'emery';
 import { useContext, useState } from 'react';
@@ -305,6 +306,21 @@ export function useUpsertItem(args: {
           const target = result.data?.createCommitOnBranch?.ref?.target;
           if (target) {
             setState({ kind: 'updated' });
+            const publishMessage = args.config.ui?.publishNotice?.message;
+            if (publishMessage) {
+              toastQueue.positive(
+                formatPublishNoticeMessage(publishMessage, {
+                  branch: branch.branchName,
+                  sha: target.oid,
+                  slug: args.slug?.value,
+                })
+              );
+            }
+            args.config.ui?.onCommit?.({
+              branch: branch.branchName,
+              sha: target.oid,
+              slug: args.slug?.value,
+            });
             return true;
           }
           throw new Error('Failed to update');
@@ -492,3 +508,13 @@ const FetchRef = gql`
     }
   }
 ` as import('../../__generated__/ts-gql/FetchRef').type;
+
+export function formatPublishNoticeMessage(
+  message: string,
+  info: { branch: string; sha?: string; slug?: string }
+): string {
+  return message
+    .replace(/\{branch\}/g, info.branch)
+    .replace(/\{sha\}/g, info.sha ?? '')
+    .replace(/\{slug\}/g, info.slug ?? '');
+}
