@@ -49,7 +49,7 @@ export function parseEntry(
     dirpath: string;
     format: FormatInfo;
     schema: Record<string, ComponentSchema>;
-    slug: { slug: string; field: string } | undefined;
+    slug: { slug: string; fields: readonly string[] } | undefined;
     requireFrontmatter?: boolean;
   },
   files: Map<string, Uint8Array>
@@ -73,6 +73,7 @@ export function parseEntry(
   }
   const usedFiles = new Set([dataFilepath]);
   const rootSchema = fields.object(args.schema);
+  const slugSegments = args.slug?.slug.split('/');
   let initialState;
 
   const getFile = (filepath: string) => {
@@ -120,11 +121,19 @@ export function parseEntry(
       [],
       [],
       (schema, value, path, pathWithArrayFieldSlugs) => {
-        if (path.length === 1 && path[0] === args.slug?.field) {
-          if (schema.formKind !== 'slug') {
-            throw new Error(`slugField is not a slug field`);
+        if (path.length === 1 && args.slug !== undefined) {
+          const slugFieldIndex = args.slug.fields.indexOf(path[0] as string);
+          if (slugFieldIndex !== -1) {
+            if (schema.formKind !== 'slug') {
+              throw new Error(`slugField is not a slug field`);
+            }
+            return schema.parse(value, {
+              slug:
+                args.slug.fields.length === 1
+                  ? args.slug.slug
+                  : slugSegments?.[slugFieldIndex] ?? '',
+            });
           }
-          return schema.parse(value, { slug: args.slug.slug });
         }
         if (schema.formKind === 'asset') {
           const suggestedFilenamePrefix = pathWithArrayFieldSlugs.join('/');
@@ -196,7 +205,7 @@ type UseItemDataArgs = {
   schema: Record<string, ComponentSchema>;
   dirpath: string;
   format: FormatInfo;
-  slug: { slug: string; field: string } | undefined;
+  slug: { slug: string; fields: readonly string[] } | undefined;
 };
 
 function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
