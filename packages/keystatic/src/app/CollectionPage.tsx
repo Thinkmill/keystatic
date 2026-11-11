@@ -427,10 +427,24 @@ function CollectionTable(
   }, [entriesWithStatus, mainFiles]);
 
   const filteredItems = useMemo(() => {
-    return entriesWithData.filter(item =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [entriesWithData, searchTerm]);
+    const normalizedSearch = searchTerm.toLowerCase();
+    if (!normalizedSearch) return entriesWithData;
+    return entriesWithData.filter(item => {
+      if (item.name.toLowerCase().includes(normalizedSearch)) {
+        return true;
+      }
+      if (item.data && collection.columns?.length) {
+        return collection.columns.some(column => {
+          const val = item.data?.[column];
+          return (
+            val != null &&
+            String(val).toLowerCase().includes(normalizedSearch)
+          );
+        });
+      }
+      return false;
+    });
+  }, [collection.columns, entriesWithData, searchTerm]);
   const sortedItems = useMemo(() => {
     return [...filteredItems].sort((a, b) => {
       const readCol = (

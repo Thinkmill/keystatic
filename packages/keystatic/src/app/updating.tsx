@@ -194,7 +194,7 @@ export function useUpsertItem(args: {
         const deletions: { path: string }[] = [...filesToDelete].map(path => ({
           path,
         }));
-        const updatedTree = await updateTreeWithChanges(unscopedTree, {
+        let updatedTree = await updateTreeWithChanges(unscopedTree, {
           additions,
           deletions: [...filesToDelete],
         });
@@ -255,11 +255,17 @@ export function useUpsertItem(args: {
                 throw new Error('Branch not found');
               }
 
+              const latestTarget = refData.data.repository.ref.target;
+              const latestTreeOid =
+                'tree' in latestTarget && latestTarget.tree?.oid
+                  ? latestTarget.tree.oid
+                  : latestTarget.oid;
+              const freshUnscopedTree = await fetchGitHubTreeData(
+                latestTreeOid,
+                args.config
+              );
               const tree = scopeEntriesWithPathPrefix(
-                await fetchGitHubTreeData(
-                  refData.data.repository.ref.target.oid,
-                  args.config
-                ),
+                freshUnscopedTree,
                 args.config
               );
               const treeKey = getTreeKey(
@@ -272,9 +278,15 @@ export function useUpsertItem(args: {
                 tree.tree
               );
               if (treeKey === args.currentLocalTreeKey) {
-                result = await runMutation(
-                  refData.data.repository.ref.target.oid
+                updatedTree = await updateTreeWithChanges(
+                  freshUnscopedTree.tree,
+                  {
+                    additions,
+                    deletions: [...filesToDelete],
+                  }
                 );
+                await hydrateTreeCacheWithEntries(updatedTree.entries);
+                result = await runMutation(latestTarget.oid);
               } else {
                 setState({
                   kind: 'needs-new-branch',
@@ -304,6 +316,17 @@ export function useUpsertItem(args: {
           }
           const target = result.data?.createCommitOnBranch?.ref?.target;
           if (target) {
+            const committedTreeOid =
+              'tree' in target && target.tree?.oid
+                ? target.tree.oid
+                : updatedTree.sha;
+            await hydrateTreeCacheWithEntries(
+              updatedTree.entries,
+              committedTreeOid
+            );
+            if (!override?.branch || override.branch === currentBranch) {
+              setTreeSha(committedTreeOid);
+            }
             setState({ kind: 'updated' });
             return true;
           }
@@ -445,6 +468,7 @@ export function useDeleteItem(args: {
           if (error) {
             throw error;
           }
+          setTreeSha(updatedTree.sha);
           setState({ kind: 'updated' });
           return true;
         } else {
@@ -487,6 +511,12 @@ const FetchRef = gql`
         target {
           id
           oid
+          ... on Commit {
+            tree {
+              id
+              oid
+            }
+          }
         }
       }
     }
