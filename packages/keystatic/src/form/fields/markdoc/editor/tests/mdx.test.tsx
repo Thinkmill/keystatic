@@ -1067,3 +1067,9 @@ test('ordered list with start', () => {
     "
   `);
 });
+
+test('external https:// image URL is preserved on round-trip without escaping or phantom local file registration', () => {
+  const mdx = `![External diagram](https://example.com/assets/diagram.png)\n`;
+  const editor = fromMDX(mdx);
+  expect(toMDX(editor)).toBe(mdx);
+});
