@@ -66,9 +66,7 @@ export function useSetTreeSha() {
   return useContext(SetTreeShaContext);
 }
 
-export const SetTreeShaContext = createContext<(sha: string) => void>(() => {
-  throw new Error('SetTreeShaContext not set');
-});
+export const SetTreeShaContext = createContext<(sha: string) => void>(() => {});
 
 export function LocalAppShellProvider(props: {
   config: LocalConfig;
@@ -316,8 +314,26 @@ export function GitHubAppShellProvider(props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [repo?.id]);
 
+  const [treeShaOverride, setTreeShaOverride] = useState<{
+    branch: string;
+    sha: string;
+  } | null>(null);
+
+  const setCurrentBranchTreeSha = useCallback(
+    (sha: string) => {
+      setTreeShaOverride({ branch: props.currentBranch, sha });
+    },
+    [props.currentBranch]
+  );
+
   const defaultBranchTreeSha = defaultBranchRef?.target.tree.oid ?? null;
-  const currentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
+  const upstreamCurrentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
+  const currentBranchTreeSha =
+    treeShaOverride &&
+    treeShaOverride.branch === props.currentBranch &&
+    treeShaOverride.sha !== upstreamCurrentBranchTreeSha
+      ? treeShaOverride.sha
+      : upstreamCurrentBranchTreeSha;
 
   const defaultBranchTree = useGitHubTreeData(
     defaultBranchTreeSha,
@@ -443,8 +459,9 @@ export function GitHubAppShellProvider(props: {
       <CurrentBranchContext.Provider value={props.currentBranch}>
         <BranchesContext.Provider value={branches}>
           <RepoInfoContext.Provider value={repoInfo}>
-            <ChangedContext.Provider value={changedData}>
-              <TreeContext.Provider value={allTreeData}>
+            <SetTreeShaContext.Provider value={setCurrentBranchTreeSha}>
+              <ChangedContext.Provider value={changedData}>
+                <TreeContext.Provider value={allTreeData}>
                 {props.config.storage.kind === 'cloud' ? (
                   <CollabProvider config={props.config}>
                     {props.children}
@@ -452,8 +469,9 @@ export function GitHubAppShellProvider(props: {
                 ) : (
                   props.children
                 )}
-              </TreeContext.Provider>
-            </ChangedContext.Provider>
+                </TreeContext.Provider>
+              </ChangedContext.Provider>
+            </SetTreeShaContext.Provider>
           </RepoInfoContext.Provider>
         </BranchesContext.Provider>
       </CurrentBranchContext.Provider>
@@ -663,13 +681,19 @@ const treeCache = new LRU<
   max: 40,
 });
 
-export async function hydrateTreeCacheWithEntries(entries: TreeEntry[]) {
+export async function hydrateTreeCacheWithEntries(
+  entries: TreeEntry[],
+  knownSha?: string
+) {
   const data = {
     entries: new Map(entries.map(entry => [entry.path, entry])),
     tree: treeEntriesToTreeNodes(entries),
   };
   const sha = await treeSha(data.tree);
   treeCache.set(sha, data);
+  if (knownSha && knownSha !== sha) {
+    treeCache.set(knownSha, data);
+  }
   return data;
 }
 

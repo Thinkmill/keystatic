@@ -125,3 +125,21 @@ test('updateTreeWithChanges', async () => {
   );
   expect(output.entries).toEqual(expectedOutput);
 });
+
+test('updateTreeWithChanges reflects newly created and updated collection entries', async () => {
+  const initialNodes = treeEntriesToTreeNodes(input);
+  const afterCreate = await updateTreeWithChanges(initialNodes, {
+    additions: [
+      {
+        path: 'something/posts/new-entry/index.mdoc',
+        contents: textEncoder.encode('---\ntitle: Newly Created Entry\n---\n'),
+      },
+    ],
+    deletions: [],
+  });
+  expect(
+    afterCreate.entries.some(e => e.path === 'something/posts/new-entry/index.mdoc')
+  ).toBe(true);
+  const rehydratedNodes = treeEntriesToTreeNodes(afterCreate.entries);
+  expect(await treeSha(rehydratedNodes)).toEqual(afterCreate.sha);
+});
