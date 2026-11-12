@@ -2,6 +2,7 @@ export const locales = [
   { label: 'Auto', value: '' },
   { label: 'Arabic (United Arab Emirates)', value: 'ar-AE', symbol: '🇦🇪' },
   { label: 'Bulgarian (Bulgaria)', value: 'bg-BG', symbol: '🇧🇬' },
+  { label: 'Catalan (Spain)', value: 'ca-ES', symbol: '🇪🇸' },
   { label: 'Chinese (Simplified)', value: 'zh-CN', symbol: '🇨🇳' },
   { label: 'Chinese (Traditional)', value: 'zh-TW', symbol: '🇨🇳' },
   { label: 'Croatian (Croatia)', value: 'hr-HR', symbol: '🇭🇷' },

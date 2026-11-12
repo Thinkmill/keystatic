@@ -11,6 +11,12 @@
     "noTags": "Нито един",
     "showAllButtonLabel": "Показване на всички ({tagCount, number})"
   },
+  "ca-ES": {
+    "showAllButtonLabel": "Mostra-ho tot ({tagCount, number})",
+    "hideButtonLabel": "Mostra'n menys",
+    "actions": "Accions",
+    "noTags": "Cap"
+  },
   "cs-CZ": {
     "actions": "Akce",
     "hideButtonLabel": "Zobrazit méně",

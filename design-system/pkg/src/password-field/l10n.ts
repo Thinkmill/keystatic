@@ -3,6 +3,7 @@ import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormat
 const intlMessages: Parameters<typeof useLocalizedStringFormatter>[0] = {
   'ar-AE': { show: vars => `أقل ${vars?.fieldLabel}` },
   'bg-BG': { show: vars => `Показване ${vars?.fieldLabel}` },
+  'ca-ES': { show: vars => `Mostra ${vars?.fieldLabel}` },
   'cs-CZ': { show: vars => `Zobrazit ${vars?.fieldLabel}` },
   'da-DK': { show: vars => `Vis ${vars?.fieldLabel}` },
   'de-DE': { show: vars => `${vars?.fieldLabel} anzeigen` },
