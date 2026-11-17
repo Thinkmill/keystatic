@@ -19,7 +19,7 @@ blog: collection({
   label: 'Blog',
   slugField: 'title',
   schema: {
-    title: fields.slug({ name: { label: 'Title' } })
+    title: fields.slug({ name: { label: 'Title' } }),
     publishedDate: fields.date({ label: 'Published date' }),
     body: fields.markdoc({ label: 'Body' })
   }
