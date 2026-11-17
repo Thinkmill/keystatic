@@ -80,6 +80,8 @@ import {
   getSlugFromState,
   isGitHubConfig,
   useShowRestoredDraftMessage,
+  getAutomaticallyRestorableDraft,
+  useStaleDraft,
 } from './utils';
 import { DataState, LOADING, useData, suspendOnData } from './useData';
 import { useYJsValue } from './useYJsValue';
@@ -389,7 +391,9 @@ function LocalItemPage(
   const { collectionConfig, schema } = useCollection(collection);
 
   const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState({
-    state: draft?.state ?? initialState,
+    state:
+      getAutomaticallyRestorableDraft(draft, localTreeKey)?.state ??
+      initialState,
     localTreeKey,
   });
 
@@ -419,6 +423,18 @@ function LocalItemPage(
     state,
     slugField: collectionConfig.slugField,
   });
+
+  const keepStaleDraft = useStaleDraft(
+    draft,
+    localTreeKey,
+    hasChanged,
+    draftState => {
+      setState(state => ({
+        localTreeKey: state.localTreeKey,
+        state: draftState,
+      }));
+    }
+  );
 
   const slug = getSlugFromState(collectionConfig, state);
   const formatInfo = getCollectionFormat(config, collection);
@@ -453,7 +469,7 @@ function LocalItemPage(
         version: 1,
       };
       setDraft(key, data);
-    } else {
+    } else if (!keepStaleDraft) {
       delDraft(key);
     }
   }, [
@@ -461,6 +477,7 @@ function LocalItemPage(
     collectionConfig,
     config,
     futureBasePath,
+    keepStaleDraft,
     localTreeKey,
     props.itemSlug,
     slug,
