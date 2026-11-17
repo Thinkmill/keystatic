@@ -1,5 +1,5 @@
 ---
-'@keystatic/core': minor
+'@keystatic/core': patch
 ---
 
 Add Catalan (`ca-ES`) translations
