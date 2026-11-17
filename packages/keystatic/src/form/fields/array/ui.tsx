@@ -7,6 +7,7 @@ import {
 } from '@keystar/ui/drag-and-drop';
 import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
+import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { VStack } from '@keystar/ui/layout';
 import { Item, ListView } from '@keystar/ui/list-view';
@@ -94,6 +95,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
       )}
 
       <DialogContainer
+        isDismissable
         onDismiss={() => {
           setModalState({ state: 'closed' });
         }}
@@ -113,7 +115,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
           }
           if (modalState.state !== 'edit') return;
           return (
-            <Dialog>
+            <Dialog isDismissable>
               <Heading>Edit item</Heading>
               <ArrayEditItemModalContent
                 formId={formId}
@@ -391,14 +393,27 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
       }}
     >
       {item => {
+        const index = props.elements.indexOf(item);
         const label =
           props.schema.itemLabel?.(item) ||
-          `Item ${props.elements.indexOf(item) + 1}`;
+          `Item ${index + 1}`;
         return (
           <Item key={item.key} textValue={label}>
             <Text>{label}</Text>
             <TooltipTrigger placement="start">
               <ActionButton
+                aria-label={stringFormatter.format('edit')}
+                onPress={() => {
+                  props.onOpenItem(index);
+                }}
+              >
+                <Icon src={pencilIcon} />
+              </ActionButton>
+              <Tooltip>{stringFormatter.format('edit')}</Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger placement="start">
+              <ActionButton
+                aria-label={stringFormatter.format('delete')}
                 onPress={() => {
                   onRemoveKey(item.key);
                 }}
