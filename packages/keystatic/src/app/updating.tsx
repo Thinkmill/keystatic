@@ -262,16 +262,21 @@ export function useUpsertItem(args: {
                 ),
                 args.config
               );
-              const treeKey = getTreeKey(
-                getDirectoriesForTreeKey(
-                  fields.object(args.schema),
-                  args.basePath,
-                  args.slug?.value,
-                  args.format
-                ),
-                tree.tree
+              const directoriesForTreeKey = getDirectoriesForTreeKey(
+                fields.object(args.schema),
+                args.basePath,
+                args.slug?.value,
+                args.format
               );
-              if (treeKey === args.currentLocalTreeKey) {
+              const treeKey = getTreeKey(directoriesForTreeKey, tree.tree);
+              // When creating an entry there is no local tree key, so the
+              // entry is expected to be absent from the remote branch. Only
+              // retry if that's still the case (i.e. the head moved because of
+              // an unrelated commit and nobody created this entry meanwhile).
+              const expectedTreeKey =
+                args.currentLocalTreeKey ??
+                getTreeKey(directoriesForTreeKey, new Map());
+              if (treeKey === expectedTreeKey) {
                 result = await runMutation(
                   refData.data.repository.ref.target.oid
                 );
