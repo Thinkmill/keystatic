@@ -46,7 +46,10 @@ export function createGitHubReader<
     const res = await fetch(
       `https://api.github.com/repos/${opts.repo}/git/trees/${ref}?recursive=1`,
       {
-        headers: opts.token ? { Authorization: `Bearer ${opts.token}` } : {},
+        headers: {
+          'User-Agent': opts.repo,
+          ...(opts.token && { Authorization: `Bearer ${opts.token}` }),
+        },
         cache: 'no-store',
       }
     );
