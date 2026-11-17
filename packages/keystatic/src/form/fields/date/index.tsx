@@ -52,6 +52,14 @@ export function date<IsRequired extends boolean | undefined>({
         return null;
       }
       if (value instanceof Date) {
+        if (
+          value.getUTCHours() !== 0 ||
+          value.getUTCMinutes() !== 0 ||
+          value.getUTCSeconds() !== 0 ||
+          value.getUTCMilliseconds() !== 0
+        ) {
+          return value.toISOString();
+        }
         const year = value.getUTCFullYear();
         const month = String(value.getUTCMonth() + 1).padStart(2, '0');
         const day = String(value.getUTCDate()).padStart(2, '0');
