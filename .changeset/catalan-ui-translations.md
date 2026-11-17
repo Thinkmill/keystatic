@@ -1,5 +1,5 @@
 ---
-'@keystar/ui': minor
+'@keystar/ui': patch
 ---
 
 Add Catalan (`ca-ES`) translations
