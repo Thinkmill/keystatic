@@ -1,6 +1,7 @@
 {
   "ar-AE": { "info": "معلومات", "critical": "خطأ", "positive": "تم بنجاح" },
   "bg-BG": { "info": "Инфо", "critical": "Грешка", "positive": "Успех" },
+  "ca-ES": { "info": "Informació", "critical": "Error", "positive": "Èxit" },
   "cs-CZ": { "info": "Informace", "critical": "Chyba", "positive": "Úspěch" },
   "da-DK": { "info": "Info", "critical": "Fejl", "positive": "Fuldført" },
   "de-DE": {

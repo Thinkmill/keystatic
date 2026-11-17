@@ -72,12 +72,12 @@ describe('switch/Switch', () => {
 
   it('can be disabled', async () => {
     let children = 'Toggle me';
-    let { getByLabelText } = renderSwitch({ children });
+    let { getByLabelText } = renderSwitch({ children, isDisabled: true });
 
     let checkbox = getByLabelText(children) as HTMLInputElement;
     expect(checkbox.checked).toBeFalsy();
 
-    userEvent.click(checkbox);
+    await user.click(checkbox);
     expect(checkbox.checked).toBeFalsy();
     expect(onChangeSpy).not.toHaveBeenCalled();
   });

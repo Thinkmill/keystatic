@@ -7,6 +7,10 @@
     "loading": "Зареждане...",
     "placeholder": "Изберете опция"
   },
+  "ca-ES": {
+    "placeholder": "Trieu una opció…",
+    "loading": "S'està carregant…"
+  },
   "cs-CZ": {
     "loading": "Načítání...",
     "placeholder": "Vyberte vhodnou možnost..."
