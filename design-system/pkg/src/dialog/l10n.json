@@ -1,6 +1,7 @@
 {
   "ar-AE": { "alert": "تنبيه", "dismiss": "تجاهل" },
   "bg-BG": { "alert": "Сигнал", "dismiss": "Отхвърляне" },
+  "ca-ES": { "alert": "Alerta", "dismiss": "Descarta" },
   "cs-CZ": { "alert": "Výstraha", "dismiss": "Odstranit" },
   "da-DK": { "alert": "Advarsel", "dismiss": "Luk" },
   "de-DE": { "alert": "Warnhinweis", "dismiss": "Schließen" },

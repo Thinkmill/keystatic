@@ -8,6 +8,7 @@
 export const locales = {
   'ar-AE': 'Arabic (UAE) 🇦🇪',
   'bg-BG': 'Bulgarian (Bulgaria) 🇧🇬',
+  'ca-ES': 'Catalan (Spain) 🇪🇸',
   'cs-CZ': 'Czech (Czech Republic) 🇨🇿',
   'da-DK': 'Danish (Denmark) 🇩🇰',
   'de-DE': 'German (Germany) 🇩🇪',

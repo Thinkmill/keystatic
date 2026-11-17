@@ -21,6 +21,17 @@
     "sortAscending": "Възходящо сортиране",
     "sortDescending": "Низходящо сортиране "
   },
+  "ca-ES": {
+    "loading": "S'està carregant…",
+    "loadingMore": "S'estan carregant més elements…",
+    "sortAscending": "Ordena de manera ascendent",
+    "sortDescending": "Ordena de manera descendent",
+    "resizeColumn": "Canvia la mida de la columna",
+    "columnResizer": "Control de mida de la columna",
+    "drag": "Arrossega",
+    "expand": "Amplia",
+    "collapse": "Redueix"
+  },
   "cs-CZ": {
     "collapse": "Zmenšit",
     "columnResizer": "Změna velikosti sloupce",

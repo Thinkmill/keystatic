@@ -7,6 +7,10 @@
     "(optional)": "(незадължително)",
     "(required)": "(задължително)"
   },
+  "ca-ES": {
+    "(optional)": "(opcional)",
+    "(required)": "(obligatori)"
+  },
   "cs-CZ": {
     "(optional)": "(volitelně)",
     "(required)": "(požadováno)"

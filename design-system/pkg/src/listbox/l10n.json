@@ -7,6 +7,10 @@
     "loading": "Зареждане...",
     "loadingMore": "Зареждане на още..."
   },
+  "ca-ES": {
+    "loading": "S'està carregant…",
+    "loadingMore": "S'estan carregant més elements…"
+  },
   "cs-CZ": {
     "loading": "Načítání...",
     "loadingMore": "Načítání dalších..."
