@@ -1,6 +1,7 @@
 import nodePath from 'node:path';
 import nodeFs from 'node:fs/promises';
 import { Collection, ComponentSchema, Config, Singleton } from '..';
+import { assertValidI18nConfig } from '../app/path-utils';
 import {
   BaseReader,
   MinimalFs,
@@ -30,8 +31,11 @@ export function createReader<
   },
 >(
   repoPath: string,
-  config: Config<Collections, Singletons>
+  config: Config<Collections, Singletons>,
+  opts?: { locale?: string }
 ): Reader<Collections, Singletons> {
+  assertValidI18nConfig(config as Config);
+  const locale = opts?.locale;
   const fs: MinimalFs = {
     async fileExists(path) {
       try {
@@ -75,13 +79,13 @@ export function createReader<
     collections: Object.fromEntries(
       Object.keys(config.collections || {}).map(key => [
         key,
-        collectionReader(key, config as Config, fs),
+        collectionReader(key, config as Config, fs, locale),
       ])
     ) as any,
     singletons: Object.fromEntries(
       Object.keys(config.singletons || {}).map(key => [
         key,
-        singletonReader(key, config as Config, fs),
+        singletonReader(key, config as Config, fs, locale),
       ])
     ) as any,
     repoPath,

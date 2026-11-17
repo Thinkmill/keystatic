@@ -59,6 +59,7 @@ import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
 import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
+import { useActiveLocale } from './shell/content-locale';
 import { useBaseCommit, useCurrentBranch, useRepoInfo } from './shell/data';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useSlugFieldInfo } from './slugs';
@@ -108,7 +109,10 @@ const storedValSchema = s.type({
   savedAt: s.date(),
   slug: s.string(),
   beforeTreeKey: s.string(),
-  files: s.map(s.string(), s.instance(Uint8Array)),
+  files: s.map(
+    s.string(),
+    s.define<Uint8Array>('Uint8Array', v => v instanceof Uint8Array)
+  ),
 });
 
 function ItemPageInner(
@@ -136,7 +140,13 @@ function ItemPageInner(
 
   const router = useRouter();
   const baseCommit = useBaseCommit();
-  const currentBasePath = getCollectionItemPath(config, collection, itemSlug);
+  const locale = useActiveLocale();
+  const currentBasePath = getCollectionItemPath(
+    config,
+    collection,
+    itemSlug,
+    locale
+  );
   const formatInfo = getCollectionFormat(config, collection);
   const currentBranch = useCurrentBranch();
   const repoInfo = useRepoInfo();
@@ -422,7 +432,13 @@ function LocalItemPage(
 
   const slug = getSlugFromState(collectionConfig, state);
   const formatInfo = getCollectionFormat(config, collection);
-  const futureBasePath = getCollectionItemPath(config, collection, slug);
+  const locale = useActiveLocale();
+  const futureBasePath = getCollectionItemPath(
+    config,
+    collection,
+    slug,
+    locale
+  );
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
@@ -505,7 +521,13 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
     slugField: collectionConfig.slugField,
   });
 
-  const futureBasePath = getCollectionItemPath(config, collection, slug);
+  const locale = useActiveLocale();
+  const futureBasePath = getCollectionItemPath(
+    config,
+    collection,
+    slug,
+    locale
+  );
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
@@ -844,6 +866,7 @@ type ItemPageWrapperProps = {
 function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
   const collectionConfig = props.config.collections?.[props.collection];
   if (!collectionConfig) notFound();
+  const locale = useActiveLocale();
   const format = useMemo(
     () => getCollectionFormat(props.config, props.collection),
     [props.config, props.collection]
@@ -868,7 +891,8 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
             dirpath: getCollectionItemPath(
               props.config,
               props.collection,
-              stored.slug
+              stored.slug,
+              locale
             ),
             format: getCollectionFormat(props.config, props.collection),
             schema: collectionConfig.schema,
@@ -882,7 +906,13 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
           treeKey: stored.beforeTreeKey,
         };
       } catch {}
-    }, [collectionConfig, props.collection, props.config, props.itemSlug])
+    }, [
+      collectionConfig,
+      props.collection,
+      props.config,
+      props.itemSlug,
+      locale,
+    ])
   );
 
   const itemData = useItemData({
@@ -890,7 +920,8 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
     dirpath: getCollectionItemPath(
       props.config,
       props.collection,
-      props.itemSlug
+      props.itemSlug,
+      locale
     ),
     schema: collectionConfig.schema,
     format,

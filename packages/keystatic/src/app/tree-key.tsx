@@ -1,7 +1,16 @@
 import { assertNever } from 'emery';
 
-import { ComponentSchema } from '..';
-import { fixPath, FormatInfo, getDataFileExtension } from './path-utils';
+import { ComponentSchema, Config } from '..';
+import { object } from '../form/fields/object';
+import {
+  fixPath,
+  FormatInfo,
+  getDataFileExtension,
+  getEntryDataFilepath,
+  getSingletonFormat,
+  getSingletonPath,
+  singletonDirHoldsOtherLocales,
+} from './path-utils';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 
 function collectDirectoriesUsedInSchemaInner(
@@ -79,6 +88,25 @@ export function getDirectoriesForTreeKey(
     directories.push(directory + toAdd);
   }
   return directories;
+}
+
+export function getSingletonPathsForTreeKey(
+  config: Config,
+  singleton: string,
+  locale: string | undefined
+) {
+  const singletonPath = getSingletonPath(config, singleton, locale);
+  const format = getSingletonFormat(config, singleton);
+  const paths = [getEntryDataFilepath(singletonPath, format)];
+  if (!singletonDirHoldsOtherLocales(config, singleton, locale)) {
+    paths.push(singletonPath);
+  }
+  paths.push(
+    ...collectDirectoriesUsedInSchema(
+      object(config.singletons![singleton].schema)
+    )
+  );
+  return paths;
 }
 
 export function getTreeKey(directories: string[], tree: Map<string, TreeNode>) {

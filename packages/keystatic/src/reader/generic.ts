@@ -14,6 +14,7 @@ import {
   getCollectionPath,
   getDataFileExtension,
   getEntryDataFilepath,
+  getLocaleDirsToSkip,
   getSingletonFormat,
   getSingletonPath,
   getSlugGlobForCollection,
@@ -198,11 +199,13 @@ export type MinimalFs = {
 
 async function getAllEntries(
   parent: string,
-  fsReader: MinimalFs
+  fsReader: MinimalFs,
+  skip?: Set<string>
 ): Promise<{ entry: DirEntry; name: string }[]> {
   return (
     await Promise.all(
       (await fsReader.readdir(parent)).map(async dirent => {
+        if (skip?.has(dirent.name)) return [];
         const name = `${parent}${dirent.name}`;
         const entry = { entry: dirent, name };
         if (dirent.kind === 'directory') {
@@ -219,15 +222,18 @@ const listCollection = cache(async function listCollection(
   glob: Glob,
   formatInfo: FormatInfo,
   extension: string,
-  fsReader: MinimalFs
+  fsReader: MinimalFs,
+  // a comma separated string rather than a Set so that `cache` can key on it
+  localeDirsToSkip: string
 ) {
+  const skip = new Set(localeDirsToSkip ? localeDirsToSkip.split(',') : []);
   const entries: { entry: DirEntry; name: string }[] =
     glob === '*'
       ? (await fsReader.readdir(collectionPath)).map(entry => ({
           entry,
           name: entry.name,
         }))
-      : (await getAllEntries(`${collectionPath}/`, fsReader)).map(x => ({
+      : (await getAllEntries(`${collectionPath}/`, fsReader, skip)).map(x => ({
           entry: x.entry,
           name: x.name.slice(collectionPath.length + 1),
         }));
@@ -259,30 +265,41 @@ const listCollection = cache(async function listCollection(
 export function collectionReader(
   collection: string,
   config: Config,
-  fsReader: MinimalFs
+  fsReader: MinimalFs,
+  locale?: string
 ): CollectionReader<any, any> {
   const formatInfo = getCollectionFormat(config, collection);
-  const collectionPath = getCollectionPath(config, collection);
   const collectionConfig = config.collections![collection];
   const schema = fields.object(collectionConfig.schema);
   const glob = getSlugGlobForCollection(config, collection);
   const extension = getDataFileExtension(formatInfo);
+  const localeDirsToSkip = getLocaleDirsToSkip(config, collection, locale);
+  const localeDirsToSkipKey = [...localeDirsToSkip].sort().join(',');
 
   const read: CollectionReader<any, any>['read'] = (slug, ...args) =>
-    readItem(
-      schema,
-      formatInfo,
-      getCollectionItemPath(config, collection, slug),
-      args[0]?.resolveLinkedFiles,
-      `"${slug}" in collection "${collection}"`,
-      fsReader,
-      slug,
-      collectionConfig.slugField,
-      glob
-    );
+    localeDirsToSkip.has(slug.split('/')[0])
+      ? Promise.resolve(null)
+      : readItem(
+          schema,
+          formatInfo,
+          getCollectionItemPath(config, collection, slug, locale),
+          args[0]?.resolveLinkedFiles,
+          `"${slug}" in collection "${collection}"`,
+          fsReader,
+          slug,
+          collectionConfig.slugField,
+          glob
+        );
 
   const list = () =>
-    listCollection(collectionPath, glob, formatInfo, extension, fsReader);
+    listCollection(
+      getCollectionPath(config, collection, locale),
+      glob,
+      formatInfo,
+      extension,
+      fsReader,
+      localeDirsToSkipKey
+    );
 
   return {
     read,
@@ -403,16 +420,16 @@ const readItem = cache(async function readItem(
 export function singletonReader(
   singleton: string,
   config: Config,
-  fsReader: MinimalFs
+  fsReader: MinimalFs,
+  locale?: string
 ): SingletonReader<any> {
   const formatInfo = getSingletonFormat(config, singleton);
-  const singletonPath = getSingletonPath(config, singleton);
   const schema = fields.object(config.singletons![singleton].schema);
   const read: SingletonReader<any>['read'] = (...args) =>
     readItem(
       schema,
       formatInfo,
-      singletonPath,
+      getSingletonPath(config, singleton, locale),
       args[0]?.resolveLinkedFiles,
       `singleton "${singleton}"`,
       fsReader,

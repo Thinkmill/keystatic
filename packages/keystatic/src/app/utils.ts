@@ -7,6 +7,7 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getCollectionItemSlugSuffix,
+  getLocaleDirsToSkip,
   getCollectionPath,
   getDataFileExtension,
   getSlugGlobForCollection,
@@ -95,19 +96,24 @@ export function getSlugFromState(
 export function getEntriesInCollectionWithTreeKey(
   config: Config,
   collection: string,
-  rootTree: Map<string, TreeNode>
+  rootTree: Map<string, TreeNode>,
+  locale?: string
 ): { key: string; slug: string; sha: string }[] {
   const collectionConfig = config.collections![collection];
   const schema = object(collectionConfig.schema);
   const formatInfo = getCollectionFormat(config, collection);
   const extension = getDataFileExtension(formatInfo);
   const glob = getSlugGlobForCollection(config, collection);
-  const collectionPath = getCollectionPath(config, collection);
-  const directory: Map<string, TreeNode> =
+  const collectionPath = getCollectionPath(config, collection, locale);
+  const localeDirsToSkip = getLocaleDirsToSkip(config, collection, locale);
+  const allChildren: Map<string, TreeNode> =
     getTreeNodeAtPath(rootTree, collectionPath)?.children ?? new Map();
+  const directory = localeDirsToSkip.size
+    ? new Map([...allChildren].filter(([key]) => !localeDirsToSkip.has(key)))
+    : allChildren;
   const entries: { key: string; slug: string; sha: string }[] = [];
   const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
-  const suffix = getCollectionItemSlugSuffix(config, collection);
+  const suffix = getCollectionItemSlugSuffix(config, collection, locale);
   const possibleEntries = new Map(directory);
   if (glob === '**') {
     const handleDirectory = (dir: Map<string, TreeNode>, prefix: string) => {
@@ -126,7 +132,7 @@ export function getEntriesInCollectionWithTreeKey(
     if (formatInfo.dataLocation === 'index') {
       const actualEntry = getTreeNodeAtPath(
         rootTree,
-        getCollectionItemPath(config, collection, key)
+        getCollectionItemPath(config, collection, key, locale)
       );
       if (!actualEntry?.children?.has('index' + extension)) continue;
       entries.push({
@@ -144,14 +150,14 @@ export function getEntriesInCollectionWithTreeKey(
       if (suffix) {
         const newEntry = getTreeNodeAtPath(
           rootTree,
-          getCollectionItemPath(config, collection, key) + extension
+          getCollectionItemPath(config, collection, key, locale) + extension
         );
         if (!newEntry || newEntry.children) continue;
         entries.push({
           key: getTreeKey(
             [
               entry.entry.path,
-              getCollectionItemPath(config, collection, key),
+              getCollectionItemPath(config, collection, key, locale),
               ...directoriesUsedInSchema.map(x => `${x}/${key}`),
             ],
             rootTree
@@ -166,7 +172,7 @@ export function getEntriesInCollectionWithTreeKey(
         key: getTreeKey(
           [
             entry.entry.path,
-            getCollectionItemPath(config, collection, slug),
+            getCollectionItemPath(config, collection, slug, locale),
             ...directoriesUsedInSchema.map(x => `${x}/${slug}`),
           ],
           rootTree

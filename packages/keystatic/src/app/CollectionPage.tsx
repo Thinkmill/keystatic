@@ -42,6 +42,7 @@ import { sortBy } from './collection-sort';
 import l10nMessages from './l10n';
 import { useRouter } from './router';
 import { EmptyState } from './shell/empty-state';
+import { useActiveLocale } from './shell/content-locale';
 import {
   useTree,
   TreeData,
@@ -218,11 +219,12 @@ function CollectionPageHeader(props: {
 type CollectionPageContentProps = CollectionPageProps & { searchTerm: string };
 function CollectionPageContent(props: CollectionPageContentProps) {
   const trees = useTree();
+  const locale = useActiveLocale();
 
   const tree =
     trees.merged.kind === 'loaded'
       ? trees.merged.data.current.entries.get(
-          getCollectionPath(props.config, props.collection)
+          getCollectionPath(props.config, props.collection, locale)
         )
       : null;
 
@@ -293,6 +295,7 @@ function CollectionTable(
 
   const repoInfo = useRepoInfo();
   const currentBranch = useCurrentBranch();
+  const locale = useActiveLocale();
   let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -311,13 +314,15 @@ function CollectionTable(
       getEntriesInCollectionWithTreeKey(
         props.config,
         props.collection,
-        props.trees.default.tree
+        props.trees.default.tree,
+        locale
       ).map(x => [x.slug, x.key])
     );
     return getEntriesInCollectionWithTreeKey(
       props.config,
       props.collection,
-      props.trees.current.tree
+      props.trees.current.tree,
+      locale
     ).map(entry => {
       return {
         name: entry.slug,
@@ -329,7 +334,7 @@ function CollectionTable(
         sha: entry.sha,
       };
     });
-  }, [props.collection, props.config, props.trees]);
+  }, [props.collection, props.config, props.trees, locale]);
 
   const mainFiles = useData(
     useCallback(async () => {
@@ -346,7 +351,8 @@ function CollectionTable(
                 getCollectionItemPath(
                   props.config,
                   props.collection,
-                  entry.name
+                  entry.name,
+                  locale
                 ),
                 formatInfo
               ),
@@ -405,6 +411,7 @@ function CollectionTable(
       entriesWithStatus,
       baseCommit,
       repoInfo,
+      locale,
     ])
   );
 
