@@ -54,9 +54,10 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getCollectionPath,
+  getCollectionPathInfo,
+  getSlugFieldSlug,
   getEntriesInCollectionWithTreeKey,
   getEntryDataFilepath,
-  getSlugGlobForCollection,
   isLocalConfig,
 } from './utils';
 import { notFound } from './not-found';
@@ -356,7 +357,7 @@ function CollectionTable(
           ] as const;
         })
       );
-      const glob = getSlugGlobForCollection(props.config, props.collection);
+      const pathInfo = getCollectionPathInfo(props.config, props.collection);
       const rootSchema = { kind: 'object' as const, fields: collection.schema };
       const parsedEntries = new Map<string, Record<string, unknown>>();
       for (const [slug, dataFile] of entries) {
@@ -385,8 +386,8 @@ function CollectionTable(
                     );
                   }
                   return schema.reader.parseWithSlug(value, {
-                    slug,
-                    glob,
+                    slug: getSlugFieldSlug(pathInfo, slug),
+                    glob: pathInfo.glob,
                   });
                 }
               }

@@ -22,6 +22,18 @@ export type Collection<
   SlugField extends string,
 > = {
   label: string;
+  /**
+   * The path where entries in the collection live. Must contain exactly one
+   * `*` or `**` segment, which each entry's slug fills in (`*` matches a
+   * single path segment, `**` matches a nested slug like `a/b/c`).
+   *
+   * Segments like `{locale}` are filled in from the value of the named field
+   * in the collection's schema when an entry is created, so paths can vary
+   * per entry while staying deterministic from config. For example, with
+   * `path: 'src/content/blog/{locale}/*'`, an entry with `locale: 'en'` and
+   * slug `my-post` lives at `src/content/blog/en/my-post` and has the slug
+   * `en/my-post`.
+   */
   path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
   entryLayout?: EntryLayout;
   format?: Format;

@@ -108,6 +108,12 @@ export type SlugFieldInfo = {
   field: string;
   slugs: Set<string>;
   glob: Glob;
+  /**
+   * The segments derived from `{field}` placeholders in the collection's
+   * path for the current entry, in path order. Used to validate the
+   * placeholder values and to check the full slug for uniqueness.
+   */
+  pathSegments?: { field: string; segment: string }[];
 };
 
 export const SlugFieldContext = createContext<SlugFieldInfo | undefined>(
