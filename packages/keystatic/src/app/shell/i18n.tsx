@@ -34,6 +34,9 @@ export function formatWithElements(
 }
 
 /** Renders a message, for elements that are created outside of a component. */
-export function LocalizedText(props: { id: LocalizedMessageKey }) {
-  return <>{useLocalizedString().format(props.id)}</>;
+export function LocalizedText(props: {
+  id: LocalizedMessageKey;
+  args?: Record<string, string | number>;
+}) {
+  return <>{useLocalizedString().format(props.id, props.args)}</>;
 }

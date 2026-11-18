@@ -73,7 +73,9 @@ function ExtraAttributesMenuItem(props: {
       >
         {isOpen && (
           <Dialog>
-            <Heading>Edit {props.name}</Heading>
+            <Heading>
+              <LocalizedText id="editName" args={{ name: props.name }} />
+            </Heading>
             <FormValue
               schema={componentSchema}
               value={value}
@@ -433,7 +435,12 @@ function InlineComponentPopover(props: {
       >
         {isOpen && (
           <Dialog>
-            <Heading>Edit {componentConfig.label}</Heading>
+            <Heading>
+              <LocalizedText
+                id="editName"
+                args={{ name: componentConfig.label }}
+              />
+            </Heading>
             <FormValue
               schema={componentSchema}
               value={value}
@@ -516,7 +523,12 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
       >
         {isOpen && (
           <Dialog>
-            <Heading>Edit {componentConfig.label}</Heading>
+            <Heading>
+              <LocalizedText
+                id="editName"
+                args={{ name: componentConfig.label }}
+              />
+            </Heading>
             <FormValue
               schema={componentSchema}
               value={deserialized}

@@ -197,6 +197,7 @@
   "mustHaveAtLeastItems": "Must have at least {count, plural, one {{count} item} other {{count} items}}.",
   "mustHaveAtMostItems": "Must have at most {count, plural, one {{count} item} other {{count} items}}.",
   "name": "Name",
+  "nameDetails": "{name} details",
   "newBranch": "New branch…",
   "noItemsMatching": "No items matching \"{searchTerm}\" were found.",
   "noItemsSelected": "No items selected…",
