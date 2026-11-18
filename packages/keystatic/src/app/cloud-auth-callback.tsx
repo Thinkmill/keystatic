@@ -1,6 +1,6 @@
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Text } from '@keystar/ui/typography';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as s from 'superstruct';
 import { Config } from '../config';
 import { useRouter } from './router';
@@ -35,8 +35,18 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
     return storedState;
   }, []);
   const [error, setError] = useState<null | Error>(null);
+  // the authorization code can only be exchanged once, but the effect re-runs
+  // whenever the router changes, which happens on every RouterProvider render
+  const hasExchangedCode = useRef(false);
   useEffect(() => {
-    if (code && state && storedState && config.cloud?.project) {
+    if (
+      !hasExchangedCode.current &&
+      code &&
+      state &&
+      storedState &&
+      config.cloud?.project
+    ) {
+      hasExchangedCode.current = true;
       const { project } = config.cloud;
       (async () => {
         const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/oauth/token`, {
