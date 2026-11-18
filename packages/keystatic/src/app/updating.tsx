@@ -28,6 +28,7 @@ import { AppSlugContext } from './onboarding/install-app';
 import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
+import { useLocalizedString } from './shell/i18n';
 import { base64Encode } from '#base64';
 
 const textEncoder = new TextEncoder();
@@ -133,6 +134,7 @@ export function useUpsertItem(args: {
   const repoInfo = useRepoInfo();
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
+  const stringFormatter = useLocalizedString();
 
   return [
     state,
@@ -235,8 +237,7 @@ export function useUpsertItem(args: {
           ) {
             setState({
               kind: 'needs-new-branch',
-              reason:
-                'Changes must be made via pull request to this branch. Create a new branch to save changes.',
+              reason: stringFormatter.format('branchRequiresPullRequest'),
             });
             return false;
           }
@@ -283,8 +284,7 @@ export function useUpsertItem(args: {
               } else {
                 setState({
                   kind: 'needs-new-branch',
-                  reason:
-                    'This entry has been updated since it was opened. Create a new branch to save changes.',
+                  reason: stringFormatter.format('entryUpdatedSinceOpened'),
                 });
                 return false;
               }
@@ -300,7 +300,9 @@ export function useUpsertItem(args: {
             )
           ) {
             throw new Error(
-              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${repoInfo.owner}/${repoInfo.name}`
+              stringFormatter.format('githubAppUnableToCommit', {
+                repo: `${repoInfo.owner}/${repoInfo.name}`,
+              })
             );
           }
 
@@ -312,7 +314,7 @@ export function useUpsertItem(args: {
             setState({ kind: 'updated' });
             return true;
           }
-          throw new Error('Failed to update');
+          throw new Error(stringFormatter.format('failedToUpdate'));
         } else {
           const res = await fetch('/api/keystatic/update', {
             method: 'POST',
@@ -390,6 +392,7 @@ export function useDeleteItem(args: {
   const repoInfo = useRepoInfo();
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
+  const stringFormatter = useLocalizedString();
 
   return [
     state,
@@ -444,7 +447,9 @@ export function useDeleteItem(args: {
             )
           ) {
             throw new Error(
-              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${repoInfo.owner}/${repoInfo.name}`
+              stringFormatter.format('githubAppUnableToCommit', {
+                repo: `${repoInfo.owner}/${repoInfo.name}`,
+              })
             );
           }
           if (error) {

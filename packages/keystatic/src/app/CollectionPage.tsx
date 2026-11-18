@@ -42,6 +42,7 @@ import { sortBy } from './collection-sort';
 import l10nMessages from './l10n';
 import { useRouter } from './router';
 import { EmptyState } from './shell/empty-state';
+import { formatWithElements } from './shell/i18n';
 import {
   useTree,
   TreeData,
@@ -183,7 +184,7 @@ function CollectionPageHeader(props: {
         />
       </div>
       <ActionButton
-        aria-label="show search"
+        aria-label={stringFormatter.format('showSearch')}
         isHidden={searchVisible || { above: 'mobile' }}
         onPress={() => {
           setSearchVisible(true);
@@ -218,6 +219,7 @@ function CollectionPageHeader(props: {
 type CollectionPageContentProps = CollectionPageProps & { searchTerm: string };
 function CollectionPageContent(props: CollectionPageContentProps) {
   const trees = useTree();
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   const tree =
     trees.merged.kind === 'loaded'
@@ -230,11 +232,11 @@ function CollectionPageContent(props: CollectionPageContentProps) {
     return (
       <EmptyState
         icon={alertCircleIcon}
-        title="Unable to load collection"
+        title={stringFormatter.format('unableToLoadCollection')}
         message={trees.merged.error.message}
         actions={
           <Button tone="accent" href={props.basePath}>
-            Dashboard
+            {stringFormatter.format('dashboard')}
           </Button>
         }
       />
@@ -245,7 +247,7 @@ function CollectionPageContent(props: CollectionPageContentProps) {
     return (
       <EmptyState>
         <ProgressCircle
-          aria-label="Loading Entries"
+          aria-label={stringFormatter.format('loadingEntries')}
           isIndeterminate
           size="large"
         />
@@ -257,20 +259,18 @@ function CollectionPageContent(props: CollectionPageContentProps) {
     return (
       <EmptyState
         icon={listXIcon}
-        title="Empty collection"
-        message={
-          <>
-            There aren't any entries yet.{' '}
+        title={stringFormatter.format('emptyCollection')}
+        message={formatWithElements(stringFormatter, 'emptyCollectionMessage', {
+          createLink: (
             <TextLink
               href={`${props.basePath}/collection/${encodeURIComponent(
                 props.collection
               )}/create`}
             >
-              Create the first entry
-            </TextLink>{' '}
-            to see it here.
-          </>
-        }
+              {stringFormatter.format('createTheFirstEntry')}
+            </TextLink>
+          ),
+        })}
       />
     );
   }
@@ -295,6 +295,7 @@ function CollectionTable(
   const currentBranch = useCurrentBranch();
   let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
+  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: SLUG,
     direction: 'ascending',
@@ -465,9 +466,16 @@ function CollectionTable(
       return [
         ...(hideStatusColumn
           ? []
-          : [{ name: 'Status', key: STATUS, minWidth: 32, width: 32 }]),
+          : [
+              {
+                name: stringFormatter.format('status'),
+                key: STATUS,
+                minWidth: 32,
+                width: 32,
+              },
+            ]),
         {
-          name: 'Slug',
+          name: stringFormatter.format('slug'),
           key: SLUG,
         },
         ...collection.columns.map(column => {
@@ -480,12 +488,17 @@ function CollectionTable(
       ];
     }
     return hideStatusColumn
-      ? [{ name: 'Name', key: SLUG }]
+      ? [{ name: stringFormatter.format('name'), key: SLUG }]
       : [
-          { name: 'Status', key: STATUS, minWidth: 32, width: 32 },
-          { name: 'Name', key: SLUG },
+          {
+            name: stringFormatter.format('status'),
+            key: STATUS,
+            minWidth: 32,
+            width: 32,
+          },
+          { name: stringFormatter.format('name'), key: SLUG },
         ];
-  }, [collection, hideStatusColumn]);
+  }, [collection, hideStatusColumn, stringFormatter]);
 
   return (
     <TableView
@@ -508,8 +521,8 @@ function CollectionTable(
       renderEmptyState={() => (
         <EmptyState
           icon={searchXIcon}
-          title="No results"
-          message={`No items matching "${searchTerm}" were found.`}
+          title={stringFormatter.format('noResults')}
+          message={stringFormatter.format('noItemsMatching', { searchTerm })}
         />
       )}
       flex
@@ -533,7 +546,10 @@ function CollectionTable(
         {({ name, key, ...options }) =>
           key === STATUS ? (
             <Column key={key} isRowHeader allowsSorting {...options}>
-              <Icon aria-label="Status" src={diffIcon} />
+              <Icon
+                aria-label={stringFormatter.format('status')}
+                src={diffIcon}
+              />
             </Column>
           ) : (
             <Column key={key} isRowHeader allowsSorting {...options}>
@@ -545,7 +561,16 @@ function CollectionTable(
       <TableBody items={sortedItems}>
         {item => {
           const statusCell = (
-            <Cell key={STATUS + item.name} textValue={item.status}>
+            <Cell
+              key={STATUS + item.name}
+              textValue={stringFormatter.format(
+                item.status === 'Added'
+                  ? 'added'
+                  : item.status === 'Changed'
+                  ? 'changed'
+                  : 'unchanged'
+              )}
+            >
               {item.status === 'Added' ? (
                 <Icon color="positive" src={plusSquareIcon} />
               ) : item.status === 'Changed' ? (
