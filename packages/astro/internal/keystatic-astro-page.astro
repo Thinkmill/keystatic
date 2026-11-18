@@ -1,7 +1,24 @@
 ---
 import { Keystatic } from './keystatic-page.js';
+// eslint-disable-next-line import/no-unresolved
+import config from 'virtual:keystatic-config';
 
 export const prerender = false;
+
+let brandName = 'Keystatic';
+
+if (config.ui?.brand?.name) {
+  brandName = config.ui.brand.name;
+}
 ---
 
-<Keystatic client:only="react" />
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{brandName}</title>
+  </head>
+  <body>
+    <Keystatic client:only="react" />
+  </body>
+</html>
