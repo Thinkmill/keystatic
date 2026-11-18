@@ -60,6 +60,16 @@ type BrandMark = (props: {
   colorScheme: Exclude<ColorScheme, 'auto'>; // we resolve "auto" to "light" or "dark" on the client
 }) => ReactElement;
 export const NAVIGATION_DIVIDER_KEY = '---';
+export type CommitInfo = {
+  branch: string;
+  sha: string;
+  slug?: string;
+};
+
+export type PublishNoticeConfig = {
+  message: string;
+};
+
 type UserInterface<Collections, Singletons> = {
   brand?: {
     mark?: BrandMark;
@@ -70,6 +80,8 @@ type UserInterface<Collections, Singletons> = {
     | (keyof Singletons & string)
     | typeof NAVIGATION_DIVIDER_KEY
   >;
+  publishNotice?: PublishNoticeConfig;
+  onCommit?: (info: CommitInfo) => void;
 };
 
 type Navigation<K> = K[] | { [section: string]: K[] };
