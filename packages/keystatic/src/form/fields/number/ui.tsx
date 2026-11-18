@@ -2,6 +2,7 @@ import { NumberField } from '@keystar/ui/number-field';
 import { useReducer } from 'react';
 import { validateNumber } from './validateNumber';
 import { FormFieldInputProps } from '../../api';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 export function NumberFieldInput(
   props: FormFieldInputProps<number | null> & {
@@ -14,6 +15,7 @@ export function NumberFieldInput(
   }
 ) {
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
 
   return (
     <NumberField
@@ -26,7 +28,8 @@ export function NumberFieldInput(
               props.validation,
               props.value,
               props.step,
-              props.label
+              props.label,
+              stringFormatter
             )
           : undefined
       }

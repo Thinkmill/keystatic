@@ -19,7 +19,6 @@ import { useId, Key, useMemo, useState } from 'react';
 
 import l10nMessages from '../../../app/l10n';
 import { getSlugFromState } from '../../../app/utils';
-import { pluralize } from '../../../app/pluralize';
 
 import { ArrayField, ComponentSchema, GenericPreviewProps } from '../../api';
 import { clientSideValidateProp } from '../../errors';
@@ -114,7 +113,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
           if (modalState.state !== 'edit') return;
           return (
             <Dialog>
-              <Heading>Edit item</Heading>
+              <Heading>{stringFormatter.format('editItem')}</Heading>
               <ArrayEditItemModalContent
                 formId={formId}
                 modalStateIndex={modalState.index}
@@ -125,7 +124,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
               />
               <ButtonGroup>
                 <Button form={formId} prominence="high" type="submit">
-                  Done
+                  {stringFormatter.format('done')}
                 </Button>
               </ButtonGroup>
             </Dialog>
@@ -176,7 +175,7 @@ function ArrayFieldAddItemModalContent(props: {
   )(value);
   return (
     <Dialog>
-      <Heading>Add item</Heading>
+      <Heading>{stringFormatter.format('addItem')}</Heading>
       <Content>
         <VStack
           id={props.formId}
@@ -282,7 +281,6 @@ function ArrayEditItemModalContent(props: {
   );
 }
 
-// TODO: l10n
 export function useArrayFieldValidationMessage<Element extends ComponentSchema>(
   props: GenericPreviewProps<ArrayField<Element>, unknown> &
     ExtraFieldInputProps
@@ -290,20 +288,21 @@ export function useArrayFieldValidationMessage<Element extends ComponentSchema>(
   const { elements, forceValidation, schema } = props;
   const minLength = schema.validation?.length?.min;
   const maxLength = schema.validation?.length?.max;
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   return useMemo(() => {
     if (forceValidation) {
       if (minLength && elements.length < minLength) {
-        return `Must have at least ${pluralize(minLength, {
-          singular: 'item',
-        })}.`;
+        return stringFormatter.format('mustHaveAtLeastItems', {
+          count: minLength,
+        });
       } else if (maxLength && elements.length > maxLength) {
-        return `Must have at most ${pluralize(maxLength, {
-          singular: 'item',
-        })}.`;
+        return stringFormatter.format('mustHaveAtMostItems', {
+          count: maxLength,
+        });
       }
     }
-  }, [elements.length, forceValidation, maxLength, minLength]);
+  }, [elements.length, forceValidation, maxLength, minLength, stringFormatter]);
 }
 
 export function ArrayFieldListView<Element extends ComponentSchema>(
@@ -383,7 +382,7 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
       dragAndDropHooks={dragAndDropHooks}
       height={props.elements.length ? undefined : 'scale.2000'}
       selectionMode="none"
-      renderEmptyState={arrayFieldEmptyState}
+      renderEmptyState={() => <ArrayFieldEmptyState />}
       onAction={key => {
         const idx = props.elements.findIndex(x => x.key === key);
         if (idx === -1) return;
@@ -393,7 +392,9 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
       {item => {
         const label =
           props.schema.itemLabel?.(item) ||
-          `Item ${props.elements.indexOf(item) + 1}`;
+          stringFormatter.format('itemNumber', {
+            number: props.elements.indexOf(item) + 1,
+          });
         return (
           <Item key={item.key} textValue={label}>
             <Text>{label}</Text>
@@ -414,7 +415,8 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
   );
 }
 
-function arrayFieldEmptyState() {
+function ArrayFieldEmptyState() {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   return (
     <VStack
       gap="large"
@@ -430,10 +432,10 @@ function arrayFieldEmptyState() {
         size="large"
         weight="medium"
       >
-        Empty list
+        {stringFormatter.format('emptyList')}
       </Text>
       <Text align="center" color="neutralTertiary">
-        Add the first item to see it here.
+        {stringFormatter.format('addTheFirstItem')}
       </Text>
     </VStack>
   );

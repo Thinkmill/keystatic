@@ -6,6 +6,7 @@ import { TextField } from '@keystar/ui/text-field';
 import { useIsInDocumentEditor } from '../document/DocumentEditor';
 import { useId, useReducer } from 'react';
 import { FormFieldInputProps } from '../../api';
+import { useLocalizedString } from '../../../app/shell/i18n';
 import { getUploadedFile, useObjectURL } from '../image/ui';
 
 // TODO: button labels ("Choose file", "Remove", "Download") need i18n support
@@ -23,6 +24,7 @@ export function FileFieldInput(
 ) {
   const { value } = props;
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
   const isInEditor = useIsInDocumentEditor();
   const objectUrl = useObjectURL(value === null ? null : value.data, undefined);
   const labelId = useId();
@@ -62,7 +64,7 @@ export function FileFieldInput(
             }
           }}
         >
-          Choose file
+          {stringFormatter.format('chooseFile')}
         </ActionButton>
         {value !== null && (
           <>
@@ -73,7 +75,7 @@ export function FileFieldInput(
                 onBlur();
               }}
             >
-              Remove
+              {stringFormatter.format('remove')}
             </ActionButton>
             {objectUrl && (
               <Button
@@ -81,7 +83,7 @@ export function FileFieldInput(
                 download={value.filename}
                 prominence="low"
               >
-                Download
+                {stringFormatter.format('download')}
               </Button>
             )}
           </>
@@ -89,7 +91,7 @@ export function FileFieldInput(
       </ButtonGroup>
       {isInEditor && value !== null && (
         <TextField
-          label="Filename"
+          label={stringFormatter.format('filename')}
           onChange={filename => {
             props.onChange({ ...value, filename });
           }}
@@ -99,7 +101,9 @@ export function FileFieldInput(
       {(props.forceValidation || blurred) &&
         props.validation?.isRequired &&
         value === null && (
-          <FieldMessage>{props.label} is required</FieldMessage>
+          <FieldMessage>
+            {stringFormatter.format('fieldIsRequired', { label: props.label })}
+          </FieldMessage>
         )}
     </Flex>
   );

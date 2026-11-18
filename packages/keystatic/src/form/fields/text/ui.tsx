@@ -3,6 +3,7 @@ import { FormFieldInputProps } from '../../api';
 import { TextArea, TextField } from '@keystar/ui/text-field';
 import { validateText } from './validateText';
 import { PathContext, SlugFieldContext } from './path-slug-context';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 export function TextFieldInput(
   props: FormFieldInputProps<string> & {
@@ -18,6 +19,7 @@ export function TextFieldInput(
   const [blurred, setBlurred] = useState(false);
   const slugContext = useContext(SlugFieldContext);
   const path = useContext(PathContext);
+  const stringFormatter = useLocalizedString();
   return (
     <TextFieldComponent
       label={props.label}
@@ -37,7 +39,8 @@ export function TextFieldInput(
               path.length === 1 && slugContext?.field === path[0]
                 ? slugContext
                 : undefined,
-              props.pattern
+              props.pattern,
+              stringFormatter
             )
           : undefined
       }

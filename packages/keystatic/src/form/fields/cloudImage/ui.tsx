@@ -25,6 +25,10 @@ import {
 import { useConfig } from '../../../app/shell/context';
 import { isValidURL } from '../document/DocumentEditor/isValidURL';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
+import {
+  formatWithElements,
+  useLocalizedString,
+} from '../../../app/shell/i18n';
 
 function ImageField(props: {
   image: CloudImageProps;
@@ -36,6 +40,7 @@ function ImageField(props: {
   const { image, onChange } = props;
   const [status, setStatus] = useState<ImageStatus>(image.src ? 'good' : '');
   const imageLibraryURL = useImageLibraryURL();
+  const stringFormatter = useLocalizedString();
 
   const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -81,14 +86,14 @@ function ImageField(props: {
 
   const errorMessage =
     (blurred || props.forceValidation) && props.isRequired && !image.src
-      ? 'Image URL is required.'
+      ? stringFormatter.format('imageUrlIsRequired')
       : undefined;
 
   return (
     <VStack gap="xlarge" padding="large">
       <VStack gap="medium">
         <TextField
-          label="Image URL"
+          label={stringFormatter.format('imageUrl')}
           isRequired={props.isRequired}
           errorMessage={errorMessage}
           autoFocus={props.autoFocus}
@@ -102,16 +107,18 @@ function ImageField(props: {
           value={image.src}
           description={
             <Text>
-              Upload an image, or copy a URL from the{' '}
-              <TextLink
-                prominence="high"
-                href={imageLibraryURL}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Image&nbsp;Library
-              </TextLink>{' '}
-              and paste it into this field.
+              {formatWithElements(stringFormatter, 'uploadOrPasteImageUrl', {
+                imageLibraryLink: (
+                  <TextLink
+                    prominence="high"
+                    href={imageLibraryURL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {stringFormatter.format('imageLibraryNoBreak')}
+                  </TextLink>
+                ),
+              })}
             </Text>
           }
           endElement={
@@ -124,7 +131,7 @@ function ImageField(props: {
               >
                 <ProgressCircle
                   size="small"
-                  aria-label="Checking…"
+                  aria-label={stringFormatter.format('checking')}
                   isIndeterminate
                 />
               </Flex>
@@ -166,7 +173,7 @@ function ImageField(props: {
             />
           </Box>
           <TextArea
-            label="Alt text"
+            label={stringFormatter.format('altText')}
             value={image.alt}
             onChange={alt => props.onChange({ ...image, alt })}
           />
@@ -190,7 +197,7 @@ function ImageField(props: {
         >
           <Icon src={imageIcon} color="neutralSecondary" size="medium" />
           <Text align="center" color="neutralSecondary" size="small">
-            Awaiting URL to display image preview and information…
+            {stringFormatter.format('awaitingImageUrl')}
           </Text>
         </VStack>
       )}

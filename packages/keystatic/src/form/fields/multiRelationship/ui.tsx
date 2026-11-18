@@ -16,6 +16,7 @@ import { FormFieldInputProps } from '../../api';
 import { useSlugsInCollection } from '../../../app/useSlugsInCollection';
 import { ExtraFieldInputProps } from '../../form-from-preview';
 import { validateMultiRelationshipLength } from './validate';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 export function MultiRelationshipInput(
   props: FormFieldInputProps<string[]> & {
@@ -29,6 +30,7 @@ export function MultiRelationshipInput(
     return props.value.map(key => ({ key }));
   }, [props.value]);
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
   const slugs = useSlugsInCollection(props.collection);
   const options = useMemo(() => {
     return slugs.map(slug => ({ slug }));
@@ -36,7 +38,11 @@ export function MultiRelationshipInput(
 
   const _errorMessage =
     (props.forceValidation || blurred) &&
-    validateMultiRelationshipLength(props.validation, props.value);
+    validateMultiRelationshipLength(
+      props.validation,
+      props.value,
+      stringFormatter
+    );
   // this state & effect shouldn't really exist
   // it's here because react-aria/stately calls onChange with null
   // after selecting an item if we immediately remove the error message
@@ -50,6 +56,7 @@ export function MultiRelationshipInput(
     const elementSet = new Set(props.value);
     return options.filter(option => !elementSet.has(option.slug));
   }, [props.value, options]);
+  const noMoreItems = stringFormatter.format('noMoreItems');
 
   return (
     <VStack gap="medium" minWidth={0}>
@@ -57,16 +64,18 @@ export function MultiRelationshipInput(
         label={props.label}
         description={props.description}
         value={null}
-        placeholder={items.length === 0 ? 'All selected' : undefined}
+        placeholder={
+          items.length === 0 ? stringFormatter.format('allSelected') : undefined
+        }
         onChange={key => {
           if (typeof key === 'string') {
             props.onChange([...props.value, key]);
           }
         }}
-        disabledKeys={['No more items…']}
+        disabledKeys={[noMoreItems]}
         onBlur={onBlur}
         autoFocus={props.autoFocus}
-        defaultItems={items.length ? items : [{ slug: 'No more items…' }]}
+        defaultItems={items.length ? items : [{ slug: noMoreItems }]}
         isReadOnly={items.length === 0}
         isRequired={
           props.validation?.length?.min !== undefined &&
@@ -99,6 +108,7 @@ function MultiRelationshipListView(
     onChange: (elements: { key: string }[]) => void;
   }
 ) {
+  const stringFormatter = useLocalizedString();
   const [selectedKeys, setSelectedKeys] = useState<Selection>(
     () => new Set([])
   );
@@ -167,7 +177,7 @@ function MultiRelationshipListView(
         selectionMode="multiple"
         onSelectionChange={setSelectedKeys}
         selectedKeys={selectedKeys}
-        renderEmptyState={arrayFieldEmptyState}
+        renderEmptyState={() => <ArrayFieldEmptyState />}
         // density="compact"
         UNSAFE_className={css({
           borderRadius: tokenSchema.size.radius.regular,
@@ -200,16 +210,17 @@ function MultiRelationshipListView(
           }
         }}
       >
-        <Item key="delete" textValue="Remove">
+        <Item key="delete" textValue={stringFormatter.format('remove')}>
           <Icon src={trash2Icon} />
-          <Text>Remove</Text>
+          <Text>{stringFormatter.format('remove')}</Text>
         </Item>
       </ActionBar>
     </ActionBarContainer>
   );
 }
 
-function arrayFieldEmptyState() {
+function ArrayFieldEmptyState() {
+  const stringFormatter = useLocalizedString();
   return (
     <VStack
       gap="large"
@@ -219,7 +230,7 @@ function arrayFieldEmptyState() {
       padding="regular"
     >
       <Text align="center" color="neutralTertiary">
-        No items selected…
+        {stringFormatter.format('noItemsSelected')}
       </Text>
     </VStack>
   );

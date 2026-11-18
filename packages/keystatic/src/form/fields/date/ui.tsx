@@ -2,6 +2,7 @@ import { TextField } from '@keystar/ui/text-field';
 import { useReducer } from 'react';
 import { validateDate } from './validateDate';
 import { FormFieldInputProps } from '../../api';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 export function DateFieldInput(
   props: FormFieldInputProps<string | null> & {
@@ -11,6 +12,7 @@ export function DateFieldInput(
   }
 ) {
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
 
   return (
     <TextField
@@ -26,7 +28,12 @@ export function DateFieldInput(
       isRequired={props.validation?.isRequired}
       errorMessage={
         blurred || props.forceValidation
-          ? validateDate(props.validation, props.value, props.label)
+          ? validateDate(
+              props.validation,
+              props.value,
+              props.label,
+              stringFormatter
+            )
           : undefined
       }
     />

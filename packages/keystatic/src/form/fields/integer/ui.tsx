@@ -2,6 +2,7 @@ import { NumberField } from '@keystar/ui/number-field';
 import { useReducer } from 'react';
 import { validateInteger } from './validateInteger';
 import { FormFieldInputProps } from '../../api';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 export function IntegerFieldInput(
   props: FormFieldInputProps<number | null> & {
@@ -13,6 +14,7 @@ export function IntegerFieldInput(
   }
 ) {
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
 
   return (
     <NumberField
@@ -21,7 +23,12 @@ export function IntegerFieldInput(
       isRequired={props.validation?.isRequired}
       errorMessage={
         props.forceValidation || blurred
-          ? validateInteger(props.validation, props.value, props.label)
+          ? validateInteger(
+              props.validation,
+              props.value,
+              props.label,
+              stringFormatter
+            )
           : undefined
       }
       onBlur={onBlur}

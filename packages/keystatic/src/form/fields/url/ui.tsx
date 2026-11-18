@@ -1,6 +1,7 @@
 import { TextField } from '@keystar/ui/text-field';
 import { useReducer } from 'react';
 import { FormFieldInputProps } from '../../api';
+import { useLocalizedString } from '../../../app/shell/i18n';
 import { validateUrl } from './validateUrl';
 
 export function UrlFieldInput(
@@ -11,6 +12,7 @@ export function UrlFieldInput(
   }
 ) {
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
   return (
     <TextField
       inputMode="url"
@@ -27,7 +29,12 @@ export function UrlFieldInput(
       isRequired={props.validation?.isRequired}
       errorMessage={
         props.forceValidation || blurred
-          ? validateUrl(props.validation, props.value, props.label)
+          ? validateUrl(
+              props.validation,
+              props.value,
+              props.label,
+              stringFormatter
+            )
           : undefined
       }
     />
