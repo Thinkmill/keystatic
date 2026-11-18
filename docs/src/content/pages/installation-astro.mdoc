@@ -1,6 +1,6 @@
 ---
 title: Adding Keystatic to an Astro project
-summary: Integrating Keystatic with an existing Astro v2 project.
+summary: Integrating Keystatic with an existing Astro project (content layer, Astro 5 and later).
 ---
 {% aside icon="☝️" %}
 This guide assumes you have an existing Astro project.
@@ -76,6 +76,51 @@ export default config({
 
 Keystatic is now configured to manage your content based on your schema.
 
+{% aside icon="☝️" %}
+This config only tells Keystatic how to read and write files. Astro needs its own
+collection definition before `getCollection('posts')` can return anything. The
+next section covers it.
+{% /aside %}
+
+## Defining the content collection
+
+Since Astro 5, collections are defined in `src/content.config.ts` with an
+explicit `loader`. Astro no longer discovers collections automatically from the
+folders in `src/content/`, so the `.mdoc` files written by Keystatic stay
+invisible until you declare them:
+
+```ts
+// src/content.config.ts
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
+
+const posts = defineCollection({
+  loader: glob({ base: './src/content/posts', pattern: '**/*.mdoc' }),
+  schema: z.object({
+    title: z.string(),
+  }),
+});
+
+export const collections = { posts };
+```
+
+{% aside icon="💡" %}
+Only `title` is declared in the schema, because `fields.markdoc()` stores the
+body of the file, not frontmatter. If you add fields to your Keystatic schema,
+add the matching properties to the Astro schema too.
+{% /aside %}
+
+{% aside icon="☝️" %}
+Use `src/content.config.ts` (singular `content.config`), not the old
+`src/content/config.ts`. Restart the dev server after creating or renaming this
+file. Without it, `getCollection('posts')` returns `[]` and Astro logs a
+`The collection "posts" does not exist or is empty` warning in the terminal — the
+page itself renders without an error.
+{% /aside %}
+
+---
+
 ## Running Keystatic
 
 You can now launch the Keystatic Admin UI. Start the Astro dev server:
@@ -138,7 +183,7 @@ Keystatic provides its own [Reader API](/docs/reader-api) to pull data from the 
 
 The following example displays a list of each post title, with a link to an individual post page:
 
-```tsx
+```astro
 // src/pages/posts/index.astro
 ---
 import { getCollection } from 'astro:content'
@@ -148,23 +193,32 @@ const posts = await getCollection('posts')
 <ul>
   {posts.map(post => (
     <li>
-      <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+      <a href={`/posts/${post.id}`}>{post.data.title}</a>
     </li>
   ))}
 </ul>
 ```
 
+{% aside icon="💡" %}
+With the content layer, an entry's identifier is `post.id` (generated from the
+file name relative to the loader's `base`), not `post.slug`. `slug` is only
+available as a reserved frontmatter field.
+{% /aside %}
+
 ### Displaying a single collection entry
 
-To display content from an individual post, you can import and use Astro's `<Content />` component to [render your content to HTML](https://docs.astro.build/en/guides/content-collections/#rendering-content-to-html):
+To display content from an individual post, fetch the entry and compile it with
+`render()`:
 
-```tsx
+```astro
 // src/pages/posts/my-first-post.astro
 ---
-import { getEntry } from 'astro:content'
+import { getEntry, render } from 'astro:content'
 
 const post = await getEntry('posts', 'my-first-post')
-const { Content } = await post.render()
+if (!post) throw new Error('Post not found')
+
+const { Content } = await render(post)
 ---
 
 <main>
@@ -173,7 +227,9 @@ const { Content } = await post.render()
 </main>
 ```
 
-If you want to generate pages for all entries of a collection, [this Astro guide](https://docs.astro.build/en/tutorials/add-content-collections/#generate-pages-from-a-collection) will help.
+To generate pages for all entries of a collection, use the `id` property in
+`getStaticPaths()` and render each entry with `render()`. See [Generating routes
+from content](https://docs.astro.build/en/guides/content-collections/#generating-routes-from-content).
 
 ---
 
@@ -183,6 +239,32 @@ If you want to use The  `<Image />` component from Astro to display images in yo
 
 ## Deploying Keystatic + Astro
 
-Because Keystatic needs to run serverside code and use Node.js APIs, you will need to add an [Astro adapter](https://docs.astro.build/en/guides/server-side-rendering/#adding-an-adapter) to deploy your project.
+Keystatic's admin UI is server-rendered, so `astro build` fails with
+`[NoAdapterInstalled]` until you either add an Astro adapter or keep the
+integration out of production builds.
+
+### Using local storage in production
+
+If content is only edited locally, don't mount Keystatic in production. [This
+recipe](/docs/recipes/astro-disable-admin-ui-in-production) shows the full setup:
+
+```diff
+// astro.config.mjs
+- integrations: [react(), markdoc(), keystatic()],
++ integrations: [react(), markdoc(), ...(process.env.SKIP_KEYSTATIC ? [] : [keystatic()])],
+```
+
+Set `SKIP_KEYSTATIC=true` in your host's environment variables. The site then
+builds as a fully static project, without an adapter.
+
+### Serving the admin UI in production
+
+If you want to edit content on the deployed site, add an [Astro
+adapter](https://docs.astro.build/en/guides/on-demand-rendering/#adding-an-adapter),
+for example:
+
+```bash
+npx astro add node
+```
 
 You will also probably want to [connect Keystatic to GitHub](/docs/github-mode) so you can manage content on the deployed instance of the project.
