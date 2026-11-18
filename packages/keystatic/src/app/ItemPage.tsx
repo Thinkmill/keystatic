@@ -76,6 +76,7 @@ import {
   getCollection,
   getCollectionFormat,
   getCollectionItemPath,
+  getCollectionPathInfo,
   getRepoUrl,
   getSlugFromState,
   isGitHubConfig,
@@ -148,7 +149,7 @@ function ItemPageInner(
     : undefined;
   const { push, replace } = router;
 
-  const slugInfo = useSlugFieldInfo(collection, itemSlug);
+  const slugInfo = useSlugFieldInfo(collection, itemSlug, props.state);
 
   const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
     initialFiles: props.initialFiles,
@@ -198,10 +199,15 @@ function ItemPageInner(
   });
 
   const onPaste = useEventCallback(async () => {
-    const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
-      field: collectionConfig.slugField,
-      slug: getSlugFromState(collectionConfig, props.state),
-    });
+    const entry = await getPastedEntry(
+      formatInfo,
+      collectionConfig.schema,
+      {
+        field: collectionConfig.slugField,
+        slug: getSlugFromState(collectionConfig, props.state),
+      },
+      getCollectionPathInfo(config, collection)
+    );
     if (entry) {
       setValueToPreviewProps(entry, props.previewProps);
       toastQueue.positive('Entry pasted', {
@@ -418,6 +424,7 @@ function LocalItemPage(
     schema,
     state,
     slugField: collectionConfig.slugField,
+    path: collectionConfig.path,
   });
 
   const slug = getSlugFromState(collectionConfig, state);
@@ -503,6 +510,7 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
     schema,
     state,
     slugField: collectionConfig.slugField,
+    path: collectionConfig.path,
   });
 
   const futureBasePath = getCollectionItemPath(config, collection, slug);
@@ -873,6 +881,7 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
             format: getCollectionFormat(props.config, props.collection),
             schema: collectionConfig.schema,
             slug: { field: collectionConfig.slugField, slug: stored.slug },
+            pathInfo: getCollectionPathInfo(props.config, props.collection),
           },
           stored.files
         );
@@ -895,6 +904,7 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
     schema: collectionConfig.schema,
     format,
     slug: slugInfo,
+    pathInfo: getCollectionPathInfo(props.config, props.collection),
   });
 
   const currentBranch = useCurrentBranch();

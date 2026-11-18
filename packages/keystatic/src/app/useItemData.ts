@@ -15,9 +15,11 @@ import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
 import { TreeNode, getTreeNodeAtPath, TreeEntry, blobSha } from './trees';
 import { LOADING, useData } from './useData';
 import {
+  CollectionPathInfo,
   FormatInfo,
   getEntryDataFilepath,
   getPathPrefix,
+  getSlugFieldSlug,
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
   MaybePromise,
@@ -51,6 +53,7 @@ export function parseEntry(
     schema: Record<string, ComponentSchema>;
     slug: { slug: string; field: string } | undefined;
     requireFrontmatter?: boolean;
+    pathInfo?: CollectionPathInfo;
   },
   files: Map<string, Uint8Array>
 ) {
@@ -124,7 +127,11 @@ export function parseEntry(
           if (schema.formKind !== 'slug') {
             throw new Error(`slugField is not a slug field`);
           }
-          return schema.parse(value, { slug: args.slug.slug });
+          return schema.parse(value, {
+            slug: args.pathInfo
+              ? getSlugFieldSlug(args.pathInfo, args.slug.slug)
+              : args.slug.slug,
+          });
         }
         if (schema.formKind === 'asset') {
           const suggestedFilenamePrefix = pathWithArrayFieldSlugs.join('/');
@@ -197,6 +204,7 @@ type UseItemDataArgs = {
   dirpath: string;
   format: FormatInfo;
   slug: { slug: string; field: string } | undefined;
+  pathInfo?: CollectionPathInfo;
 };
 
 function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
@@ -256,6 +264,7 @@ export function useItemData(args: UseItemDataArgs) {
         format: args.format,
         schema: args.schema,
         slug: args.slug,
+        pathInfo: args.pathInfo,
       };
       const allBlobs = locationsForTreeKey
         .flatMap(dir => {
@@ -312,6 +321,7 @@ export function useItemData(args: UseItemDataArgs) {
       args.config,
       args.schema,
       args.slug,
+      args.pathInfo,
       locationsForTreeKey,
       baseCommit,
       repoInfo,

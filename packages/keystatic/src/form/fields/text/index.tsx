@@ -47,7 +47,13 @@ export function text({
   min = Math.max(isRequired ? 1 : 0, min);
   function validate(
     value: string,
-    slugField: { slugs: Set<string>; glob: Glob } | undefined
+    slugField:
+      | {
+          slugs: Set<string>;
+          glob: Glob;
+          pathSegments?: { field: string; segment: string }[];
+        }
+      | undefined
   ) {
     const message = validateText(value, min, max, label, slugField, pattern);
     if (message !== undefined) {
