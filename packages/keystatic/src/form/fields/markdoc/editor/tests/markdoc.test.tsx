@@ -474,6 +474,29 @@ test('two hard breaks', () => {
   `);
 });
 
+test('escaped markdown syntax in text is kept', () => {
+  const markdoc = `2026\\. A turning point
+
+\\- not a list
+
+\\+ not a list
+
+something\\
+\\- not a list
+
+a \\*literal\\* and \\_literal\\_ snake_case word
+
+5 * 3 and a _ b stay as they are
+
+**a \\_literal\\_ word**
+
+Some \\{% braces %} here.
+
+## 1. Heading
+`;
+  expect(toMarkdoc(fromMarkdoc(markdoc))).toBe(markdoc);
+});
+
 test('inline', () => {
   const markdoc = `wertgrfdsc{% inline-thing something="adkjsakjndnajksdnjk" /%}sfasdf`;
   const editor = fromMarkdoc(markdoc);
