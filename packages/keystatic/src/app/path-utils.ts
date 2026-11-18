@@ -19,6 +19,76 @@ function getConfiguredCollectionPath(config: Config, collection: string) {
   return path;
 }
 
+export function getSlugFieldsForCollection(
+  config: Config,
+  collection: string
+): readonly string[] {
+  const collectionConfig = config.collections![collection];
+  const slugFields = collectionConfig.slugFields ?? [
+    collectionConfig.slugField,
+  ];
+  if (slugFields.length === 0) {
+    throw new Error(
+      `The "${collection}" collection must specify a slugField or a non-empty slugFields array`
+    );
+  }
+  for (const slugField of slugFields) {
+    const field = collectionConfig.schema[slugField];
+    if (!field) {
+      throw new Error(
+        `The slugField "${slugField}" does not exist in the schema for the "${collection}" collection`
+      );
+    }
+    if (field.kind !== 'form' || field.formKind !== 'slug') {
+      throw new Error(
+        `The slugField "${slugField}" in the "${collection}" collection is not a slug field`
+      );
+    }
+  }
+  if (
+    collectionConfig.slugFields !== undefined &&
+    slugFields[slugFields.length - 1] !== collectionConfig.slugField
+  ) {
+    throw new Error(
+      `The last entry in slugFields for the "${collection}" collection must be the slugField ("${collectionConfig.slugField}")`
+    );
+  }
+  const path = getConfiguredCollectionPath(config, collection);
+  const globSegments = path
+    .split('/')
+    .filter(segment => segment === '*' || segment === '**');
+  if (globSegments.includes('**') && slugFields.length > 1) {
+    throw new Error(
+      `The "${collection}" collection cannot use multiple slugFields with a ** segment in its path`
+    );
+  }
+  if (globSegments.length !== slugFields.length) {
+    throw new Error(
+      `The path for the "${collection}" collection must contain exactly ${
+        slugFields.length
+      } * segment${
+        slugFields.length === 1 ? '' : 's'
+      } to match its slug fields but it has ${globSegments.length} (${path})`
+    );
+  }
+  if (slugFields.length > 1) {
+    const segments = fixPath(path).split('/');
+    const firstGlob = segments.findIndex(
+      segment => segment === '*' || segment === '**'
+    );
+    if (
+      segments
+        .slice(firstGlob)
+        .some(segment => segment !== '*' && segment !== '**')
+    ) {
+      throw new Error(
+        `The path for the "${collection}" collection must consist of a static prefix followed by its * segments when using multiple slugFields but it is ${path}`
+      );
+    }
+  }
+  return slugFields;
+}
+
 export function getCollectionPath(config: Config, collection: string) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
   const path = fixPath(configuredPath.replace(/\*\*?.*$/, ''));
@@ -62,7 +132,9 @@ export function getCollectionItemSlugSuffix(
   collection: string
 ) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
-  const path = fixPath(configuredPath.replace(/^[^*]+\*\*?/, ''));
+  const path = fixPath(
+    configuredPath.slice(configuredPath.lastIndexOf('*') + 1)
+  );
   return path ? `/${path}` : '';
 }
 

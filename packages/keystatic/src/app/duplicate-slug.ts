@@ -4,7 +4,7 @@ import { ComponentSchema } from '../form/api';
 
 export function useDuplicateSlug(
   duplicateInitalState: Record<string, unknown> | undefined,
-  collectionConfig: Collection<Record<string, ComponentSchema>, string>
+  collectionConfig: Collection<Record<string, ComponentSchema>, string, readonly string[]>
 ) {
   return useMemo(() => {
     if (duplicateInitalState) {

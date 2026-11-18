@@ -4,7 +4,7 @@ import {
   SplitPanePrimary,
   SplitPaneSecondary,
 } from '@keystar/ui/split-view';
-import { ReactNode, createContext, useContext } from 'react';
+import { ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
 import {
@@ -82,6 +82,29 @@ export function FormForEntry({
   slugField: SlugFieldInfo | undefined;
 }) {
   const isAboveMobile = useContentPanelQuery({ above: 'mobile' });
+  // for collections with multiple slug fields, the uniqueness of the last
+  // slug field is checked against the composite slug, so the segments from
+  // the other slug fields are needed from the current form state
+  const slugFieldWithPrefix = useMemo((): SlugFieldInfo | undefined => {
+    if (!slugField || slugField.fields.length === 1) return slugField;
+    const prefix = slugField.fields
+      .slice(0, -1)
+      .map(key => {
+        const fieldSchema = props.schema.fields[key];
+        const fieldValue = (props.fields[key] as { value: unknown } | undefined)
+          ?.value;
+        if (
+          fieldSchema?.kind === 'form' &&
+          fieldSchema.formKind === 'slug' &&
+          fieldValue !== undefined
+        ) {
+          return fieldSchema.serializeWithSlug(fieldValue).slug;
+        }
+        return '';
+      })
+      .join('/');
+    return { ...slugField, prefix };
+  }, [slugField, props.schema, props.fields]);
 
   if (entryLayout === 'content' && formatInfo.contentField && isAboveMobile) {
     const { contentField } = formatInfo;
@@ -107,7 +130,7 @@ export function FormForEntry({
     }
     return (
       <PathContextProvider value={emptyArray}>
-        <SlugFieldProvider value={slugField}>
+        <SlugFieldProvider value={slugFieldWithPrefix}>
           <SplitView
             autoSaveId="keystatic-content-split-view"
             defaultSize={320}
@@ -152,7 +175,7 @@ export function FormForEntry({
         <FormValueContentFromPreviewProps
           // autoFocus
           forceValidation={forceValidation}
-          slugField={slugField}
+          slugField={slugFieldWithPrefix}
           {...props}
         />
       </PageContainer>

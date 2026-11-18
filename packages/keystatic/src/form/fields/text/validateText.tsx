@@ -1,11 +1,26 @@
 import { Glob } from '../../../config';
 
+export type SlugValidationInfo = {
+  slugs: Set<string>;
+  glob: Glob;
+  prefix?: string;
+};
+
+export function slugIsTaken(
+  slugInfo: { slugs: Set<string>; prefix?: string },
+  val: string
+) {
+  return slugInfo.slugs.has(
+    slugInfo.prefix ? `${slugInfo.prefix}/${val}` : val
+  );
+}
+
 export function validateText(
   val: string,
   min: number,
   max: number,
   fieldLabel: string,
-  slugInfo: { slugs: Set<string>; glob: Glob } | undefined,
+  slugInfo: SlugValidationInfo | undefined,
   pattern: { regex: RegExp; message?: string } | undefined
 ) {
   if (val.length < min) {
@@ -48,7 +63,7 @@ export function validateText(
     if (/^\s|\s$/.test(val)) {
       return `${fieldLabel} must not start or end with spaces`;
     }
-    if (slugInfo.slugs.has(val)) {
+    if (slugIsTaken(slugInfo, val)) {
       return `${fieldLabel} must be unique`;
     }
   }

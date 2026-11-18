@@ -1,10 +1,49 @@
 import { getSlugFromState } from '../app/utils';
-import { ComponentSchema } from './api';
+import { ComponentSchema, ObjectField } from './api';
 import { SlugFieldInfo } from './fields/text/path-slug-context';
 import { PropValidationError } from './prop-validation-error';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
 import { validateArrayLength } from './validate-array-length';
 import { toFormattedFormDataError } from './error-formatting';
+
+function slugSegmentFromState(schema: ComponentSchema, value: unknown) {
+  if (value === undefined || value === null) return '';
+  if (schema.kind === 'form' && schema.formKind === 'slug') {
+    return schema.serializeWithSlug(value).slug;
+  }
+  return '';
+}
+
+// distributes the collection's slug field info to the individual fields of a
+// top-level object: the last slug field is validated for uniqueness against
+// the composite slug built from the other segments, the other slug fields
+// only get format validation (their uniqueness is enforced via the composite
+// slug on the last slug field)
+function slugFieldInfoForChild(
+  schema: ObjectField<Record<string, ComponentSchema>>,
+  value: Record<string, unknown>,
+  key: string,
+  slugField: SlugFieldInfo | undefined,
+  atRoot: boolean
+): SlugFieldInfo | undefined {
+  if (!slugField) {
+    return undefined;
+  }
+  if (!atRoot || slugField.fields.length === 1) {
+    return key === slugField.field ? slugField : undefined;
+  }
+  if (key === slugField.field) {
+    const prefix = slugField.fields
+      .slice(0, -1)
+      .map(field => slugSegmentFromState(schema.fields[field], value?.[field]))
+      .join('/');
+    return { ...slugField, prefix };
+  }
+  if (slugField.fields.includes(key)) {
+    return { ...slugField, field: key, slugs: new Set(), prefix: undefined };
+  }
+  return undefined;
+}
 
 export function clientSideValidateProp(
   schema: ComponentSchema,
@@ -34,7 +73,11 @@ function validateValueWithSchema(
       try {
         if (slugField && path[path.length - 1] === slugField?.field) {
           schema.validate(value, {
-            slugField: { slugs: slugField.slugs, glob: slugField.glob },
+            slugField: {
+              slugs: slugField.slugs,
+              glob: slugField.glob,
+              prefix: slugField.prefix,
+            },
           });
           return;
         }
@@ -61,7 +104,7 @@ function validateValueWithSchema(
           validateValueWithSchema(
             childProp,
             value[key],
-            key === slugField?.field ? slugField : undefined,
+            slugFieldInfoForChild(schema, value, key, slugField, !path.length),
             path.concat(key)
           );
         } catch (err) {
@@ -103,6 +146,7 @@ function validateValueWithSchema(
               ? undefined
               : {
                   field: slugInfo.slugField,
+                  fields: [slugInfo.slugField],
                   slugs: new Set(slugInfo.slugs.filter((_, i) => idx !== i)),
                   glob: '*',
                 },
