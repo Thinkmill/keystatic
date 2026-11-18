@@ -19,13 +19,23 @@ for (const file of await fs.readdir(src)) {
   const l10n: Record<string, Record<string, string>> = JSON.parse(
     l10nFileContents
   );
-  let out = 'const localizedMessages = {\n';
-  for (const [lang, translations] of Object.entries(l10n)) {
-    out += `  ${JSON.stringify(lang)}: {\n`;
+  const defaultStrings = l10n['en-US'];
+  const compile = (translations: Record<string, string>) => {
+    let out = '';
     for (const [key, value] of Object.entries(translations)) {
       out += `    ${JSON.stringify(key)}: ${compileString(value)},\n`;
     }
-    out += '  },\n';
+    return out;
+  };
+  // every locale falls back to en-US for keys it doesn't have
+  let out = `const defaultStrings = {\n${compile(defaultStrings)}};\n\n`;
+  out += 'const localizedMessages = {\n';
+  for (const [lang, translations] of Object.entries(l10n)) {
+    out += `  ${JSON.stringify(lang)}: `;
+    out +=
+      lang === 'en-US'
+        ? 'defaultStrings,\n'
+        : `{\n    ...defaultStrings,\n${compile(translations)}  },\n`;
   }
   out += '};\n';
   out += 'export default localizedMessages;\n';
@@ -33,7 +43,11 @@ for (const file of await fs.readdir(src)) {
   await fs.writeFile(withoutExtension + '.js', out);
   await fs.writeFile(
     withoutExtension + '.d.ts',
-    `declare const localizedMessages: Record<string, Record<string, import('@internationalized/string').LocalizedString>>;
+    `declare const localizedMessages: Record<string, Record<${Object.keys(
+      defaultStrings
+    )
+      .map(key => JSON.stringify(key))
+      .join(' | ')}, import('@internationalized/string').LocalizedString>>;
 export default localizedMessages;
 `
   );
