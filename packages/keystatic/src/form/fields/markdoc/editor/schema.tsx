@@ -369,13 +369,16 @@ const nodeSpecs = {
       },
     },
     nodeView(node) {
-      const blob = new Blob([node.attrs.src], {
-        type: node.attrs.filename.endsWith('.svg')
-          ? 'image/svg+xml'
-          : undefined,
-      });
+      const isExternalUrl = typeof node.attrs.src === 'string';
+      const blob = isExternalUrl
+        ? undefined
+        : new Blob([node.attrs.src], {
+            type: node.attrs.filename.endsWith('.svg')
+              ? 'image/svg+xml'
+              : undefined,
+          });
       const dom = document.createElement('img');
-      dom.src = URL.createObjectURL(blob);
+      dom.src = isExternalUrl ? node.attrs.src : URL.createObjectURL(blob!);
       dom.alt = node.attrs.alt;
       dom.title = node.attrs.title;
       dom.dataset.filename = node.attrs.filename;
@@ -395,11 +398,23 @@ const nodeSpecs = {
       return {
         dom,
         destroy() {
-          URL.revokeObjectURL(dom.src);
+          if (!isExternalUrl) {
+            URL.revokeObjectURL(dom.src);
+          }
         },
       };
     },
     toDOM(node) {
+      if (typeof node.attrs.src === 'string') {
+        return [
+          'img',
+          {
+            src: node.attrs.src,
+            alt: node.attrs.alt,
+            title: node.attrs.title,
+          },
+        ];
+      }
       return [
         'img',
         {

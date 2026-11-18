@@ -39,7 +39,9 @@ class TrackedMap<K, V> extends Map<K, V> {
     this.#onGet = onGet;
   }
   get(key: K) {
-    this.#onGet(key);
+    if (super.has(key)) {
+      this.#onGet(key);
+    }
     return super.get(key);
   }
 }

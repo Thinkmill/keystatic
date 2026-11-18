@@ -384,15 +384,29 @@ function markdocNodeToProseMirrorNode(
     return childrenToProseMirrorNodes(node.children, parentType);
   }
   if (node.type === 'image') {
+    if (
+      typeof node.attributes.src === 'string' &&
+      /^(?:https?:)?\/\//i.test(node.attributes.src) &&
+      schema.nodes.image
+    ) {
+      return schema.nodes.image.createChecked({
+        src: node.attributes.src,
+        alt: node.attributes.alt,
+        title: node.attributes.title,
+        filename: '',
+      });
+    }
     const prefix = getSrcPrefixForImageBlock(schema.config, getState().slug);
     const fullFilename = decodeURIComponent(node.attributes.src);
     const filename = fullFilename.slice(prefix.length);
-    const content = (
-      typeof schema.config.image === 'object' &&
-      typeof schema.config.image.directory === 'string'
-        ? getState().otherFiles.get(fixPath(schema.config.image.directory))
-        : getState().extraFiles
-    )?.get(filename);
+    const content = fullFilename.startsWith(prefix)
+      ? (
+          typeof schema.config.image === 'object' &&
+          typeof schema.config.image.directory === 'string'
+            ? getState().otherFiles.get(fixPath(schema.config.image.directory))
+            : getState().extraFiles
+        )?.get(filename)
+      : undefined;
 
     if (content && schema.nodes.image) {
       return schema.nodes.image.createChecked({

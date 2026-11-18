@@ -52,6 +52,13 @@ function getLeafContent(
   }
   if (node.type === schema.nodes.image) {
     const { src, filename } = node.attrs;
+    if (typeof src === 'string') {
+      return new Ast.Node('image', {
+        src,
+        alt: node.attrs.alt,
+        title: node.attrs.title,
+      });
+    }
 
     if (
       typeof state.schema.config.image === 'object' &&
