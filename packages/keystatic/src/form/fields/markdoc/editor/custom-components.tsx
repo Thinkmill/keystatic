@@ -10,6 +10,7 @@ import { insertNode } from './commands/misc';
 import { useEditorDispatchCommand } from './editor-view';
 import { EditorNodeSpec } from './schema';
 import { classes } from './utils';
+import { LocalizedText, useLocalizedString } from '../../../../app/shell/i18n';
 import { ContentComponent } from '../../../../content-components';
 import { NodeSelection } from 'prosemirror-state';
 import { css, tokenSchema } from '@keystar/ui/style';
@@ -72,6 +73,7 @@ function BlockWrapper(props: {
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const runCommand = useEditorDispatchCommand();
+  const stringFormatter = useLocalizedString();
   const schema = useMemo(
     () => ({ kind: 'object' as const, fields: props.component.schema }),
     [props.component.schema]
@@ -157,7 +159,7 @@ function BlockWrapper(props: {
                 borderBottomRightRadius: 0,
               })}
             >
-              Edit
+              {stringFormatter.format('edit')}
             </Button>
           )}
         </Flex>
@@ -170,7 +172,11 @@ function BlockWrapper(props: {
       >
         {isOpen && (
           <Dialog>
-            <Heading>Edit {props.component.label}</Heading>
+            <Heading>
+              {stringFormatter.format('editName', {
+                name: props.component.label,
+              })}
+            </Heading>
             <FormValue
               schema={schema}
               value={value}
@@ -626,11 +632,13 @@ export function getCustomNodeSpecs(
                           });
                         }}
                       >
-                        Insert
+                        <LocalizedText id="insert" />
                       </Button>
                     ) : (
                       <MenuTrigger>
-                        <Button>Insert</Button>
+                        <Button>
+                          <LocalizedText id="insert" />
+                        </Button>
                         <Menu
                           onAction={key => {
                             runCommand((state, dispatch) => {

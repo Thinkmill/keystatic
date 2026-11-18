@@ -65,7 +65,7 @@ export function ImagePopover(props: {
             >
               <Icon src={fileUpIcon} />
             </ActionButton>
-            <Tooltip>Choose file</Tooltip>
+            <Tooltip>{stringFormatter.format('chooseFile')}</Tooltip>
           </TooltipTrigger>
         </Flex>
         <Divider orientation="vertical" />
@@ -85,7 +85,7 @@ export function ImagePopover(props: {
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">{stringFormatter.format('remove')}</Tooltip>
         </TooltipTrigger>
       </Flex>
       <DialogContainer
@@ -171,18 +171,18 @@ function ImageDialog(props: {
           }
         }}
       >
-        <Heading>Image details</Heading>
+        <Heading>{stringFormatter.format('imageDetails')}</Heading>
         <Content>
           <Flex gap="large" direction="column">
             <TextField
-              label="File name"
+              label={stringFormatter.format('fileName')}
               onChange={setFileName}
               onBlur={() => setFileNameTouched(true)}
               value={fileName}
               isRequired
               errorMessage={
                 (fileNameTouched || forceValidation) && !fileName
-                  ? 'Please provide a file name.'
+                  ? stringFormatter.format('pleaseProvideFileName')
                   : undefined
               }
               endElement={

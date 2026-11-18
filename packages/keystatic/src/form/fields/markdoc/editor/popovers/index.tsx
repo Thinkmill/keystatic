@@ -27,6 +27,10 @@ import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { ComponentSchema } from '../../../../api';
 import { toSerialized, useDeserializedValue } from '../props-serialization';
 import { TextField } from '@keystar/ui/text-field';
+import {
+  LocalizedText,
+  useLocalizedString,
+} from '../../../../../app/shell/i18n';
 
 type NodePopoverRenderer = (props: {
   node: Node;
@@ -58,7 +62,9 @@ function ExtraAttributesMenuItem(props: {
         >
           <Icon src={pencilIcon} />
         </ActionButton>
-        <Tooltip>Edit</Tooltip>
+        <Tooltip>
+          <LocalizedText id="edit" />
+        </Tooltip>
       </TooltipTrigger>
       <DialogContainer
         onDismiss={() => {
@@ -108,10 +114,11 @@ const popoverComponents: Record<
     const dispatchCommand = useEditorDispatchCommand();
     const schema = useEditorSchema();
     const viewRef = useEditorViewRef();
+    const stringFormatter = useLocalizedString();
     return (
       <Flex gap="regular" padding="regular">
         <TextField
-          aria-label="Code block language"
+          aria-label={stringFormatter.format('codeBlockLanguage')}
           value={props.node.attrs.language}
           onChange={val => {
             const view = viewRef.current!;
@@ -145,7 +152,9 @@ const popoverComponents: Record<
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">
+            <LocalizedText id="remove" />
+          </Tooltip>
         </TooltipTrigger>
       </Flex>
     );
@@ -172,7 +181,9 @@ const popoverComponents: Record<
               >
                 <Icon src={sheetIcon} />
               </ActionButton>
-              <Tooltip>Header row</Tooltip>
+              <Tooltip>
+                <LocalizedText id="headerRow" />
+              </Tooltip>
             </TooltipTrigger>
             <Divider orientation="vertical" />
           </>
@@ -193,7 +204,9 @@ const popoverComponents: Record<
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">
+            <LocalizedText id="remove" />
+          </Tooltip>
         </TooltipTrigger>
       </Flex>
     );
@@ -230,7 +243,9 @@ const popoverComponents: Record<
             >
               <Icon src={trash2Icon} />
             </ActionButton>
-            <Tooltip tone="critical">Remove</Tooltip>
+            <Tooltip tone="critical">
+              <LocalizedText id="remove" />
+            </Tooltip>
           </TooltipTrigger>
         </Flex>
       );
@@ -386,7 +401,9 @@ function InlineComponentPopover(props: {
           >
             <Icon src={pencilIcon} />
           </ActionButton>
-          <Tooltip>Edit</Tooltip>
+          <Tooltip>
+            <LocalizedText id="edit" />
+          </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
           <ActionButton
@@ -404,7 +421,9 @@ function InlineComponentPopover(props: {
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">
+            <LocalizedText id="remove" />
+          </Tooltip>
         </TooltipTrigger>
       </Flex>
       <DialogContainer
@@ -465,7 +484,9 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
           >
             <Icon src={pencilIcon} />
           </ActionButton>
-          <Tooltip>Edit</Tooltip>
+          <Tooltip>
+            <LocalizedText id="edit" />
+          </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
           <ActionButton
@@ -483,7 +504,9 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">
+            <LocalizedText id="remove" />
+          </Tooltip>
         </TooltipTrigger>
       </Flex>
       <DialogContainer

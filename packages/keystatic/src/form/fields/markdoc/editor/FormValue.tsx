@@ -53,7 +53,7 @@ export function FormValue(props: {
       <ButtonGroup>
         <Button onPress={dismiss}>{stringFormatter.format('cancel')}</Button>
         <Button form={formId} prominence="high" type="submit">
-          Done
+          {stringFormatter.format('done')}
         </Button>
       </ButtonGroup>
     </>

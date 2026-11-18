@@ -14,6 +14,8 @@ import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
 import { BaseStyleProps } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
+import { LocalizedText } from '../../../../../app/shell/i18n';
+
 export { Item, Section } from '@keystar/ui/listbox';
 
 export type EditorListboxProps<T> = {
@@ -121,7 +123,7 @@ function renderEmptyState() {
       paddingX="medium"
     >
       <Text color="neutralSecondary" weight="medium">
-        No results…
+        <LocalizedText id="noResultsEllipsis" />
       </Text>
     </HStack>
   );

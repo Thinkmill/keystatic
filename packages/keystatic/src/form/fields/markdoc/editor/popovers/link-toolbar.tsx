@@ -51,8 +51,7 @@ export function LinkToolbar(props: {
         <ActionButton prominence="low" onPress={props.onUnlink}>
           <Icon src={unlinkIcon} />
         </ActionButton>
-        {/* TODO: needs localization */}
-        <Tooltip>Unlink</Tooltip>
+        <Tooltip>{stringFormatter.format('unlink')}</Tooltip>
       </TooltipTrigger>
       <DialogContainer
         onDismiss={() => {
@@ -101,18 +100,27 @@ export function LinkDialog({
           }
         }}
       >
-        <Heading>{props.href ? 'Edit' : 'Add'} link</Heading>
+        <Heading>
+          {stringFormatter.format(props.href ? 'editLink' : 'addLink')}
+        </Heading>
         <Content>
           <Flex gap="large" direction="column">
-            <TextField label="Text" value={props.text} isReadOnly />
+            <TextField
+              label={stringFormatter.format('text')}
+              value={props.text}
+              isReadOnly
+            />
             <TextField
               autoFocus
               isRequired
               onBlur={() => setTouched(true)}
-              label="Link"
+              label={stringFormatter.format('link')}
               onChange={setHref}
               value={href}
-              errorMessage={showInvalidState && 'Please provide a valid URL.'}
+              errorMessage={
+                showInvalidState &&
+                stringFormatter.format('pleaseProvideValidUrl')
+              }
             />
           </Flex>
         </Content>

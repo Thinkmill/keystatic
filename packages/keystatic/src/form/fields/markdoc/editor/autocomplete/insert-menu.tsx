@@ -21,11 +21,12 @@ import { Item } from './EditorListbox';
 import { InputRule } from '../inputrules/inputrules';
 import { useEditorKeydownListener } from '../keydown';
 import { EditorAutocomplete } from './autocomplete';
-import { EditorSchema } from '../schema';
+import { EditorSchema, formatInsertMenuText, InsertMenuText } from '../schema';
+import { useLocalizedString } from '../../../../../app/shell/i18n';
 
 export type InsertMenuItemSpec = {
-  label: string;
-  description?: string;
+  label: InsertMenuText;
+  description?: InsertMenuText;
   icon?: ReactElement;
   command: (type: NodeType, schema: EditorSchema) => Command;
   forToolbar?: true;
@@ -37,8 +38,8 @@ export type WithInsertMenuNodeSpec = {
 
 export type InsertMenuItem = {
   id: string;
-  label: string;
-  description?: string;
+  label: InsertMenuText;
+  description?: InsertMenuText;
   icon?: ReactElement;
   forToolbar?: true;
   command: Command;
@@ -78,7 +79,30 @@ function wrapInsertMenuCommand(command: Command): Command {
   };
 }
 
-export function itemRenderer(item: InsertMenuItem) {
+type LocalizedInsertMenuItem = Omit<InsertMenuItem, 'label' | 'description'> & {
+  label: string;
+  description?: string;
+};
+
+export function useLocalizedInsertMenuItems(
+  items: InsertMenuItem[]
+): LocalizedInsertMenuItem[] {
+  const stringFormatter = useLocalizedString();
+  return useMemo(
+    () =>
+      items.map(item => ({
+        ...item,
+        label: formatInsertMenuText(stringFormatter, item.label),
+        description:
+          item.description === undefined
+            ? undefined
+            : formatInsertMenuText(stringFormatter, item.description),
+      })),
+    [items, stringFormatter]
+  );
+}
+
+export function itemRenderer(item: LocalizedInsertMenuItem) {
   return (
     <Item key={item.id} textValue={item.label}>
       <Text>{item.label}</Text>
@@ -93,13 +117,15 @@ function InsertMenu(props: { query: string; from: number; to: number }) {
   const dispatchCommand = useEditorDispatchCommand();
   const schema = useEditorSchema();
   const editorState = useEditorState();
+  const stringFormatter = useLocalizedString();
+  const insertMenuItems = useLocalizedInsertMenuItems(schema.insertMenuItems);
 
   const options = useMemo(
     () =>
-      matchSorter(schema.insertMenuItems, props.query, {
+      matchSorter(insertMenuItems, props.query, {
         keys: ['label'],
       }).filter(option => option.command(editorState)),
-    [editorState, schema.insertMenuItems, props.query]
+    [editorState, insertMenuItems, props.query]
   );
 
   useEditorKeydownListener(event => {
@@ -117,7 +143,7 @@ function InsertMenu(props: { query: string; from: number; to: number }) {
     <EditorAutocomplete
       from={props.from}
       to={props.to}
-      aria-label="Insert menu"
+      aria-label={stringFormatter.format('insertMenu')}
       items={options}
       children={itemRenderer}
       onEscape={() => {
