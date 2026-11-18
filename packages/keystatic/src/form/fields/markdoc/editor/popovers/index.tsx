@@ -22,7 +22,7 @@ import { useEditorReferenceElement } from './reference';
 import { ImagePopover } from './images';
 import { Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { FormValue } from '../FormValue';
-import { Heading } from '@keystar/ui/typography';
+import { Heading, Text } from '@keystar/ui/typography';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { ComponentSchema } from '../../../../api';
 import { toSerialized, useDeserializedValue } from '../props-serialization';
@@ -63,7 +63,9 @@ function ExtraAttributesMenuItem(props: {
           <Icon src={pencilIcon} />
         </ActionButton>
         <Tooltip>
-          <LocalizedText id="edit" />
+          <Text>
+            <LocalizedText id="edit" />
+          </Text>
         </Tooltip>
       </TooltipTrigger>
       <DialogContainer
@@ -155,7 +157,9 @@ const popoverComponents: Record<
             <Icon src={trash2Icon} />
           </ActionButton>
           <Tooltip tone="critical">
-            <LocalizedText id="remove" />
+            <Text>
+              <LocalizedText id="remove" />
+            </Text>
           </Tooltip>
         </TooltipTrigger>
       </Flex>
@@ -184,7 +188,9 @@ const popoverComponents: Record<
                 <Icon src={sheetIcon} />
               </ActionButton>
               <Tooltip>
-                <LocalizedText id="headerRow" />
+                <Text>
+                  <LocalizedText id="headerRow" />
+                </Text>
               </Tooltip>
             </TooltipTrigger>
             <Divider orientation="vertical" />
@@ -207,7 +213,9 @@ const popoverComponents: Record<
             <Icon src={trash2Icon} />
           </ActionButton>
           <Tooltip tone="critical">
-            <LocalizedText id="remove" />
+            <Text>
+              <LocalizedText id="remove" />
+            </Text>
           </Tooltip>
         </TooltipTrigger>
       </Flex>
@@ -246,7 +254,9 @@ const popoverComponents: Record<
               <Icon src={trash2Icon} />
             </ActionButton>
             <Tooltip tone="critical">
-              <LocalizedText id="remove" />
+              <Text>
+                <LocalizedText id="remove" />
+              </Text>
             </Tooltip>
           </TooltipTrigger>
         </Flex>
@@ -404,7 +414,9 @@ function InlineComponentPopover(props: {
             <Icon src={pencilIcon} />
           </ActionButton>
           <Tooltip>
-            <LocalizedText id="edit" />
+            <Text>
+              <LocalizedText id="edit" />
+            </Text>
           </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
@@ -424,7 +436,9 @@ function InlineComponentPopover(props: {
             <Icon src={trash2Icon} />
           </ActionButton>
           <Tooltip tone="critical">
-            <LocalizedText id="remove" />
+            <Text>
+              <LocalizedText id="remove" />
+            </Text>
           </Tooltip>
         </TooltipTrigger>
       </Flex>
@@ -492,7 +506,9 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
             <Icon src={pencilIcon} />
           </ActionButton>
           <Tooltip>
-            <LocalizedText id="edit" />
+            <Text>
+              <LocalizedText id="edit" />
+            </Text>
           </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
@@ -512,7 +528,9 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
             <Icon src={trash2Icon} />
           </ActionButton>
           <Tooltip tone="critical">
-            <LocalizedText id="remove" />
+            <Text>
+              <LocalizedText id="remove" />
+            </Text>
           </Tooltip>
         </TooltipTrigger>
       </Flex>

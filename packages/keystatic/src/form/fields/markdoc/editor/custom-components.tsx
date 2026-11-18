@@ -1,7 +1,7 @@
 import { Button } from '@keystar/ui/button';
 import { DialogContainer, Dialog } from '@keystar/ui/dialog';
 import { Box, Flex } from '@keystar/ui/layout';
-import { Heading } from '@keystar/ui/typography';
+import { Heading, Text } from '@keystar/ui/typography';
 import { MarkSpec, Node } from 'prosemirror-model';
 import { ReactNode, useMemo, useState } from 'react';
 import { getInitialPropsValue } from '../../../initial-values';
@@ -632,12 +632,16 @@ export function getCustomNodeSpecs(
                           });
                         }}
                       >
-                        <LocalizedText id="insert" />
+                        <Text>
+                          <LocalizedText id="insert" />
+                        </Text>
                       </Button>
                     ) : (
                       <MenuTrigger>
                         <Button>
-                          <LocalizedText id="insert" />
+                          <Text>
+                            <LocalizedText id="insert" />
+                          </Text>
                         </Button>
                         <Menu
                           onAction={key => {
