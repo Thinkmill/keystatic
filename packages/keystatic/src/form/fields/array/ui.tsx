@@ -7,8 +7,9 @@ import {
 } from '@keystar/ui/drag-and-drop';
 import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
+import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
-import { VStack } from '@keystar/ui/layout';
+import { Flex, VStack } from '@keystar/ui/layout';
 import { Item, ListView } from '@keystar/ui/list-view';
 import { Content } from '@keystar/ui/slots';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
@@ -93,7 +94,14 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
         <FieldMessage {...errorMessageProps}>{errorMessage}</FieldMessage>
       )}
 
+      {/*
+        Editing is live (changes apply as you type, "Done" only closes the
+        dialog), so the edit dialog can safely be dismissed with a close button
+        or by clicking outside. The "add" dialog has its own "Cancel" button and
+        is not dismissable, to avoid discarding a half-filled item by accident.
+      */}
       <DialogContainer
+        isDismissable={modalState.state === 'edit'}
         onDismiss={() => {
           setModalState({ state: 'closed' });
         }}
@@ -397,16 +405,30 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
         return (
           <Item key={item.key} textValue={label}>
             <Text>{label}</Text>
-            <TooltipTrigger placement="start">
-              <ActionButton
-                onPress={() => {
-                  onRemoveKey(item.key);
-                }}
-              >
-                <Icon src={trash2Icon} />
-              </ActionButton>
-              <Tooltip>{stringFormatter.format('delete')}</Tooltip>
-            </TooltipTrigger>
+            <Flex gridArea="actions" alignItems="center" gap="small">
+              <TooltipTrigger placement="start">
+                <ActionButton
+                  aria-label={stringFormatter.format('edit')}
+                  onPress={() => {
+                    props.onOpenItem(props.elements.indexOf(item));
+                  }}
+                >
+                  <Icon src={pencilIcon} />
+                </ActionButton>
+                <Tooltip>{stringFormatter.format('edit')}</Tooltip>
+              </TooltipTrigger>
+              <TooltipTrigger placement="start">
+                <ActionButton
+                  aria-label={stringFormatter.format('delete')}
+                  onPress={() => {
+                    onRemoveKey(item.key);
+                  }}
+                >
+                  <Icon src={trash2Icon} />
+                </ActionButton>
+                <Tooltip>{stringFormatter.format('delete')}</Tooltip>
+              </TooltipTrigger>
+            </Flex>
           </Item>
         );
       }}
