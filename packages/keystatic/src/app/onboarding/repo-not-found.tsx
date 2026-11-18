@@ -4,9 +4,11 @@ import { Heading, Text } from '@keystar/ui/typography';
 import { GitHubConfig } from '../..';
 import { InstallGitHubApp } from './install-app';
 import { serializeRepoConfig } from '../repo-config';
+import { formatWithElements, useLocalizedString } from '../shell/i18n';
 
 export function RepoNotFound(props: { config: GitHubConfig }) {
   const repo = serializeRepoConfig(props.config.storage.repo);
+  const stringFormatter = useLocalizedString();
   return (
     <Flex alignItems="center" justifyContent="center" margin="xxlarge">
       <Flex
@@ -20,14 +22,12 @@ export function RepoNotFound(props: { config: GitHubConfig }) {
         maxWidth="scale.4600"
       >
         <Flex justifyContent="center">
-          <Heading>Repo not found</Heading>
+          <Heading>{stringFormatter.format('repoNotFound')}</Heading>
         </Flex>
         <Text>
-          Keystatic is configured for the{' '}
-          <a href={`https://github.com/${repo}`}>{repo}</a> GitHub repo but
-          Keystatic isn't able to access this repo. This is either because you
-          don't have access to this repo or you haven't added the GitHub app to
-          it.
+          {formatWithElements(stringFormatter, 'repoNotFoundMessage', {
+            repo: <a href={`https://github.com/${repo}`}>{repo}</a>,
+          })}
         </Text>
         <InstallGitHubApp config={props.config} />
       </Flex>

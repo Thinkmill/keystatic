@@ -23,6 +23,7 @@ import Provider from './provider';
 import { AppShell } from './shell';
 import { PageBody, PageRoot } from './shell/page';
 import { EmptyState } from './shell/empty-state';
+import { useLocalizedString } from './shell/i18n';
 import { SingletonPage } from './SingletonPage';
 import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
@@ -100,6 +101,7 @@ function RedirectToBranch(props: { config: Config }) {
 
 function PageInner({ config }: { config: Config }) {
   const { params } = useRouter();
+  const stringFormatter = useLocalizedString();
   let branch = null,
     parsedParams,
     basePath: string;
@@ -137,7 +139,7 @@ function PageInner({ config }: { config: Config }) {
       }
     }
     if (params[0] !== 'branch' || params.length < 2) {
-      return <Text>Not found</Text>;
+      return <Text>{stringFormatter.format('notFound')}</Text>;
     }
     branch = params[1];
     basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
@@ -154,8 +156,8 @@ function PageInner({ config }: { config: Config }) {
             <PageBody>
               <EmptyState
                 icon={fileX2Icon}
-                title="Not found"
-                message="This page could not be found."
+                title={stringFormatter.format('notFound')}
+                message={stringFormatter.format('pageNotFoundMessage')}
               />
             </PageBody>
           </PageRoot>
@@ -216,6 +218,7 @@ function AuthWrapper(props: {
     'unknown'
   );
   const router = useRouter();
+  const stringFormatter = useLocalizedString();
   useEffect(() => {
     getAuth(props.config).then(auth => {
       if (auth) {
@@ -245,7 +248,7 @@ function AuthWrapper(props: {
             target="_top"
           >
             <Icon src={githubIcon} />
-            <Text>Log in with GitHub</Text>
+            <Text>{stringFormatter.format('logInWithGitHub')}</Text>
           </Button>
         </Flex>
       );
@@ -261,7 +264,7 @@ function AuthWrapper(props: {
               );
             }}
           >
-            <Text>Log in with Keystatic Cloud</Text>
+            <Text>{stringFormatter.format('logInWithKeystaticCloud')}</Text>
           </Button>
         </Flex>
       );
