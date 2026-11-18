@@ -23,6 +23,8 @@ import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './u
 import { getUploadedImage } from '../../image/ui';
 import { isBlock } from './editor';
 import { insertTable } from './table/table-ui';
+import type { KeystaticStringFormatter } from '../../../../app/l10n/default-formatter';
+import { useLocalizedString } from '../../../../app/shell/i18n';
 
 type Option = {
   label: string;
@@ -32,7 +34,8 @@ type Option = {
 
 function getOptions(
   toolbarState: ToolbarState,
-  componentBlocks: Record<string, ComponentBlock>
+  componentBlocks: Record<string, ComponentBlock>,
+  stringFormatter: KeystaticStringFormatter
 ): Option[] {
   const options: (Option | boolean)[] = [
     ...Object.keys(componentBlocks).map(key => ({
@@ -48,7 +51,7 @@ function getOptions(
         )
       )
       .map(level => ({
-        label: `Heading ${level}`,
+        label: stringFormatter.format('headingLevel', { level }),
         insert(editor: Editor) {
           insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, {
             type: 'heading',
@@ -59,7 +62,7 @@ function getOptions(
       })),
     !toolbarState.blockquote.isDisabled &&
       toolbarState.editorDocumentFeatures.formatting.blockTypes.blockquote && {
-        label: 'Blockquote',
+        label: stringFormatter.format('blockquote'),
         insert(editor) {
           insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, {
             type: 'blockquote',
@@ -69,7 +72,7 @@ function getOptions(
       },
     !toolbarState.code.isDisabled &&
       toolbarState.editorDocumentFeatures.formatting.blockTypes.code && {
-        label: 'Code block',
+        label: stringFormatter.format('codeBlock'),
         insert(editor) {
           insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, {
             type: 'code',
@@ -78,7 +81,7 @@ function getOptions(
         },
       },
     !!toolbarState.editorDocumentFeatures.images && {
-      label: 'Image',
+      label: stringFormatter.format('image'),
       async insert(editor) {
         const image = await getUploadedImage();
         if (image) {
@@ -93,12 +96,12 @@ function getOptions(
       },
     },
     !!toolbarState.editorDocumentFeatures.tables && {
-      label: 'Table',
+      label: stringFormatter.format('table'),
       insert: insertTable,
     },
     !toolbarState.dividers.isDisabled &&
       toolbarState.editorDocumentFeatures.dividers && {
-        label: 'Divider',
+        label: stringFormatter.format('divider'),
         insert(editor) {
           insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, {
             type: 'divider',
@@ -107,14 +110,14 @@ function getOptions(
         },
       },
     !!toolbarState.editorDocumentFeatures.layouts.length && {
-      label: 'Layout',
+      label: stringFormatter.format('layout'),
       insert(editor) {
         insertLayout(editor, toolbarState.editorDocumentFeatures.layouts[0]);
       },
     },
     !toolbarState.lists.ordered.isDisabled &&
       toolbarState.editorDocumentFeatures.formatting.listTypes.ordered && {
-        label: 'Numbered List',
+        label: stringFormatter.format('numberedListTitleCase'),
         keywords: ['ordered list'],
         insert(editor) {
           insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, {
@@ -125,7 +128,7 @@ function getOptions(
       },
     !toolbarState.lists.unordered.isDisabled &&
       toolbarState.editorDocumentFeatures.formatting.listTypes.unordered && {
-        label: 'Bullet List',
+        label: stringFormatter.format('bulletListTitleCase'),
         keywords: ['unordered list'],
         insert(editor) {
           insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, {
@@ -161,8 +164,9 @@ export function InsertMenu({
   const toolbarState = useToolbarState();
   const { editor } = toolbarState;
   const { componentBlocks } = useDocumentEditorConfig();
+  const stringFormatter = useLocalizedString();
   const options = matchSorter(
-    getOptions(toolbarState, componentBlocks),
+    getOptions(toolbarState, componentBlocks, stringFormatter),
     text.text.slice(1),
     {
       keys: ['label', 'keywords'],
@@ -294,7 +298,7 @@ export function InsertMenu({
           ref={scrollableRef}
         >
           <ListBoxBase
-            aria-label="Insert block"
+            aria-label={stringFormatter.format('insertBlock')}
             state={state}
             shouldUseVirtualFocus
             layout={layout}

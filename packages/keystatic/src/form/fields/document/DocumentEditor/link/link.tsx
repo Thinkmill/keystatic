@@ -27,6 +27,7 @@ import {
   useActiveBlockPopover,
 } from '../primitives';
 import { useToolbarState } from '../toolbar-state';
+import { LocalizedText } from '../../../../../app/shell/i18n';
 import { isValidURL } from '../isValidURL';
 import { isElementActive } from '../utils';
 import {
@@ -133,8 +134,7 @@ export const LinkElement = ({
               <ActionButton prominence="low" onPress={unlink}>
                 <Icon src={unlinkIcon} />
               </ActionButton>
-              {/* TODO: needs localization */}
-              <Tooltip>Unlink</Tooltip>
+              <Tooltip>{stringFormatter.format('unlink')}</Tooltip>
             </TooltipTrigger>
           </Flex>
         </BlockPopover>
@@ -187,18 +187,27 @@ function LinkDialog({
           }
         }}
       >
-        <Heading>{props.href ? 'Edit' : 'Add'} link</Heading>
+        <Heading>
+          {stringFormatter.format(props.href ? 'editLink' : 'addLink')}
+        </Heading>
         <Content>
           <Flex gap="large" direction="column">
-            <TextField label="Text" value={props.text} isReadOnly />
+            <TextField
+              label={stringFormatter.format('text')}
+              value={props.text}
+              isReadOnly
+            />
             <TextField
               autoFocus
               isRequired
               onBlur={() => setTouched(true)}
-              label="Link"
+              label={stringFormatter.format('link')}
               onChange={setHref}
               value={href}
-              errorMessage={showInvalidState && 'Please provide a valid URL.'}
+              errorMessage={
+                showInvalidState &&
+                stringFormatter.format('pleaseProvideValidUrl')
+              }
             />
           </Flex>
         </Content>
@@ -242,7 +251,9 @@ export const linkButton = (
   <TooltipTrigger>
     <LinkButton />
     <Tooltip>
-      <Text>Link</Text>
+      <Text>
+        <LocalizedText id="link" />
+      </Text>
     </Tooltip>
   </TooltipTrigger>
 );

@@ -32,3 +32,8 @@ export function formatWithElements(
       i % 2 === 0 ? part : <Fragment key={i}>{elements[names[+part]]}</Fragment>
     );
 }
+
+/** Renders a message, for elements that are created outside of a component. */
+export function LocalizedText(props: { id: LocalizedMessageKey }) {
+  return <>{useLocalizedString().format(props.id)}</>;
+}

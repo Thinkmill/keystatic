@@ -22,6 +22,7 @@ import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import l10nMessages from '../../../../app/l10n';
+import { LocalizedText } from '../../../../app/shell/i18n';
 import { getUploadedImage, useObjectURL } from '../../image/ui';
 import {
   focusWithPreviousSelection,
@@ -126,7 +127,7 @@ export const ImageElement = ({
                   >
                     <Icon src={fileUpIcon} />
                   </ActionButton>
-                  <Tooltip>Choose file</Tooltip>
+                  <Tooltip>{stringFormatter.format('chooseFile')}</Tooltip>
                 </TooltipTrigger>
               </Flex>
               <Divider orientation="vertical" />
@@ -141,7 +142,9 @@ export const ImageElement = ({
                 >
                   <Icon src={trash2Icon} />
                 </ActionButton>
-                <Tooltip tone="critical">Remove</Tooltip>
+                <Tooltip tone="critical">
+                  {stringFormatter.format('remove')}
+                </Tooltip>
               </TooltipTrigger>
             </Flex>
           </BlockPopover>
@@ -221,18 +224,18 @@ function ImageDialog(props: {
           }
         }}
       >
-        <Heading>Image details</Heading>
+        <Heading>{stringFormatter.format('imageDetails')}</Heading>
         <Content>
           <Flex gap="large" direction="column">
             <TextField
-              label="File name"
+              label={stringFormatter.format('fileName')}
               onChange={setFileName}
               onBlur={() => setFileNameTouched(true)}
               value={fileName}
               isRequired
               errorMessage={
                 (fileNameTouched || forceValidation) && !fileName
-                  ? 'Please provide a file name.'
+                  ? stringFormatter.format('pleaseProvideFileName')
                   : undefined
               }
               endElement={
@@ -305,7 +308,9 @@ export const imageButton = (
   <TooltipTrigger>
     <ImageButton />
     <Tooltip>
-      <Text>Image</Text>
+      <Text>
+        <LocalizedText id="image" />
+      </Text>
     </Tooltip>
   </TooltipTrigger>
 );

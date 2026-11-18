@@ -34,6 +34,7 @@ import { Prose } from '@keystar/ui/typography';
 
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { useContentPanelSize } from '../../../../app/shell/context';
+import { useLocalizedString } from '../../../../app/shell/i18n';
 import { ComponentBlock } from '../../../api';
 import { DocumentFeatures } from './document-features';
 import { wrapLink } from './link/link';
@@ -453,6 +454,7 @@ export function DocumentEditorEditable(props: EditableProps) {
   const entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useSlate();
   const { componentBlocks, documentFeatures } = useDocumentEditorConfig();
+  const stringFormatter = useLocalizedString();
 
   const onKeyDown = useMemo(
     () => getKeyDownHandler(editor, documentFeatures),
@@ -463,7 +465,7 @@ export function DocumentEditorEditable(props: EditableProps) {
     <ActiveBlockPopoverProvider editor={editor}>
       <Prose size={entryLayoutPane === 'main' ? 'medium' : 'regular'}>
         <Editable
-          placeholder='Start writing or press "/" for commands...'
+          placeholder={stringFormatter.format('documentEditorPlaceholder')}
           decorate={useCallback(
             ([node, path]: NodeEntry<Node>) => {
               let decorations: Range[] = [];

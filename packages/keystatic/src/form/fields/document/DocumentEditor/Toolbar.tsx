@@ -26,6 +26,7 @@ import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
 
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
+import { useLocalizedString } from '../../../../app/shell/i18n';
 
 import { TextAlignMenu } from './alignment';
 import { blockquoteButton } from './blockquote/blockquote-ui';
@@ -50,6 +51,7 @@ export function Toolbar({
   viewState?: { expanded: boolean; toggle: () => void };
 }) {
   const componentBlocks = useDocumentEditorConfig().componentBlocks;
+  const stringFormatter = useLocalizedString();
   let hasComponentBlocksForInsertMenu = false,
     hasComponentBlocksForToolbar = false;
   for (const componentBlock of Object.values(componentBlocks)) {
@@ -139,12 +141,16 @@ export function Toolbar({
                     src={viewState.expanded ? minimizeIcon : maximizeIcon}
                   />
                 </Button>
-                <Tooltip>{viewState.expanded ? 'Collapse' : 'Expand'}</Tooltip>
+                <Tooltip>
+                  {stringFormatter.format(
+                    viewState.expanded ? 'collapse' : 'expand'
+                  )}
+                </Tooltip>
               </TooltipTrigger>
             </Flex>
           )
         );
-      }, [viewState])}
+      }, [viewState, stringFormatter])}
       {!!hasComponentBlocksForInsertMenu && <InsertBlockMenu />}
     </ToolbarWrapper>
   );
@@ -260,13 +266,19 @@ const HeadingMenu = ({
 }) => {
   const { editor, textStyles } = useToolbarState();
   const isDisabled = textStyles.allowedHeadingLevels.length === 0;
+  const stringFormatter = useLocalizedString();
   const items = useMemo(() => {
-    let resolvedItems: HeadingItem[] = [{ name: 'Paragraph', id: 'normal' }];
+    let resolvedItems: HeadingItem[] = [
+      { name: stringFormatter.format('paragraph'), id: 'normal' },
+    ];
     headingLevels.forEach(level => {
-      resolvedItems.push({ name: `Heading ${level}`, id: level.toString() });
+      resolvedItems.push({
+        name: stringFormatter.format('headingLevel', { level }),
+        id: level.toString(),
+      });
     });
     return resolvedItems;
-  }, [headingLevels]);
+  }, [headingLevels, stringFormatter]);
   const selected = textStyles.selected.toString();
 
   return useMemo(
@@ -275,7 +287,7 @@ const HeadingMenu = ({
         flexShrink={0}
         width="scale.1700"
         prominence="low"
-        aria-label="Text block"
+        aria-label={stringFormatter.format('textBlock')}
         items={items}
         isDisabled={isDisabled}
         value={selected}
@@ -311,7 +323,7 @@ const HeadingMenu = ({
         {item => <Item key={item.id}>{item.name}</Item>}
       </Picker>
     ),
-    [editor, isDisabled, items, selected]
+    [editor, isDisabled, items, selected, stringFormatter]
   );
 };
 
@@ -345,6 +357,7 @@ function InsertBlockMenu() {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useSlateStatic();
   const componentBlocks = useDocumentEditorConfig().componentBlocks;
+  const stringFormatter = useLocalizedString();
 
   return (
     <MenuTrigger align="end">
@@ -357,7 +370,7 @@ function InsertBlockMenu() {
           <Icon src={chevronDownIcon} />
         </ActionButton>
         <Tooltip>
-          <Text>Insert</Text>
+          <Text>{stringFormatter.format('insert')}</Text>
           <Kbd>/</Kbd>
         </Tooltip>
       </TooltipTrigger>
@@ -378,45 +391,45 @@ function InsertBlockMenu() {
 const inlineMarks = [
   {
     key: 'bold',
-    label: 'Bold',
+    label: 'bold',
     icon: boldIcon,
     shortcut: `B`,
   },
   {
     key: 'italic',
-    label: 'Italic',
+    label: 'italic',
     icon: italicIcon,
     shortcut: `I`,
   },
   {
     key: 'underline',
-    label: 'Underline',
+    label: 'underline',
     icon: underlineIcon,
     shortcut: `U`,
   },
   {
     key: 'strikethrough',
-    label: 'Strikethrough',
+    label: 'strikethrough',
     icon: strikethroughIcon,
   },
   {
     key: 'code',
-    label: 'Code',
+    label: 'code',
     icon: codeIcon,
   },
   {
     key: 'superscript',
-    label: 'Superscript',
+    label: 'superscript',
     icon: superscriptIcon,
   },
   {
     key: 'subscript',
-    label: 'Subscript',
+    label: 'subscript',
     icon: subscriptIcon,
   },
   {
     key: 'clearFormatting',
-    label: 'Clear formatting',
+    label: 'clearFormatting',
     icon: removeFormattingIcon,
   },
 ] as const;
@@ -432,6 +445,7 @@ function InlineMarks({
     marks,
   } = useToolbarState();
   const marksShown = useMemoStringified(_marksShown);
+  const stringFormatter = useLocalizedString();
 
   const selectedKeys = useMemoStringified(
     Object.keys(marks).filter(
@@ -478,8 +492,8 @@ function InlineMarks({
       >
         {item => {
           return (
-            <Item key={item.key} textValue={item.label}>
-              <Text>{item.label}</Text>
+            <Item key={item.key} textValue={stringFormatter.format(item.label)}>
+              <Text>{stringFormatter.format(item.label)}</Text>
               {'shortcut' in item && <Kbd meta>{item.shortcut}</Kbd>}
               <Icon src={item.icon} />
             </Item>
@@ -487,7 +501,7 @@ function InlineMarks({
         }}
       </ActionGroup>
     );
-  }, [disabledKeys, editor, marksShown, selectedKeys]);
+  }, [disabledKeys, editor, marksShown, selectedKeys, stringFormatter]);
 }
 
 function useMemoStringified<T>(value: T): T {

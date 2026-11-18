@@ -15,6 +15,10 @@ import { Kbd, Text } from '@keystar/ui/typography';
 
 import { useDocumentEditorConfig, useToolbarState } from '../toolbar-state';
 import {
+  LocalizedText,
+  useLocalizedString,
+} from '../../../../../app/shell/i18n';
+import {
   BlockPopover,
   BlockPopoverTrigger,
   BlockWrapper,
@@ -69,7 +73,9 @@ export const codeButton = (
   <TooltipTrigger>
     <CodeButton />
     <Tooltip>
-      <Text>Code block</Text>
+      <Text>
+        <LocalizedText id="codeBlock" />
+      </Text>
       <Kbd>```</Kbd>
     </Tooltip>
   </TooltipTrigger>
@@ -81,6 +87,7 @@ export function CodeElement({
   element,
 }: RenderElementProps & { element: { type: 'code' } }) {
   const editor = useSlateStatic();
+  const stringFormatter = useLocalizedString();
   const triggerRef = useRef(null);
   const [inputValue, setInputValue] = useState(
     element.language
@@ -107,7 +114,7 @@ export function CodeElement({
           <BlockPopover>
             <Flex gap="regular" padding="regular">
               <Combobox
-                aria-label="Language"
+                aria-label={stringFormatter.format('language')}
                 width="scale.2000"
                 allowsCustomValue // allow consumers to support other languages
                 inputValue={inputValue}
@@ -221,7 +228,9 @@ export function CodeElement({
                 >
                   <Icon src={trash2Icon} />
                 </ActionButton>
-                <Tooltip tone="critical">Remove</Tooltip>
+                <Tooltip tone="critical">
+                  {stringFormatter.format('remove')}
+                </Tooltip>
               </TooltipTrigger>
             </Flex>
           </BlockPopover>
@@ -231,7 +240,7 @@ export function CodeElement({
         <CustomAttributesDialog
           element={element}
           isOpen={dialogOpen}
-          nodeLabel="Code block"
+          nodeLabel={stringFormatter.format('codeBlock')}
           schema={customAttributesSchema}
           onDismiss={() => {
             setDialogOpen(false);
