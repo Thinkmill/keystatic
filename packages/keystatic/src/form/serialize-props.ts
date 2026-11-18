@@ -7,7 +7,7 @@ export function serializeProps(
   rootValue: unknown,
   rootSchema: ComponentSchema,
   // note you might have a slug without a slug field when serializing props inside a component block or etc. in the editor
-  slugField: string | undefined,
+  slugFields: readonly string[] | undefined,
   slug: string | undefined,
   shouldSuggestFilenamePrefix: boolean
 ) {
@@ -19,7 +19,10 @@ export function serializeProps(
   return {
     value: transformProps(rootSchema, rootValue, {
       form(schema, value, propPath) {
-        if (propPath.length === 1 && slugField === propPath[0]) {
+        if (
+          propPath.length === 1 &&
+          slugFields?.includes(propPath[0] as string)
+        ) {
           if (schema.formKind !== 'slug') {
             throw new Error('slugField is a not a slug field');
           }

@@ -16,6 +16,7 @@ import {
   getEntryDataFilepath,
   getSingletonFormat,
   getSingletonPath,
+  getSlugFieldsForCollection,
   getSlugGlobForCollection,
 } from '../app/path-utils';
 import { parseProps } from '../form/parse-props';
@@ -217,20 +218,25 @@ async function getAllEntries(
 const listCollection = cache(async function listCollection(
   collectionPath: string,
   glob: Glob,
+  segments: number,
   formatInfo: FormatInfo,
   extension: string,
   fsReader: MinimalFs
 ) {
-  const entries: { entry: DirEntry; name: string }[] =
-    glob === '*'
-      ? (await fsReader.readdir(collectionPath)).map(entry => ({
-          entry,
-          name: entry.name,
-        }))
-      : (await getAllEntries(`${collectionPath}/`, fsReader)).map(x => ({
-          entry: x.entry,
-          name: x.name.slice(collectionPath.length + 1),
-        }));
+  let entries: { entry: DirEntry; name: string }[];
+  if (glob === '*' && segments === 1) {
+    entries = (await fsReader.readdir(collectionPath)).map(entry => ({
+      entry,
+      name: entry.name,
+    }));
+  } else {
+    entries = (await getAllEntries(`${collectionPath}/`, fsReader))
+      .map(x => ({
+        entry: x.entry,
+        name: x.name.slice(collectionPath.length + 1),
+      }))
+      .filter(x => glob === '**' || x.name.split('/').length === segments);
+  }
 
   return (
     await Promise.all(
@@ -266,6 +272,7 @@ export function collectionReader(
   const collectionConfig = config.collections![collection];
   const schema = fields.object(collectionConfig.schema);
   const glob = getSlugGlobForCollection(config, collection);
+  const slugFields = getSlugFieldsForCollection(config, collection);
   const extension = getDataFileExtension(formatInfo);
 
   const read: CollectionReader<any, any>['read'] = (slug, ...args) =>
@@ -277,12 +284,19 @@ export function collectionReader(
       `"${slug}" in collection "${collection}"`,
       fsReader,
       slug,
-      collectionConfig.slugField,
+      slugFields,
       glob
     );
 
   const list = () =>
-    listCollection(collectionPath, glob, formatInfo, extension, fsReader);
+    listCollection(
+      collectionPath,
+      glob,
+      slugFields.length,
+      formatInfo,
+      extension,
+      fsReader
+    );
 
   return {
     read,
@@ -320,12 +334,14 @@ const readItem = cache(async function readItem(
   resolveLinkedFiles: boolean | undefined,
   debugReference: string,
   fsReader: MinimalFs,
-  ...slugInfo: [slug: undefined] | [slug: string, field: string, glob: Glob]
+  ...slugInfo:
+    | [slug: undefined]
+    | [slug: string, fields: readonly string[], glob: Glob]
 ) {
   if (typeof slugInfo[0] === 'string') {
     if (slugInfo[0].includes('\\')) return null;
     const split = slugInfo[0].split('/');
-    if (slugInfo[2] === '*' && split.length !== 1) return null;
+    if (slugInfo[2] === '*' && split.length !== slugInfo[1].length) return null;
     if (split.includes('..') || split.includes('.')) return null;
   }
   const dataFile = await fsReader.readFile(
@@ -366,12 +382,19 @@ const readItem = cache(async function readItem(
           };
         }
         if (path.length === 1 && slugInfo[0] !== undefined) {
-          const [slug, slugField, glob] = slugInfo;
-          if (path[0] === slugField) {
+          const [slug, slugFields, glob] = slugInfo;
+          const slugFieldIndex = slugFields.indexOf(path[0] as string);
+          if (slugFieldIndex !== -1) {
             if (schema.formKind !== 'slug') {
-              throw new Error(`Slug field ${slugInfo[1]} is not a slug field`);
+              throw new Error(`Slug field ${path[0]} is not a slug field`);
             }
-            return schema.reader.parseWithSlug(value, { slug, glob });
+            return schema.reader.parseWithSlug(value, {
+              slug:
+                slugFields.length === 1
+                  ? slug
+                  : slug.split('/')[slugFieldIndex] ?? '',
+              glob,
+            });
           }
         }
         return schema.reader.parse(value);
