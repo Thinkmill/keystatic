@@ -103,7 +103,9 @@ export function slug(_args: {
     {
       slugField,
     }: {
-      slugField: { slugs: Set<string>; glob: Glob } | undefined;
+      slugField:
+        | { slugs: Set<string>; glob: Glob; segments?: number }
+        | undefined;
     } = { slugField: undefined }
   ) {
     const nameMessage = validateText(

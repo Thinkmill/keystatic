@@ -8,6 +8,47 @@ export function fixPath(path: string) {
 
 const collectionPath = /\/\*\*?(?:$|\/)/;
 
+/**
+ * Splits the wildcard portion of a collection path template. Consecutive `*`
+ * segments each match exactly one path segment of the slug (so two of them
+ * give slugs like `en/hello`), `**` matches any number of segments, and
+ * whatever follows the wildcards is a literal suffix.
+ */
+export function parseCollectionPathWildcards(path: string): {
+  glob: Glob;
+  /** number of slug segments, or undefined if it is not fixed */
+  segments: number | undefined;
+  suffix: string;
+} {
+  const wildcardStart = path.indexOf('*');
+  const rest = path.slice(wildcardStart).split('/');
+  let segments = 0;
+  while (rest[0] === '*') {
+    segments++;
+    rest.shift();
+  }
+  let glob: Glob = '*';
+  if (segments === 0 && rest[0] === '**') {
+    glob = '**';
+    rest.shift();
+  }
+  const suffix = rest.join('/');
+  if (segments === 0 && glob === '*') {
+    throw new Error(`Invalid wildcard in collection path ${path}`);
+  }
+  if (suffix.includes('*')) {
+    throw new Error(
+      `Collection path wildcards must be adjacent and come before any other path segments but got ${path}`
+    );
+  }
+  return {
+    // a slug with several segments needs to be allowed to contain slashes
+    glob: segments > 1 ? '**' : glob,
+    segments: glob === '*' && segments > 1 ? segments : undefined,
+    suffix,
+  };
+}
+
 function getConfiguredCollectionPath(config: Config, collection: string) {
   const collectionConfig = config.collections![collection];
   const path = collectionConfig.path ?? `${collection}/*/`;
@@ -16,6 +57,7 @@ function getConfiguredCollectionPath(config: Config, collection: string) {
       `Collection path must end with /* or /** or include /*/ or /**/ but ${collection} has ${path}`
     );
   }
+  parseCollectionPathWildcards(path);
   return path;
 }
 
@@ -53,16 +95,37 @@ export function getSlugGlobForCollection(
   config: Config,
   collection: string
 ): Glob {
-  const collectionPath = getConfiguredCollectionPath(config, collection);
-  return collectionPath.includes('**') ? '**' : '*';
+  return parseCollectionPathWildcards(
+    getConfiguredCollectionPath(config, collection)
+  ).glob;
+}
+
+/**
+ * The exact number of `/`-separated segments slugs in the collection must
+ * have, or undefined if the collection doesn't constrain it.
+ */
+export function getSlugSegmentCount(
+  config: Config,
+  collection: string
+): number | undefined {
+  return parseCollectionPathWildcards(
+    getConfiguredCollectionPath(config, collection)
+  ).segments;
+}
+
+export function slugHasSegmentCount(slug: string, segments: number) {
+  const split = slug.split('/');
+  return split.length === segments && split.every(x => x !== '');
 }
 
 export function getCollectionItemSlugSuffix(
   config: Config,
   collection: string
 ) {
-  const configuredPath = getConfiguredCollectionPath(config, collection);
-  const path = fixPath(configuredPath.replace(/^[^*]+\*\*?/, ''));
+  const { suffix } = parseCollectionPathWildcards(
+    getConfiguredCollectionPath(config, collection)
+  );
+  const path = fixPath(suffix);
   return path ? `/${path}` : '';
 }
 

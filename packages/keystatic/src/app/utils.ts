@@ -10,6 +10,8 @@ import {
   getCollectionPath,
   getDataFileExtension,
   getSlugGlobForCollection,
+  getSlugSegmentCount,
+  slugHasSegmentCount,
 } from './path-utils';
 import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
@@ -176,7 +178,10 @@ export function getEntriesInCollectionWithTreeKey(
       });
     }
   }
-  return entries;
+  const segments = getSlugSegmentCount(config, collection);
+  return segments === undefined
+    ? entries
+    : entries.filter(entry => slugHasSegmentCount(entry.slug, segments));
 }
 
 export const KEYSTATIC_CLOUD_API_URL = 'https://api.keystatic.cloud';

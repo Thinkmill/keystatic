@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getSlugGlobForCollection } from './path-utils';
+import { getSlugGlobForCollection, getSlugSegmentCount } from './path-utils';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import { SlugFieldInfo } from '../form/fields/text/path-slug-context';
 import { useConfig } from './shell/context';
@@ -21,6 +21,7 @@ export function useSlugFieldInfo(
       field: collectionConfig.slugField,
       slugs,
       glob: getSlugGlobForCollection(config, collection),
+      segments: getSlugSegmentCount(config, collection),
     };
   }, [allSlugs, collection, config, slugToExclude]);
 }
