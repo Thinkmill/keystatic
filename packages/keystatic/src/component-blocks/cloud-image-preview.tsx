@@ -31,6 +31,13 @@ import { Heading, Text } from '@keystar/ui/typography';
 import { useId } from '@keystar/ui/utils';
 
 import { useConfig } from '../app/shell/context';
+import l10nMessages from '../app/l10n';
+import type { KeystaticStringFormatter } from '../app/l10n/default-formatter';
+import { formatWithElements, useLocalizedString } from '../app/shell/i18n';
+import {
+  LocalizedStringDictionary,
+  LocalizedStringFormatter,
+} from '@internationalized/string';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
 import {
   KEYSTATIC_CLOUD_API_URL,
@@ -73,19 +80,21 @@ const imageUploadResponse = s.type({
   height: s.number(),
 });
 
-function uploadImage(file: File, config: Config) {
+function uploadImage(
+  file: File,
+  config: Config,
+  stringFormatter: KeystaticStringFormatter
+) {
   if (file.size > 10_000_000) {
-    throw new Error('Images must be smaller than 10MB');
+    throw new Error(stringFormatter.format('imageTooLarge'));
   }
   const auth = getCloudAuth(config);
   if (!auth) {
-    throw new Error('You must be signed in to upload images');
+    throw new Error(stringFormatter.format('signInToUploadImages'));
   }
   const filenameMatch = /(.+)\.(png|jpe?g|gif|webp)$/.exec(file.name);
   if (!filenameMatch) {
-    throw new Error(
-      'Invalid image type, only PNG, JPEG, GIF, and WebP are supported'
-    );
+    throw new Error(stringFormatter.format('invalidImageType'));
   }
   const filename = slugify(filenameMatch[1]);
   const ext = filenameMatch[2];
@@ -107,7 +116,11 @@ function uploadImage(file: File, config: Config) {
       body: formData,
     });
     if (!res.ok) {
-      throw new Error(`Failed to upload image: ${await res.text()}`);
+      throw new Error(
+        stringFormatter.format('failedToUploadImage', {
+          error: await res.text(),
+        })
+      );
     }
     const data = await res.json();
 
@@ -115,7 +128,7 @@ function uploadImage(file: File, config: Config) {
     try {
       parsedData = imageUploadResponse.create(data);
     } catch {
-      throw new Error('Unexpected response from cloud');
+      throw new Error(stringFormatter.format('unexpectedResponseFromCloud'));
     }
     return parsedData;
   })();
@@ -234,7 +247,11 @@ export function ImageDimensionsInput(props: {
   const dimensions = useImageDimensions(props.src);
 
   const [constrainProportions, setConstrainProportions] = useState(true);
-  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
+  const stringFormatter = useLocalizedString();
+  const revertLabel = stringFormatter.format('revertToOriginalDimensions', {
+    width: String(dimensions.width),
+    height: String(dimensions.height),
+  });
   const dimensionsMatchOriginal =
     dimensions.width === props.image.width &&
     dimensions.height === props.image.height;
@@ -242,7 +259,7 @@ export function ImageDimensionsInput(props: {
   return (
     <HStack gap="regular" alignItems="end">
       <NumberField
-        label="Width"
+        label={stringFormatter.format('width')}
         width="scale.1600"
         formatOptions={{ maximumFractionDigits: 0 }}
         value={props.image.width}
@@ -260,7 +277,7 @@ export function ImageDimensionsInput(props: {
       <TooltipTrigger>
         <ToggleButton
           isSelected={constrainProportions}
-          aria-label="Constrain proportions"
+          aria-label={stringFormatter.format('constrainProportions')}
           prominence="low"
           onPress={() => {
             setConstrainProportions(state => !state);
@@ -268,10 +285,10 @@ export function ImageDimensionsInput(props: {
         >
           <Icon src={constrainProportions ? link2Icon : link2OffIcon} />
         </ToggleButton>
-        <Tooltip>Constrain proportions</Tooltip>
+        <Tooltip>{stringFormatter.format('constrainProportions')}</Tooltip>
       </TooltipTrigger>
       <NumberField
-        label="Height"
+        label={stringFormatter.format('height')}
         width="scale.1600"
         formatOptions={{ maximumFractionDigits: 0 }}
         value={props.image.height}
@@ -320,6 +337,7 @@ export function UploadImageButton(
 ) {
   const { onUploaded, ...styleProps } = props;
   const config = useConfig();
+  const stringFormatter = useLocalizedString();
   const [isUploading, setIsUploading] = useState(false);
   if (!config.cloud?.project) return null;
 
@@ -331,7 +349,7 @@ export function UploadImageButton(
         if (files[0]) {
           setIsUploading(true);
           try {
-            const result = await uploadImage(files[0], config);
+            const result = await uploadImage(files[0], config, stringFormatter);
             props.onUploaded({ ...result, alt: '' });
             setIsUploading(false);
           } catch (err) {
@@ -342,7 +360,7 @@ export function UploadImageButton(
       }}
     >
       <ActionButton isDisabled={isUploading} {...styleProps}>
-        {isUploading ? 'Uploading…' : 'Upload'}
+        {stringFormatter.format(isUploading ? 'uploading' : 'upload')}
       </ActionButton>
     </FileTrigger>
   );
@@ -359,6 +377,7 @@ function ImageDialog(props: {
   const [status, setStatus] = useState<ImageStatus>(image ? 'good' : '');
   const formId = useId();
   const imageLibraryURL = useImageLibraryURL();
+  const stringFormatter = useLocalizedString();
 
   const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -394,7 +413,7 @@ function ImageDialog(props: {
 
   return (
     <Dialog>
-      <Heading>Cloud image</Heading>
+      <Heading>{stringFormatter.format('cloudImage')}</Heading>
       <Content>
         <VStack
           elementType="form"
@@ -409,7 +428,7 @@ function ImageDialog(props: {
         >
           <HStack alignItems="end" gap="medium">
             <TextField
-              label="Image URL"
+              label={stringFormatter.format('imageUrl')}
               flex
               autoFocus
               onPaste={onPaste}
@@ -423,16 +442,18 @@ function ImageDialog(props: {
               value={state.src}
               description={
                 <Text>
-                  Copy an image URL from the{' '}
-                  <TextLink
-                    prominence="high"
-                    href={imageLibraryURL}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Image Library
-                  </TextLink>{' '}
-                  and paste it into this field.
+                  {formatWithElements(stringFormatter, 'pasteImageUrl', {
+                    imageLibraryLink: (
+                      <TextLink
+                        prominence="high"
+                        href={imageLibraryURL}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {stringFormatter.format('imageLibraryTitleCase')}
+                      </TextLink>
+                    ),
+                  })}
                 </Text>
               }
               endElement={
@@ -445,7 +466,7 @@ function ImageDialog(props: {
                   >
                     <ProgressCircle
                       size="small"
-                      aria-label="Checking…"
+                      aria-label={stringFormatter.format('checking')}
                       isIndeterminate
                     />
                   </Flex>
@@ -466,7 +487,7 @@ function ImageDialog(props: {
           {status === 'good' ? (
             <>
               <TextArea
-                label="Alt text"
+                label={stringFormatter.format('altText')}
                 value={state.alt}
                 onChange={alt => setState(state => ({ ...state, alt }))}
               />
@@ -482,14 +503,14 @@ function ImageDialog(props: {
         </VStack>
       </Content>
       <ButtonGroup>
-        <Button onPress={onCancel}>Cancel</Button>
+        <Button onPress={onCancel}>{stringFormatter.format('cancel')}</Button>
         <Button
           prominence="high"
           type="submit"
           form={formId}
           isDisabled={status !== 'good'}
         >
-          {image ? 'Done' : 'Insert'}
+          {stringFormatter.format(image ? 'done' : 'insert')}
         </Button>
       </ButtonGroup>
     </Dialog>
@@ -502,6 +523,7 @@ function Placeholder(props: {
   selected: boolean;
 }) {
   const state = useOverlayTriggerState({ defaultOpen: false });
+  const stringFormatter = useLocalizedString();
 
   const { open } = state;
   useEffect(() => {
@@ -527,7 +549,10 @@ function Placeholder(props: {
         onClick={() => state.open()}
       >
         <Icon src={imageIcon} />
-        <Text>Cloud image{state.isOpen ? '' : '(click to configure)'}</Text>
+        <Text>
+          {stringFormatter.format('cloudImage')}
+          {state.isOpen ? '' : stringFormatter.format('clickToConfigure')}
+        </Text>
       </Flex>
       <DialogContainer onDismiss={closeAndCleanup}>
         {state.isOpen && (
@@ -555,6 +580,7 @@ function ImagePreview({
 }) {
   const maxHeight = 368; // size.scale.4600 — TODO: it'd be nice to get this from some token artefact
   const maxWidth = 734; // roughly the max width that an editor container will allow
+  const stringFormatter = useLocalizedString();
 
   return (
     <>
@@ -598,7 +624,9 @@ function ImagePreview({
                   <ActionButton>
                     <Icon src={pencilIcon} />
                   </ActionButton>
-                  <Tooltip>Edit Image Options</Tooltip>
+                  <Tooltip>
+                    {stringFormatter.format('editImageOptions')}
+                  </Tooltip>
                 </TooltipTrigger>
                 {onClose => (
                   <ImageDialog
@@ -613,7 +641,7 @@ function ImagePreview({
                 <ActionButton onPress={onRemove}>
                   <Icon src={trash2Icon} />
                 </ActionButton>
-                <Tooltip>Remove Image</Tooltip>
+                <Tooltip>{stringFormatter.format('removeImage')}</Tooltip>
               </TooltipTrigger>
             </HStack>
           </HStack>
@@ -662,11 +690,16 @@ export function CloudImagePreview(
 }
 
 export function handleFile(file: File, config: Config) {
+  // not called from a component, so use the same locale as the Admin UI
+  const stringFormatter = new LocalizedStringFormatter(
+    config.locale || 'en-US',
+    new LocalizedStringDictionary(l10nMessages)
+  );
   try {
-    const result = uploadImage(file, config);
-    toastQueue.info('Uploading image…');
+    const result = uploadImage(file, config, stringFormatter);
+    toastQueue.info(stringFormatter.format('uploadingImage'));
     return result.then(data => {
-      toastQueue.positive('Image uploaded');
+      toastQueue.positive(stringFormatter.format('imageUploaded'));
       return {
         ...data,
         alt: '',
