@@ -18,10 +18,12 @@ import {
 import { SidebarProvider } from './sidebar';
 import { MainPanelLayout } from './panels';
 import { EmptyState } from './empty-state';
+import { useLocalizedString } from './i18n';
 
 function BranchNotFound(props: { children: ReactNode }) {
   const branches = useBranches();
   const currentBranch = useCurrentBranch();
+  const stringFormatter = useLocalizedString();
   const appShellDataContext = useContext(GitHubAppShellDataContext);
   if (
     appShellDataContext?.data?.repository?.refs?.pageInfo.hasNextPage ===
@@ -31,8 +33,10 @@ function BranchNotFound(props: { children: ReactNode }) {
     return (
       <EmptyState
         icon={alertCircleIcon}
-        title="Branch not found"
-        message={`The branch ${currentBranch} does not exist in this repository.`}
+        title={stringFormatter.format('branchNotFound')}
+        message={stringFormatter.format('branchDoesNotExist', {
+          branchName: currentBranch,
+        })}
       />
     );
   }
@@ -45,6 +49,7 @@ export const AppShell = (props: {
   currentBranch: string;
   basePath: string;
 }) => {
+  const stringFormatter = useLocalizedString();
   const content = (
     <AppShellErrorContext.Consumer>
       {error =>
@@ -54,7 +59,7 @@ export const AppShell = (props: {
         ) ? (
           <EmptyState
             icon={alertCircleIcon}
-            title="Failed to load shell"
+            title={stringFormatter.format('failedToLoadShell')}
             message={error.message}
           />
         ) : (

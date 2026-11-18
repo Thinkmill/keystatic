@@ -13,6 +13,7 @@ import { css, tokenSchema, VoussoirTheme } from '@keystar/ui/style';
 import { MAIN_PANEL_ID } from './constants';
 import { ScrollView } from './primitives';
 import { useSidebar } from './sidebar';
+import { useLocalizedString } from './i18n';
 
 type PageContextValue = {
   containerWidth: keyof VoussoirTheme['size']['container'] | 'none';
@@ -47,6 +48,7 @@ export const PageHeader = ({ children }: PropsWithChildren) => {
   const sidebarState = useSidebar();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const { direction } = useLocale();
+  const stringFormatter = useLocalizedString();
 
   let icon = sidebarState.isOpen ? panelLeftCloseIcon : panelLeftOpenIcon;
   if (direction === 'rtl') {
@@ -63,7 +65,7 @@ export const PageHeader = ({ children }: PropsWithChildren) => {
       >
         <ActionButton
           prominence="low"
-          aria-label="Open app navigation"
+          aria-label={stringFormatter.format('openAppNavigation')}
           aria-pressed={sidebarState.isOpen}
           isHidden={sidebarState.isOpen ? { above: 'tablet' } : undefined}
           onPress={sidebarState.toggle}
