@@ -12,6 +12,7 @@ import { css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 
 import { DocumentFeatures } from '../document-features';
+import { useLocalizedString } from '../../../../../app/shell/i18n';
 import {
   BlockPopover,
   BlockPopoverTrigger,
@@ -31,6 +32,7 @@ export const LayoutContainer = ({
   element,
 }: RenderElementProps & { element: { type: 'layout' } }) => {
   const editor = useSlateStatic();
+  const stringFormatter = useLocalizedString();
 
   const layout = element.layout;
   const layoutOptions = useDocumentEditorConfig().documentFeatures.layouts;
@@ -85,7 +87,9 @@ export const LayoutContainer = ({
               >
                 <Icon src={trash2Icon} />
               </ActionButton>
-              <Tooltip tone="critical">Remove</Tooltip>
+              <Tooltip tone="critical">
+                {stringFormatter.format('remove')}
+              </Tooltip>
             </TooltipTrigger>
           </Flex>
         </BlockPopover>
@@ -175,6 +179,7 @@ export const LayoutsButton = ({
     editor,
     layouts: { isSelected },
   } = useToolbarState();
+  const stringFormatter = useLocalizedString();
   return useMemo(
     () => (
       <TooltipTrigger>
@@ -194,9 +199,9 @@ export const LayoutsButton = ({
         >
           {layoutsIcon}
         </ActionButton>
-        <Tooltip>Layouts</Tooltip>
+        <Tooltip>{stringFormatter.format('layouts')}</Tooltip>
       </TooltipTrigger>
     ),
-    [editor, isSelected, layouts]
+    [editor, isSelected, layouts, stringFormatter]
   );
 };

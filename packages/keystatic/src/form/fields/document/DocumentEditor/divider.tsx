@@ -8,6 +8,7 @@ import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
 
 import { useToolbarState } from './toolbar-state';
+import { LocalizedText } from '../../../../app/shell/i18n';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './ui-utils';
 import { Icon } from '@keystar/ui/icon';
 import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
@@ -45,7 +46,9 @@ export const dividerButton = (
   <TooltipTrigger delay={200}>
     <DividerButton />
     <Tooltip>
-      <Text>Divider</Text>
+      <Text>
+        <LocalizedText id="divider" />
+      </Text>
       <Kbd>---</Kbd>
     </Tooltip>
   </TooltipTrigger>

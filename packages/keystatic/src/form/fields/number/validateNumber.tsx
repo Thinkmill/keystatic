@@ -1,3 +1,8 @@
+import {
+  defaultStringFormatter,
+  KeystaticStringFormatter,
+} from '../../../app/l10n/default-formatter';
+
 export function validateNumber(
   validation:
     | {
@@ -9,29 +14,36 @@ export function validateNumber(
     | undefined,
   value: unknown,
   step: number | undefined,
-  label: string
+  label: string,
+  stringFormatter: KeystaticStringFormatter = defaultStringFormatter
 ) {
   if (value !== null && typeof value !== 'number') {
-    return `${label} must be a number`;
+    return stringFormatter.format('fieldMustBeNumber', { label });
   }
 
   if (validation?.isRequired && value === null) {
-    return `${label} is required`;
+    return stringFormatter.format('fieldIsRequired', { label });
   }
 
   if (value !== null) {
     if (validation?.min !== undefined && value < validation.min) {
-      return `${label} must be at least ${validation.min}`;
+      return stringFormatter.format('fieldMustBeAtLeast', {
+        label,
+        min: validation.min,
+      });
     }
     if (validation?.max !== undefined && value > validation.max) {
-      return `${label} must be at most ${validation.max}`;
+      return stringFormatter.format('fieldMustBeAtMost', {
+        label,
+        max: validation.max,
+      });
     }
     if (
       step !== undefined &&
       validation?.validateStep !== undefined &&
       !isAtStep(value, step)
     ) {
-      return `${label} must be a multiple of ${step}`;
+      return stringFormatter.format('fieldMustBeMultipleOf', { label, step });
     }
   }
 }

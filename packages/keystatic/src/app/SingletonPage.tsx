@@ -1,4 +1,5 @@
 import { useRouter } from './router';
+import { useLocalizedString } from './shell/i18n';
 import {
   FormEvent,
   ReactElement,
@@ -93,6 +94,7 @@ function SingletonPageInner(
   const { schema, singletonConfig } = useSingleton(props.singleton);
 
   const router = useRouter();
+  const stringFormatter = useLocalizedString();
 
   const previewHref = useMemo(() => {
     if (!singletonConfig.previewUrl) return undefined;
@@ -129,24 +131,24 @@ function SingletonPageInner(
     }[] = [
       {
         key: 'reset',
-        label: 'Reset',
+        label: stringFormatter.format('reset'),
         icon: historyIcon,
       },
       {
         key: 'copy',
-        label: 'Copy entry',
+        label: stringFormatter.format('copyEntry'),
         icon: clipboardCopyIcon,
       },
       {
         key: 'paste',
-        label: 'Paste entry',
+        label: stringFormatter.format('pasteEntry'),
         icon: clipboardPasteIcon,
       },
     ];
     if (previewHref) {
       actions.push({
         key: 'preview',
-        label: 'Preview',
+        label: stringFormatter.format('preview'),
         icon: externalLinkIcon,
         href: previewHref,
         target: '_blank',
@@ -156,7 +158,7 @@ function SingletonPageInner(
     if (viewHref) {
       actions.push({
         key: 'view',
-        label: 'View on GitHub',
+        label: stringFormatter.format('viewOnGitHub'),
         icon: githubIcon,
         href: viewHref,
         target: '_blank',
@@ -164,7 +166,7 @@ function SingletonPageInner(
       });
     }
     return actions;
-  }, [previewHref, viewHref]);
+  }, [previewHref, viewHref, stringFormatter]);
 
   const formID = 'singleton-form';
 
@@ -194,13 +196,14 @@ function SingletonPageInner(
     const entry = await getPastedEntry(
       formatInfo,
       singletonConfig.schema,
-      undefined
+      undefined,
+      stringFormatter
     );
     if (entry) {
       setValueToPreviewProps(entry, props.previewProps);
-      toastQueue.positive('Entry pasted', {
+      toastQueue.positive(stringFormatter.format('entryPasted'), {
         shouldCloseOnAction: true,
-        actionLabel: 'Undo',
+        actionLabel: stringFormatter.format('undo'),
         onAction: () => {
           setValueToPreviewProps(props.state, props.previewProps);
         },
@@ -217,13 +220,17 @@ function SingletonPageInner(
           </Heading>
           {props.updateResult.kind === 'loading' ? (
             <ProgressCircle
-              aria-label={`Updating ${singletonConfig.label}`}
+              aria-label={stringFormatter.format('updatingName', {
+                name: singletonConfig.label,
+              })}
               isIndeterminate
               size="small"
               alignSelf="center"
             />
           ) : (
-            props.hasChanged && <Badge tone="pending">Unsaved</Badge>
+            props.hasChanged && (
+              <Badge tone="pending">{stringFormatter.format('unsaved')}</Badge>
+            )
           )}
         </Flex>
         <PresenceAvatars />
@@ -268,7 +275,7 @@ function SingletonPageInner(
           prominence="high"
           type="submit"
         >
-          {isCreating ? 'Create' : 'Save'}
+          {stringFormatter.format(isCreating ? 'create' : 'save')}
         </Button>
       </PageHeader>
       <Flex
@@ -539,6 +546,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     () => getSingletonFormat(props.config, props.singleton),
     [props.config, props.singleton]
   );
+  const stringFormatter = useLocalizedString();
 
   const dirpath = getSingletonPath(props.config, props.singleton);
 
@@ -661,7 +669,9 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
             minHeight="scale.3000"
           >
             <ProgressCircle
-              aria-label={`Loading ${singletonConfig.label}`}
+              aria-label={stringFormatter.format('loadingName', {
+                name: singletonConfig.label,
+              })}
               isIndeterminate
               size="large"
             />

@@ -14,6 +14,7 @@ import { AppSlugContext } from './onboarding/install-app';
 import { Flex } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
 import { parseRepoConfig, serializeRepoConfig } from './repo-config';
+import { formatWithElements } from './shell/i18n';
 
 export function ForkRepoDialog(props: {
   onDismiss: () => void;
@@ -73,7 +74,7 @@ export function ForkRepoDialog(props: {
         props.onDismiss();
       }}
     >
-      <Heading>Fork Repo</Heading>
+      <Heading>{stringFormatter.format('forkRepo')}</Heading>
       {state.kind === 'error' ? (
         <>
           <Content>
@@ -89,29 +90,30 @@ export function ForkRepoDialog(props: {
         <>
           <Content>
             <Flex gap="large" direction="column" marginBottom="large">
+              <Text>{stringFormatter.format('forkRepoNoPermission')}</Text>
               <Text>
-                You don't have permission to write to this repo so to save your
-                changes, you need to fork the repo.
-              </Text>
-              <Text>
-                To start,{' '}
-                <TextLink
-                  href={`https://github.com/${serializeRepoConfig(
-                    props.config.storage.repo
-                  )}/fork`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  fork the repo on GitHub
-                </TextLink>
-                . Then, come back to this page and{' '}
-                <TextLink
-                  href={`https://github.com/apps/${appSlug?.value}/installations/new?state=close`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  install the Keystatic GitHub App on your fork.
-                </TextLink>
+                {formatWithElements(stringFormatter, 'forkRepoInstructions', {
+                  forkLink: (
+                    <TextLink
+                      href={`https://github.com/${serializeRepoConfig(
+                        props.config.storage.repo
+                      )}/fork`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {stringFormatter.format('forkTheRepoOnGitHub')}
+                    </TextLink>
+                  ),
+                  installLink: (
+                    <TextLink
+                      href={`https://github.com/apps/${appSlug?.value}/installations/new?state=close`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {stringFormatter.format('installGitHubAppOnFork')}
+                    </TextLink>
+                  ),
+                })}
               </Text>
             </Flex>
           </Content>

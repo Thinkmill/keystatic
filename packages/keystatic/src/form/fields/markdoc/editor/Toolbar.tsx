@@ -49,7 +49,11 @@ import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
 import { EditorSchema } from './schema';
 import { ImageToolbarButton } from './images';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
-import { itemRenderer } from './autocomplete/insert-menu';
+import { useLocalizedString } from '../../../../app/shell/i18n';
+import {
+  itemRenderer,
+  useLocalizedInsertMenuItems,
+} from './autocomplete/insert-menu';
 import { LinkDialog } from './popovers/link-toolbar';
 import { DialogContainer } from '@keystar/ui/dialog';
 import { linkIcon } from '@keystar/ui/icon/icons/linkIcon';
@@ -88,6 +92,7 @@ function LinkButton(props: { link: MarkType }) {
   const [text, setText] = useState<null | string>(null);
   const runCommand = useEditorDispatchCommand();
   const viewRef = useEditorViewRef();
+  const stringFormatter = useLocalizedString();
   useEditorKeydownListener(event => {
     if (event.metaKey && (event.key === 'k' || event.key === 'K')) {
       const { state } = viewRef.current!;
@@ -106,7 +111,7 @@ function LinkButton(props: { link: MarkType }) {
       <>
         <TooltipTrigger>
           <ToolbarButton
-            aria-label="Divider"
+            aria-label={stringFormatter.format('divider')}
             command={(state, dispatch) => {
               const aroundFrom = markAround(state.selection.$from, props.link);
               const aroundTo = markAround(state.selection.$to, props.link);
@@ -142,7 +147,7 @@ function LinkButton(props: { link: MarkType }) {
             <Icon src={linkIcon} />
           </ToolbarButton>
           <Tooltip>
-            <Text>Link</Text>
+            <Text>{stringFormatter.format('link')}</Text>
             <Kbd meta>K</Kbd>
           </Tooltip>
         </TooltipTrigger>
@@ -164,7 +169,7 @@ function LinkButton(props: { link: MarkType }) {
         </DialogContainer>
       </>
     ),
-    [props.link, runCommand, text]
+    [props.link, runCommand, text, stringFormatter]
   );
 }
 
@@ -173,28 +178,29 @@ export const Toolbar = memo(function Toolbar(
 ) {
   const schema = useEditorSchema();
   const { nodes, marks } = schema;
+  const stringFormatter = useLocalizedString();
   return (
     <ToolbarWrapper {...props}>
       <ToolbarScrollArea>
         {nodes.heading && <HeadingMenu headingType={nodes.heading} />}
-        <EditorToolbar aria-label="Formatting options">
+        <EditorToolbar aria-label={stringFormatter.format('formattingOptions')}>
           <EditorToolbarSeparator />
           <InlineMarks />
           <EditorToolbarSeparator />
           <ListButtons />
           <EditorToolbarSeparator />
-          <EditorToolbarGroup aria-label="Blocks">
+          <EditorToolbarGroup aria-label={stringFormatter.format('blocks')}>
             {nodes.divider && (
               <TooltipTrigger>
                 <ToolbarButton
-                  aria-label="Divider"
+                  aria-label={stringFormatter.format('divider')}
                   command={insertNode(nodes.divider)}
                   isSelected={typeInSelection(nodes.divider)}
                 >
                   <Icon src={minusIcon} />
                 </ToolbarButton>
                 <Tooltip>
-                  <Text>Divider</Text>
+                  <Text>{stringFormatter.format('divider')}</Text>
                   <Kbd>---</Kbd>
                 </Tooltip>
               </TooltipTrigger>
@@ -203,7 +209,7 @@ export const Toolbar = memo(function Toolbar(
             {nodes.blockquote && (
               <TooltipTrigger>
                 <ToolbarButton
-                  aria-label="Quote"
+                  aria-label={stringFormatter.format('quote')}
                   command={(state, dispatch) => {
                     const hasQuote = typeInSelection(nodes.blockquote!)(state);
                     if (hasQuote) {
@@ -228,7 +234,7 @@ export const Toolbar = memo(function Toolbar(
                   <Icon src={quoteIcon} />
                 </ToolbarButton>
                 <Tooltip>
-                  <Text>Quote</Text>
+                  <Text>{stringFormatter.format('quote')}</Text>
                   <Kbd>{'>⎵'}</Kbd>
                 </Tooltip>
               </TooltipTrigger>
@@ -236,14 +242,14 @@ export const Toolbar = memo(function Toolbar(
             {nodes.code_block && (
               <TooltipTrigger>
                 <ToolbarButton
-                  aria-label="Code block"
+                  aria-label={stringFormatter.format('codeBlock')}
                   command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
                   isSelected={typeInSelection(nodes.code_block)}
                 >
                   <Icon src={codeIcon} />
                 </ToolbarButton>
                 <Tooltip>
-                  <Text>Code block</Text>
+                  <Text>{stringFormatter.format('codeBlock')}</Text>
                   <Kbd>```</Kbd>
                 </Tooltip>
               </TooltipTrigger>
@@ -251,13 +257,13 @@ export const Toolbar = memo(function Toolbar(
             {nodes.table && (
               <TooltipTrigger>
                 <ToolbarButton
-                  aria-label="Table"
+                  aria-label={stringFormatter.format('table')}
                   command={insertTable(nodes.table)}
                 >
                   <Icon src={tableIcon} />
                 </ToolbarButton>
                 <Tooltip>
-                  <Text>Table</Text>
+                  <Text>{stringFormatter.format('table')}</Text>
                 </Tooltip>
               </TooltipTrigger>
             )}
@@ -408,13 +414,19 @@ function getHeadingMenuState(
 
 const HeadingMenu = (props: { headingType: NodeType }) => {
   const { nodes, config } = useEditorSchema();
+  const stringFormatter = useLocalizedString();
   const items = useMemo(() => {
-    let resolvedItems: HeadingItem[] = [{ name: 'Paragraph', id: 'normal' }];
+    let resolvedItems: HeadingItem[] = [
+      { name: stringFormatter.format('paragraph'), id: 'normal' },
+    ];
     config.heading.levels.forEach(level => {
-      resolvedItems.push({ name: `Heading ${level}`, id: level.toString() });
+      resolvedItems.push({
+        name: stringFormatter.format('headingLevel', { level }),
+        id: level.toString(),
+      });
     });
     return resolvedItems;
-  }, [config.heading.levels]);
+  }, [config.heading.levels, stringFormatter]);
   const state = useEditorState();
   const menuState = getHeadingMenuState(
     state,
@@ -429,7 +441,7 @@ const HeadingMenu = (props: { headingType: NodeType }) => {
         flexShrink={0}
         width="scale.1700"
         prominence="low"
-        aria-label="Text block"
+        aria-label={stringFormatter.format('textBlock')}
         items={items}
         isDisabled={menuState === 'disabled'}
         value={menuState === 'disabled' ? 'normal' : menuState.toString()}
@@ -452,7 +464,14 @@ const HeadingMenu = (props: { headingType: NodeType }) => {
         {item => <Item key={item.id}>{item.name}</Item>}
       </Picker>
     ),
-    [items, menuState, nodes.paragraph, props.headingType, runCommand]
+    [
+      items,
+      menuState,
+      nodes.paragraph,
+      props.headingType,
+      runCommand,
+      stringFormatter,
+    ]
   );
 };
 
@@ -461,10 +480,12 @@ function InsertBlockMenu() {
 
   const commandDispatch = useEditorDispatchCommand();
   const schema = useEditorSchema();
+  const stringFormatter = useLocalizedString();
 
+  const insertMenuItems = useLocalizedInsertMenuItems(schema.insertMenuItems);
   const items = useMemo(
-    () => schema.insertMenuItems.filter(x => x.forToolbar),
-    [schema.insertMenuItems]
+    () => insertMenuItems.filter(x => x.forToolbar),
+    [insertMenuItems]
   );
   const idToItem = useMemo(
     () => new Map(items.map(item => [item.id, item])),
@@ -485,7 +506,7 @@ function InsertBlockMenu() {
           <Icon src={chevronDownIcon} />
         </ActionButton>
         <Tooltip>
-          <Text>Insert</Text>
+          <Text>{stringFormatter.format('insert')}</Text>
           <Kbd>/</Kbd>
         </Tooltip>
       </TooltipTrigger>
@@ -523,6 +544,7 @@ function InlineMarks() {
   const state = useEditorState();
   const schema = useEditorSchema();
   const runCommand = useEditorDispatchCommand();
+  const stringFormatter = useLocalizedString();
   const inlineMarks = useMemo(() => {
     const marks: {
       key: string;
@@ -535,7 +557,7 @@ function InlineMarks() {
     if (schema.marks.bold) {
       marks.push({
         key: 'bold',
-        label: 'Bold',
+        label: stringFormatter.format('bold'),
         icon: boldIcon,
         shortcut: `B`,
         command: toggleMark(schema.marks.bold),
@@ -546,7 +568,7 @@ function InlineMarks() {
     if (schema.marks.italic) {
       marks.push({
         key: 'italic',
-        label: 'Italic',
+        label: stringFormatter.format('italic'),
         icon: italicIcon,
         shortcut: `I`,
         command: toggleMark(schema.marks.italic),
@@ -556,7 +578,7 @@ function InlineMarks() {
     if (schema.marks.strikethrough) {
       marks.push({
         key: 'strikethrough',
-        label: 'Strikethrough',
+        label: stringFormatter.format('strikethrough'),
         icon: strikethroughIcon,
         command: toggleMark(schema.marks.strikethrough),
         isSelected: isMarkActive(schema.marks.strikethrough),
@@ -565,7 +587,7 @@ function InlineMarks() {
     if (schema.marks.code) {
       marks.push({
         key: 'code',
-        label: 'Code',
+        label: stringFormatter.format('code'),
         icon: codeIcon,
         command: toggleMark(schema.marks.code),
         isSelected: isMarkActive(schema.marks.code),
@@ -585,13 +607,13 @@ function InlineMarks() {
 
     marks.push({
       key: 'clearFormatting',
-      label: 'Clear formatting',
+      label: stringFormatter.format('clearFormatting'),
       icon: removeFormattingIcon,
       command: removeAllMarks(),
       isSelected: () => false,
     });
     return marks;
-  }, [schema]);
+  }, [schema, stringFormatter]);
   const selectedKeys = useMemoStringified(
     inlineMarks.filter(val => val.isSelected(state)).map(val => val.key)
   );
@@ -602,7 +624,7 @@ function InlineMarks() {
   return useMemo(() => {
     return (
       <EditorToolbarGroup
-        aria-label="Text formatting"
+        aria-label={stringFormatter.format('textFormatting')}
         value={selectedKeys}
         onChange={key => {
           const mark = inlineMarks.find(mark => mark.key === key);
@@ -626,7 +648,7 @@ function InlineMarks() {
         ))}
       </EditorToolbarGroup>
     );
-  }, [disabledKeys, inlineMarks, runCommand, selectedKeys]);
+  }, [disabledKeys, inlineMarks, runCommand, selectedKeys, stringFormatter]);
 }
 
 function useMemoStringified<T>(value: T): T {
@@ -651,6 +673,7 @@ function ListButtons() {
   const state = useEditorState();
   const schema = useEditorSchema();
   const dispatchCommand = useEditorDispatchCommand();
+  const stringFormatter = useLocalizedString();
 
   const canWrapInOrderedList =
     !!schema.nodes.ordered_list && toggleList(schema.nodes.ordered_list)(state);
@@ -662,19 +685,19 @@ function ListButtons() {
   const items = useMemo(() => {
     return [
       !!schema.nodes.unordered_list && {
-        label: 'Bullet list',
+        label: stringFormatter.format('bulletList'),
         key: 'unordered_list',
         shortcut: '-',
         icon: listIcon,
       },
       !!schema.nodes.ordered_list && {
-        label: 'Numbered list',
+        label: stringFormatter.format('numberedList'),
         key: 'ordered_list',
         shortcut: '1.',
         icon: listOrderedIcon,
       },
     ].filter(removeFalse);
-  }, [schema.nodes.unordered_list, schema.nodes.ordered_list]);
+  }, [schema.nodes.unordered_list, schema.nodes.ordered_list, stringFormatter]);
 
   const disabledKeys = useMemo(() => {
     return [
@@ -690,7 +713,7 @@ function ListButtons() {
 
     return (
       <EditorToolbarGroup
-        aria-label="Lists"
+        aria-label={stringFormatter.format('lists')}
         value={activeListType}
         onChange={key => {
           const format = key as 'ordered_list' | 'unordered_list';
@@ -715,7 +738,14 @@ function ListButtons() {
         ))}
       </EditorToolbarGroup>
     );
-  }, [activeListType, disabledKeys, dispatchCommand, items, schema.nodes]);
+  }, [
+    activeListType,
+    disabledKeys,
+    dispatchCommand,
+    items,
+    schema.nodes,
+    stringFormatter,
+  ]);
 }
 
 function removeFalse<T>(val: T): val is Exclude<T, false> {

@@ -16,16 +16,22 @@ import { useEditorDispatchCommand, useEditorState } from '../editor-view';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { ResolvedPos } from 'prosemirror-model';
 import { createPortal } from 'react-dom';
+import type { LocalizedMessageKey } from '../../../../../app/l10n/default-locale';
+import { useLocalizedString } from '../../../../../app/shell/i18n';
 
-const cellActions: Record<string, { label: string; command: Command }> = {
-  deleteRow: { label: 'Delete row', command: deleteRow },
-  deleteColumn: { label: 'Delete column', command: deleteColumn },
-  insertRowBelow: { label: 'Insert row below', command: addRowAfter },
-  insertColumnRight: { label: 'Insert column right', command: addColumnAfter },
+const cellActions: Record<
+  string,
+  { label: LocalizedMessageKey; command: Command }
+> = {
+  deleteRow: { label: 'deleteRow', command: deleteRow },
+  deleteColumn: { label: 'deleteColumn', command: deleteColumn },
+  insertRowBelow: { label: 'insertRowBelow', command: addRowAfter },
+  insertColumnRight: { label: 'insertColumnRight', command: addColumnAfter },
 };
 
 function CellMenu() {
   const runCommand = useEditorDispatchCommand();
+  const stringFormatter = useLocalizedString();
   const gutter = tokenSchema.size.space.small;
   return (
     <div
@@ -40,7 +46,7 @@ function CellMenu() {
         <MenuTrigger align="end">
           <ActionButton
             prominence="low"
-            aria-label="Cell options"
+            aria-label={stringFormatter.format('cellOptions')}
             UNSAFE_className={css({
               borderRadius: tokenSchema.size.radius.small,
               height: 'auto',
@@ -68,10 +74,12 @@ function CellMenu() {
               key,
             }))}
           >
-            {item => <Item key={item.key}>{item.label}</Item>}
+            {item => (
+              <Item key={item.key}>{stringFormatter.format(item.label)}</Item>
+            )}
           </Menu>
         </MenuTrigger>
-        <Tooltip>Options</Tooltip>
+        <Tooltip>{stringFormatter.format('options')}</Tooltip>
       </TooltipTrigger>
     </div>
   );

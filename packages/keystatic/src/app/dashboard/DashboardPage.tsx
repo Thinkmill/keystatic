@@ -52,6 +52,7 @@ function UserInfo({
   user: { avatarUrl?: string; name: string };
   manageAccount: boolean;
 }) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   return (
     <Flex alignItems="center" gap="medium" isHidden={{ below: 'tablet' }}>
       <Avatar src={user.avatarUrl} name={user.name} size="large" />
@@ -63,11 +64,11 @@ function UserInfo({
             fontWeight: tokenSchema.typography.fontWeight.bold,
           }}
         >
-          Hello, {user.name}!
+          {stringFormatter.format('helloName', { name: user.name })}
         </Heading>
         {manageAccount && (
           <TextLink href="https://keystatic.cloud/account">
-            Manage Account
+            {stringFormatter.format('manageAccount')}
           </TextLink>
         )}
       </VStack>

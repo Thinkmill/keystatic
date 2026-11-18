@@ -93,7 +93,9 @@ export function BlocksFieldInput(
         </FieldDescription>
       )}
       <MenuTrigger>
-        <ActionButton alignSelf="start">Add</ActionButton>
+        <ActionButton alignSelf="start">
+          {stringFormatter.format('add')}
+        </ActionButton>
         <Menu
           items={props.schema.element.discriminant.options}
           onAction={discriminant => {
@@ -136,12 +138,12 @@ export function BlocksFieldInput(
             return (
               <Dialog>
                 <Heading>
-                  Edit{' '}
-                  {
-                    props.schema.element.discriminant.options.find(
-                      x => x.value === discriminant
-                    )?.label
-                  }
+                  {stringFormatter.format('editName', {
+                    name:
+                      props.schema.element.discriminant.options.find(
+                        x => x.value === discriminant
+                      )?.label ?? '',
+                  })}
                 </Heading>
                 <BlocksEditItemModalContent
                   formId={formId}
@@ -151,7 +153,7 @@ export function BlocksFieldInput(
                 />
                 <ButtonGroup>
                   <Button form={formId} prominence="high" type="submit">
-                    Done
+                    {stringFormatter.format('done')}
                   </Button>
                 </ButtonGroup>
               </Dialog>
@@ -161,12 +163,12 @@ export function BlocksFieldInput(
           return (
             <Dialog>
               <Heading>
-                Add{' '}
-                {
-                  props.schema.element.discriminant.options.find(
-                    x => x.value === discriminant
-                  )?.label
-                }
+                {stringFormatter.format('addName', {
+                  name:
+                    props.schema.element.discriminant.options.find(
+                      x => x.value === discriminant
+                    )?.label ?? '',
+                })}
               </Heading>
               <Content>
                 <BlocksAddItemModalContent

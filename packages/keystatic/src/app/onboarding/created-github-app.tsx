@@ -3,8 +3,10 @@ import { Heading, Text } from '@keystar/ui/typography';
 import { GitHubConfig } from '../..';
 import { InstallGitHubApp } from './install-app';
 import { serializeRepoConfig } from '../repo-config';
+import { formatWithElements, useLocalizedString } from '../shell/i18n';
 
 export function CreatedGitHubApp(props: { config: GitHubConfig }) {
+  const stringFormatter = useLocalizedString();
   return (
     <Flex alignItems="center" justifyContent="center" margin="xxlarge">
       <Flex
@@ -17,15 +19,12 @@ export function CreatedGitHubApp(props: { config: GitHubConfig }) {
         gap="xlarge"
         maxWidth="scale.4600"
       >
-        <Heading>You've installed Keystatic! 🎉</Heading>
+        <Heading>{stringFormatter.format('installedKeystatic')}</Heading>
+        <Text>{stringFormatter.format('installGitHubAppToStart')}</Text>
         <Text>
-          To start using Keystatic, you need to install the GitHub app you've
-          created.
-        </Text>
-        <Text>
-          Make sure to add the App to the{' '}
-          <code>{serializeRepoConfig(props.config.storage.repo)}</code>{' '}
-          repository.
+          {formatWithElements(stringFormatter, 'addGitHubAppToRepo', {
+            repo: <code>{serializeRepoConfig(props.config.storage.repo)}</code>,
+          })}
         </Text>
         <InstallGitHubApp config={props.config} />
       </Flex>

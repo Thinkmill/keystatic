@@ -26,6 +26,11 @@ import {
   InsertMenuItem,
   WithInsertMenuNodeSpec,
 } from './autocomplete/insert-menu';
+import {
+  defaultStringFormatter,
+  KeystaticStringFormatter,
+} from '../../../../app/l10n/default-formatter';
+import type { LocalizedMessageKey } from '../../../../app/l10n/default-locale';
 import { setBlockType, wrapIn } from 'prosemirror-commands';
 import { insertNode, insertTable } from './commands/misc';
 import { toggleList } from './lists';
@@ -82,14 +87,28 @@ export type EditorNodeSpec = NodeSpec &
 
 const inlineContent = `inline*`;
 
+/** Built-in items use messages, custom components use their own label. */
+export type InsertMenuText =
+  | string
+  | { key: LocalizedMessageKey; args?: Record<string, string | number> };
+
+export function formatInsertMenuText(
+  stringFormatter: KeystaticStringFormatter,
+  text: InsertMenuText
+) {
+  return typeof text === 'string'
+    ? text
+    : stringFormatter.format(text.key, text.args);
+}
+
 const levelsMeta = [
-  { description: 'Use this for a top level heading', icon: heading1Icon },
-  { description: 'Use this for key sections', icon: heading2Icon },
-  { description: 'Use this for sub-sections', icon: heading3Icon },
-  { description: 'Use this for deep headings', icon: heading4Icon },
-  { description: 'Use this for grouping list items', icon: heading5Icon },
-  { description: 'Use this for low-level headings', icon: heading6Icon },
-];
+  { description: { key: 'heading1Description' }, icon: heading1Icon },
+  { description: { key: 'heading2Description' }, icon: heading2Icon },
+  { description: { key: 'heading3Description' }, icon: heading3Icon },
+  { description: { key: 'heading4Description' }, icon: heading4Icon },
+  { description: { key: 'heading5Description' }, icon: heading5Icon },
+  { description: { key: 'heading6Description' }, icon: heading6Icon },
+] as const;
 
 const cellAttrs: Record<string, AttributeSpec> = {
   colspan: { default: 1 },
@@ -151,8 +170,8 @@ const nodeSpecs = {
       return blockquoteDOM;
     },
     insertMenu: {
-      label: 'Blockquote',
-      description: 'Insert a quote or citation',
+      label: { key: 'blockquote' },
+      description: { key: 'insertBlockquoteDescription' },
       icon: quoteIcon,
       command: wrapIn,
     },
@@ -164,8 +183,8 @@ const nodeSpecs = {
       return dividerDOM;
     },
     insertMenu: {
-      label: 'Divider',
-      description: 'A horizontal line to separate content',
+      label: { key: 'divider' },
+      description: { key: 'insertDividerDescription' },
       icon: separatorHorizontalIcon,
       command: insertNode,
     },
@@ -179,8 +198,8 @@ const nodeSpecs = {
       language: { default: '' },
     },
     insertMenu: {
-      label: 'Code block',
-      description: 'Display code with syntax highlighting',
+      label: { key: 'codeBlock' },
+      description: { key: 'insertCodeBlockDescription' },
       icon: fileCodeIcon,
       command: setBlockType,
     },
@@ -220,8 +239,8 @@ const nodeSpecs = {
       return ulDOM;
     },
     insertMenu: {
-      label: 'Bullet list',
-      description: 'Insert an unordered list',
+      label: { key: 'bulletList' },
+      description: { key: 'insertBulletListDescription' },
       icon: listIcon,
       command: toggleList,
     },
@@ -251,8 +270,8 @@ const nodeSpecs = {
       return ['ol', { start: node.attrs.start }, 0];
     },
     insertMenu: {
-      label: 'Ordered list',
-      description: 'Insert an ordered list',
+      label: { key: 'orderedList' },
+      description: { key: 'insertOrderedListDescription' },
       icon: listOrderedIcon,
       command: toggleList,
     },
@@ -269,8 +288,8 @@ const nodeSpecs = {
   table: {
     content: 'table_row+',
     insertMenu: {
-      label: 'Table',
-      description: 'Insert a table',
+      label: { key: 'table' },
+      description: { key: 'insertTableDescription' },
       icon: tableIcon,
       command: insertTable,
     },
@@ -344,8 +363,8 @@ const nodeSpecs = {
       title: { default: '' },
     },
     insertMenu: {
-      label: 'Image',
-      description: 'Insert an image',
+      label: { key: 'image' },
+      description: { key: 'insertImageDescription' },
       icon: imageIcon,
       command: nodeType => {
         return (state, dispatch, view) => {
@@ -610,7 +629,7 @@ export function createEditorSchema(
       },
       insertMenu: config.heading.levels.map((level, index) => ({
         ...levelsMeta[index],
-        label: 'Heading ' + level,
+        label: { key: 'headingLevel', args: { level } },
         command: type => setBlockType(type, { level }),
       })),
     };
@@ -698,7 +717,11 @@ export function createEditorSchema(
 
   // TODO: keep "bullet list" and "ordered list" together
   editorSchema.insertMenuItems = insertMenuItems
-    .sort((a, b) => a.label.localeCompare(b.label))
+    .sort((a, b) =>
+      formatInsertMenuText(defaultStringFormatter, a.label).localeCompare(
+        formatInsertMenuText(defaultStringFormatter, b.label)
+      )
+    )
     .map((item, i) => ({ ...item, id: i.toString() }));
 
   return editorSchema;

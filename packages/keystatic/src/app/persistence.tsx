@@ -4,6 +4,8 @@ import { useLocale } from 'react-aria/I18nProvider';
 import { UseStore, clear, createStore, del, get, set } from 'idb-keyval';
 import { useState, useMemo } from 'react';
 
+import { formatWithElements, useLocalizedString } from './shell/i18n';
+
 const units = {
   seconds: 60,
   minutes: 60,
@@ -44,20 +46,34 @@ function RelativeTime(props: { date: Date }) {
   return <time dateTime={props.date.toISOString()}>{formatted}</time>;
 }
 
+function DraftRestoredMessage(props: {
+  savedAt: Date;
+  hasChangedSince: boolean;
+}) {
+  const stringFormatter = useLocalizedString();
+  return (
+    <Text>
+      {formatWithElements(stringFormatter, 'restoredDraftFrom', {
+        time: <RelativeTime date={props.savedAt} />,
+      })}{' '}
+      {props.hasChangedSince && (
+        <Text color="accent">
+          {stringFormatter.format('draftHasChangedSince')}
+        </Text>
+      )}
+    </Text>
+  );
+}
+
 export function showDraftRestoredToast(
   savedAt: Date,
   hasChangedSince: boolean
 ) {
   toastQueue.info(
-    <Text>
-      Restored draft from <RelativeTime date={savedAt} />.{' '}
-      {hasChangedSince && (
-        <Text color="accent">
-          Other changes have been made to this entry since the draft. You may
-          want to discard the draft changes.
-        </Text>
-      )}
-    </Text>,
+    <DraftRestoredMessage
+      savedAt={savedAt}
+      hasChangedSince={hasChangedSince}
+    />,
     { timeout: 8000 }
   );
 }

@@ -9,6 +9,7 @@ import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Kbd, Text } from '@keystar/ui/typography';
 
 import { useToolbarState } from '../toolbar-state';
+import { LocalizedText } from '../../../../../app/shell/i18n';
 import { isElementActive } from '../utils';
 
 export const insertBlockquote = (editor: Editor) => {
@@ -58,7 +59,9 @@ export const blockquoteButton = (
   <TooltipTrigger>
     <BlockquoteButton />
     <Tooltip>
-      <Text>Quote</Text>
+      <Text>
+        <LocalizedText id="quote" />
+      </Text>
       <Kbd>{'>⎵'}</Kbd>
     </Tooltip>
   </TooltipTrigger>

@@ -2,6 +2,7 @@ import { Editor, Element, Node, Path, Transforms } from 'slate';
 
 import { isElementActive } from '../utils';
 import { getListTypeAbove, useToolbarState } from '../toolbar-state';
+import { useLocalizedString } from '../../../../../app/shell/i18n';
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { Kbd, Text } from '@keystar/ui/typography';
 import { listIcon } from '@keystar/ui/icon/icons/listIcon';
@@ -52,6 +53,7 @@ export function ListButtons(props: {
   lists: { ordered: boolean; unordered: boolean };
 }) {
   const { editor, lists } = useToolbarState();
+  const stringFormatter = useLocalizedString();
   return useMemo(() => {
     const disabledKeys: string[] = [];
     if (lists.ordered.isDisabled) disabledKeys.push('ordered');
@@ -63,7 +65,7 @@ export function ListButtons(props: {
     return (
       <ActionGroup
         flexShrink={0}
-        aria-label="Lists"
+        aria-label={stringFormatter.format('lists')}
         selectionMode="single"
         buttonLabelBehavior="hide"
         density="compact"
@@ -80,16 +82,26 @@ export function ListButtons(props: {
       >
         {[
           props.lists.unordered && (
-            <Item key="unordered" textValue="Bullet List (- )">
+            <Item
+              key="unordered"
+              textValue={`${stringFormatter.format(
+                'bulletListTitleCase'
+              )} (- )`}
+            >
               <Icon src={listIcon} />
-              <Text>Bullet List</Text>
+              <Text>{stringFormatter.format('bulletListTitleCase')}</Text>
               <Kbd>-⎵</Kbd>
             </Item>
           ),
           props.lists.ordered && (
-            <Item key="ordered" textValue="Numbered List (1.)">
+            <Item
+              key="ordered"
+              textValue={`${stringFormatter.format(
+                'numberedListTitleCase'
+              )} (1.)`}
+            >
               <Icon src={listOrderedIcon} />
-              <Text>Numbered List</Text>
+              <Text>{stringFormatter.format('numberedListTitleCase')}</Text>
               <Kbd>1.⎵</Kbd>
             </Item>
           ),
@@ -104,6 +116,7 @@ export function ListButtons(props: {
     lists.unordered.isSelected,
     props.lists.ordered,
     props.lists.unordered,
+    stringFormatter,
   ]);
 }
 

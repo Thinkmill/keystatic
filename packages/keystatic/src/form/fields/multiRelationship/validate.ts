@@ -1,19 +1,19 @@
-import { pluralize } from '../../../app/pluralize';
+import {
+  defaultStringFormatter,
+  KeystaticStringFormatter,
+} from '../../../app/l10n/default-formatter';
 
 export function validateMultiRelationshipLength(
   validation: { length?: { min?: number; max?: number } } | undefined,
-  value: string[]
+  value: string[],
+  stringFormatter: KeystaticStringFormatter = defaultStringFormatter
 ) {
   const minLength = validation?.length?.min ?? 0;
   if (value.length < minLength) {
-    return `Must have at least ${pluralize(minLength, {
-      singular: 'item',
-    })}.`;
+    return stringFormatter.format('mustHaveAtLeastItems', { count: minLength });
   }
   const maxLength = validation?.length?.max ?? Infinity;
   if (value.length > maxLength) {
-    return `Must have at most ${pluralize(maxLength, {
-      singular: 'item',
-    })}.`;
+    return stringFormatter.format('mustHaveAtMostItems', { count: maxLength });
   }
 }

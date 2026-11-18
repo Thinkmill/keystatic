@@ -75,7 +75,11 @@ export function BranchSection() {
           ) : (
             <ActionButton href={`${repoURL}/pull/${prNumber}`} target="_blank">
               <Icon src={gitPullRequestIcon} />
-              <Text>Pull request #{prNumber}</Text>
+              <Text>
+                {localizedString.format('pullRequestNumber', {
+                  number: prNumber,
+                })}
+              </Text>
             </ActionButton>
           ))}
       </Flex>

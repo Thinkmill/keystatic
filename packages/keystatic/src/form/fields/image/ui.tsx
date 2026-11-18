@@ -7,6 +7,7 @@ import { TextField } from '@keystar/ui/text-field';
 import { useIsInDocumentEditor } from '../document/DocumentEditor';
 import { useState, useEffect, useReducer, useId } from 'react';
 import { FormFieldInputProps } from '../../api';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 export function getUploadedFileObject(
   accept: string
@@ -61,7 +62,6 @@ export function useObjectURL(
   return url;
 }
 
-// TODO: button labels ("Choose file", "Remove") need i18n support
 export function ImageFieldInput(
   props: FormFieldInputProps<{
     data: Uint8Array;
@@ -76,6 +76,7 @@ export function ImageFieldInput(
 ) {
   const { value } = props;
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
   const isInEditor = useIsInDocumentEditor();
   const objectUrl = useObjectURL(
     value === null ? null : value.data,
@@ -121,7 +122,7 @@ export function ImageFieldInput(
             }
           }}
         >
-          Choose file
+          {stringFormatter.format('chooseFile')}
         </ActionButton>
         {value !== null && (
           <ActionButton
@@ -131,7 +132,7 @@ export function ImageFieldInput(
               onBlur();
             }}
           >
-            Remove
+            {stringFormatter.format('remove')}
           </ActionButton>
         )}
       </ButtonGroup>
@@ -156,7 +157,7 @@ export function ImageFieldInput(
       )}
       {isInEditor && value !== null && (
         <TextField
-          label="Filename"
+          label={stringFormatter.format('filename')}
           onChange={filename => {
             props.onChange({ ...value, filename });
           }}
@@ -166,7 +167,9 @@ export function ImageFieldInput(
       {(props.forceValidation || blurred) &&
         props.validation?.isRequired &&
         value === null && (
-          <FieldMessage>{props.label} is required</FieldMessage>
+          <FieldMessage>
+            {stringFormatter.format('fieldIsRequired', { label: props.label })}
+          </FieldMessage>
         )}
     </Flex>
   );

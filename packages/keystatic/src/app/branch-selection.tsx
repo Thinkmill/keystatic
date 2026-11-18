@@ -1,3 +1,4 @@
+import { useLocale } from 'react-aria/I18nProvider';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { gql } from '@ts-gql/tag/no-transform';
 import { useMemo, useState } from 'react';
@@ -17,6 +18,7 @@ import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import l10nMessages from './l10n';
+import type { KeystaticStringFormatter } from './l10n/default-formatter';
 import { useRouter } from './router';
 import {
   Ref_base,
@@ -106,6 +108,7 @@ export function CreateBranchDialog(props: {
   const currentBranch = useCurrentBranch();
   const isDefaultBranch = repoInfo?.defaultBranch === currentBranch;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const { locale } = useLocale();
   const [{ error, fetching }, createBranch] = useCreateBranchMutation();
   const createBranchSubmitButtonId = 'create-branch-submit-button';
 
@@ -165,7 +168,11 @@ export function CreateBranchDialog(props: {
               label={stringFormatter.format('branchName')}
               // description="Your new branch will be based on the currently checked out branch, which is the default branch for this repository."
               autoFocus
-              errorMessage={prettyErrorForCreateBranchMutation(error)}
+              errorMessage={prettyErrorForCreateBranchMutation(
+                error,
+                stringFormatter,
+                locale
+              )}
               {...propsForBranchPrefix}
             />
           ) : (
@@ -175,7 +182,11 @@ export function CreateBranchDialog(props: {
                 value={branchName}
                 onChange={setBranchName}
                 autoFocus
-                errorMessage={prettyErrorForCreateBranchMutation(error)}
+                errorMessage={prettyErrorForCreateBranchMutation(
+                  error,
+                  stringFormatter,
+                  locale
+                )}
                 {...propsForBranchPrefix}
               />
               <RadioGroup
@@ -241,7 +252,11 @@ const invalidAnywhere = [' ', '~', '^', ':', '*', '?', '[', '..', '@{', '\\'];
 const invalidStart = ['.', '/'];
 const invalidEnd = ['.', '/', '.lock'];
 
-export function prettyErrorForCreateBranchMutation(error?: CombinedError) {
+export function prettyErrorForCreateBranchMutation(
+  error: CombinedError | undefined,
+  stringFormatter: KeystaticStringFormatter,
+  locale: string
+) {
   if (!error) {
     return undefined;
   }
@@ -255,14 +270,14 @@ export function prettyErrorForCreateBranchMutation(error?: CombinedError) {
     // start rules
     for (let char of invalidStart) {
       if (branchname.startsWith(char)) {
-        return `Cannot start with "${char}"`;
+        return stringFormatter.format('branchNameCannotStartWith', { char });
       }
     }
 
     // end rules
     for (let char of invalidEnd) {
       if (branchname.endsWith(char)) {
-        return `Cannot end with "${char}"`;
+        return stringFormatter.format('branchNameCannotEndWith', { char });
       }
     }
 
@@ -270,13 +285,15 @@ export function prettyErrorForCreateBranchMutation(error?: CombinedError) {
     let invalidMatches = invalidAnywhere.filter(c => branchname.includes(c));
     if (invalidMatches.length > 0) {
       let options = { style: 'long', type: 'conjunction' } as const;
-      let formatter = new Intl.ListFormat('en-US', options);
+      let formatter = new Intl.ListFormat(locale, options);
       let list = invalidMatches.map(char => `"${char}"`);
-      return `Some characters are not allowed: ${formatter.format(list)}`;
+      return stringFormatter.format('branchNameCharactersNotAllowed', {
+        characters: formatter.format(list),
+      });
     }
 
     // unknown
-    return 'Invalid branch name';
+    return stringFormatter.format('invalidBranchName');
   }
 
   return error.message;

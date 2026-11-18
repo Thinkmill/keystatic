@@ -75,19 +75,24 @@ type MenuSection = { key: string; label: string; children: MenuItem[] };
 // -----------------------------------------------------------------------------
 
 const THEME_MODE = {
-  light: { icon: sunIcon, label: 'Light' },
-  dark: { icon: moonIcon, label: 'Dark' },
-  auto: { icon: monitorIcon, label: 'System' },
+  light: { icon: sunIcon, label: 'themeLight' },
+  dark: { icon: moonIcon, label: 'themeDark' },
+  auto: { icon: monitorIcon, label: 'themeSystem' },
 } as const;
-const themeItems = Object.entries(THEME_MODE).map(([id, { icon, label }]) => ({
-  id,
-  icon,
-  label,
-}));
 
 export function ThemeMenu() {
   let { theme, setTheme } = useThemeContext();
   let matchesDark = useMediaQuery('(prefers-color-scheme: dark)');
+  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  let themeItems = useMemo(
+    () =>
+      Object.entries(THEME_MODE).map(([id, { icon, label }]) => ({
+        id,
+        icon,
+        label: stringFormatter.format(label),
+      })),
+    [stringFormatter]
+  );
   let icon = THEME_MODE[theme].icon;
   if (theme === 'auto') {
     icon = matchesDark ? moonIcon : sunIcon;
@@ -95,7 +100,10 @@ export function ThemeMenu() {
 
   return (
     <MenuTrigger align="end">
-      <ActionButton aria-label="theme" prominence="low">
+      <ActionButton
+        aria-label={stringFormatter.format('theme')}
+        prominence="low"
+      >
         <Icon src={icon} />
       </ActionButton>
       <Menu
@@ -129,6 +137,7 @@ export function UserActions() {
   let config = useConfig();
   let userData = useUserData();
   let router = useRouter();
+  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   if (!userData) {
     return null;
@@ -145,7 +154,7 @@ export function UserActions() {
         }}
         flex
       >
-        Sign into Cloud
+        {stringFormatter.format('signIntoCloud')}
       </ActionButton>
     );
   }
@@ -161,12 +170,13 @@ export function UserMenu(user: {
   let config = useConfig();
   const cloudInfo = useCloudInfo();
   const imageLibraryUrl = useImageLibraryURL();
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   const menuItems = useMemo(() => {
     let items: MenuItem[] = [
       {
         key: 'logout',
-        label: 'Log out',
+        label: stringFormatter.format('logOut'),
         href:
           config.storage.kind === 'github'
             ? '/api/keystatic/github/logout'
@@ -177,7 +187,7 @@ export function UserMenu(user: {
     if (config.cloud?.project) {
       items.unshift({
         key: 'manage',
-        label: 'Account',
+        label: stringFormatter.format('account'),
         icon: userIcon,
         href: 'https://keystatic.cloud/account',
         target: '_blank',
@@ -187,7 +197,7 @@ export function UserMenu(user: {
     if (cloudInfo?.team.images) {
       items.unshift({
         key: 'image-library',
-        label: 'Image library',
+        label: stringFormatter.format('imageLibrary'),
         icon: imageIcon,
         href: imageLibraryUrl,
         target: '_blank',
@@ -195,7 +205,7 @@ export function UserMenu(user: {
       });
     }
     return items;
-  }, [cloudInfo, config, imageLibraryUrl]);
+  }, [cloudInfo, config, imageLibraryUrl, stringFormatter]);
 
   if (!user) {
     return null;
@@ -257,11 +267,12 @@ const UserDetailsButton = forwardRef(function UserDetailsButton(
   ref: ForwardedRef<HTMLButtonElement>
 ) {
   let { avatarUrl, login, name, ...otherProps } = props;
+  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
   return (
     <ActionButton
       {...otherProps}
       ref={ref}
-      aria-label="User menu"
+      aria-label={stringFormatter.format('userMenu')}
       prominence="low"
       flexGrow={1}
       UNSAFE_className={css({ justifyContent: 'start', textAlign: 'start' })}
@@ -362,7 +373,7 @@ export function GitMenu() {
         href: repoURL,
         target: '_blank',
         rel: 'noopener noreferrer',
-        label: 'Github repo', // TODO: l10n
+        label: stringFormatter.format('githubRepo'),
       },
     ];
 
@@ -388,7 +399,9 @@ export function GitMenu() {
           href: `${repoURL}/pull/${prNumber}`,
           target: '_blank',
           rel: 'noopener noreferrer',
-          label: `Pull Request #${prNumber}`,
+          label: stringFormatter.format('viewPullRequestNumber', {
+            number: prNumber,
+          }),
         });
       }
     }
@@ -400,7 +413,7 @@ export function GitMenu() {
         href: forkRepoUrl,
         target: '_blank',
         rel: 'noopener noreferrer',
-        label: 'View fork', // TODO: l10n
+        label: stringFormatter.format('viewFork'),
       });
     }
 
@@ -421,7 +434,7 @@ export function GitMenu() {
     if (repoSection.length) {
       items.push({
         key: 'repo-section',
-        label: 'Repository', // TODO: l10n
+        label: stringFormatter.format('repository'),
         children: repoSection,
       });
     }
@@ -432,7 +445,7 @@ export function GitMenu() {
   return (
     <>
       <ActionMenu
-        aria-label="git actions"
+        aria-label={stringFormatter.format('gitActions')}
         align="end"
         items={gitMenuItems}
         onAction={key => {
@@ -485,10 +498,10 @@ export function GitMenu() {
       <DialogContainer onDismiss={toggleDeleteBranchDialog}>
         {deleteBranchDialogVisible && (
           <AlertDialog
-            title="Delete branch"
+            title={stringFormatter.format('deleteBranch')}
             tone="critical"
-            cancelLabel="Cancel"
-            primaryActionLabel="Yes, delete"
+            cancelLabel={stringFormatter.format('cancel')}
+            primaryActionLabel={stringFormatter.format('yesDelete')}
             autoFocusButton="cancel"
             onPrimaryAction={async () => {
               if (repoInfo) {
@@ -504,8 +517,9 @@ export function GitMenu() {
               }
             }}
           >
-            Are you sure you want to delete the "{currentBranch}" branch? This
-            cannot be undone.
+            {stringFormatter.format('deleteBranchConfirmation', {
+              branchName: currentBranch,
+            })}
           </AlertDialog>
         )}
       </DialogContainer>

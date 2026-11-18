@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import * as s from 'superstruct';
 import { Config } from '../config';
 import { useRouter } from './router';
+import { useLocalizedString } from './shell/i18n';
 import { KEYSTATIC_CLOUD_API_URL, KEYSTATIC_CLOUD_HEADERS } from './utils';
 import { Flex } from '@keystar/ui/layout';
 
@@ -20,6 +21,7 @@ const tokenResponseSchema = s.type({
 
 export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
   const router = useRouter();
+  const stringFormatter = useLocalizedString();
   const url = new URL(window.location.href);
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');
@@ -77,13 +79,13 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
     }
   }, [code, state, router, storedState, config]);
   if (!config.cloud?.project) {
-    return <Text>Missing Keystatic Cloud config</Text>;
+    return <Text>{stringFormatter.format('missingKeystaticCloudConfig')}</Text>;
   }
   if (!code || !state) {
-    return <Text>Missing code or state</Text>;
+    return <Text>{stringFormatter.format('missingCodeOrState')}</Text>;
   }
   if (!storedState || state !== storedState.state) {
-    return <Text>Invalid state</Text>;
+    return <Text>{stringFormatter.format('invalidState')}</Text>;
   }
 
   if (error) {
@@ -94,7 +96,7 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
       <ProgressCircle
         size="large"
         isIndeterminate
-        aria-label="Authenticating"
+        aria-label={stringFormatter.format('authenticating')}
       />
     </Flex>
   );

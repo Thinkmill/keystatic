@@ -3,6 +3,7 @@ import { Combobox } from '@keystar/ui/combobox';
 import { useReducer, useMemo, useState, useEffect } from 'react';
 import { useSlugsInCollection } from '../../../app/useSlugsInCollection';
 import { FormFieldInputProps } from '../../api';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 export function RelationshipInput(
   props: FormFieldInputProps<string | null> & {
@@ -13,6 +14,7 @@ export function RelationshipInput(
   }
 ) {
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
   const slugs = useSlugsInCollection(props.collection);
   const options = useMemo(() => {
     return slugs.map(slug => ({ slug }));
@@ -22,7 +24,7 @@ export function RelationshipInput(
     (props.forceValidation || blurred) &&
     props.validation?.isRequired &&
     props.value === null
-      ? `${props.label} is required`
+      ? stringFormatter.format('fieldIsRequired', { label: props.label })
       : undefined;
   // this state & effect shouldn't really exist
   // it's here because react-aria/stately calls onChange with null

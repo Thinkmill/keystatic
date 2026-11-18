@@ -32,6 +32,11 @@ import {
   ToolbarSeparator,
 } from '../primitives';
 import { useToolbarState } from '../toolbar-state';
+import type { LocalizedMessageKey } from '../../../../../app/l10n/default-locale';
+import {
+  LocalizedText,
+  useLocalizedString,
+} from '../../../../../app/shell/i18n';
 import { nodeTypeMatcher } from '../utils';
 import { cell, getRelativeRowPath, getSelectedTableArea } from './with-table';
 
@@ -144,6 +149,7 @@ export const TableElement = ({
   element,
 }: RenderElementProps) => {
   const editor = useSlateStatic();
+  const stringFormatter = useLocalizedString();
   const selectedCellsContext = useContext(SelectedCellsContext);
   const selectedCells =
     selectedCellsContext?.table === element ? selectedCellsContext : undefined;
@@ -245,7 +251,7 @@ export const TableElement = ({
                   >
                     <Icon src={sheetIcon} />
                   </ActionButton>
-                  <Tooltip>Header row</Tooltip>
+                  <Tooltip>{stringFormatter.format('headerRow')}</Tooltip>
                 </TooltipTrigger>
                 <ToolbarSeparator />
                 <TooltipTrigger>
@@ -259,7 +265,9 @@ export const TableElement = ({
                   >
                     <Icon src={trash2Icon} />
                   </ActionButton>
-                  <Tooltip tone="critical">Remove</Tooltip>
+                  <Tooltip tone="critical">
+                    {stringFormatter.format('remove')}
+                  </Tooltip>
                 </TooltipTrigger>
               </Flex>
             </BlockPopover>
@@ -305,6 +313,7 @@ export function TableCellElement({
   element,
 }: RenderElementProps & { element: { type: 'table-cell' } }) {
   const editor = useSlateStatic();
+  const stringFormatter = useLocalizedString();
   const selectedCellsContext = useContext(SelectedCellsContext);
   const startElements = useContext(StartElementsContext);
   const isSelected = selectedCellsContext?.cells.has(element);
@@ -369,7 +378,7 @@ export function TableCellElement({
         <CellSelection
           location="top"
           selected={!!startElements.top.get(element)}
-          label="Select Column"
+          label={stringFormatter.format('selectColumn')}
           onClick={() => {
             const path = ReactEditor.findPath(editor, element);
             const table = Editor.above(editor, {
@@ -398,7 +407,7 @@ export function TableCellElement({
         <CellSelection
           location="left"
           selected={!!startElements.left.get(element)}
-          label="Select Row"
+          label={stringFormatter.format('selectRow')}
           onClick={() => {
             const path = ReactEditor.findPath(editor, element);
             Transforms.select(editor, {
@@ -416,7 +425,7 @@ export function TableCellElement({
               startElements.top.get(element) && startElements.left.get(element)
             )
           }
-          label="Select Table"
+          label={stringFormatter.format('selectTable')}
           onClick={() => {
             const path = ReactEditor.findPath(editor, element);
             const table = Editor.above(editor, {
@@ -543,7 +552,7 @@ function CellSelection(props: {
 
 export const cellActions = {
   deleteRow: {
-    label: 'Delete row',
+    label: 'deleteRow',
     action: (editor, cellPath) => {
       const tablePath = cellPath.slice(0, -3);
       const table = Node.get(editor, tablePath);
@@ -559,7 +568,7 @@ export const cellActions = {
     },
   },
   deleteColumn: {
-    label: 'Delete column',
+    label: 'deleteColumn',
     action: (editor, path) => {
       const cellIndex = path[path.length - 1];
       const tablePath = path.slice(0, -3);
@@ -583,7 +592,7 @@ export const cellActions = {
     },
   },
   insertRowBelow: {
-    label: 'Insert row below',
+    label: 'insertRowBelow',
     action: (editor, path) => {
       const tableRow = Node.get(editor, Path.parent(path));
       const tablePath = path.slice(0, -3);
@@ -611,7 +620,7 @@ export const cellActions = {
     },
   },
   insertColumnRight: {
-    label: 'Insert column right',
+    label: 'insertColumnRight',
     action: (editor, path) => {
       const newCellIndex = path[path.length - 1] + 1;
       const tablePath = path.slice(0, -3);
@@ -641,12 +650,18 @@ export const cellActions = {
   },
 } satisfies Record<
   string,
-  { label: string; action: (editor: Editor, cellPath: Path) => void }
+  {
+    label: LocalizedMessageKey;
+    action: (editor: Editor, cellPath: Path) => void;
+  }
 >;
 
 const _cellActions: Record<
   string,
-  { label: string; action: (editor: Editor, cellPath: Path) => void }
+  {
+    label: LocalizedMessageKey;
+    action: (editor: Editor, cellPath: Path) => void;
+  }
 > = cellActions;
 
 function CellMenu(props: {
@@ -654,6 +669,7 @@ function CellMenu(props: {
   table: Element & { type: 'table' };
 }) {
   const editor = useSlateStatic();
+  const stringFormatter = useLocalizedString();
   const gutter = tokenSchema.size.space.small;
   return (
     <div
@@ -698,10 +714,12 @@ function CellMenu(props: {
               key,
             }))}
           >
-            {item => <Item key={item.key}>{item.label}</Item>}
+            {item => (
+              <Item key={item.key}>{stringFormatter.format(item.label)}</Item>
+            )}
           </Menu>
         </MenuTrigger>
-        <Tooltip>Options</Tooltip>
+        <Tooltip>{stringFormatter.format('options')}</Tooltip>
       </TooltipTrigger>
     </div>
   );
@@ -733,7 +751,9 @@ export const tableButton = (
   <TooltipTrigger>
     <TableButton />
     <Tooltip>
-      <Text>Table</Text>
+      <Text>
+        <LocalizedText id="table" />
+      </Text>
     </Tooltip>
   </TooltipTrigger>
 );

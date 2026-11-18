@@ -4,6 +4,7 @@ import { ComponentSchema } from '../form/api';
 import { serializeEntryToFiles } from './updating';
 import { parseEntry } from './useItemData';
 import { FormatInfo, getEntryDataFilepath } from './utils';
+import type { KeystaticStringFormatter } from './l10n/default-formatter';
 import * as s from 'superstruct';
 
 const keystaticEntryAttributeSchema = s.type({
@@ -66,7 +67,8 @@ function parseEntryFromPlaintext(
 export async function getPastedEntry(
   format: FormatInfo,
   schema: Record<string, ComponentSchema>,
-  slugInfo: { field: string; slug: string } | undefined
+  slugInfo: { field: string; slug: string } | undefined,
+  stringFormatter: KeystaticStringFormatter
 ) {
   let clipboardItems: ClipboardItem[];
   try {
@@ -75,13 +77,14 @@ export async function getPastedEntry(
     clipboardItems = await navigator.clipboard.read();
   } catch (err) {
     if (err instanceof DOMException && err.name === 'NotAllowedError') {
-      toastQueue.critical(
-        'Failed to paste because clipboard access was denied',
-        { timeout: 5000 }
-      );
+      toastQueue.critical(stringFormatter.format('clipboardAccessDenied'), {
+        timeout: 5000,
+      });
       return;
     }
-    toastQueue.critical('Failed to read clipboard', { timeout: 5000 });
+    toastQueue.critical(stringFormatter.format('failedToReadClipboard'), {
+      timeout: 5000,
+    });
     return;
   }
   for (const item of clipboardItems) {
@@ -107,7 +110,9 @@ export async function getPastedEntry(
       }
     }
   }
-  toastQueue.critical('Entry not found in clipboard', { timeout: 5000 });
+  toastQueue.critical(stringFormatter.format('entryNotFoundInClipboard'), {
+    timeout: 5000,
+  });
 }
 
 function serializeEntryForClipboard(

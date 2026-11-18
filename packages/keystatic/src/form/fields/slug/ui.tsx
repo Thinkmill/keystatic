@@ -10,6 +10,7 @@ import { useContext, useState } from 'react';
 import { FormFieldInputProps } from '../../api';
 import { SlugFieldContext, PathContext } from '../text/path-slug-context';
 import { validateText } from '../text/validateText';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 const emptySet = new Set<string>();
 
@@ -24,6 +25,7 @@ export function SlugFieldInput(
 ) {
   const slugContext = useContext(SlugFieldContext);
   const path = useContext(PathContext);
+  const stringFormatter = useLocalizedString();
   const slugInfo =
     path.length === 1 && path[0] === slugContext?.field
       ? slugContext
@@ -47,7 +49,8 @@ export function SlugFieldInput(
     return generated;
   };
 
-  const slugFieldLabel = props.args.slug?.label ?? 'Slug';
+  const slugFieldLabel =
+    props.args.slug?.label ?? stringFormatter.format('slug');
   const slugErrorMessage =
     props.forceValidation || blurredSlug
       ? validateText(
@@ -56,7 +59,8 @@ export function SlugFieldInput(
           props.args.slug?.validation?.length?.max ?? Infinity,
           slugFieldLabel,
           slugInfo,
-          props.args.slug?.validation?.pattern
+          props.args.slug?.validation?.pattern,
+          stringFormatter
         )
       : undefined;
 
@@ -83,7 +87,8 @@ export function SlugFieldInput(
                 props.args.name.validation?.length?.max ?? Infinity,
                 props.args.name.label,
                 undefined,
-                props.args.name.validation?.pattern
+                props.args.name.validation?.pattern,
+                stringFormatter
               )
             : undefined
         }
@@ -104,7 +109,7 @@ export function SlugFieldInput(
         />
         <Flex gap="regular" direction="column">
           <ActionButton
-            aria-label="regenerate"
+            aria-label={stringFormatter.format('regenerateAriaLabel')}
             onPress={() => {
               props.onChange({
                 name: props.value.name,
@@ -123,7 +128,7 @@ export function SlugFieldInput(
                 [containerQueries.below.tablet]: { display: 'none' },
               })}
             >
-              Regenerate
+              {stringFormatter.format('regenerate')}
             </Text>
           </ActionButton>
           {/* display shim to offset the error message */}

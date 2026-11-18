@@ -7,6 +7,7 @@ import {
 } from '@keystar/ui/style';
 import { useId, useIsMounted } from '@keystar/ui/utils';
 import { useLocale } from 'react-aria/I18nProvider';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { filterDOMProps } from 'react-aria/filterDOMProps';
 import { useUpdateEffect } from 'react-aria/private/utils/useUpdateEffect';
 import { clamp } from 'react-stately/private/utils/number';
@@ -23,6 +24,7 @@ import {
 
 import { SplitViewProvider, useSplitView } from './context';
 import { resetGlobalCursorStyle, setGlobalCursorStyle } from './cursor';
+import localizedMessages from './l10n';
 import { defaultStorage } from './storage';
 import {
   CursorState,
@@ -424,13 +426,14 @@ const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let { activity, id, isCollapsed } = useSplitView();
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
 
   return (
     <div
       {...props}
       ref={forwardedRef}
       aria-controls={getPrimaryPaneId(id)}
-      aria-label="Resize" // FIXME: localize
+      aria-label={stringFormatter.format('resize')}
       aria-orientation="vertical"
       id={getResizeHandleId(id)}
       role="separator"

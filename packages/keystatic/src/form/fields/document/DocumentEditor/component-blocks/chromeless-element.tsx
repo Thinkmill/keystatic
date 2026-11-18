@@ -16,6 +16,7 @@ import {
   ComponentSchema,
 } from '../../../../api';
 import { blockElementSpacing } from '../ui-utils';
+import { useLocalizedString } from '../../../../../app/shell/i18n';
 
 export function ChromelessComponentBlockElement(props: {
   renderedBlock: ReactNode;
@@ -56,12 +57,13 @@ function DefaultToolbarWithoutChrome({
   onRemove(): void;
   props: Record<string, any>;
 }) {
+  const stringFormatter = useLocalizedString();
   return (
     <TooltipTrigger>
       <ActionButton onPress={onRemove} margin="regular">
         <Icon src={trashIcon} />
       </ActionButton>
-      <Tooltip tone="critical">Remove</Tooltip>
+      <Tooltip tone="critical">{stringFormatter.format('remove')}</Tooltip>
     </TooltipTrigger>
   );
 }

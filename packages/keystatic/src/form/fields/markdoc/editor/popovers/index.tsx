@@ -22,11 +22,15 @@ import { useEditorReferenceElement } from './reference';
 import { ImagePopover } from './images';
 import { Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { FormValue } from '../FormValue';
-import { Heading } from '@keystar/ui/typography';
+import { Heading, Text } from '@keystar/ui/typography';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { ComponentSchema } from '../../../../api';
 import { toSerialized, useDeserializedValue } from '../props-serialization';
 import { TextField } from '@keystar/ui/text-field';
+import {
+  LocalizedText,
+  useLocalizedString,
+} from '../../../../../app/shell/i18n';
 
 type NodePopoverRenderer = (props: {
   node: Node;
@@ -58,7 +62,11 @@ function ExtraAttributesMenuItem(props: {
         >
           <Icon src={pencilIcon} />
         </ActionButton>
-        <Tooltip>Edit</Tooltip>
+        <Tooltip>
+          <Text>
+            <LocalizedText id="edit" />
+          </Text>
+        </Tooltip>
       </TooltipTrigger>
       <DialogContainer
         onDismiss={() => {
@@ -67,7 +75,9 @@ function ExtraAttributesMenuItem(props: {
       >
         {isOpen && (
           <Dialog>
-            <Heading>Edit {props.name}</Heading>
+            <Heading>
+              <LocalizedText id="editName" args={{ name: props.name }} />
+            </Heading>
             <FormValue
               schema={componentSchema}
               value={value}
@@ -108,10 +118,11 @@ const popoverComponents: Record<
     const dispatchCommand = useEditorDispatchCommand();
     const schema = useEditorSchema();
     const viewRef = useEditorViewRef();
+    const stringFormatter = useLocalizedString();
     return (
       <Flex gap="regular" padding="regular">
         <TextField
-          aria-label="Code block language"
+          aria-label={stringFormatter.format('codeBlockLanguage')}
           value={props.node.attrs.language}
           onChange={val => {
             const view = viewRef.current!;
@@ -145,7 +156,11 @@ const popoverComponents: Record<
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">
+            <Text>
+              <LocalizedText id="remove" />
+            </Text>
+          </Tooltip>
         </TooltipTrigger>
       </Flex>
     );
@@ -172,7 +187,11 @@ const popoverComponents: Record<
               >
                 <Icon src={sheetIcon} />
               </ActionButton>
-              <Tooltip>Header row</Tooltip>
+              <Tooltip>
+                <Text>
+                  <LocalizedText id="headerRow" />
+                </Text>
+              </Tooltip>
             </TooltipTrigger>
             <Divider orientation="vertical" />
           </>
@@ -193,7 +212,11 @@ const popoverComponents: Record<
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">
+            <Text>
+              <LocalizedText id="remove" />
+            </Text>
+          </Tooltip>
         </TooltipTrigger>
       </Flex>
     );
@@ -230,7 +253,11 @@ const popoverComponents: Record<
             >
               <Icon src={trash2Icon} />
             </ActionButton>
-            <Tooltip tone="critical">Remove</Tooltip>
+            <Tooltip tone="critical">
+              <Text>
+                <LocalizedText id="remove" />
+              </Text>
+            </Tooltip>
           </TooltipTrigger>
         </Flex>
       );
@@ -386,7 +413,11 @@ function InlineComponentPopover(props: {
           >
             <Icon src={pencilIcon} />
           </ActionButton>
-          <Tooltip>Edit</Tooltip>
+          <Tooltip>
+            <Text>
+              <LocalizedText id="edit" />
+            </Text>
+          </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
           <ActionButton
@@ -404,7 +435,11 @@ function InlineComponentPopover(props: {
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">
+            <Text>
+              <LocalizedText id="remove" />
+            </Text>
+          </Tooltip>
         </TooltipTrigger>
       </Flex>
       <DialogContainer
@@ -414,7 +449,12 @@ function InlineComponentPopover(props: {
       >
         {isOpen && (
           <Dialog>
-            <Heading>Edit {componentConfig.label}</Heading>
+            <Heading>
+              <LocalizedText
+                id="editName"
+                args={{ name: componentConfig.label }}
+              />
+            </Heading>
             <FormValue
               schema={componentSchema}
               value={value}
@@ -465,7 +505,11 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
           >
             <Icon src={pencilIcon} />
           </ActionButton>
-          <Tooltip>Edit</Tooltip>
+          <Tooltip>
+            <Text>
+              <LocalizedText id="edit" />
+            </Text>
+          </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
           <ActionButton
@@ -483,7 +527,11 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
           >
             <Icon src={trash2Icon} />
           </ActionButton>
-          <Tooltip tone="critical">Remove</Tooltip>
+          <Tooltip tone="critical">
+            <Text>
+              <LocalizedText id="remove" />
+            </Text>
+          </Tooltip>
         </TooltipTrigger>
       </Flex>
       <DialogContainer
@@ -493,7 +541,12 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
       >
         {isOpen && (
           <Dialog>
-            <Heading>Edit {componentConfig.label}</Heading>
+            <Heading>
+              <LocalizedText
+                id="editName"
+                args={{ name: componentConfig.label }}
+              />
+            </Heading>
             <FormValue
               schema={componentSchema}
               value={deserialized}

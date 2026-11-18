@@ -65,6 +65,7 @@ function CreateItemWrapper(props: {
   basePath: string;
 }) {
   const router = useRouter();
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const duplicateSlug = useMemo(() => {
     const url = new URL(router.href, 'http://localhost');
     return url.searchParams.get('duplicate');
@@ -207,7 +208,7 @@ function CreateItemWrapper(props: {
     return (
       <Flex alignItems="center" justifyContent="center" minHeight="scale.3000">
         <ProgressCircle
-          aria-label="Loading Item"
+          aria-label={stringFormatter.format('loadingItem')}
           isIndeterminate
           size="large"
         />
@@ -221,7 +222,9 @@ function CreateItemWrapper(props: {
   ) {
     return (
       <PageBody>
-        <Notice tone="caution">Entry not found.</Notice>
+        <Notice tone="caution">
+          {stringFormatter.format('entryNotFound')}
+        </Notice>
       </PageBody>
     );
   }
@@ -457,7 +460,9 @@ function CreateItemInner(props: {
     if (await props.createItem()) {
       const slug = getSlugFromState(collectionConfig, props.state);
       router.push(`${collectionPath}/item/${encodeURIComponent(slug)}`);
-      toastQueue.positive('Entry created', { timeout: 5000 }); // TODO: l10n
+      toastQueue.positive(stringFormatter.format('entryCreated'), {
+        timeout: 5000,
+      });
     }
   };
 
@@ -469,15 +474,20 @@ function CreateItemInner(props: {
   };
 
   const onPaste = async () => {
-    const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
-      field: collectionConfig.slugField,
-      slug: getSlugFromState(collectionConfig, props.state),
-    });
+    const entry = await getPastedEntry(
+      formatInfo,
+      collectionConfig.schema,
+      {
+        field: collectionConfig.slugField,
+        slug: getSlugFromState(collectionConfig, props.state),
+      },
+      stringFormatter
+    );
     if (entry) {
       setValueToPreviewProps(entry, props.previewProps);
-      toastQueue.positive('Entry pasted', {
+      toastQueue.positive(stringFormatter.format('entryPasted'), {
         shouldCloseOnAction: true,
-        actionLabel: 'Undo',
+        actionLabel: stringFormatter.format('undo'),
         onAction: () => {
           setValueToPreviewProps(props.state, props.previewProps);
         },
@@ -513,7 +523,7 @@ function CreateItemInner(props: {
           <PresenceAvatars />
           {isLoading && (
             <ProgressCircle
-              aria-label="Creating entry"
+              aria-label={stringFormatter.format('creatingEntry')}
               isIndeterminate
               size="small"
             />
@@ -541,9 +551,12 @@ function CreateItemInner(props: {
             }}
           >
             {item => (
-              <Item key={item.key} textValue={item.label}>
+              <Item
+                key={item.key}
+                textValue={stringFormatter.format(item.label)}
+              >
                 <Icon src={item.icon} />
-                <Text>{item.label}</Text>
+                <Text>{stringFormatter.format(item.label)}</Text>
               </Item>
             )}
           </ActionGroup>
@@ -648,19 +661,19 @@ function CreateItemInner(props: {
 const menuActions = [
   {
     key: 'reset',
-    label: 'Reset',
+    label: 'reset',
     icon: historyIcon,
   },
   {
     key: 'copy',
-    label: 'Copy entry',
+    label: 'copyEntry',
     icon: clipboardCopyIcon,
   },
   {
     key: 'paste',
-    label: 'Paste entry',
+    label: 'pasteEntry',
     icon: clipboardPasteIcon,
   },
-];
+] as const;
 
 export { CreateItemWrapper as CreateItem };

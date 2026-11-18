@@ -13,6 +13,7 @@ import { ToolbarButton } from './Toolbar';
 import { EditorConfig } from '../config';
 import { getSrcPrefix } from '../../image/getSrcPrefix';
 import { toSerialized } from './props-serialization';
+import { useLocalizedString } from '../../../../app/shell/i18n';
 
 export function getSrcPrefixForImageBlock(
   config: EditorConfig,
@@ -138,10 +139,11 @@ export function imageDropPlugin(schema: EditorSchema) {
   });
 }
 export function ImageToolbarButton() {
+  const stringFormatter = useLocalizedString();
   return (
     <TooltipTrigger>
       <ToolbarButton
-        aria-label="Image"
+        aria-label={stringFormatter.format('image')}
         command={(_, dispatch, view) => {
           if (dispatch && view) {
             (async () => {
@@ -164,7 +166,7 @@ export function ImageToolbarButton() {
         <Icon src={imageIcon} />
       </ToolbarButton>
       <Tooltip>
-        <Text>Image</Text>
+        <Text>{stringFormatter.format('image')}</Text>
       </Tooltip>
     </TooltipTrigger>
   );

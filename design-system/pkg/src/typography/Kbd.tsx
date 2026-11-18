@@ -1,4 +1,5 @@
 import { filterDOMProps } from 'react-aria/filterDOMProps';
+import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { isMac as getIsMac } from 'react-aria/private/utils/platform';
 import {
   ForwardedRef,
@@ -15,6 +16,7 @@ import { DOMProps } from '@react-types/shared';
 import { useSlotProps } from '@keystar/ui/slots';
 import { BaseStyleProps, css } from '@keystar/ui/style';
 
+import localizedMessages from './l10n';
 import { useTextStyles } from './text';
 
 function noopSubscribe() {
@@ -72,6 +74,7 @@ export const Kbd: ForwardRefExoticComponent<
   });
 
   const isMac = useIsMac();
+  const stringFormatter = useLocalizedStringFormatter(localizedMessages);
 
   const modifiers = useMemo(() => {
     const SYSTEM_KEYS = isMac
@@ -81,9 +84,9 @@ export const Kbd: ForwardRefExoticComponent<
           shift: '⇧',
         }
       : {
-          alt: 'Alt',
-          meta: 'Ctrl',
-          shift: 'Shift',
+          alt: stringFormatter.format('alt'),
+          meta: stringFormatter.format('ctrl'),
+          shift: stringFormatter.format('shift'),
           // shift: '⇧', // maybe?
         };
     let keys = [
@@ -93,7 +96,7 @@ export const Kbd: ForwardRefExoticComponent<
     ].filter(Boolean) as string[];
 
     return joinModifierKeys(keys, isMac);
-  }, [alt, meta, shift, isMac]);
+  }, [alt, meta, shift, isMac, stringFormatter]);
 
   return (
     <kbd

@@ -1,3 +1,4 @@
+import { useLocale } from 'react-aria/I18nProvider';
 import { useLocalizedStringFormatter } from 'react-aria/useLocalizedStringFormatter';
 import { isHotkey } from 'is-hotkey';
 import {
@@ -133,6 +134,7 @@ function ItemPageInner(
     onUpdate: parentOnUpdate,
   } = props;
   const { collectionConfig, schema } = useCollection(collection);
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   const router = useRouter();
   const baseCommit = useBaseCommit();
@@ -198,15 +200,20 @@ function ItemPageInner(
   });
 
   const onPaste = useEventCallback(async () => {
-    const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
-      field: collectionConfig.slugField,
-      slug: getSlugFromState(collectionConfig, props.state),
-    });
+    const entry = await getPastedEntry(
+      formatInfo,
+      collectionConfig.schema,
+      {
+        field: collectionConfig.slugField,
+        slug: getSlugFromState(collectionConfig, props.state),
+      },
+      stringFormatter
+    );
     if (entry) {
       setValueToPreviewProps(entry, props.previewProps);
-      toastQueue.positive('Entry pasted', {
+      toastQueue.positive(stringFormatter.format('entryPasted'), {
         shouldCloseOnAction: true,
-        actionLabel: 'Undo',
+        actionLabel: stringFormatter.format('undo'),
         onAction: () => {
           setValueToPreviewProps(props.state, props.previewProps);
         },
@@ -582,34 +589,34 @@ function HeaderActions(props: {
     let items: ActionType[] = [
       {
         key: 'reset',
-        label: 'Reset changes', // TODO: l10n
+        label: stringFormatter.format('resetChanges'),
         icon: historyIcon,
       },
       {
         key: 'delete',
-        label: 'Delete entry…', // TODO: l10n
+        label: stringFormatter.format('deleteEntryEllipsis'),
         icon: trash2Icon,
       },
       {
         key: 'copy',
-        label: 'Copy entry', // TODO: l10n
+        label: stringFormatter.format('copyEntry'),
         icon: clipboardCopyIcon,
       },
       {
         key: 'paste',
-        label: 'Paste entry', // TODO: l10n
+        label: stringFormatter.format('pasteEntry'),
         icon: clipboardPasteIcon,
       },
       {
         key: 'duplicate',
-        label: 'Duplicate entry…', // TODO: l10n
+        label: stringFormatter.format('duplicateEntryEllipsis'),
         icon: copyPlusIcon,
       },
     ];
     if (previewHref) {
       items.push({
         key: 'preview',
-        label: 'Preview',
+        label: stringFormatter.format('preview'),
         icon: externalLinkIcon,
         href: previewHref,
         target: '_blank',
@@ -619,7 +626,7 @@ function HeaderActions(props: {
     if (viewHref) {
       items.push({
         key: 'view',
-        label: 'View on GitHub',
+        label: stringFormatter.format('viewOnGitHub'),
         icon: githubIcon,
         href: viewHref,
         target: '_blank',
@@ -628,13 +635,13 @@ function HeaderActions(props: {
     }
 
     return items;
-  }, [previewHref, viewHref]);
+  }, [previewHref, viewHref, stringFormatter]);
 
   const indicatorElement = (() => {
     if (isLoading) {
       return (
         <ProgressCircle
-          aria-label="Saving changes"
+          aria-label={stringFormatter.format('savingChanges')}
           isIndeterminate
           size="small"
           alignSelf="center"
@@ -650,10 +657,10 @@ function HeaderActions(props: {
           width="scale.75"
           borderRadius="full"
         >
-          <Text visuallyHidden>Unsaved</Text>
+          <Text visuallyHidden>{stringFormatter.format('unsaved')}</Text>
         </Box>
       ) : (
-        <Badge tone="pending">Unsaved</Badge>
+        <Badge tone="pending">{stringFormatter.format('unsaved')}</Badge>
       );
     }
 
@@ -720,28 +727,28 @@ function HeaderActions(props: {
       <DialogContainer onDismiss={() => setDeleteAlertOpen(false)}>
         {deleteAlertIsOpen && (
           <AlertDialog
-            title="Delete entry"
+            title={stringFormatter.format('deleteEntry')}
             tone="critical"
-            cancelLabel="Cancel"
-            primaryActionLabel="Yes, delete"
+            cancelLabel={stringFormatter.format('cancel')}
+            primaryActionLabel={stringFormatter.format('yesDelete')}
             autoFocusButton="cancel"
             onPrimaryAction={onDelete}
           >
-            Are you sure? This action cannot be undone.
+            {stringFormatter.format('deleteEntryConfirmation')}
           </AlertDialog>
         )}
       </DialogContainer>
       <DialogContainer onDismiss={() => setDuplicateAlertOpen(false)}>
         {duplicateAlertIsOpen && (
           <AlertDialog
-            title="Save and duplicate entry"
+            title={stringFormatter.format('saveAndDuplicateEntry')}
             tone="neutral"
-            cancelLabel="Cancel"
-            primaryActionLabel="Save and duplicate"
+            cancelLabel={stringFormatter.format('cancel')}
+            primaryActionLabel={stringFormatter.format('saveAndDuplicate')}
             autoFocusButton="primary"
             onPrimaryAction={onDuplicate}
           >
-            You have unsaved changes. Save this entry to duplicate it.
+            {stringFormatter.format('saveAndDuplicateMessage')}
           </AlertDialog>
         )}
       </DialogContainer>
@@ -756,6 +763,7 @@ export function CreateBranchDuringUpdateDialog(props: {
   reason: string;
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const { locale } = useLocale();
   const repoInfo = useRepoInfo();
   const [branchName, setBranchName] = useState('');
   const [{ error, fetching, data }, createBranch] = useCreateBranchMutation();
@@ -806,10 +814,14 @@ export function CreateBranchDuringUpdateDialog(props: {
             <TextField
               value={branchName}
               onChange={setBranchName}
-              label="Branch name"
+              label={stringFormatter.format('branchName')}
               description={props.reason}
               autoFocus
-              errorMessage={prettyErrorForCreateBranchMutation(error)}
+              errorMessage={prettyErrorForCreateBranchMutation(
+                error,
+                stringFormatter,
+                locale
+              )}
               {...propsForBranchPrefix}
             />
           </Flex>
@@ -819,14 +831,14 @@ export function CreateBranchDuringUpdateDialog(props: {
             <ProgressCircle
               isIndeterminate
               size="small"
-              aria-label="Creating Branch"
+              aria-label={stringFormatter.format('creatingBranch')}
             />
           )}
           <Button isDisabled={isLoading} onPress={props.onDismiss}>
             {stringFormatter.format('cancel')}
           </Button>
           <Button isDisabled={isLoading} prominence="high" type="submit">
-            Create branch and save
+            {stringFormatter.format('createBranchAndSave')}
           </Button>
         </ButtonGroup>
       </form>
@@ -848,6 +860,7 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
     () => getCollectionFormat(props.config, props.collection),
     [props.config, props.collection]
   );
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   const slugInfo = useMemo(() => {
     return { slug: props.itemSlug, field: collectionConfig.slugField };
@@ -934,7 +947,9 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
       fallback={
         <ItemPageShell {...props}>
           <PageBody>
-            <Notice tone="caution">Entry not found.</Notice>
+            <Notice tone="caution">
+              {stringFormatter.format('entryNotFound')}
+            </Notice>
           </PageBody>
         </ItemPageShell>
       }
@@ -957,7 +972,7 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
                 minHeight="scale.3000"
               >
                 <ProgressCircle
-                  aria-label="Loading Item"
+                  aria-label={stringFormatter.format('loadingItem')}
                   isIndeterminate
                   size="large"
                 />

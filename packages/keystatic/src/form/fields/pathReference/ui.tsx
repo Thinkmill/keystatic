@@ -3,6 +3,7 @@ import { filter } from 'minimatch';
 import { useReducer, useMemo, useState, useEffect } from 'react';
 import { useTree } from '../../../app/shell/data';
 import { FormFieldInputProps } from '../../api';
+import { useLocalizedString } from '../../../app/shell/i18n';
 
 export function PathReferenceInput(
   props: FormFieldInputProps<string | null> & {
@@ -18,6 +19,7 @@ export function PathReferenceInput(
   );
 
   const [blurred, onBlur] = useReducer(() => true, false);
+  const stringFormatter = useLocalizedString();
   const tree = useTree().current;
   const options = useMemo(() => {
     const files = tree.kind === 'loaded' ? [...tree.data.entries.values()] : [];
@@ -28,7 +30,7 @@ export function PathReferenceInput(
     (props.forceValidation || blurred) &&
     props.validation?.isRequired &&
     props.value === null
-      ? `${props.label} is required`
+      ? stringFormatter.format('fieldIsRequired', { label: props.label })
       : undefined;
   // this state & effect shouldn't really exist
   // it's here because react-aria/stately calls onChange with null

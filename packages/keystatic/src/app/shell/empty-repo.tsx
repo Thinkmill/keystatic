@@ -2,7 +2,10 @@ import { Flex } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
 import { Heading, Text } from '@keystar/ui/typography';
 
+import { formatWithElements, useLocalizedString } from './i18n';
+
 export function EmptyRepo(props: { repo: string }) {
+  const stringFormatter = useLocalizedString();
   return (
     <Flex alignItems="center" justifyContent="center" margin="xxlarge">
       <Flex
@@ -16,15 +19,16 @@ export function EmptyRepo(props: { repo: string }) {
         maxWidth="scale.4600"
       >
         <Flex justifyContent="center">
-          <Heading>Git repo not initialised</Heading>
+          <Heading>{stringFormatter.format('gitRepoNotInitialised')}</Heading>
         </Flex>
         <Text>
-          The Keystatic GitHub App is installed in the GitHub repository{' '}
-          <TextLink href={`https://github.com/${props.repo}`}>
-            {props.repo}
-          </TextLink>{' '}
-          but the Git repo is not initialised. Please initialise the Git repo
-          before using Keystatic.
+          {formatWithElements(stringFormatter, 'gitRepoNotInitialisedMessage', {
+            repo: (
+              <TextLink href={`https://github.com/${props.repo}`}>
+                {props.repo}
+              </TextLink>
+            ),
+          })}
         </Text>
       </Flex>
     </Flex>

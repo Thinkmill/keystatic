@@ -54,6 +54,7 @@ export function ChromefulComponentBlockElement(props: {
   attributes: RenderElementProps['attributes'];
 }) {
   const selected = useSelected();
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   const isValid = useMemo(
     () =>
@@ -104,7 +105,11 @@ export function ChromefulComponentBlockElement(props: {
               }
               return (
                 <Dialog>
-                  <Heading>Edit {props.componentBlock.label}</Heading>
+                  <Heading>
+                    {stringFormatter.format('editName', {
+                      name: props.componentBlock.label,
+                    })}
+                  </Heading>
                   <FormValue
                     props={props.previewProps}
                     onClose={onCloseEditMode}
@@ -195,7 +200,9 @@ function DefaultToolbarWithChrome({
           </TooltipTrigger>
         </Flex>
         {!isValid && (
-          <FieldMessage>Contains invalid fields. Please edit.</FieldMessage>
+          <FieldMessage>
+            {stringFormatter.format('containsInvalidFields')}
+          </FieldMessage>
         )}
       </Flex>
     </NotEditable>
@@ -247,7 +254,7 @@ function FormValue({
       <ButtonGroup>
         <Button onPress={onClose}>{stringFormatter.format('cancel')}</Button>
         <Button form={formId} prominence="high" type="submit">
-          Done
+          {stringFormatter.format('done')}
         </Button>
       </ButtonGroup>
     </>

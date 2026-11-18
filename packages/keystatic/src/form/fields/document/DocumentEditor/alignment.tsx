@@ -15,24 +15,25 @@ import { Text } from '@keystar/ui/typography';
 import { DocumentFeatures } from './document-features';
 import { useToolbarState } from './toolbar-state';
 import { useMemo } from 'react';
+import { useLocalizedString } from '../../../../app/shell/i18n';
 
 const values = {
   start: {
     key: 'start',
-    label: 'Align Start',
+    label: 'alignStart',
     icon: <Icon src={alignLeftIcon} />,
   },
   center: {
     key: 'center',
-    label: 'Align Center',
+    label: 'alignCenter',
     icon: <Icon src={alignCenterIcon} />,
   },
   end: {
     key: 'end',
-    label: 'Align End',
+    label: 'alignEnd',
     icon: <Icon src={alignRightIcon} />,
   },
-};
+} as const;
 
 export const TextAlignMenu = ({
   alignment,
@@ -40,6 +41,7 @@ export const TextAlignMenu = ({
   alignment: DocumentFeatures['formatting']['alignment'];
 }) => {
   const toolbarState = useToolbarState();
+  const stringFormatter = useLocalizedString();
   const items = useMemo(
     () => [
       values.start,
@@ -58,7 +60,7 @@ export const TextAlignMenu = ({
             <Icon src={chevronDownIcon} />
           </ActionButton>
           <Tooltip>
-            <Text>Text Alignment</Text>
+            <Text>{stringFormatter.format('textAlignment')}</Text>
           </Tooltip>
         </TooltipTrigger>
         <Menu
@@ -86,8 +88,11 @@ export const TextAlignMenu = ({
         >
           {item => {
             return (
-              <Item key={item.key} textValue={item.label}>
-                <Text>{item.label}</Text>
+              <Item
+                key={item.key}
+                textValue={stringFormatter.format(item.label)}
+              >
+                <Text>{stringFormatter.format(item.label)}</Text>
                 {item.icon}
               </Item>
             );
@@ -95,6 +100,11 @@ export const TextAlignMenu = ({
         </Menu>
       </MenuTrigger>
     ),
-    [items, toolbarState.alignment.selected, toolbarState.editor]
+    [
+      items,
+      toolbarState.alignment.selected,
+      toolbarState.editor,
+      stringFormatter,
+    ]
   );
 };

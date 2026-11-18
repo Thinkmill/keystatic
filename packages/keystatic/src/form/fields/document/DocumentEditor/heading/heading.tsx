@@ -14,6 +14,7 @@ import {
 } from '../custom-attributes';
 import { BlockPopover, BlockPopoverTrigger } from '../primitives';
 import { useDocumentEditorConfig } from '../toolbar-state';
+import { useLocalizedString } from '../../../../../app/shell/i18n';
 
 export const HeadingElement = ({
   attributes,
@@ -24,6 +25,7 @@ export const HeadingElement = ({
   const editor = useSlateStatic();
   const { documentFeatures } = useDocumentEditorConfig();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const stringFormatter = useLocalizedString();
 
   if (
     Object.keys(documentFeatures.formatting.headings.schema.fields).length === 0
@@ -54,7 +56,9 @@ export const HeadingElement = ({
                 >
                   <Icon src={trash2Icon} />
                 </ActionButton>
-                <Tooltip tone="critical">Remove</Tooltip>
+                <Tooltip tone="critical">
+                  {stringFormatter.format('remove')}
+                </Tooltip>
               </TooltipTrigger>
             </Flex>
           </BlockPopover>
@@ -64,7 +68,7 @@ export const HeadingElement = ({
         element={element}
         schema={documentFeatures.formatting.headings.schema}
         isOpen={dialogOpen}
-        nodeLabel="Heading"
+        nodeLabel={stringFormatter.format('heading')}
         onDismiss={() => setDialogOpen(false)}
       />
     </>

@@ -64,7 +64,9 @@ function CustomAttributesDialogInner(props: {
           }
         }}
       >
-        <Heading>{props.nodeLabel} details</Heading>
+        <Heading>
+          {stringFormatter.format('nameDetails', { name: props.nodeLabel })}
+        </Heading>
         <Content>
           <FormValueContentFromPreviewProps
             forceValidation={forceValidation}

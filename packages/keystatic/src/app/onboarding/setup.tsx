@@ -7,10 +7,12 @@ import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 import { GitHubConfig } from '../..';
 import { parseRepoConfig } from '../repo-config';
+import { formatWithElements, useLocalizedString } from '../shell/i18n';
 
 export function KeystaticSetup(props: { config: GitHubConfig }) {
   const [deployedURL, setDeployedURL] = useState('');
   const [organization, setOrganization] = useState('');
+  const stringFormatter = useLocalizedString();
   return (
     <Flex alignItems="center" justifyContent="center" margin="xxlarge">
       <Flex
@@ -29,12 +31,11 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
         method="post"
       >
         <Flex justifyContent="center">
-          <Heading>Keystatic Setup</Heading>
+          <Heading>{stringFormatter.format('keystaticSetup')}</Heading>
         </Flex>
-        <Text>Keystatic doesn't have the required config.</Text>
+        <Text>{stringFormatter.format('keystaticSetupMissingConfig')}</Text>
         <Text>
-          If you've already created your GitHub app, make sure to add the
-          following environment variables:
+          {stringFormatter.format('keystaticSetupEnvironmentVariables')}
         </Text>
         <Box elementType="ul">
           <li>
@@ -47,26 +48,23 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
             <code>KEYSTATIC_SECRET</code>
           </li>
         </Box>
-        <Text>
-          If you haven't created your GitHub app for Keystatic, you can create
-          one below.
-        </Text>
+        <Text>{stringFormatter.format('keystaticSetupCreateApp')}</Text>
         <TextField
-          label="Deployed App URL"
-          description="This should the root of your domain. If you're not sure where Keystatic will be deployed, leave this blank and you can update the GitHub app later."
+          label={stringFormatter.format('deployedAppUrl')}
+          description={stringFormatter.format('deployedAppUrlDescription')}
           value={deployedURL}
           onChange={setDeployedURL}
         />
         <TextField
-          label="GitHub organization (if any)"
-          description="You must be an owner or GitHub App manager in the organization to create the GitHub App. Leave this blank to create the app in your personal account."
+          label={stringFormatter.format('githubOrganization')}
+          description={stringFormatter.format('githubOrganizationDescription')}
           value={organization}
           onChange={setOrganization}
         />
         <Text>
-          After visiting GitHub to create the GitHub app, you'll be redirected
-          back here and secrets generated from GitHub will be written to your{' '}
-          <code>.env</code> file.
+          {formatWithElements(stringFormatter, 'keystaticSetupRedirect', {
+            envFile: <code>.env</code>,
+          })}
         </Text>
         <input
           type="text"
@@ -102,7 +100,7 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
           })}
         />
         <Button prominence="high" type="submit">
-          Create GitHub App
+          {stringFormatter.format('createGitHubApp')}
         </Button>
       </Flex>
     </Flex>

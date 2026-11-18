@@ -84,7 +84,7 @@ export function createEditorState(
       keymap(keymapForSchema(schema, !!(yXmlFragment && awareness))),
       markdocClipboard(),
       nodeInSelectionDecorations(),
-      placeholderPlugin('Start writing or press "/" for commands…'),
+      placeholderPlugin(),
       reactNodeViews(doc.type.schema),
       autocompleteDecoration(),
       tableEditing(),
