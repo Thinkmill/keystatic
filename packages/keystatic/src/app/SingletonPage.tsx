@@ -376,7 +376,7 @@ function LocalSingletonPage(
 
   const isCreating = initialState === null;
   const hasChanged =
-    useHasChanged({ initialState, state, schema, slugField: undefined }) ||
+    useHasChanged({ initialState, state, schema, slugFields: undefined }) ||
     isCreating;
 
   useEffect(() => {
@@ -477,7 +477,7 @@ function CollabSingletonPage(
 
   const isCreating = initialState === null;
   const hasChanged =
-    useHasChanged({ initialState, state, schema, slugField: undefined }) ||
+    useHasChanged({ initialState, state, schema, slugFields: undefined }) ||
     isCreating;
 
   const formatInfo = getSingletonFormat(config, singleton);

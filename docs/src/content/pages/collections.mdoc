@@ -103,6 +103,25 @@ testimonials: collection({
 }),
 ```
 
+### Multiple slug fields
+
+`slugFields` — defines multiple fields to make up the slug of each item. Each entry is mapped to a `*` segment of the collection `path` in order, and the last entry must be the `slugField`. Entries are stored in nested directories, one per slug field.
+
+```typescript
+blog: collection({
+  label: 'Blog',
+  path: 'src/content/blog/*/*',
+  slugFields: ['locale', 'title'],
+  schema: {
+    locale: fields.text({ label: 'Locale' }),
+    title: fields.slug({ name: { label: 'Title' } }),
+  },
+  slugField: 'title',
+}),
+```
+
+An entry with the locale `en` and the title `hello-world` is stored at `src/content/blog/en/hello-world`.
+
 ### Template
 
 `template` — the path to a content file (existing collection entry or "template") to use as a starting point for new entries.

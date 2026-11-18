@@ -106,6 +106,8 @@ export function AddToPathProvider(props: {
 
 export type SlugFieldInfo = {
   field: string;
+  /** all slug fields, in path segment order; `field` is always the last entry */
+  fields: readonly string[];
   slugs: Set<string>;
   glob: Glob;
 };

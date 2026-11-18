@@ -38,6 +38,7 @@ import { parseEntry, useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { useYJsValue } from './useYJsValue';
 import {
+  collectionSlugFields,
   getCollectionFormat,
   getCollectionItemPath,
   getSlugFromState,
@@ -95,7 +96,10 @@ function CreateItemWrapper(props: {
           ),
           format,
           schema: collectionConfig.schema,
-          slug: { field: collectionConfig.slugField, slug: stored.slug },
+          slug: {
+            fields: collectionSlugFields(collectionConfig),
+            slug: stored.slug,
+          },
         },
         stored.files
       );
@@ -111,10 +115,13 @@ function CreateItemWrapper(props: {
 
   const slug = useMemo(() => {
     if (duplicateSlug) {
-      return { field: collectionConfig.slugField, slug: duplicateSlug };
+      return {
+        fields: collectionSlugFields(collectionConfig),
+        slug: duplicateSlug,
+      };
     }
     if (collectionConfig.template) {
-      return { field: collectionConfig.slugField, slug: '' };
+      return { fields: collectionSlugFields(collectionConfig), slug: '' };
     }
   }, [duplicateSlug, collectionConfig]);
 
@@ -288,7 +295,7 @@ function CreateItemLocal(props: {
     schema: collectionConfig.schema,
     format: formatInfo,
     currentLocalTreeKey: undefined,
-    slug: { field: collectionConfig.slugField, value: slug },
+    slug: { fields: collectionSlugFields(collectionConfig), value: slug },
   });
   const createItem = useEventCallback(_createItem);
 
@@ -296,7 +303,7 @@ function CreateItemLocal(props: {
     initialState,
     schema,
     state,
-    slugField: collectionConfig.slugField,
+    slugFields: collectionSlugFields(collectionConfig),
   });
   const hasCreated =
     createResult.kind === 'updated' || createResult.kind === 'loading';
@@ -314,7 +321,10 @@ function CreateItemLocal(props: {
         basePath,
         format: formatInfo,
         schema: collectionConfig.schema,
-        slug: { field: collectionConfig.slugField, value: slug },
+        slug: {
+          fields: collectionSlugFields(collectionConfig),
+          value: slug,
+        },
         state,
       });
       const files = new Map(serialized.map(x => [x.path, x.contents]));
@@ -381,7 +391,7 @@ function CreateItemCollab(props: {
     schema: collectionConfig.schema,
     format: formatInfo,
     currentLocalTreeKey: undefined,
-    slug: { field: collectionConfig.slugField, value: slug },
+    slug: { fields: collectionSlugFields(collectionConfig), value: slug },
   });
   const createItem = useEventCallback(_createItem);
 
@@ -463,14 +473,14 @@ function CreateItemInner(props: {
 
   const onCopy = () => {
     copyEntryToClipboard(props.state, formatInfo, collectionConfig.schema, {
-      field: collectionConfig.slugField,
+      fields: collectionSlugFields(collectionConfig),
       value: getSlugFromState(collectionConfig, props.state),
     });
   };
 
   const onPaste = async () => {
     const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
-      field: collectionConfig.slugField,
+      fields: collectionSlugFields(collectionConfig),
       slug: getSlugFromState(collectionConfig, props.state),
     });
     if (entry) {

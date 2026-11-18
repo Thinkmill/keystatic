@@ -19,6 +19,64 @@ function getConfiguredCollectionPath(config: Config, collection: string) {
   return path;
 }
 
+function countStarSegments(path: string) {
+  return path.split('/*').length - 1;
+}
+
+export function getSlugFieldsForCollection(
+  config: Config,
+  collection: string
+): readonly string[] {
+  const collectionConfig = config.collections![collection];
+  const slugFields = collectionConfig.slugFields ?? [
+    collectionConfig.slugField,
+  ];
+  if (!slugFields.length) {
+    throw new Error(
+      `Collection ${collection} must specify a slugField or a non-empty slugFields array`
+    );
+  }
+  for (const slugField of slugFields) {
+    const schema = collectionConfig.schema[slugField];
+    if (!schema) {
+      throw new Error(
+        `slugField "${slugField}" does not exist in the schema for collection ${collection}`
+      );
+    }
+    if (schema.kind !== 'form' || schema.formKind !== 'slug') {
+      throw new Error(
+        `slugField "${slugField}" in collection ${collection} is not a slug field`
+      );
+    }
+  }
+  if (
+    collectionConfig.slugFields &&
+    collectionConfig.slugFields[slugFields.length - 1] !==
+      collectionConfig.slugField
+  ) {
+    throw new Error(
+      `The last entry of slugFields for collection ${collection} must be the slugField ("${collectionConfig.slugField}")`
+    );
+  }
+  const path = getConfiguredCollectionPath(config, collection);
+  if (path.includes('**') && slugFields.length > 1) {
+    throw new Error(
+      `Collection ${collection} cannot combine slugFields with a ** glob in its path`
+    );
+  }
+  const starCount = countStarSegments(path);
+  if (starCount !== slugFields.length) {
+    throw new Error(
+      `Collection path for ${collection} must contain exactly ${
+        slugFields.length
+      } * segment${
+        slugFields.length === 1 ? '' : 's'
+      } to match its slug fields but has ${starCount} (${path})`
+    );
+  }
+  return slugFields;
+}
+
 export function getCollectionPath(config: Config, collection: string) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
   const path = fixPath(configuredPath.replace(/\*\*?.*$/, ''));
@@ -62,7 +120,9 @@ export function getCollectionItemSlugSuffix(
   collection: string
 ) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
-  const path = fixPath(configuredPath.replace(/^[^*]+\*\*?/, ''));
+  const path = fixPath(
+    configuredPath.slice(configuredPath.lastIndexOf('*') + 1)
+  );
   return path ? `/${path}` : '';
 }
 

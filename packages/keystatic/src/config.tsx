@@ -22,14 +22,31 @@ export type Collection<
   SlugField extends string,
 > = {
   label: string;
-  path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
+  path?:
+    | `${string}/${Glob}`
+    | `${string}/${Glob}/${string}`
+    | `${string}/${Glob}/${Glob}`
+    | `${string}/${Glob}/${Glob}/${string}`;
   entryLayout?: EntryLayout;
   format?: Format;
   previewUrl?: string;
   columns?: string[];
   template?: string;
   parseSlugForSort?: (slug: string) => string | number;
+  /**
+   * The slug field for the collection. When `slugFields` is provided, this must
+   * be the last entry in `slugFields` and it is the segment shown as "the slug"
+   * in the admin UI.
+   */
   slugField: SlugField;
+  /**
+   * Multiple slug fields, mapped to the star segments of `path` in order.
+   * The entry's slug is the segment values joined with a slash. For example,
+   * with `slugFields: ['locale', 'slug']` and a path with two star segments,
+   * an entry with locale `en` and slug `my-post` is stored at
+   * `content/blog/en/my-post`.
+   */
+  slugFields?: readonly string[];
   schema: Schema;
 };
 
@@ -192,6 +209,7 @@ export function collection<
         ? K & string
         : never;
     }[keyof Schema][];
+    slugFields?: readonly (keyof Schema & string)[];
   }
 ): Collection<Schema, SlugField & string> {
   return collection;
