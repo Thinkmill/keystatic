@@ -1,5 +1,23 @@
 # @keystatic/core
 
+## 0.6.10
+
+### Patch Changes
+
+- [#1666](https://github.com/Thinkmill/keystatic/pull/1666) [`814a4c5`](https://github.com/Thinkmill/keystatic/commit/814a4c57993a5043b9ea45a6259c11f8d997d9f3) Thanks [@ganlub](https://github.com/ganlub)! - Add Catalan (`ca-ES`) translations
+
+- [#1653](https://github.com/Thinkmill/keystatic/pull/1653) [`e66c1b8`](https://github.com/Thinkmill/keystatic/commit/e66c1b8d6587c531a8f2733a216c0870d740c2f8) Thanks [@colingreig](https://github.com/colingreig)! - Fix creating an entry always failing with "This entry has been updated since it was opened" when an unrelated commit landed on the branch after the admin UI was loaded. Creating an entry now retries on the new branch head when the entry still doesn't exist there, matching the existing behaviour for edits. If an entry with the same slug was created in the meantime, the "create a new branch" dialog is still shown.
+
+- [#1642](https://github.com/Thinkmill/keystatic/pull/1642) [`5d9b73b`](https://github.com/Thinkmill/keystatic/commit/5d9b73b4e5f2f43972c88e852bbf8b172a42fa64) Thanks [@aryes](https://github.com/aryes)! - Fix incorrect he-IL translations: git terms, buttons and "singleton"
+
+- [#1646](https://github.com/Thinkmill/keystatic/pull/1646) [`a1661b2`](https://github.com/Thinkmill/keystatic/commit/a1661b282d6a4906cbe17040827634fbc5af4165) Thanks [@MilindChatrabhuji](https://github.com/MilindChatrabhuji)! - Fix incorrect Dutch (nl-NL) translations: "Save", "Clear", and git terms
+
+- [#1635](https://github.com/Thinkmill/keystatic/pull/1635) [`b8ec965`](https://github.com/Thinkmill/keystatic/commit/b8ec9650622c11e1d38e73fca3b64c17ec278d18) Thanks [@nanochen821](https://github.com/nanochen821)! - Fix incorrect zh-TW translations for branch-related strings and "save"
+
+- [#1668](https://github.com/Thinkmill/keystatic/pull/1668) [`3163f3f`](https://github.com/Thinkmill/keystatic/commit/3163f3fb7fa74a2445e0bc5e7125ac769f1010ab) Thanks [@jramosg](https://github.com/jramosg)! - Update minimatch to v11
+- Updated dependencies [[`814a4c5`](https://github.com/Thinkmill/keystatic/commit/814a4c57993a5043b9ea45a6259c11f8d997d9f3)]:
+  - @keystar/ui@0.10.1
+
 ## 0.6.9
 
 ### Patch Changes

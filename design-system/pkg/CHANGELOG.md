@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.10.1
+
+### Patch Changes
+
+- [#1666](https://github.com/Thinkmill/keystatic/pull/1666) [`814a4c5`](https://github.com/Thinkmill/keystatic/commit/814a4c57993a5043b9ea45a6259c11f8d997d9f3) Thanks [@ganlub](https://github.com/ganlub)! - Add Catalan (`ca-ES`) translations
+
 ## 0.10.0
 
 ### Minor Changes

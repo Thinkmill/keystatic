@@ -15,6 +15,14 @@
     "buttonLabel": "Покажи предложения",
     "listboxLabel": "Предложения"
   },
+  "ca-ES": {
+    "clear": "Neteja",
+    "invalid": "(no vàlid)",
+    "loading": "S'està carregant…",
+    "noResults": "Cap resultat",
+    "buttonLabel": "Mostra els suggeriments",
+    "listboxLabel": "Suggeriments"
+  },
   "cs-CZ": {
     "clear": "Vymazat",
     "invalid": "(neplatné)",
