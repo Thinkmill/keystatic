@@ -1,3 +1,4 @@
+import { sanitizeUrl } from '@braintree/sanitize-url';
 import { Fragment, ReactElement, ReactNode, type JSX } from 'react';
 
 type Node = Element | Text;
@@ -260,7 +261,7 @@ function DocumentNode({
     }
     case 'link': {
       return (
-        <renderers.inline.link href={node.href as string}>
+        <renderers.inline.link href={sanitizeUrl(node.href as string)}>
           {children}
         </renderers.inline.link>
       );
