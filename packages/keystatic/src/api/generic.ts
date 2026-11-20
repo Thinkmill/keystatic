@@ -32,6 +32,8 @@ type InnerAPIRouteConfig = {
 const keystaticRouteRegex =
   /^branch\/[^]+(\/collection\/[^/]+(|\/(create|item\/[^/]+))|\/singleton\/[^/]+)?$/;
 
+const oauthStateCookiePath = '/api/keystatic/github/oauth/callback';
+
 const keyToEnvVar = {
   clientId: 'KEYSTATIC_GITHUB_CLIENT_ID',
   clientSecret: 'KEYSTATIC_GITHUB_CLIENT_SECRET',
@@ -218,8 +220,23 @@ async function githubOauthCallback(
   if (typeof code !== 'string') {
     return { status: 400, body: 'Bad Request' };
   }
+  if (state === 'close') {
+    // the GitHub App install popup opened from the fork flow, the user is
+    // already signed in so the code is not exchanged here
+    return {
+      headers: [['Content-Type', 'text/html']],
+      body: "<script>localStorage.setItem('ks-refetch-installations', 'true');window.close();</script>",
+      status: 200,
+    };
+  }
   const cookies = cookie.parse(req.headers.get('cookie') ?? '');
   const fromCookie = state ? cookies['ks-' + state] : undefined;
+  if (typeof fromCookie !== 'string') {
+    return {
+      status: 400,
+      body: 'Invalid OAuth state. Please try signing in again.',
+    };
+  }
   const from =
     typeof fromCookie === 'string' && keystaticRouteRegex.test(fromCookie)
       ? fromCookie
@@ -245,13 +262,10 @@ async function githubOauthCallback(
   }
 
   const headers = await getTokenCookies(tokenData, config);
-  if (state === 'close') {
-    return {
-      headers: [...headers, ['Content-Type', 'text/html']],
-      body: "<script>localStorage.setItem('ks-refetch-installations', 'true');window.close();</script>",
-      status: 200,
-    };
-  }
+  headers.push([
+    'Set-Cookie',
+    immediatelyExpiringCookie('ks-' + state, oauthStateCookiePath),
+  ]);
   return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
 }
 
@@ -377,9 +391,6 @@ async function githubLogin(
     'redirect_uri',
     `${reqUrl.origin}/api/keystatic/github/oauth/callback`
   );
-  if (from === '/') {
-    return redirect(url.toString());
-  }
   url.searchParams.set('state', state);
   return redirect(url.toString(), [
     [
@@ -387,10 +398,10 @@ async function githubLogin(
       cookie.serialize('ks-' + state, from, {
         sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
-        // 1 day
-        maxAge: 60 * 60 * 24,
-        expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
-        path: '/',
+        // 10 minutes
+        maxAge: 60 * 10,
+        expires: new Date(Date.now() + 60 * 10 * 1000),
+        path: oauthStateCookiePath,
         httpOnly: true,
       }),
     ],
@@ -407,11 +418,11 @@ async function createdGithubApp(
   return handleGitHubAppCreation(req, slugEnvVarName);
 }
 
-function immediatelyExpiringCookie(name: string) {
+function immediatelyExpiringCookie(name: string, path = '/') {
   return cookie.serialize(name, '', {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    path: '/',
+    path,
     maxAge: 0,
     expires: new Date(),
   });
