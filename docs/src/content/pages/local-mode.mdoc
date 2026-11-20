@@ -16,6 +16,8 @@ export default config({
 
 Content is stored on your local file system directly, and this is what makes the most sense when starting a project.
 
+The API routes used in `local` mode have no authentication and are meant for local development only. Do not expose `/api/keystatic` on a server that other people can reach while using `local` mode.
+
 {% aside icon="☝️"%}
 New projects started with the [Keystatic CLI](/docs/quick-start) will be running in `local` mode.
 {% /aside %}
