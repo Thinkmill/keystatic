@@ -34,6 +34,15 @@ export function ForkRepoDialog(props: {
         event.newValue === 'true'
       ) {
         localStorage.removeItem('ks-refetch-installations');
+        // the install popup doesn't sign in again, so try to get a token
+        // issued after the install. if this fails, the existing token is used
+        try {
+          await fetch('/api/keystatic/github/refresh-token', {
+            method: 'POST',
+          });
+        } catch {
+          // ignore
+        }
         try {
           const auth = await getAuth(props.config);
           if (!auth) throw new Error('Unauthorized');
