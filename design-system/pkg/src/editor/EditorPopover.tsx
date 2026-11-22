@@ -225,6 +225,7 @@ export const DialogElement = forwardRef<
           minHeight: tokenSchema.size.element.regular,
           minWidth: tokenSchema.size.element.regular,
           outline: 0,
+          zIndex: 3
         }),
         props.className
       )}
