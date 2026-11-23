@@ -5,6 +5,14 @@ import { useReducer } from 'react';
 import { validateDatetime } from './validateDatetime';
 import { FormFieldInputProps } from '../../api';
 
+function convertUTCToLocal(datetime: string | null): string {
+  if (!datetime) return '';
+  const date = new Date(datetime);
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60 * 1000);
+  return localDate.toISOString().slice(0, 16);
+}
+
 export function DatetimeFieldInput(
   props: FormFieldInputProps<string | null> & {
     label: string;
@@ -23,7 +31,7 @@ export function DatetimeFieldInput(
         props.onChange(val === '' ? null : val);
       }}
       autoFocus={props.autoFocus}
-      value={props.value === null ? '' : props.value}
+      value={convertUTCToLocal(props.value)}
       onBlur={onBlur}
       isRequired={props.validation?.isRequired}
       errorMessage={

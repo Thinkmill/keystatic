@@ -39,13 +39,10 @@ export function datetime<IsRequired extends boolean | undefined>({
         return null;
       }
       if (typeof defaultValue === 'string') {
-        return defaultValue;
+        return new Date(defaultValue).toISOString();
       }
       if (defaultValue.kind === 'now') {
-        const now = new Date();
-        return new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000)
-          .toISOString()
-          .slice(0, -8);
+        return new Date().toISOString();
       }
       return null;
     },
@@ -54,19 +51,16 @@ export function datetime<IsRequired extends boolean | undefined>({
         return null;
       }
       if (value instanceof Date) {
-        return value.toISOString().slice(0, -8);
+        return value.toISOString();
       }
       if (typeof value !== 'string') {
         throw new FieldDataError('Must be a string or date');
       }
-      return value;
+      return new Date(value).toISOString();
     },
     serialize(value) {
       if (value === null) return { value: undefined };
-      const date = new Date(value + 'Z');
-      date.toJSON = () => date.toISOString().slice(0, -8);
-      date.toString = () => date.toISOString().slice(0, -8);
-      return { value: date };
+      return { value: new Date(value).toISOString() };
     },
     validate(value) {
       const message = validateDatetime(validation, value, label);
