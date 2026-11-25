@@ -98,7 +98,9 @@ export function useEditorView(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mountRef, onEditorStateChange, config]);
   useLayoutEffect(() => {
-    viewRef.current?.updateState(state);
+    if (viewRef.current && viewRef.current.state !== state) {
+      viewRef.current.updateState(state);
+    }
   }, [state]);
   return {
     view: viewRef,
