@@ -1,7 +1,12 @@
 import { ColorScheme } from '@keystar/ui/types';
 import { ReactElement } from 'react';
 
-import { ComponentSchema, FormField, SlugFormField } from './form/api';
+import {
+  ArrayField,
+  ComponentSchema,
+  FormField,
+  SlugFormField,
+} from './form/api';
 import type { Locale } from './app/l10n/locales';
 import { RepoConfig } from './app/repo-config';
 
@@ -189,6 +194,14 @@ export function collection<
             string | number | boolean | Date | null | undefined
           >
         | SlugFormField<any, any, any, string>
+        | ArrayField<
+            | FormField<
+                any,
+                any,
+                string | number | boolean | Date | null | undefined
+              >
+            | SlugFormField<any, any, any, string>
+          >
         ? K & string
         : never;
     }[keyof Schema][];
