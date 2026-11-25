@@ -13,11 +13,12 @@ export function placeholderPlugin(text: string) {
           doc.firstChild?.isTextblock &&
           doc.firstChild.content.size === 0
         ) {
-          let placeholder = document.createElement('span');
-          placeholder.className = classes.placeholder;
-          placeholder.textContent = text;
-
-          return DecorationSet.create(doc, [Decoration.widget(1, placeholder)]);
+          return DecorationSet.create(doc, [
+            Decoration.node(0, doc.firstChild.nodeSize, {
+              class: classes.placeholder,
+              'data-placeholder': text,
+            }),
+          ]);
         }
       },
     },

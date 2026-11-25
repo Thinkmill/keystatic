@@ -92,9 +92,12 @@ export const prosemirrorStyles = css`
     caret-color: transparent;
   }
 
-  /* Style the placeholder element */
-  .${classes.placeholder} {
+  /* Style the placeholder pseudo-element */
+  .${classes.placeholder}::before {
     color: ${tokenSchema.color.foreground.neutralTertiary};
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
     pointer-events: none;
   }
 
