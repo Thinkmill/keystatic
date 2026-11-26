@@ -154,6 +154,7 @@ function ItemPageInner(
     initialFiles: props.initialFiles,
     storage: config.storage,
     basePath: currentBasePath,
+    beforeDelete: collectionConfig.beforeDelete,
   });
 
   const onDelete = useEventCallback(async () => {
@@ -432,6 +433,7 @@ function LocalItemPage(
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
     slug: { field: collectionConfig.slugField, value: slug },
+    beforeSave: collectionConfig.beforeSave,
   });
 
   useEffect(() => {
@@ -885,17 +887,52 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
     }, [collectionConfig, props.collection, props.config, props.itemSlug])
   );
 
-  const itemData = useItemData({
-    config: props.config,
-    dirpath: getCollectionItemPath(
-      props.config,
-      props.collection,
-      props.itemSlug
-    ),
-    schema: collectionConfig.schema,
-    format,
-    slug: slugInfo,
-  });
+  const itemData = collectionConfig.reader
+    ? useData(
+        useCallback(async () => {
+          let entryData: Record<string, unknown> | null = null;
+          
+          try {
+            entryData = await collectionConfig.reader!.read(props.itemSlug);
+          } catch {
+            return 'not-found' as const;
+          }
+
+          if (!entryData) {
+            return 'not-found' as const;
+          }
+          
+          const initialFiles: string[] = [];
+          const initialState: Record<string, unknown> = {};
+
+          initialState[collectionConfig.slugField] = {
+            name: props.itemSlug,
+            slug: props.itemSlug,
+          };
+
+          for (const [key, value] of Object.entries(entryData)) {
+            if (key !== collectionConfig.slugField) {
+              initialState[key] = value;
+            }
+          }
+          return {
+            initialState,
+            initialFiles,
+            localTreeKey: '',
+          };
+        }, [collectionConfig, props.itemSlug])
+      )
+    : useItemData({
+        config: props.config,
+        dirpath: getCollectionItemPath(
+          props.config,
+          props.collection,
+          props.itemSlug
+        ),
+        schema: collectionConfig.schema,
+        format,
+        slug: slugInfo,
+      });
 
   const currentBranch = useCurrentBranch();
 
