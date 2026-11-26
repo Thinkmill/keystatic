@@ -62,6 +62,20 @@ export function showDraftRestoredToast(
   );
 }
 
+export function showStaleDraftToast(savedAt: Date, onRestore: () => void) {
+  toastQueue.info(
+    <Text>
+      A draft from <RelativeTime date={savedAt} /> was not restored because this
+      entry has changed since the draft was saved.
+    </Text>,
+    {
+      actionLabel: 'Restore draft',
+      onAction: onRestore,
+      shouldCloseOnAction: true,
+    }
+  );
+}
+
 let store: UseStore;
 
 function getStore() {
