@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, ComponentType } from 'react';
 import { Glob } from '../config';
 
 import { ChildField } from './fields/child';
@@ -48,6 +48,7 @@ export type BasicFormField<
     parse(value: FormFieldStoredValue): ReaderValue;
   };
   label?: string;
+  Cell?: ComponentType<{ value: any }>;
 };
 
 export type SlugFormField<
@@ -85,6 +86,7 @@ export type SlugFormField<
     ): ReaderValueAsSlugField;
   };
   label?: string;
+  Cell?: ComponentType<{ value: any }>;
 };
 
 export type AssetFormField<
@@ -127,6 +129,7 @@ export type AssetFormField<
     parse(value: FormFieldStoredValue): ReaderValue;
   };
   label?: string;
+  Cell?: ComponentType<{ value: any }>;
 };
 
 export type AssetsFormField<
