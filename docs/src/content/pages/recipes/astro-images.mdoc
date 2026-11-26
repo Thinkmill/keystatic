@@ -113,4 +113,8 @@ captionImage: block({
 })
 ```
 
-Read the  [Astro guide on dynamic image imports](https://docs.astro.build/en/recipes/dynamically-importing-images/) for details on the implementation.
+Read the [Astro guide on dynamic image imports](https://docs.astro.build/en/recipes/dynamically-importing-images/) for details on the implementation.
+
+{% aside icon="☝️" %}
+Reminder: The `glob` string is case-sensitive, so you need to include patterns like `import.meta.glob('/src/assets/*.{jpeg,jpg,JPEG,JPG}')` because Keystatic does not change the capitalization of file extensions during upload.
+{% /aside %}
