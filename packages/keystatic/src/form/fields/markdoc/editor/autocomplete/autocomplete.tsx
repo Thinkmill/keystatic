@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import { EditorPopover } from '@keystar/ui/editor';
+import { PreventBackgroundScroll } from '@keystar/ui/overlays';
 
 import { useEditorViewRef } from '../editor-view';
 import { useEditorKeydownListener } from '../keydown';
@@ -41,7 +42,7 @@ export function EditorAutocomplete<Item extends object>(
         placement="bottom-start"
         reference={referenceElement}
       >
-        {listbox}
+        <PreventBackgroundScroll>{listbox}</PreventBackgroundScroll>
       </EditorPopover>
     )
   );

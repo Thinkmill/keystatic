@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import {
   classNames,
   css,
@@ -7,6 +9,7 @@ import {
   useStyleProps,
 } from '@keystar/ui/style';
 
+import { usePreventBackgroundScroll } from './scrollLock';
 import { BlanketProps } from './types';
 
 /**
@@ -15,10 +18,17 @@ import { BlanketProps } from './types';
  */
 export function Blanket(props: BlanketProps) {
   const { isOpen, isTransparent, ...otherProps } = props;
+  const blanketRef = useRef<HTMLDivElement>(null);
   const styleProps = useStyleProps(otherProps);
+
+  usePreventBackgroundScroll(
+    () => blanketRef.current?.nextElementSibling ?? null,
+    Boolean(isOpen)
+  );
 
   return (
     <div
+      ref={blanketRef}
       {...filterStyleProps(otherProps)}
       {...toDataAttributes({
         fill: isTransparent ? 'transparent' : 'translucent',
@@ -30,8 +40,10 @@ export function Blanket(props: BlanketProps) {
           inset: 0,
           opacity: 0,
           overflow: 'hidden',
+          overscrollBehavior: 'none',
           pointerEvents: 'none',
           position: 'fixed',
+          touchAction: 'none',
           visibility: 'hidden',
           zIndex: 1,
 

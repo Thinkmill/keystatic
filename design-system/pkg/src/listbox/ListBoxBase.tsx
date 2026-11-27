@@ -10,7 +10,7 @@ import { RefObject, forwardRef, ReactElement, ReactNode, useMemo } from 'react';
 
 import { useProvider } from '@keystar/ui/core';
 import { ProgressCircle } from '@keystar/ui/progress';
-import { useStyleProps } from '@keystar/ui/style';
+import { classNames, css, useStyleProps } from '@keystar/ui/style';
 
 import localizedMessages from './l10n';
 import { ListBoxContext } from './context';
@@ -120,6 +120,10 @@ function ListBoxBase<T>(
         <Virtualizer
           {...styleProps}
           {...mergeProps(listBoxProps, domProps)}
+          className={classNames(
+            styleProps.className,
+            css({ overscrollBehavior: 'contain' })
+          )}
           ref={forwardedRef}
           persistedKeys={persistedKeys}
           autoFocus={!!props.autoFocus}
