@@ -19,6 +19,7 @@ import { FormatInfo, getEntryDataFilepath, getPathPrefix } from './path-utils';
 import {
   getTreeNodeAtPath,
   TreeEntry,
+  TreeNode,
   treeSha,
   updateTreeWithChanges,
 } from './trees';
@@ -106,6 +107,57 @@ export function serializeEntryToFiles(args: {
   ];
 }
 
+function getExpectedShas(
+  unscopedTree: Map<string, TreeNode>,
+  paths: Iterable<string>
+) {
+  return [...new Set(paths)].map(path => ({
+    path,
+    sha: getTreeNodeAtPath(unscopedTree, path)?.entry.sha ?? null,
+  }));
+}
+
+async function sendLocalUpdate(args: {
+  additions: { path: string; contents: string }[];
+  deletions: { path: string }[];
+  expectedShas: { path: string; sha: string | null }[];
+}): Promise<
+  | { kind: 'updated'; tree: Map<string, TreeNode> }
+  | { kind: 'conflict'; message: string }
+> {
+  const res = await fetch('/api/keystatic/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'no-cors': '1',
+    },
+    body: JSON.stringify(args),
+  });
+  if (res.status === 409) {
+    let message = 'This entry has changed on disk since it was loaded.';
+    try {
+      const text = await res.text();
+      if (text) {
+        try {
+          const parsed = JSON.parse(text);
+          if (typeof parsed?.message === 'string' && parsed.message) {
+            message = parsed.message;
+          }
+        } catch {
+          message = text;
+        }
+      }
+    } catch {}
+    return { kind: 'conflict', message };
+  }
+  if (!res.ok) {
+    throw new Error(await res.text());
+  }
+  const newTree: TreeEntry[] = await res.json();
+  const { tree } = await hydrateTreeCacheWithEntries(newTree);
+  return { kind: 'updated', tree };
+}
+
 export function useUpsertItem(args: {
   state: unknown;
   initialFiles: string[] | undefined;
@@ -123,6 +175,7 @@ export function useUpsertItem(args: {
     | { kind: 'needs-fork' }
     | { kind: 'error'; error: Error }
     | { kind: 'needs-new-branch'; reason: string }
+    | { kind: 'conflict'; reason: string }
   >({
     kind: 'idle',
   });
@@ -194,15 +247,15 @@ export function useUpsertItem(args: {
         const deletions: { path: string }[] = [...filesToDelete].map(path => ({
           path,
         }));
-        const updatedTree = await updateTreeWithChanges(unscopedTree, {
-          additions,
-          deletions: [...filesToDelete],
-        });
-        await hydrateTreeCacheWithEntries(updatedTree.entries);
         if (
           args.config.storage.kind === 'github' ||
           args.config.storage.kind === 'cloud'
         ) {
+          const updatedTree = await updateTreeWithChanges(unscopedTree, {
+            additions,
+            deletions: [...filesToDelete],
+          });
+          await hydrateTreeCacheWithEntries(updatedTree.entries);
           if (!repoInfo) {
             throw new Error('Repo info not loaded');
           }
@@ -314,26 +367,37 @@ export function useUpsertItem(args: {
           }
           throw new Error('Failed to update');
         } else {
-          const res = await fetch('/api/keystatic/update', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'no-cors': '1',
-            },
-            body: JSON.stringify({
-              additions: additions.map(addition => ({
-                ...addition,
-                contents: base64Encode(addition.contents),
-              })),
-              deletions,
-            }),
+          const directoriesForTreeKey = getDirectoriesForTreeKey(
+            fields.object(args.schema),
+            args.basePath,
+            args.slug?.value,
+            args.format
+          ).map(dir => pathPrefix + dir);
+          const expectedShas = getExpectedShas(unscopedTree, [
+            ...directoriesForTreeKey,
+            ...(args.initialFiles?.map(x => pathPrefix + x) ?? []),
+            ...additions.map(addition => addition.path),
+            ...deletions.map(deletion => deletion.path),
+          ]);
+          const result = await sendLocalUpdate({
+            additions: additions.map(addition => ({
+              ...addition,
+              contents: base64Encode(addition.contents),
+            })),
+            deletions,
+            expectedShas,
           });
-          if (!res.ok) {
-            throw new Error(await res.text());
+          if (result.kind === 'conflict') {
+            const isCreating = !args.initialFiles?.length;
+            const reason = isCreating
+              ? args.slug
+                ? 'An entry with this slug already exists on disk. Change the slug or reload to view the existing entry.'
+                : 'This entry has already been created or modified on disk since it was opened. Reload to load the latest version, or copy your changes before reloading.'
+              : 'This entry has changed on disk since it was opened (for example, in another browser tab). Reload to get the latest version — your unsaved changes are still in the editor if you want to copy them first.';
+            setState({ kind: 'conflict', reason });
+            return false;
           }
-          const newTree: TreeEntry[] = await res.json();
-          const { tree } = await hydrateTreeCacheWithEntries(newTree);
-          setTreeSha(await treeSha(tree));
+          setTreeSha(await treeSha(result.tree));
           setState({ kind: 'updated' });
           return true;
         }
@@ -379,6 +443,7 @@ export function useDeleteItem(args: {
     | { kind: 'loading' }
     | { kind: 'needs-fork' }
     | { kind: 'error'; error: Error }
+    | { kind: 'conflict'; reason: string }
   >({
     kind: 'idle',
   });
@@ -410,15 +475,14 @@ export function useDeleteItem(args: {
           return false;
         }
         setState({ kind: 'loading' });
-        const deletions = args.initialFiles.map(
-          x => (getPathPrefix(args.storage) ?? '') + x
-        );
-        const updatedTree = await updateTreeWithChanges(unscopedTree, {
-          additions: [],
-          deletions,
-        });
-        await hydrateTreeCacheWithEntries(updatedTree.entries);
+        const pathPrefix = getPathPrefix(args.storage) ?? '';
+        const deletions = args.initialFiles.map(x => pathPrefix + x);
         if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
+          const updatedTree = await updateTreeWithChanges(unscopedTree, {
+            additions: [],
+            deletions,
+          });
+          await hydrateTreeCacheWithEntries(updatedTree.entries);
           if (!repoInfo) {
             throw new Error('Repo info not loaded');
           }
@@ -453,28 +517,30 @@ export function useDeleteItem(args: {
           setState({ kind: 'updated' });
           return true;
         } else {
-          const res = await fetch('/api/keystatic/update', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'no-cors': '1',
-            },
-            body: JSON.stringify({
-              additions: [],
-              deletions: deletions.map(path => ({ path })),
-            }),
+          const expectedShas = getExpectedShas(unscopedTree, [
+            ...(args.basePath ? [pathPrefix + args.basePath] : []),
+            ...deletions,
+          ]);
+          const result = await sendLocalUpdate({
+            additions: [],
+            deletions: deletions.map(path => ({ path })),
+            expectedShas,
           });
-          if (!res.ok) {
-            throw new Error(await res.text());
+          if (result.kind === 'conflict') {
+            setState({
+              kind: 'conflict',
+              reason:
+                'This entry has changed on disk since it was opened (for example, in another browser tab). Reload to review the latest version before deleting.',
+            });
+            return false;
           }
-          const newTree: TreeEntry[] = await res.json();
-          const { tree } = await hydrateTreeCacheWithEntries(newTree);
-          setTreeSha(await treeSha(tree));
+          setTreeSha(await treeSha(result.tree));
           setState({ kind: 'updated' });
           return true;
         }
       } catch (err) {
         setState({ kind: 'error', error: err as Error });
+        return false;
       }
     },
     () => {

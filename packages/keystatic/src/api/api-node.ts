@@ -172,6 +172,24 @@ const base64Schema = s.coerce(s.instance(Uint8Array), s.string(), val =>
   base64UrlDecode(val)
 );
 
+const updateLocks = new Map<string, Promise<unknown>>();
+
+async function withDirectoryLock<T>(
+  dir: string,
+  fn: () => Promise<T>
+): Promise<T> {
+  const prev = updateLocks.get(dir) ?? Promise.resolve();
+  const next = prev.catch(() => {}).then(fn);
+  updateLocks.set(dir, next);
+  try {
+    return await next;
+  } finally {
+    if (updateLocks.get(dir) === next) {
+      updateLocks.delete(dir);
+    }
+  }
+}
+
 async function update(
   req: KeystaticRequest,
   config: Config,
@@ -198,26 +216,71 @@ async function update(
           })
         ),
         deletions: s.array(s.object({ path: filepath })),
+        expectedShas: s.optional(
+          s.array(
+            s.object({
+              path: filepath,
+              sha: s.nullable(s.string()),
+            })
+          )
+        ),
       })
     );
   } catch {
     return { status: 400, body: 'Bad data' };
   }
-  for (const addition of updates.additions) {
-    await fs.mkdir(path.dirname(path.join(baseDirectory, addition.path)), {
-      recursive: true,
-    });
-    await fs.writeFile(
-      path.join(baseDirectory, addition.path),
-      addition.contents
-    );
-  }
-  for (const deletion of updates.deletions) {
-    await fs.rm(path.join(baseDirectory, deletion.path), { force: true });
-  }
-  return {
-    status: 200,
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(baseDirectory)),
-  };
+
+  return withDirectoryLock(baseDirectory, async () => {
+    if (updates.expectedShas && updates.expectedShas.length > 0) {
+      const currentEntries = await readToDirEntries(baseDirectory);
+      const currentShaByPath = new Map(
+        currentEntries.map(entry => [entry.path, entry.sha])
+      );
+      const conflicts: {
+        path: string;
+        expectedSha: string | null;
+        actualSha: string | null;
+      }[] = [];
+      for (const expected of updates.expectedShas) {
+        const actualSha = currentShaByPath.get(expected.path) ?? null;
+        if (actualSha !== expected.sha) {
+          conflicts.push({
+            path: expected.path,
+            expectedSha: expected.sha,
+            actualSha,
+          });
+        }
+      }
+      if (conflicts.length > 0) {
+        return {
+          status: 409,
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            code: 'CONFLICT',
+            message:
+              'Conflict: one or more files have changed since they were loaded.',
+            conflicts,
+          }),
+        };
+      }
+    }
+
+    for (const addition of updates.additions) {
+      await fs.mkdir(path.dirname(path.join(baseDirectory, addition.path)), {
+        recursive: true,
+      });
+      await fs.writeFile(
+        path.join(baseDirectory, addition.path),
+        addition.contents
+      );
+    }
+    for (const deletion of updates.deletions) {
+      await fs.rm(path.join(baseDirectory, deletion.path), { force: true });
+    }
+    return {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(await readToDirEntries(baseDirectory)),
+    };
+  });
 }

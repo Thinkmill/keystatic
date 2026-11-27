@@ -70,11 +70,31 @@ export const SetTreeShaContext = createContext<(sha: string) => void>(() => {
   throw new Error('SetTreeShaContext not set');
 });
 
+const RefreshLocalTreeContext = createContext<() => Promise<void>>(
+  async () => {}
+);
+
+export function useRefreshLocalTree() {
+  return useContext(RefreshLocalTreeContext);
+}
+
 export function LocalAppShellProvider(props: {
   config: LocalConfig;
   children: ReactNode;
 }) {
   const [currentTreeSha, setCurrentTreeSha] = useState<string>('initial');
+
+  const refreshLocalTree = useCallback(async () => {
+    const res = await fetch('/api/keystatic/tree', {
+      headers: { 'no-cors': '1' },
+    });
+    if (!res.ok) {
+      throw new Error(await res.text());
+    }
+    const entries: TreeEntry[] = await res.json();
+    const { tree } = await hydrateTreeCacheWithEntries(entries);
+    setCurrentTreeSha(await treeSha(tree));
+  }, []);
 
   const tree = useData(
     useCallback(() => fetchLocalTree(currentTreeSha), [currentTreeSha])
@@ -110,13 +130,15 @@ export function LocalAppShellProvider(props: {
   }, [allTreeData, props.config]);
 
   return (
-    <SetTreeShaContext.Provider value={setCurrentTreeSha}>
-      <ChangedContext.Provider value={changedData}>
-        <TreeContext.Provider value={allTreeData}>
-          {props.children}
-        </TreeContext.Provider>
-      </ChangedContext.Provider>
-    </SetTreeShaContext.Provider>
+    <RefreshLocalTreeContext.Provider value={refreshLocalTree}>
+      <SetTreeShaContext.Provider value={setCurrentTreeSha}>
+        <ChangedContext.Provider value={changedData}>
+          <TreeContext.Provider value={allTreeData}>
+            {props.children}
+          </TreeContext.Provider>
+        </ChangedContext.Provider>
+      </SetTreeShaContext.Provider>
+    </RefreshLocalTreeContext.Provider>
   );
 }
 
