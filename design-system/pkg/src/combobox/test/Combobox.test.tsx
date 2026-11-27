@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { forwardRef } from 'react';
-import { beforeAll, expect, vi, describe, it } from 'vitest';
+import { afterAll, beforeAll, expect, vi, describe, it } from 'vitest';
 
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 
@@ -50,6 +50,10 @@ describe('combobox/Combobox', () => {
     vi.useFakeTimers();
   });
 
+  afterAll(function () {
+    vi.useRealTimers();
+  });
+
   it('renders correctly', function () {
     let { getByRole, getByText } = renderCombobox();
 
@@ -72,12 +76,15 @@ describe('combobox/Combobox', () => {
     expect(combobox).toHaveAttribute('name', 'test name');
   });
 
-  it('can be disabled', function () {
-    let user = userEvent.setup();
+  it('can be disabled', async function () {
+    let user = userEvent.setup({
+      delay: null,
+      advanceTimers: vi.advanceTimersByTimeAsync,
+    });
     let { getByRole, queryByRole } = renderCombobox({ isDisabled: true });
 
     let combobox = getByRole('combobox');
-    user.type(combobox, 'One');
+    await user.type(combobox, 'One');
     act(() => {
       vi.runAllTimers();
     });
@@ -106,8 +113,11 @@ describe('combobox/Combobox', () => {
     expect(onInputChange).not.toHaveBeenCalled();
   });
 
-  it('can be readonly', function () {
-    let user = userEvent.setup();
+  it('can be readonly', async function () {
+    let user = userEvent.setup({
+      delay: null,
+      advanceTimers: vi.advanceTimersByTimeAsync,
+    });
     let { getByRole, queryByRole } = renderCombobox({
       isReadOnly: true,
       defaultInputValue: 'default input value',
@@ -117,7 +127,7 @@ describe('combobox/Combobox', () => {
     act(() => {
       combobox.focus();
     });
-    user.type(combobox, 'One');
+    await user.type(combobox, 'One');
 
     expect(queryByRole('listbox')).toBeNull();
     expect(combobox.value).toBe('default input value');

@@ -5,6 +5,10 @@ export { DirectionIndicator } from './DirectionIndicator';
 export { Modal } from './Modal';
 export { Overlay } from './Overlay';
 export { Popover } from './Popover';
+export {
+  PreventBackgroundScroll,
+  usePreventBackgroundScroll,
+} from './scrollLock';
 export { Transition } from './Transition';
 export { Tray } from './Tray';
 

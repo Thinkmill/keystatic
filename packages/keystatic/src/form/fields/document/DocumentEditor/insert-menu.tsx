@@ -8,7 +8,7 @@ import { useListState } from 'react-stately/useListState';
 import { useOverlayTriggerState } from 'react-stately/useOverlayTriggerState';
 
 import { Item, ListBoxBase, useListBoxLayout } from '@keystar/ui/listbox';
-import { Popover } from '@keystar/ui/overlays';
+import { Popover, PreventBackgroundScroll } from '@keystar/ui/overlays';
 import { css, tokenSchema } from '@keystar/ui/style';
 
 import { insertComponentBlock } from './component-blocks';
@@ -289,8 +289,16 @@ export function InsertMenu({
         state={overlayState}
         triggerRef={triggerRef}
       >
+        <PreventBackgroundScroll
+          target={scrollableRef}
+          isActive={overlayState.isOpen}
+        />
         <div
-          className={css({ overflow: 'scroll', maxHeight: 300 })}
+          className={css({
+            overflowY: 'auto',
+            overscrollBehavior: 'contain',
+            maxHeight: 300,
+          })}
           ref={scrollableRef}
         >
           <ListBoxBase

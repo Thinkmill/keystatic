@@ -4,7 +4,7 @@ import React, { ForwardedRef, ReactElement, useRef } from 'react';
 import { useProviderProps } from '@keystar/ui/core';
 import { FieldPrimitive } from '@keystar/ui/field';
 import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
-import { Popover } from '@keystar/ui/overlays';
+import { Popover, usePreventBackgroundScroll } from '@keystar/ui/overlays';
 import { useIsMobileDevice } from '@keystar/ui/style';
 import { validateTextFieldProps } from '@keystar/ui/text-field';
 
@@ -85,6 +85,8 @@ const ComboboxMultiBase = React.forwardRef(function ComboboxMultiBase<
     inputRef,
     fieldRef,
   });
+
+  usePreventBackgroundScroll(popoverRef, state.isOpen);
 
   return (
     <>
