@@ -34,7 +34,7 @@ function makeLive(code: string): LiveProp {
 
 describe('ReactLive hydration', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
+    vi.useFakeTimers({ toFake: ['Date'] });
     if (!window.matchMedia) {
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
