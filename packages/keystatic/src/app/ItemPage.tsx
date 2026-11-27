@@ -52,6 +52,7 @@ import {
 } from './branch-selection';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
+import { LocalConflictNotice } from './local-conflict-notice';
 import l10nMessages from './l10n';
 import { NotFoundBoundary, notFound } from './not-found';
 import { getDataFileExtension, getPathPrefix } from './path-utils';
@@ -59,7 +60,12 @@ import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
 import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
-import { useBaseCommit, useCurrentBranch, useRepoInfo } from './shell/data';
+import {
+  useBaseCommit,
+  useCurrentBranch,
+  useRefreshLocalTree,
+  useRepoInfo,
+} from './shell/data';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useSlugFieldInfo } from './slugs';
 import { delDraft, getDraft, setDraft } from './persistence';
@@ -117,6 +123,7 @@ function ItemPageInner(
     onReset: () => void;
     updateResult: ReturnType<typeof useUpsertItem>[0];
     onResetUpdateItem: () => void;
+    onDiscardDraft?: () => void;
     previewProps: GenericPreviewProps<
       ObjectField<Record<string, ComponentSchema>>,
       undefined
@@ -140,6 +147,7 @@ function ItemPageInner(
   const formatInfo = getCollectionFormat(config, collection);
   const currentBranch = useCurrentBranch();
   const repoInfo = useRepoInfo();
+  const refreshLocalTree = useRefreshLocalTree();
   const [forceValidation, setForceValidation] = useState(false);
   const previewHref = collectionConfig.previewUrl
     ? collectionConfig.previewUrl
@@ -229,6 +237,16 @@ function ItemPageInner(
 
   const formID = 'item-edit-form';
 
+  const onResetUpdateItem = props.onResetUpdateItem;
+  const onDiscardDraft = props.onDiscardDraft;
+  const onReloadLatest = useEventCallback(async () => {
+    await delDraft(['collection', collection, itemSlug]);
+    onDiscardDraft?.();
+    await refreshLocalTree();
+    onResetUpdateItem();
+    resetDeleteItem();
+  });
+
   // allow shortcuts "cmd+s" and "ctrl+s" to save
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
@@ -266,8 +284,21 @@ function ItemPageInner(
         {updateResult.kind === 'error' && (
           <Notice tone="critical">{updateResult.error.message}</Notice>
         )}
+        {updateResult.kind === 'conflict' && (
+          <LocalConflictNotice
+            reason={updateResult.reason}
+            onReload={onReloadLatest}
+          />
+        )}
         {deleteResult.kind === 'error' && (
           <Notice tone="critical">{deleteResult.error.message}</Notice>
+        )}
+        {deleteResult.kind === 'conflict' && (
+          <LocalConflictNotice
+            heading="Delete conflict"
+            reason={deleteResult.reason}
+            onReload={onReloadLatest}
+          />
         )}
         <Box
           id={formID}
@@ -373,6 +404,7 @@ function ItemPageInner(
 
 function LocalItemPage(
   props: ItemPageProps & {
+    onDiscardDraft?: () => void;
     draft:
       | { state: Record<string, unknown>; savedAt: Date; treeKey: string }
       | undefined;
@@ -479,6 +511,7 @@ function LocalItemPage(
       onReset={onReset}
       updateResult={updateResult}
       onResetUpdateItem={resetUpdateItem}
+      onDiscardDraft={props.onDiscardDraft}
       previewProps={previewProps}
       state={state}
       hasChanged={hasChanged}
@@ -853,6 +886,11 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
     return { slug: props.itemSlug, field: collectionConfig.slugField };
   }, [collectionConfig.slugField, props.itemSlug]);
 
+  const [discardedDraftKey, setDiscardedDraftKey] = useState<string | null>(
+    null
+  );
+  const draftKey = `${props.collection}/${props.itemSlug}`;
+
   const draftData = useData(
     useCallback(async () => {
       try {
@@ -969,6 +1007,8 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
             mapData={mapData}
             draftData={draftData}
             itemData={itemData}
+            isDraftDiscarded={discardedDraftKey === draftKey}
+            onDiscardDraft={() => setDiscardedDraftKey(draftKey)}
             {...props}
           />
         </Suspense>
@@ -982,6 +1022,8 @@ function ItemPageWrapper(
     draftData: DataState<
       { state: any; savedAt: Date; treeKey: string } | undefined
     >;
+    isDraftDiscarded: boolean;
+    onDiscardDraft: () => void;
     mapData: DataState<Y.Map<any> | undefined>;
     itemData: DataState<
       | 'not-found'
@@ -1036,7 +1078,8 @@ function ItemPageWrapper(
       itemSlug={props.itemSlug}
       initialState={itemData.initialState}
       initialFiles={itemData.initialFiles}
-      draft={loadedDraft}
+      draft={props.isDraftDiscarded ? undefined : loadedDraft}
+      onDiscardDraft={props.onDiscardDraft}
       localTreeKey={itemData.localTreeKey}
     />
   );

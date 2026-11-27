@@ -19,8 +19,13 @@ import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
+import { LocalConflictNotice } from './local-conflict-notice';
 import l10nMessages from './l10n';
-import { useBaseCommit, useCurrentBranch } from './shell/data';
+import {
+  useBaseCommit,
+  useCurrentBranch,
+  useRefreshLocalTree,
+} from './shell/data';
 import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { ForkRepoDialog } from './fork-repo';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
@@ -428,6 +433,7 @@ function CreateItemInner(props: {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const config = useConfig();
+  const refreshLocalTree = useRefreshLocalTree();
 
   const { collectionConfig, schema } = useCollection(props.collection);
 
@@ -484,6 +490,11 @@ function CreateItemInner(props: {
       });
     }
   };
+
+  const onReloadLatest = useEventCallback(async () => {
+    await refreshLocalTree();
+    props.resetCreateItemState();
+  });
 
   // note we're still "loading" when it's already been created
   // since we're waiting to go to the item page
@@ -573,6 +584,12 @@ function CreateItemInner(props: {
         >
           {createResult.kind === 'error' && (
             <Notice tone="critical">{createResult.error.message}</Notice>
+          )}
+          {createResult.kind === 'conflict' && (
+            <LocalConflictNotice
+              reason={createResult.reason}
+              onReload={onReloadLatest}
+            />
           )}
           <FormForEntry
             previewProps={props.previewProps}

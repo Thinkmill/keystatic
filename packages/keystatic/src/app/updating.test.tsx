@@ -16,7 +16,12 @@ const mocks = vi.hoisted(() => ({
   remoteHeads: [] as { oid: string; entries: TreeEntry[] }[],
   fetchRef: vi.fn(),
   fetchTree: vi.fn(),
+  setTreeSha: vi.fn(),
+  fetch: vi.fn(),
+  unscopedTree: [] as TreeEntry[],
 }));
+
+vi.stubGlobal('fetch', mocks.fetch);
 
 vi.mock('urql', () => ({
   useMutation: () => [undefined, mocks.mutate],
@@ -31,7 +36,7 @@ vi.mock('./provider', () => ({
 vi.mock('./shell/data', () => ({
   useBaseCommit: () => 'opened-head',
   useCurrentBranch: () => 'main',
-  useSetTreeSha: () => () => {},
+  useSetTreeSha: () => mocks.setTreeSha,
   useRepoInfo: () => ({
     owner: 'owner',
     name: 'repo',
@@ -39,7 +44,7 @@ vi.mock('./shell/data', () => ({
   }),
   useCurrentUnscopedTree: () => ({
     kind: 'loaded',
-    data: { tree: treeEntriesToTreeNodes([]) },
+    data: { tree: treeEntriesToTreeNodes(mocks.unscopedTree) },
   }),
   fetchGitHubTreeData: (...args: unknown[]) => mocks.fetchTree(...args),
   hydrateTreeCacheWithEntries: async (entries: TreeEntry[]) => ({
@@ -53,7 +58,7 @@ vi.mock('./useItemData', () => ({
 }));
 
 // imported after the mocks are registered
-const { useUpsertItem } = await import('./updating');
+const { useDeleteItem, useUpsertItem } = await import('./updating');
 
 const config: Config = {
   storage: { kind: 'github', repo: 'owner/repo' },
@@ -141,6 +146,9 @@ beforeEach(() => {
   mocks.mutate.mockReset();
   mocks.fetchRef.mockReset();
   mocks.fetchTree.mockReset();
+  mocks.setTreeSha.mockReset();
+  mocks.fetch.mockReset();
+  mocks.unscopedTree = [];
 });
 
 // CreateItemLocal and CreateItemCollab (create-item.tsx) both call
@@ -216,5 +224,170 @@ describe('editing an entry (local tree key)', () => {
     expect(saved).toBe(false);
     expect(state.kind).toBe('needs-new-branch');
     expect(mocks.mutate).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('local storage mode', () => {
+  const localConfig: Config = {
+    storage: { kind: 'local' },
+    collections: {
+      posts: {
+        label: 'Posts',
+        slugField: 'title',
+        path: 'posts/*',
+        schema: { title: fields.slug({ name: { label: 'Title' } }) },
+      },
+    },
+  };
+
+  function renderLocalUpsert(args: {
+    initialFiles?: string[];
+    currentLocalTreeKey?: string;
+    slug?: string;
+  }) {
+    const slug = args.slug ?? 'my-post';
+    return renderHook(() =>
+      useUpsertItem({
+        state: { title: { name: 'My post', slug } },
+        initialFiles: args.initialFiles,
+        schema: localConfig.collections!.posts.schema,
+        config: localConfig,
+        format: {
+          data: 'yaml',
+          contentField: undefined,
+          dataLocation: 'index',
+        },
+        currentLocalTreeKey: args.currentLocalTreeKey,
+        basePath: `posts/${slug}`,
+        slug: { field: 'title', value: slug },
+      })
+    );
+  }
+
+  test('sends expectedShas and updates tree SHA on 200', async () => {
+    mocks.unscopedTree = remoteTree({ 'my-post': 'v1' });
+    mocks.fetch.mockResolvedValueOnce(
+      new Response(JSON.stringify(remoteTree({ 'my-post': 'v2' })), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      })
+    );
+
+    const { saved, state } = await save(
+      renderLocalUpsert({
+        initialFiles: ['posts/my-post/index.yaml'],
+        currentLocalTreeKey: 'v1',
+      })
+    );
+
+    expect(saved).toBe(true);
+    expect(state).toEqual({ kind: 'updated' });
+    expect(mocks.setTreeSha).toHaveBeenCalledTimes(1);
+    const reqBody = JSON.parse(mocks.fetch.mock.calls[0][1].body);
+    expect(reqBody.expectedShas).toEqual([
+      { path: 'posts/my-post', sha: 'v1' },
+      { path: 'posts/my-post/index.yaml', sha: 'v1-file' },
+    ]);
+  });
+
+  test('returns conflict state without updating tree SHA on 409 during edit', async () => {
+    mocks.unscopedTree = remoteTree({ 'my-post': 'v1' });
+    mocks.fetch.mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({ code: 'CONFLICT', message: 'Changed on disk' }),
+        { status: 409, headers: { 'content-type': 'application/json' } }
+      )
+    );
+
+    const { saved, state } = await save(
+      renderLocalUpsert({
+        initialFiles: ['posts/my-post/index.yaml'],
+        currentLocalTreeKey: 'v1',
+      })
+    );
+
+    expect(saved).toBe(false);
+    expect(state.kind).toBe('conflict');
+    if (state.kind === 'conflict') {
+      expect(state.reason).toContain('changed on disk');
+    }
+    expect(mocks.setTreeSha).not.toHaveBeenCalled();
+  });
+
+  test('sends null expectedShas when creating and surfaces slug conflict on 409', async () => {
+    mocks.unscopedTree = remoteTree({ other: 'other-v1' });
+    mocks.fetch.mockResolvedValueOnce(
+      new Response(JSON.stringify({ code: 'CONFLICT', message: 'Conflict' }), {
+        status: 409,
+        headers: { 'content-type': 'application/json' },
+      })
+    );
+
+    const { saved, state } = await save(renderLocalUpsert({}));
+
+    expect(saved).toBe(false);
+    expect(state.kind).toBe('conflict');
+    if (state.kind === 'conflict') {
+      expect(state.reason).toContain('slug already exists');
+    }
+    expect(mocks.setTreeSha).not.toHaveBeenCalled();
+    const reqBody = JSON.parse(mocks.fetch.mock.calls[0][1].body);
+    expect(reqBody.expectedShas).toEqual([
+      { path: 'posts/my-post', sha: null },
+      { path: 'posts/my-post/index.yaml', sha: null },
+    ]);
+  });
+
+  test('sets error state on non-conflict HTTP failure', async () => {
+    mocks.unscopedTree = remoteTree({ 'my-post': 'v1' });
+    mocks.fetch.mockResolvedValueOnce(
+      new Response('Internal Server Error', { status: 500 })
+    );
+
+    const { saved, state } = await save(
+      renderLocalUpsert({
+        initialFiles: ['posts/my-post/index.yaml'],
+        currentLocalTreeKey: 'v1',
+      })
+    );
+
+    expect(saved).toBe(false);
+    expect(state.kind).toBe('error');
+    if (state.kind === 'error') {
+      expect(state.error.message).toBe('Internal Server Error');
+    }
+    expect(mocks.setTreeSha).not.toHaveBeenCalled();
+  });
+
+  test('useDeleteItem sends expectedShas and handles 409 conflict without updating tree SHA', async () => {
+    mocks.unscopedTree = remoteTree({ 'my-post': 'v1' });
+    mocks.fetch.mockResolvedValueOnce(
+      new Response(JSON.stringify({ code: 'CONFLICT', message: 'Conflict' }), {
+        status: 409,
+        headers: { 'content-type': 'application/json' },
+      })
+    );
+
+    const hook = renderHook(() =>
+      useDeleteItem({
+        basePath: 'posts/my-post',
+        initialFiles: ['posts/my-post/index.yaml'],
+        storage: localConfig.storage,
+      })
+    );
+
+    let deleted: boolean | undefined;
+    await act(async () => {
+      deleted = await hook.result.current[1]();
+    });
+
+    expect(deleted).toBe(false);
+    expect(hook.result.current[0].kind).toBe('conflict');
+    expect(mocks.setTreeSha).not.toHaveBeenCalled();
+    const reqBody = JSON.parse(mocks.fetch.mock.calls[0][1].body);
+    expect(reqBody.expectedShas).toEqual([
+      { path: 'posts/my-post', sha: 'v1' },
+      { path: 'posts/my-post/index.yaml', sha: 'v1-file' },
+    ]);
   });
 });

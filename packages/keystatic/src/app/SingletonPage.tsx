@@ -33,7 +33,13 @@ import {
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
-import { useBaseCommit, useCurrentBranch, useRepoInfo } from './shell/data';
+import {
+  useBaseCommit,
+  useCurrentBranch,
+  useRefreshLocalTree,
+  useRepoInfo,
+} from './shell/data';
+import { LocalConflictNotice } from './local-conflict-notice';
 import { useHasChanged } from './useHasChanged';
 import { parseEntry, useItemData } from './useItemData';
 import { serializeEntryToFiles, useUpsertItem } from './updating';
@@ -79,6 +85,7 @@ function SingletonPageInner(
     updateResult: ReturnType<typeof useUpsertItem>[0];
     onUpdate: ReturnType<typeof useUpsertItem>[1];
     onResetUpdateItem: ReturnType<typeof useUpsertItem>[2];
+    onDiscardDraft?: () => void;
     hasChanged: boolean;
     state: Record<string, unknown>;
     onReset: () => void;
@@ -88,6 +95,7 @@ function SingletonPageInner(
   const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
   const repoInfo = useRepoInfo();
   const currentBranch = useCurrentBranch();
+  const refreshLocalTree = useRefreshLocalTree();
   const [forceValidation, setForceValidation] = useState(false);
 
   const { schema, singletonConfig } = useSingleton(props.singleton);
@@ -208,6 +216,13 @@ function SingletonPageInner(
     }
   };
 
+  const onReloadLatest = useEventCallback(async () => {
+    await delDraft(['singleton', props.singleton]);
+    props.onDiscardDraft?.();
+    await refreshLocalTree();
+    props.onResetUpdateItem();
+  });
+
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(singletonConfig)}>
       <PageHeader>
@@ -288,6 +303,12 @@ function SingletonPageInner(
         {props.updateResult.kind === 'error' && (
           <Notice tone="critical">{props.updateResult.error.message}</Notice>
         )}
+        {props.updateResult.kind === 'conflict' && (
+          <LocalConflictNotice
+            reason={props.updateResult.reason}
+            onReload={onReloadLatest}
+          />
+        )}
         <FormForEntry
           previewProps={props.previewProps as any}
           forceValidation={forceValidation}
@@ -341,6 +362,7 @@ function SingletonPageInner(
 
 function LocalSingletonPage(
   props: SingletonPageProps & {
+    onDiscardDraft?: () => void;
     draft:
       | {
           state: Record<string, unknown>;
@@ -452,6 +474,7 @@ function LocalSingletonPage(
       onReset={onReset}
       onUpdate={update}
       onResetUpdateItem={resetUpdateItem}
+      onDiscardDraft={props.onDiscardDraft}
       updateResult={updateResult}
       state={state}
       previewProps={previewProps}
@@ -541,6 +564,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
   );
 
   const dirpath = getSingletonPath(props.config, props.singleton);
+  const [hasDiscardedDraft, setHasDiscardedDraft] = useState(false);
 
   const draftData = useData(
     useCallback(async () => {
@@ -703,7 +727,12 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
       localTreeKey={
         itemData.data === 'not-found' ? undefined : itemData.data.localTreeKey
       }
-      draft={draftData.kind === 'loaded' ? draftData.data : undefined}
+      draft={
+        hasDiscardedDraft || draftData.kind !== 'loaded'
+          ? undefined
+          : draftData.data
+      }
+      onDiscardDraft={() => setHasDiscardedDraft(true)}
     />
   );
 }
