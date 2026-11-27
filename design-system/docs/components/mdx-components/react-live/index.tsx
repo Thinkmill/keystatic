@@ -1,7 +1,14 @@
 'use client';
 import copy from 'clipboard-copy';
 import { createUrl } from 'playroom/utils';
-import { ReactNode, useEffect, useId, useState, type JSX } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useId,
+  useState,
+  useSyncExternalStore,
+  type JSX,
+} from 'react';
 
 import { ActionButton } from '@keystar/ui/button';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
@@ -142,10 +149,24 @@ function RenderedCodeExample({ children }: { children: ReactNode }) {
   );
 }
 
+const emptySubscribe = () => () => {};
+// Defer live previews that depend on runtime clock/timezone until after hydration
+// to avoid SSR/client text mismatches on statically generated docs pages.
+const RUNTIME_CLOCK_OR_TIMEZONE_PATTERN =
+  /\b(?:today|now|getLocalTimeZone)\s*\(|\bnew\s+Date\b|\bDate\.now\s*\(/;
+
 export function ReactLive(props: {
   content: string;
   live: LiveCodeInfo;
 }): JSX.Element {
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+  const shouldRenderLiveCode =
+    isClient || !RUNTIME_CLOCK_OR_TIMEZONE_PATTERN.test(props.live.code);
+
   return (
     <Flex
       backgroundColor="surface"
@@ -154,11 +175,13 @@ export function ReactLive(props: {
       direction="column"
     >
       <RenderedCodeExample>
-        <RenderLiveCode
-          code={props.live.code}
-          scope={eagerScope}
-          location={props.live.location}
-        />
+        {shouldRenderLiveCode ? (
+          <RenderLiveCode
+            code={props.live.code}
+            scope={eagerScope}
+            location={props.live.location}
+          />
+        ) : null}
       </RenderedCodeExample>
 
       <SnippetController
